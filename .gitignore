@@ -1,0 +1,13 @@
+/build/
+# Compiled Java
+**/target/
+**/*.class
+
+# Eclipse specific files
+.classpath
+.project
+.settings/
+.metadata/
+
+# Ignore the server configuration (if it's in your project)
+**/Servers/
