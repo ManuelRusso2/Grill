@@ -6,7 +6,10 @@ public class SelezioneBean implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private int idAcquisto;
-    private int idCollezione;
+    private int idProdotto;
+    private double prezzoUnitario;
+    private double sconto;
+    private double iva;
     private int quantitaAcquistata;
 
     
@@ -14,7 +17,7 @@ public class SelezioneBean implements Serializable {
     public SelezioneBean() {}
 
     
-    // Getter e Setter
+    //Getter e Setter
     public int getIdAcquisto() { 
     	return idAcquisto; 
     }
@@ -23,11 +26,35 @@ public class SelezioneBean implements Serializable {
     }
 
     
-    public int getIdCollezione() { 
-    	return idCollezione; 
+    public int getIdProdotto() { 
+    	return idProdotto; 
     }
-    public void setIdCollezione(int idCollezione) { 
-    	this.idCollezione = idCollezione; 
+    public void setIdProdotto(int idProdotto) { 
+    	this.idProdotto = idProdotto; 
+    }
+
+    
+    public double getPrezzoUnitario() { 
+    	return prezzoUnitario; 
+    }
+    public void setPrezzoUnitario(double prezzoUnitario) { 
+    	this.prezzoUnitario = prezzoUnitario; 
+    }
+
+    
+    public double getSconto() { 
+    	return sconto; 
+    }
+    public void setSconto(double sconto) { 
+    	this.sconto = sconto; 
+    }
+
+    
+    public double getIva() { 
+    	return iva; 
+    }
+    public void setIva(double iva) { 
+    	this.iva = iva; 
     }
 
     
@@ -37,13 +64,16 @@ public class SelezioneBean implements Serializable {
     public void setQuantitaAcquistata(int quantitaAcquistata) { 
     	this.quantitaAcquistata = quantitaAcquistata; 
     }
-
+    
     
     @Override
     public String toString() {
-        return "Selezione{" +
+        return "SelezioneBean{" +
                 "idAcquisto=" + idAcquisto +
-                ", idCollezione=" + idCollezione +
+                ", idProdotto=" + idProdotto +
+                ", prezzoUnitario=" + prezzoUnitario +
+                ", sconto=" + sconto +
+                ", iva=" + iva +
                 ", quantitaAcquistata=" + quantitaAcquistata +
                 '}';
     }

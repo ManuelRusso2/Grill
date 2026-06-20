@@ -2,18 +2,21 @@ package model.bean;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+import java.sql.Timestamp;
 
 public class AcquistoBean implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private int idAcquisto;
-    private double prezzoUnitario;
-    private double sconto;
+    private double prezzoTotale;
     private Timestamp dataAcquisto;
-    private double iva;
     private String metodoPagamento;
     private String emailUtente;
-
+    
+    // La lista dei prodotti associati a questo acquisto
+    private List<SelezioneBean> prodottiAcquistati = new ArrayList<>();
     
     // Costruttore vuoto
     public AcquistoBean() {}
@@ -23,25 +26,16 @@ public class AcquistoBean implements Serializable {
     public int getIdAcquisto() { 
     	return idAcquisto; 
     }
-    
     public void setIdAcquisto(int idAcquisto) { 
     	this.idAcquisto = idAcquisto; 
     }
 
     
-    public double getPrezzoUnitario() { 
-    	return prezzoUnitario; 
+    public double getPrezzoTotale() { 
+    	return prezzoTotale; 
     }
-    public void setPrezzoUnitario(double prezzoUnitario) { 
-    	this.prezzoUnitario = prezzoUnitario; 
-    }
-
-    
-    public double getSconto() { 
-    	return sconto; 
-    }
-    public void setSconto(double sconto) { 
-    	this.sconto = sconto; 
+    public void setPrezzoUnitario(double prezzoTotale) { 
+    	this.prezzoTotale = prezzoTotale; 
     }
 
     
@@ -50,14 +44,6 @@ public class AcquistoBean implements Serializable {
     }
     public void setDataAcquisto(Timestamp dataAcquisto) { 
     	this.dataAcquisto = dataAcquisto; 
-    }
-
-    
-    public double getIva() { 
-    	return iva; 
-    }
-    public void setIva(double iva) { 
-    	this.iva = iva; 
     }
 
     
@@ -77,14 +63,26 @@ public class AcquistoBean implements Serializable {
     }
 
     
+    public List<SelezioneBean> getProdottiAcquistati() { 
+    	return prodottiAcquistati; 
+    }
+    public void setProdottiAcquistati(List<SelezioneBean> prodottiAcquistati) { 
+    	this.prodottiAcquistati = prodottiAcquistati; 
+    }
+    
+    
+    // Metodo di utilità per aggiungere un prodotto alla volta
+    public void addProdottoAcquistato(SelezioneBean item) { 
+    	this.prodottiAcquistati.add(item); 
+    }
+    
+    
     @Override
     public String toString() {
         return "Acquisto{" +
                 "idAcquisto=" + idAcquisto +
-                ", prezzoUnitario=" + prezzoUnitario +
-                ", sconto=" + sconto +
+                ", prezzoTotale=" + prezzoTotale +
                 ", dataAcquisto=" + dataAcquisto +
-                ", iva=" + iva +
                 ", metodoPagamento='" + metodoPagamento + '\'' +
                 ", emailUtente='" + emailUtente + '\'' +
                 '}';

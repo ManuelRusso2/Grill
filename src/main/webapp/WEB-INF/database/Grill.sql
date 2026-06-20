@@ -15,10 +15,8 @@ CREATE TABLE IF NOT EXISTS utente(
 
 CREATE TABLE IF NOT EXISTS acquisto(
 	id_acquisto INTEGER AUTO_INCREMENT PRIMARY KEY,
-    prezzo_unitario DOUBLE NOT NULL CHECK(prezzo_unitario  > 0),
-    sconto DECIMAL(5, 2) NOT NULL,
+    prezzo_totale DOUBLE NOT NULL CHECK(prezzo_totale  > 0),
     data_acquisto DATETIME DEFAULT CURRENT_TIMESTAMP,
-	iva DECIMAL(4,2) NOT NULL CHECK (iva >= 0),
 	metodo_pagamento VARCHAR(50) NOT NULL,
     email_utente VARCHAR(100) NOT NULL,
     
@@ -53,15 +51,19 @@ CREATE TABLE IF NOT EXISTS prodotto(
 
 CREATE TABLE IF NOT EXISTS selezione(
 	id_acquisto INTEGER,
-    id_collezione INTEGER,
+    id_prodotto INTEGER,
+	prezzo_unitario DOUBLE NOT NULL CHECK(prezzo_unitario  > 0),
+    sconto DECIMAL(5, 2) NOT NULL,
+    data_acquisto DATETIME DEFAULT CURRENT_TIMESTAMP,
+	iva DECIMAL(4,2) NOT NULL CHECK (iva >= 0),
     quantita_acquistata INTEGER CHECK(quantita_acquistata > 0),
-    PRIMARY KEY(id_acquisto, id_collezione),
+    PRIMARY KEY(id_acquisto, id_prodotto),
     
     FOREIGN KEY(id_acquisto) REFERENCES acquisto(id_acquisto)
 		ON UPDATE CASCADE
 		ON DELETE CASCADE,
         
-	FOREIGN KEY(id_collezione) REFERENCES collezione(id_collezione)
+	FOREIGN KEY(id_prodotto) REFERENCES prodotto(id_prodotto)
 		ON UPDATE CASCADE
 		ON DELETE CASCADE
 );
