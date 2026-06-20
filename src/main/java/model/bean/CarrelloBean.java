@@ -1,6 +1,9 @@
 package model.bean;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
 
 public class CarrelloBean implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -8,6 +11,8 @@ public class CarrelloBean implements Serializable {
     private int idCarrello;
     private String emailUtente;
 
+    private Map<ProdottoBean, Integer> prodotti = new HashMap<>();
+    
     
     // Costruttore vuoto
     public CarrelloBean() {}
@@ -30,11 +35,49 @@ public class CarrelloBean implements Serializable {
     }
 
     
+    public Map<ProdottoBean, Integer> getProdotti() {
+        return prodotti;
+    }
+    public void setProdotti(Map<ProdottoBean, Integer> prodotti) {
+        this.prodotti = prodotti;
+    }
+    
+    
+    // METODI DI UTILITÀ PER IL CARRELLO
+
+    // Aggiunge un prodotto o aumenta la quantità se c'è già
+    public void addProdotto(ProdottoBean prodotto, int quantita) {
+        if (this.prodotti.containsKey(prodotto)) {
+            int vecchiaQuantita = this.prodotti.get(prodotto);
+            this.prodotti.put(prodotto, vecchiaQuantita + quantita);
+        } else {
+            this.prodotti.put(prodotto, quantita);
+        }
+    }
+
+    
+    // Rimuove un prodotto dal carrello
+    public void removeProdotto(ProdottoBean prodotto) {
+        this.prodotti.remove(prodotto);
+    }
+    
+    
+    // Calcola il prezzo totale del carrello
+    public double getPrezzoTotale() {
+        double totale = 0;
+        for (Map.Entry<ProdottoBean, Integer> el : prodotti.entrySet()) {
+            totale += el.getKey().getCosto() * el.getValue();
+        }
+        return totale;
+    }
+    
+    
     @Override
     public String toString() {
-        return "Carrello{" +
+        return "CarrelloBean{" +
                 "idCarrello=" + idCarrello +
                 ", emailUtente='" + emailUtente + '\'' +
+                ", prodotti=" + prodotti +
                 '}';
     }
 }

@@ -85,6 +85,30 @@ public class ProdottoBean implements Serializable {
     }
     
     
+    // METODI DI UTILITÀ
+    
+    // Serve a stabilire se due oggetti di tipo ProdottoBean rappresentano lo stesso identico prodotto nel mondo reale
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        
+        if (obj == null || getClass() != obj.getClass()) return false;
+        
+        ProdottoBean altro = (ProdottoBean) obj;
+        
+        return idProdotto == altro.idProdotto;
+    }
+
+    
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + idProdotto;
+        return result;
+    }
+    
+    
     @Override
     public String toString() {
         return "Prodotto{" +
