@@ -57,6 +57,7 @@ CREATE TABLE IF NOT EXISTS selezione(
     data_acquisto DATETIME DEFAULT CURRENT_TIMESTAMP,
 	iva DECIMAL(4,2) NOT NULL CHECK (iva >= 0),
     quantita_acquistata INTEGER CHECK(quantita_acquistata > 0),
+    stato_prodotto VARCHAR(20) NOT NULL,
     PRIMARY KEY(id_acquisto, id_prodotto),
     
     FOREIGN KEY(id_acquisto) REFERENCES acquisto(id_acquisto)
