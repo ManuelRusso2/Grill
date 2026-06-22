@@ -13,7 +13,7 @@ public class AcquistoBean implements Serializable {
     private double prezzoTotale;
     private Timestamp dataAcquisto;
     private String metodoPagamento;
-    private String emailUtente;
+	private int idUtente;
     
     // La lista dei prodotti associati a questo acquisto
     private List<SelezioneBean> prodottiAcquistati = new ArrayList<>();
@@ -55,11 +55,11 @@ public class AcquistoBean implements Serializable {
     }
 
     
-    public String getEmailUtente() { 
-    	return emailUtente; 
+    public int getidUtente() {
+    	return idUtente; 
     }
-    public void setEmailUtente(String emailUtente) { 
-    	this.emailUtente = emailUtente; 
+    public void setidUtente(int idUtente) {
+    	this.idUtente = idUtente; 
     }
 
     
@@ -84,7 +84,7 @@ public class AcquistoBean implements Serializable {
                 ", prezzoTotale=" + prezzoTotale +
                 ", dataAcquisto=" + dataAcquisto +
                 ", metodoPagamento='" + metodoPagamento + '\'' +
-                ", emailUtente='" + emailUtente + '\'' +
+                ", idUtente='" + idUtente + '\'' +
                 '}';
     }
 }

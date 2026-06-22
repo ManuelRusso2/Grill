@@ -5,6 +5,7 @@ import java.io.Serializable;
 public class UtenteBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
+	private int idUtente;
     private String email;
     private String nome;
     private String cognome;
@@ -19,6 +20,13 @@ public class UtenteBean implements Serializable {
 
     
     // Getter e Setter
+    public int getidUtente() {
+    	return idUtente; 
+    }
+    public void setidUtente(int idUtente) {
+    	this.idUtente = idUtente; 
+    }
+    
     public String getEmail() {
     	return email; 
     }
@@ -78,6 +86,7 @@ public class UtenteBean implements Serializable {
     @Override
     public String toString() {
         return "Utente{" +
+        		", idUtente" + idUtente + '\'' +
         		", email='" + email + '\'' +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +

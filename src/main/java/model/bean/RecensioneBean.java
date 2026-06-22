@@ -11,7 +11,7 @@ public class RecensioneBean implements Serializable {
     private String descrizione;
     private double valutazione;
     private int idProdotto;
-    private String emailUtente;
+	private int idUtente;
 
     
     // Costruttore vuoto
@@ -59,11 +59,11 @@ public class RecensioneBean implements Serializable {
     }
 
     
-    public String getEmailUtente() { 
-    	return emailUtente; 
+    public int getidUtente() {
+    	return idUtente; 
     }
-    public void setEmailUtente(String emailUtente) { 
-    	this.emailUtente = emailUtente; 
+    public void setidUtente(int idUtente) {
+    	this.idUtente = idUtente; 
     }
 
     
@@ -75,7 +75,7 @@ public class RecensioneBean implements Serializable {
                 ", descrizione='" + descrizione + '\'' +
                 ", valutazione=" + valutazione +
                 ", idProdotto=" + idProdotto +
-                ", emailUtente='" + emailUtente + '\'' +
+                ", idUtente='" + idUtente + '\'' +
                 '}';
     }
 }

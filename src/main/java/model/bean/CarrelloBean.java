@@ -9,7 +9,7 @@ public class CarrelloBean implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private int idCarrello;
-    private String emailUtente;
+	private int idUtente;
 
     private Map<ProdottoBean, Integer> prodotti = new HashMap<>();
     
@@ -27,11 +27,11 @@ public class CarrelloBean implements Serializable {
     }
 
     
-    public String getEmailUtente() { 
-    	return emailUtente; 
+    public int getidUtente() {
+    	return idUtente; 
     }
-    public void setEmailUtente(String emailUtente) { 
-    	this.emailUtente = emailUtente; 
+    public void setidUtente(int idUtente) {
+    	this.idUtente = idUtente; 
     }
 
     
@@ -76,7 +76,7 @@ public class CarrelloBean implements Serializable {
     public String toString() {
         return "CarrelloBean{" +
                 "idCarrello=" + idCarrello +
-                ", emailUtente='" + emailUtente + '\'' +
+                ", idUtente='" + idUtente + '\'' +
                 ", prodotti=" + prodotti +
                 '}';
     }
