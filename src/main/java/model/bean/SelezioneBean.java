@@ -11,7 +11,7 @@ public class SelezioneBean implements Serializable {
     private double sconto;
     private double iva;
     private int quantitaAcquistata;
-
+    private String statoProdotto;
     
     // Costruttore vuoto
     public SelezioneBean() {}
@@ -66,6 +66,14 @@ public class SelezioneBean implements Serializable {
     }
     
     
+    public String getStatoProdotto() { 
+    	return statoProdotto; 
+    }
+    public void setMetodoPagamento(String statoProdotto) { 
+    	this.statoProdotto = statoProdotto; 
+    }
+
+    
     @Override
     public String toString() {
         return "SelezioneBean{" +
@@ -75,6 +83,7 @@ public class SelezioneBean implements Serializable {
                 ", sconto=" + sconto +
                 ", iva=" + iva +
                 ", quantitaAcquistata=" + quantitaAcquistata +
+                ", statoProdotto=" + statoProdotto +
                 '}';
     }
 }
