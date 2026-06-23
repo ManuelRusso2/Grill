@@ -20,10 +20,10 @@ public class UtenteBean implements Serializable {
 
     
     // Getter e Setter
-    public int getidUtente() {
+    public int getIdUtente() {
     	return idUtente; 
     }
-    public void setidUtente(int idUtente) {
+    public void setIdUtente(int idUtente) {
     	this.idUtente = idUtente; 
     }
     
@@ -80,6 +80,29 @@ public class UtenteBean implements Serializable {
     }
     public void setTelefono(String telefono) { 
     	this.telefono = telefono; 
+    }
+    
+    
+    /**
+     * Confronta due oggetti UtenteBean basandosi sull'idUtente numerico.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        UtenteBean other = (UtenteBean) obj;
+        return idUtente == other.idUtente;
+    }
+
+    /**
+     * Genera l'hash numerico sfruttando l'idUtente per le strutture dati veloci (es. HashMap).
+     */
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + idUtente;
+        return result;
     }
     
     

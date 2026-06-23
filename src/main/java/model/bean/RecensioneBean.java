@@ -59,10 +59,10 @@ public class RecensioneBean implements Serializable {
     }
 
     
-    public int getidUtente() {
+    public int getIdUtente() {
     	return idUtente; 
     }
-    public void setidUtente(int idUtente) {
+    public void setIdUtente(int idUtente) {
     	this.idUtente = idUtente; 
     }
 
