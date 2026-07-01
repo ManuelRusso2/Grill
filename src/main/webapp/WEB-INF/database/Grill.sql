@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS acquisto(
     prezzo_totale DOUBLE NOT NULL CHECK(prezzo_totale > 0),
     data_acquisto DATETIME DEFAULT CURRENT_TIMESTAMP,
     metodo_pagamento VARCHAR(50) NOT NULL,
+    indirizzo_consegna VARCHAR(50) NOT NULL,
     id_utente INTEGER NOT NULL,
     
     FOREIGN KEY(id_utente) REFERENCES utente(id_utente)
@@ -39,6 +40,7 @@ CREATE TABLE IF NOT EXISTS prodotto(
     costo DOUBLE NOT NULL CHECK(costo > 0),
     quantita INTEGER NOT NULL,
     tipo VARCHAR(50) NOT NULL,
+    attivo BOOLEAN DEFAULT TRUE,
     id_collezione INTEGER,
     
     FOREIGN KEY(id_collezione) REFERENCES collezione(id_collezione)
@@ -46,7 +48,7 @@ CREATE TABLE IF NOT EXISTS prodotto(
         ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS selezione(
+CREATE TABLE IF NOT EXISTS ordine(
     id_acquisto INTEGER NOT NULL,
     id_prodotto INTEGER NOT NULL,
     prezzo_unitario DOUBLE NOT NULL CHECK(prezzo_unitario > 0),
@@ -54,16 +56,16 @@ CREATE TABLE IF NOT EXISTS selezione(
     data_acquisto DATETIME DEFAULT CURRENT_TIMESTAMP,
     iva DECIMAL(4,2) NOT NULL CHECK (iva >= 0),
     quantita_acquistata INTEGER NOT NULL CHECK(quantita_acquistata > 0),
-    stato_prodotto VARCHAR(20) NOT NULL,
+    stato_spedizione VARCHAR(20) NOT NULL,
     PRIMARY KEY(id_acquisto, id_prodotto),
     
     FOREIGN KEY(id_acquisto) REFERENCES acquisto(id_acquisto)
         ON UPDATE CASCADE
-        ON DELETE CASCADE,
+        ON DELETE RESTRICT,
         
     FOREIGN KEY(id_prodotto) REFERENCES prodotto(id_prodotto)
         ON UPDATE CASCADE
-        ON DELETE CASCADE
+        ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS recensione(

@@ -2,7 +2,7 @@ package model.bean;
 
 import java.io.Serializable;
 
-public class SelezioneBean implements Serializable {
+public class OrdineBean implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private int idAcquisto;
@@ -11,10 +11,10 @@ public class SelezioneBean implements Serializable {
     private double sconto;
     private double iva;
     private int quantitaAcquistata;
-    private String statoProdotto;
+    private String statoSpedizione;
     
     // Costruttore vuoto
-    public SelezioneBean() {}
+    public OrdineBean() {}
 
     
     //Getter e Setter
@@ -66,11 +66,11 @@ public class SelezioneBean implements Serializable {
     }
     
     
-    public String getStatoProdotto() { 
-    	return statoProdotto; 
+    public String getStatoSpedizione() { 
+    	return statoSpedizione; 
     }
-    public void setMetodoPagamento(String statoProdotto) { 
-    	this.statoProdotto = statoProdotto; 
+    public void setStatoSpedizione(String statoSpedizione) { 
+    	this.statoSpedizione = statoSpedizione; 
     }
 
     
@@ -83,7 +83,7 @@ public class SelezioneBean implements Serializable {
                 ", sconto=" + sconto +
                 ", iva=" + iva +
                 ", quantitaAcquistata=" + quantitaAcquistata +
-                ", statoProdotto=" + statoProdotto +
+                ", statoSpedizione=" + statoSpedizione +
                 '}';
     }
 }

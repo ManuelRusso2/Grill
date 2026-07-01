@@ -12,6 +12,7 @@ public class ProdottoBean implements Serializable {
     private double costo;
     private int quantita;
     private String tipo;
+    private boolean attivo;
     private Integer idCollezione;
     
     // Lista per gestire la relazione N a N con le Categorie
@@ -69,6 +70,14 @@ public class ProdottoBean implements Serializable {
     }
 
     
+    public boolean isattivo() { 
+    	return attivo; 
+    }
+    public void setAdmin(boolean attivo) { 
+    	this.attivo = attivo; 
+    }
+    
+    
     public Integer getIdCollezione() { 
     	return idCollezione; 
     }
@@ -118,6 +127,7 @@ public class ProdottoBean implements Serializable {
                 ", costo=" + costo +
                 ", quantita=" + quantita +
                 ", tipo='" + tipo + '\'' +
+                ", attivo='" + attivo + '\'' +
                 ", idCollezione=" + idCollezione +
                 ", categorie=" + categorie +
                 '}';

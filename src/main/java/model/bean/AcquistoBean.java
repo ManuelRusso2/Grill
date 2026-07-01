@@ -13,10 +13,11 @@ public class AcquistoBean implements Serializable {
     private double prezzoTotale;
     private Timestamp dataAcquisto;
     private String metodoPagamento;
+    private String indirizzoConsegna;
 	private int idUtente;
     
     // La lista dei prodotti associati a questo acquisto
-    private List<SelezioneBean> prodottiAcquistati = new ArrayList<>();
+    private List<OrdineBean> prodottiAcquistati = new ArrayList<>();
     
     // Costruttore vuoto
     public AcquistoBean() {}
@@ -47,13 +48,21 @@ public class AcquistoBean implements Serializable {
     }
 
     
+    public String getIndirizzoConsegna() { 
+    	return indirizzoConsegna; 
+    }
+    public void setIndirizzoConsegna(String indirizzoConsegna) { 
+    	this.indirizzoConsegna = indirizzoConsegna; 
+    }
+
+    
     public String getMetodoPagamento() { 
     	return metodoPagamento; 
     }
     public void setMetodoPagamento(String metodoPagamento) { 
     	this.metodoPagamento = metodoPagamento; 
     }
-
+    
     
     public int getIdUtente() {
     	return idUtente; 
@@ -63,16 +72,16 @@ public class AcquistoBean implements Serializable {
     }
 
     
-    public List<SelezioneBean> getProdottiAcquistati() { 
+    public List<OrdineBean> getProdottiAcquistati() { 
     	return prodottiAcquistati; 
     }
-    public void setProdottiAcquistati(List<SelezioneBean> prodottiAcquistati) { 
+    public void setProdottiAcquistati(List<OrdineBean> prodottiAcquistati) { 
     	this.prodottiAcquistati = prodottiAcquistati; 
     }
     
     
     // Metodo di utilità per aggiungere un prodotto alla volta
-    public void addProdottoAcquistato(SelezioneBean item) { 
+    public void addProdottoAcquistato(OrdineBean item) { 
     	this.prodottiAcquistati.add(item); 
     }
     
@@ -83,6 +92,7 @@ public class AcquistoBean implements Serializable {
                 "idAcquisto=" + idAcquisto +
                 ", prezzoTotale=" + prezzoTotale +
                 ", dataAcquisto=" + dataAcquisto +
+                ", indirizzoConsegna=" + indirizzoConsegna +
                 ", metodoPagamento='" + metodoPagamento + '\'' +
                 ", idUtente='" + idUtente + '\'' +
                 '}';
