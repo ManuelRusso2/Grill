@@ -52,7 +52,6 @@ CREATE TABLE IF NOT EXISTS ordine(
     id_acquisto INTEGER NOT NULL,
     id_prodotto INTEGER NOT NULL,
     prezzo_unitario DOUBLE NOT NULL CHECK(prezzo_unitario > 0),
-    sconto DECIMAL(5, 2) NOT NULL,
     data_acquisto DATETIME DEFAULT CURRENT_TIMESTAMP,
     iva DECIMAL(4,2) NOT NULL CHECK (iva >= 0),
     quantita_acquistata INTEGER NOT NULL CHECK(quantita_acquistata > 0),

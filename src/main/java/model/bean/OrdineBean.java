@@ -8,7 +8,6 @@ public class OrdineBean implements Serializable {
     private int idAcquisto;
     private int idProdotto;
     private double prezzoUnitario;
-    private double sconto;
     private double iva;
     private int quantitaAcquistata;
     private String statoSpedizione;
@@ -42,14 +41,6 @@ public class OrdineBean implements Serializable {
     }
 
     
-    public double getSconto() { 
-    	return sconto; 
-    }
-    public void setSconto(double sconto) { 
-    	this.sconto = sconto; 
-    }
-
-    
     public double getIva() { 
     	return iva; 
     }
@@ -80,7 +71,6 @@ public class OrdineBean implements Serializable {
                 "idAcquisto=" + idAcquisto +
                 ", idProdotto=" + idProdotto +
                 ", prezzoUnitario=" + prezzoUnitario +
-                ", sconto=" + sconto +
                 ", iva=" + iva +
                 ", quantitaAcquistata=" + quantitaAcquistata +
                 ", statoSpedizione=" + statoSpedizione +
