@@ -70,10 +70,10 @@ public class ProdottoBean implements Serializable {
     }
 
     
-    public boolean isattivo() { 
+    public boolean isAttivo() { 
     	return attivo; 
     }
-    public void setAdmin(boolean attivo) { 
+    public void setAttivo(boolean attivo) { 
     	this.attivo = attivo; 
     }
     
