@@ -15,18 +15,23 @@ public class CategoriaDAOImpl implements CategoriaDAO {
     private static final String INSERT_CATEGORIA =
         "INSERT INTO categoria (nome, descrizione) VALUES (?, ?)";
 
+    
     private static final String UPDATE_CATEGORIA =
         "UPDATE categoria SET nome = ?, descrizione = ? WHERE id_categoria = ?";
 
+    
     private static final String SELECT_BY_ID =
         "SELECT id_categoria, nome, descrizione FROM categoria WHERE id_categoria = ?";
 
+    
     private static final String SELECT_ALL =
         "SELECT id_categoria, nome, descrizione FROM categoria ORDER BY nome";
 
+    
     private static final String DELETE_CATEGORIA =
         "DELETE FROM categoria WHERE id_categoria = ?";
 
+    
     @Override
     public void doSave(CategoriaBean categoria) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
@@ -39,6 +44,7 @@ public class CategoriaDAOImpl implements CategoriaDAO {
         }
     }
 
+    
     @Override
     public void doUpdate(CategoriaBean categoria) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
@@ -52,6 +58,7 @@ public class CategoriaDAOImpl implements CategoriaDAO {
         }
     }
 
+    
     @Override
     public CategoriaBean doRetrieveById(int idCategoria) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
@@ -68,6 +75,7 @@ public class CategoriaDAOImpl implements CategoriaDAO {
         return null;
     }
 
+    
     @Override
     public List<CategoriaBean> doRetrieveAll() throws SQLException {
         List<CategoriaBean> categorie = new ArrayList<>();
@@ -82,6 +90,7 @@ public class CategoriaDAOImpl implements CategoriaDAO {
         return categorie;
     }
 
+    
     @Override
     public boolean doDelete(int idCategoria) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
@@ -93,6 +102,7 @@ public class CategoriaDAOImpl implements CategoriaDAO {
         }
     }
 
+    
     private CategoriaBean mapRow(ResultSet rs) throws SQLException {
         CategoriaBean categoria = new CategoriaBean();
         categoria.setIdCategoria(rs.getInt("id_categoria"));
