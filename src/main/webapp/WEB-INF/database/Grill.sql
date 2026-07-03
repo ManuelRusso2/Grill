@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS prodotto(
     
     FOREIGN KEY(id_collezione) REFERENCES collezione(id_collezione)
         ON UPDATE CASCADE
-        ON DELETE CASCADE
+        ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS ordine(
