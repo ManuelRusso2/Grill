@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import model.bean.CollezioneBean;
@@ -14,20 +13,25 @@ import utility.ConnessioneDB;
 public class CollezioneDAOImpl implements CollezioneDAO {
 
     private static final String INSERT_COLLEZIONE =
-        "INSERT INTO collezione (nome_collezione, descrizione, data_creazione) VALUES (?, ?, ?)";
+        "INSERT INTO collezione (nome_collezione, descrizione) VALUES (?, ?)";
 
+    
     private static final String UPDATE_COLLEZIONE =
-        "UPDATE collezione SET nome_collezione = ?, descrizione = ?, data_creazione = ? WHERE id_collezione = ?";
+        "UPDATE collezione SET nome_collezione = ?, descrizione = ? WHERE id_collezione = ?";
 
+    
     private static final String SELECT_BY_ID =
         "SELECT id_collezione, nome_collezione, descrizione, data_creazione FROM collezione WHERE id_collezione = ?";
 
+    
     private static final String SELECT_ALL =
-        "SELECT id_collezione, nome_collezione, descrizione, data_creazione FROM collezione ORDER BY data_creazione DESC";
+        "SELECT id_collezione, nome_collezione, descrizione, data_creazione FROM collezione ORDER BY nome_collezione";
 
+    
     private static final String DELETE_COLLEZIONE =
         "DELETE FROM collezione WHERE id_collezione = ?";
 
+    
     @Override
     public void doSave(CollezioneBean collezione) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
@@ -35,12 +39,12 @@ public class CollezioneDAOImpl implements CollezioneDAO {
 
             ps.setString(1, collezione.getNomeCollezione());
             ps.setString(2, collezione.getDescrizione());
-            ps.setTimestamp(3, collezione.getDataCreazione());
 
             ps.executeUpdate();
         }
     }
 
+    
     @Override
     public void doUpdate(CollezioneBean collezione) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
@@ -48,13 +52,13 @@ public class CollezioneDAOImpl implements CollezioneDAO {
 
             ps.setString(1, collezione.getNomeCollezione());
             ps.setString(2, collezione.getDescrizione());
-            ps.setTimestamp(3, collezione.getDataCreazione());
-            ps.setInt(4, collezione.getIdCollezione());
+            ps.setInt(3, collezione.getIdCollezione());
 
             ps.executeUpdate();
         }
     }
 
+    
     @Override
     public CollezioneBean doRetrieveById(int idCollezione) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
@@ -71,6 +75,7 @@ public class CollezioneDAOImpl implements CollezioneDAO {
         return null;
     }
 
+    
     @Override
     public List<CollezioneBean> doRetrieveAll() throws SQLException {
         List<CollezioneBean> collezioni = new ArrayList<>();
@@ -96,6 +101,7 @@ public class CollezioneDAOImpl implements CollezioneDAO {
         }
     }
 
+    
     private CollezioneBean mapRow(ResultSet rs) throws SQLException {
         CollezioneBean collezione = new CollezioneBean();
         collezione.setIdCollezione(rs.getInt("id_collezione"));
