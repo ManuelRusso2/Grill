@@ -14,21 +14,27 @@ public class CarrelloDAOImpl implements CarrelloDAO {
     private static final String INSERT_CARRELLO =
         "INSERT INTO carrello (id_utente) VALUES (?)";
 
+    
     private static final String SELECT_BY_UTENTE =
         "SELECT id_carrello, id_utente FROM carrello WHERE id_utente = ?";
 
+    
     private static final String SELECT_BY_ID =
         "SELECT id_carrello, id_utente FROM carrello WHERE id_carrello = ?";
 
+    
     private static final String UPDATE_CARRELLO =
         "UPDATE carrello SET id_utente = ? WHERE id_carrello = ?";
 
+    
     private static final String DELETE_CONTENUTO_CARRELLO =
         "DELETE FROM contenuto WHERE id_carrello = ?";
 
+    
     private static final String DELETE_CARRELLO =
         "DELETE FROM carrello WHERE id_carrello = ?";
 
+    
     @Override
     public void doSave(CarrelloBean carrello) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
@@ -39,6 +45,7 @@ public class CarrelloDAOImpl implements CarrelloDAO {
         }
     }
 
+    
     @Override
     public CarrelloBean doRetrieveByUtente(int idUtente) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
@@ -55,6 +62,7 @@ public class CarrelloDAOImpl implements CarrelloDAO {
         return null;
     }
 
+    
     @Override
     public CarrelloBean doRetrieveById(int idCarrello) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
@@ -71,6 +79,7 @@ public class CarrelloDAOImpl implements CarrelloDAO {
         return null;
     }
 
+    
     @Override
     public void doUpdate(CarrelloBean carrello) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
@@ -83,6 +92,7 @@ public class CarrelloDAOImpl implements CarrelloDAO {
         }
     }
 
+    
     @Override
     public boolean doEmpty(int idCarrello) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
@@ -94,6 +104,7 @@ public class CarrelloDAOImpl implements CarrelloDAO {
         }
     }
 
+    
     @Override
     public boolean doDelete(int idCarrello) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
@@ -105,6 +116,7 @@ public class CarrelloDAOImpl implements CarrelloDAO {
         }
     }
 
+    
     private CarrelloBean mapRow(ResultSet rs) throws SQLException {
         CarrelloBean carrello = new CarrelloBean();
         carrello.setIdCarrello(rs.getInt("id_carrello"));
