@@ -13,55 +13,62 @@ import utility.ConnessioneDB;
 public class RecensioneDAOImpl implements RecensioneDAO {
 
     private static final String INSERT_RECENSIONE =
-        "INSERT INTO recensione (data_recensione, descrizione, valutazione, id_prodotto, id_utente) VALUES (?, ?, ?, ?, ?)";
+        "INSERT INTO recensione (descrizione, valutazione, id_prodotto, id_utente) VALUES (?, ?, ?, ?)";
 
+    
     private static final String UPDATE_RECENSIONE =
-        "UPDATE recensione SET data_recensione = ?, descrizione = ?, valutazione = ? WHERE id_recensione = ?";
+        "UPDATE recensione SET descrizione = ?, valutazione = ? WHERE id_recensione = ?";
 
+    
     private static final String SELECT_BY_ID =
         "SELECT id_recensione, data_recensione, descrizione, valutazione, id_prodotto, id_utente FROM recensione WHERE id_recensione = ?";
 
+    
     private static final String SELECT_BY_PRODOTTO =
         "SELECT id_recensione, data_recensione, descrizione, valutazione, id_prodotto, id_utente FROM recensione WHERE id_prodotto = ? ORDER BY data_recensione DESC";
 
+    
     private static final String SELECT_BY_UTENTE =
         "SELECT id_recensione, data_recensione, descrizione, valutazione, id_prodotto, id_utente FROM recensione WHERE id_utente = ? ORDER BY data_recensione DESC";
 
+    
     private static final String SELECT_ALL =
         "SELECT id_recensione, data_recensione, descrizione, valutazione, id_prodotto, id_utente FROM recensione ORDER BY data_recensione DESC";
 
+    
     private static final String DELETE_RECENSIONE =
         "DELETE FROM recensione WHERE id_recensione = ?";
 
+    
     @Override
     public void doSave(RecensioneBean recensione) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
              PreparedStatement ps = con.prepareStatement(INSERT_RECENSIONE)) {
 
-            ps.setTimestamp(1, recensione.getDataRecensione());
-            ps.setString(2, recensione.getDescrizione());
-            ps.setDouble(3, recensione.getValutazione());
-            ps.setInt(4, recensione.getIdProdotto());
-            ps.setInt(5, recensione.getIdUtente());
+            ps.setString(1, recensione.getDescrizione());
+            ps.setDouble(2, recensione.getValutazione());
+            ps.setInt(3, recensione.getIdProdotto());
+            ps.setInt(4, recensione.getIdUtente());
 
             ps.executeUpdate();
         }
     }
 
+    
     @Override
     public void doUpdate(RecensioneBean recensione) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
              PreparedStatement ps = con.prepareStatement(UPDATE_RECENSIONE)) {
 
-            ps.setTimestamp(1, recensione.getDataRecensione());
-            ps.setString(2, recensione.getDescrizione());
-            ps.setDouble(3, recensione.getValutazione());
-            ps.setInt(4, recensione.getIdRecensione());
+            ps.setString(1, recensione.getDescrizione());
+            ps.setDouble(2, recensione.getValutazione());
+            ps.setInt(3, recensione.getIdRecensione());
 
             ps.executeUpdate();
         }
     }
 
+    
     @Override
     public RecensioneBean doRetrieveById(int idRecensione) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
@@ -78,6 +85,7 @@ public class RecensioneDAOImpl implements RecensioneDAO {
         return null;
     }
 
+    
     @Override
     public List<RecensioneBean> doRetrieveByProdotto(int idProdotto) throws SQLException {
         List<RecensioneBean> recensioni = new ArrayList<>();
@@ -95,6 +103,7 @@ public class RecensioneDAOImpl implements RecensioneDAO {
         return recensioni;
     }
 
+    
     @Override
     public List<RecensioneBean> doRetrieveByUtente(int idUtente) throws SQLException {
         List<RecensioneBean> recensioni = new ArrayList<>();
@@ -112,6 +121,7 @@ public class RecensioneDAOImpl implements RecensioneDAO {
         return recensioni;
     }
 
+    
     @Override
     public List<RecensioneBean> doRetrieveAll() throws SQLException {
         List<RecensioneBean> recensioni = new ArrayList<>();
@@ -126,6 +136,7 @@ public class RecensioneDAOImpl implements RecensioneDAO {
         return recensioni;
     }
 
+    
     @Override
     public boolean doDelete(int idRecensione) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
@@ -137,6 +148,7 @@ public class RecensioneDAOImpl implements RecensioneDAO {
         }
     }
 
+    
     private RecensioneBean mapRow(ResultSet rs) throws SQLException {
         RecensioneBean recensione = new RecensioneBean();
         recensione.setIdRecensione(rs.getInt("id_recensione"));
