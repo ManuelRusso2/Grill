@@ -35,7 +35,7 @@ public class AcquistoBean implements Serializable {
     public double getPrezzoTotale() { 
     	return prezzoTotale; 
     }
-    public void setPrezzoUnitario(double prezzoTotale) { 
+    public void setPrezzoTotale(double prezzoTotale) { 
     	this.prezzoTotale = prezzoTotale; 
     }
 

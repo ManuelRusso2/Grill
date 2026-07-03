@@ -68,7 +68,7 @@ public class UtenteBean implements Serializable {
 
     
     public String getUsername() { 
-    	return password; 
+    	return username; 
     }
     public void setUsername(String username) { 
     	this.username = username; 
