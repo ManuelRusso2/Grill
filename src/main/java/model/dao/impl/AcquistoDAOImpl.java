@@ -1,10 +1,10 @@
 package model.dao.impl;
 
 import java.sql.Connection;
+import java.sql.Date; // Per i parametri di input del filtro date
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import model.bean.AcquistoBean;
@@ -16,21 +16,31 @@ public class AcquistoDAOImpl implements AcquistoDAO {
     private static final String INSERT_ACQUISTO =
         "INSERT INTO acquisto (prezzo_totale, data_acquisto, metodo_pagamento, indirizzo_consegna, id_utente) VALUES (?, ?, ?, ?, ?)";
 
+    
     private static final String UPDATE_ACQUISTO =
         "UPDATE acquisto SET prezzo_totale = ?, data_acquisto = ?, metodo_pagamento = ?, indirizzo_consegna = ? WHERE id_acquisto = ?";
 
+    
     private static final String SELECT_BY_ID =
         "SELECT id_acquisto, prezzo_totale, data_acquisto, metodo_pagamento, indirizzo_consegna, id_utente FROM acquisto WHERE id_acquisto = ?";
 
+    
     private static final String SELECT_BY_UTENTE =
         "SELECT id_acquisto, prezzo_totale, data_acquisto, metodo_pagamento, indirizzo_consegna, id_utente FROM acquisto WHERE id_utente = ? ORDER BY data_acquisto DESC";
 
+    
     private static final String SELECT_ALL =
         "SELECT id_acquisto, prezzo_totale, data_acquisto, metodo_pagamento, indirizzo_consegna, id_utente FROM acquisto ORDER BY data_acquisto DESC";
 
+    
     private static final String DELETE_ACQUISTO =
         "DELETE FROM acquisto WHERE id_acquisto = ?";
 
+    
+    private static final String SELECT_BY_DATE_INTERVAL =
+        "SELECT id_acquisto, prezzo_totale, data_acquisto, metodo_pagamento, indirizzo_consegna, id_utente FROM acquisto WHERE data_acquisto BETWEEN ? AND ? ORDER BY data_acquisto DESC";
+
+    
     @Override
     public void doSave(AcquistoBean acquisto) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
@@ -46,6 +56,7 @@ public class AcquistoDAOImpl implements AcquistoDAO {
         }
     }
 
+    
     @Override
     public void doUpdate(AcquistoBean acquisto) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
@@ -61,6 +72,7 @@ public class AcquistoDAOImpl implements AcquistoDAO {
         }
     }
 
+    
     @Override
     public AcquistoBean doRetrieveById(int idAcquisto) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
@@ -77,6 +89,7 @@ public class AcquistoDAOImpl implements AcquistoDAO {
         return null;
     }
 
+    
     @Override
     public List<AcquistoBean> doRetrieveByUtente(int idUtente) throws SQLException {
         List<AcquistoBean> acquisti = new ArrayList<>();
@@ -94,6 +107,7 @@ public class AcquistoDAOImpl implements AcquistoDAO {
         return acquisti;
     }
 
+    
     @Override
     public List<AcquistoBean> doRetrieveAll() throws SQLException {
         List<AcquistoBean> acquisti = new ArrayList<>();
@@ -119,6 +133,26 @@ public class AcquistoDAOImpl implements AcquistoDAO {
         }
     }
 
+    
+    @Override
+    public List<AcquistoBean> doRetrieveByDateInterval(Date dallaData, Date allaData) throws SQLException {
+        List<AcquistoBean> acquisti = new ArrayList<>();
+        try (Connection con = ConnessioneDB.getConnection();
+             PreparedStatement ps = con.prepareStatement(SELECT_BY_DATE_INTERVAL)) {
+
+            ps.setDate(1, dallaData);
+            ps.setDate(2, allaData);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    acquisti.add(mapRow(rs));
+                }
+            }
+        }
+        return acquisti;
+    }
+
+    
     private AcquistoBean mapRow(ResultSet rs) throws SQLException {
         AcquistoBean acquisto = new AcquistoBean();
         acquisto.setIdAcquisto(rs.getInt("id_acquisto"));
