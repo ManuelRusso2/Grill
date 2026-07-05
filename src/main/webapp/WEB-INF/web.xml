@@ -10,8 +10,22 @@
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
+    
+    <error-page>
+        <error-code>403</error-code>
+        <location>/jsp/error403.jsp</location>
+    </error-page>
 
-    <!-- Riferimento JNDI per il DataSource-->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/jsp/error404.jsp</location>
+    </error-page>
+
+    <error-page>
+        <error-code>500</error-code>
+        <location>/jsp/error500.jsp</location>
+    </error-page>
+
     <resource-ref>
         <res-ref-name>jdbc/grillDB</res-ref-name>
         <res-type>javax.sql.DataSource</res-type>
