@@ -15,6 +15,16 @@ public interface UtenteDAO {
     void doSave(UtenteBean utente) throws SQLException;
 
     /**
+     * Recupera un utente verificando le credenziali di accesso (email e password).
+     * Requisiti: Login, Gestione sessione e Cifratura.
+     * * @param email l'email inserita nel form di login
+     * @param password la password in chiaro inserita nel form di login
+     * @return l'oggetto UtenteBean se le credenziali sono corrette, null altrimenti
+     * @throws SQLException in caso di errore di accesso al database
+     */
+    UtenteBean doRetrieveByLogin(String email, String password) throws SQLException;
+    
+    /**
      * Cerca un utente tramite la sua email.
      * Requisiti: Login e Verifica AJAX email duplicata.
      * * @param email l'email da cercare
