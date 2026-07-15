@@ -1,0 +1,10 @@
+        </div>
+    </div>
+</header>
+<footer class="site-footer">
+    <div class="container footer-note">
+        &copy; Grill - progetto Java EE con Tomcat
+    </div>
+</footer>
+</body>
+</html>

@@ -100,7 +100,7 @@ public class CarrelloDAOImpl implements CarrelloDAO {
 
             ps.setInt(1, idCarrello);
             int rows = ps.executeUpdate();
-            return rows >= 0;
+            return rows > 0;
         }
     }
 

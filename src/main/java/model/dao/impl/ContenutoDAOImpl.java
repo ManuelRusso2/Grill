@@ -49,20 +49,38 @@ public class ContenutoDAOImpl implements ContenutoDAO {
                 }
             }
 
+            // 2. Recupera la quantità disponibile del prodotto per il controllo di stock
+            int quantitaDisponibile = 0;
+            try (PreparedStatement psStock = con.prepareStatement(
+                    "SELECT quantita FROM prodotto WHERE id_prodotto = ?")) {
+                psStock.setInt(1, idProdotto);
+                try (ResultSet rs = psStock.executeQuery()) {
+                    if (rs.next()) {
+                        quantitaDisponibile = rs.getInt("quantita");
+                    }
+                }
+            }
+
+            // 3. Verifica che la quantità totale non superi lo stock
+            int quantitaTotale = quantitaEsistente + quantita;
+            if (quantitaTotale > quantitaDisponibile) {
+                // Non aggiungere se supererebbe lo stock disponibile
+                return;
+            }
+
             if (quantitaEsistente > 0) {
-                // 2. Se esiste già, aggiorniamo sommando la nuova quantità
+                // 4. Se esiste già, aggiorniamo sommando la nuova quantità
                 try (PreparedStatement psUpdate = con.prepareStatement(UPDATE_QUANTITA_CARRELLO)) {
-                    psUpdate.setInt(1, quantitaEsistente + quantita);
+                    psUpdate.setInt(1, quantitaTotale);
                     psUpdate.setInt(2, idCarrello);
                     psUpdate.setInt(3, idProdotto);
                     psUpdate.executeUpdate();
                 }
             } else {
-                // 3. Se non esiste, facciamo una nuova insert
+                // 5. Se non esiste, facciamo una nuova insert
                 try (PreparedStatement psInsert = con.prepareStatement(INSERT_PRODOTTO_CARRELLO)) {
                     psInsert.setInt(1, idCarrello);
                     psInsert.setInt(2, idProdotto);
-                    psInsert.setInt(3, quantita);
                     psInsert.setInt(3, quantita);
                     psInsert.executeUpdate();
                 }
@@ -73,13 +91,31 @@ public class ContenutoDAOImpl implements ContenutoDAO {
     
     @Override
     public void doUpdateQuantity(int idCarrello, int idProdotto, int quantita) throws SQLException {
-        try (Connection con = ConnessioneDB.getConnection();
-             PreparedStatement ps = con.prepareStatement(UPDATE_QUANTITA_CARRELLO)) {
+        try (Connection con = ConnessioneDB.getConnection()) {
+            // Recupera la quantità disponibile del prodotto
+            int quantitaDisponibile = 0;
+            try (PreparedStatement psStock = con.prepareStatement(
+                    "SELECT quantita FROM prodotto WHERE id_prodotto = ?")) {
+                psStock.setInt(1, idProdotto);
+                try (ResultSet rs = psStock.executeQuery()) {
+                    if (rs.next()) {
+                        quantitaDisponibile = rs.getInt("quantita");
+                    }
+                }
+            }
 
-            ps.setInt(1, quantita);
-            ps.setInt(2, idCarrello);
-            ps.setInt(3, idProdotto);
-            ps.executeUpdate();
+            // Verifica che la nuova quantità non superi lo stock
+            if (quantita > quantitaDisponibile) {
+                // Non aggiornare se supererebbe lo stock disponibile
+                return;
+            }
+
+            try (PreparedStatement ps = con.prepareStatement(UPDATE_QUANTITA_CARRELLO)) {
+                ps.setInt(1, quantita);
+                ps.setInt(2, idCarrello);
+                ps.setInt(3, idProdotto);
+                ps.executeUpdate();
+            }
         }
     }
 

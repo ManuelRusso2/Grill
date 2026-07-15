@@ -99,8 +99,20 @@ public class CarrelloServlet extends HttpServlet {
         ProdottoBean prodotto = prodottoDAO.doRetrieveByKey(idProdotto);
         
         if (prodotto != null && prodotto.isAttivo() && prodotto.getQuantita() > 0) {
-            // Aggiungiamo 1 unità al carrello
-            contenutoDAO.doAddProduct(carrello.getIdCarrello(), prodotto.getIdProdotto(), 1);
+            // Recupera la quantità attuale nel carrello per questo prodotto
+            Map<ProdottoBean, Integer> prodottiInCarrello = contenutoDAO.doRetrieveProdottiInCarrello(carrello.getIdCarrello());
+            int quantitaAttuale = 0;
+            for (ProdottoBean p : prodottiInCarrello.keySet()) {
+                if (p.getIdProdotto() == idProdotto) {
+                    quantitaAttuale = prodottiInCarrello.get(p);
+                    break;
+                }
+            }
+            
+            // Verifica che la quantità totale non superi lo stock
+            if (quantitaAttuale + 1 <= prodotto.getQuantita()) {
+                contenutoDAO.doAddProduct(carrello.getIdCarrello(), prodotto.getIdProdotto(), 1);
+            }
         }
     }
 

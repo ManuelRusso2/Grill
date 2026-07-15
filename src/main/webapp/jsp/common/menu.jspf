@@ -1,0 +1,17 @@
+<%@ page import="model.bean.UtenteBean" %>
+<%
+    UtenteBean utenteMenu = (UtenteBean) session.getAttribute("utente");
+    boolean isAdminMenu = utenteMenu != null && utenteMenu.isAdmin();
+%>
+<a href="${pageContext.request.contextPath}/CatalogoServlet">Catalogo</a>
+<a href="${pageContext.request.contextPath}/CarrelloServlet">Carrello</a>
+<% if (utenteMenu == null) { %>
+    <a href="${pageContext.request.contextPath}/jsp/login.jsp">Login</a>
+    <a href="${pageContext.request.contextPath}/jsp/registrazione.jsp">Registrazione</a>
+<% } else { %>
+    <a href="${pageContext.request.contextPath}/ProfiloServlet">Profilo</a>
+    <a href="${pageContext.request.contextPath}/LogoutServlet">Logout</a>
+    <% if (isAdminMenu) { %>
+        <a href="${pageContext.request.contextPath}/jsp/admin/dashboard.jsp">Admin</a>
+    <% } %>
+<% } %>

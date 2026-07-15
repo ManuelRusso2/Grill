@@ -22,6 +22,10 @@ public class UtenteDAOImpl implements UtenteDAO {
     
     private static final String SELECT_BY_EMAIL = 
         "SELECT id_utente, nome, cognome, email, password, username, telefono, isAdmin FROM utente WHERE email = ?";
+
+
+    private static final String SELECT_BY_USERNAME = 
+        "SELECT id_utente, nome, cognome, email, password, username, telefono, isAdmin FROM utente WHERE username = ?";
     
     
     private static final String SELECT_BY_ID = 
@@ -88,6 +92,23 @@ public class UtenteDAOImpl implements UtenteDAO {
             
             ps.setString(1, email);
             
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return mapRow(rs);
+                }
+            }
+        }
+        return null;
+    }
+
+
+    @Override
+    public UtenteBean doRetrieveByUsername(String username) throws SQLException {
+        try (Connection con = ConnessioneDB.getConnection();
+             PreparedStatement ps = con.prepareStatement(SELECT_BY_USERNAME)) {
+
+            ps.setString(1, username);
+
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return mapRow(rs);

@@ -46,12 +46,19 @@ public class RegistrationServlet extends HttpServlet {
         String username = request.getParameter("username");
         String telefono = request.getParameter("telefono");
 
+        nome = nome != null ? nome.trim() : null;
+        cognome = cognome != null ? cognome.trim() : null;
+        email = email != null ? email.trim() : null;
+        password = password != null ? password.trim() : null;
+        username = username != null ? username.trim() : null;
+        telefono = telefono != null ? telefono.trim() : null;
+
         // 2. Validazione Campi lato Server (Espressioni Regolari)
         String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[a-zA-Z]{2,}$";
         String usernameRegex = "^[a-zA-Z0-9_]{4,20}$"; // da 4 a 20 caratteri, alfanumerico e underscore
 
-        if (nome == null || nome.trim().isEmpty() || 
-            cognome == null || cognome.trim().isEmpty() ||
+        if (nome == null || nome.isEmpty() || 
+            cognome == null || cognome.isEmpty() ||
             email == null || !email.matches(emailRegex) || 
             password == null || password.length() < 6 ||
             username == null || !username.matches(usernameRegex)) {
@@ -69,14 +76,20 @@ public class RegistrationServlet extends HttpServlet {
                 return;
             }
 
+            if (utenteDAO.doRetrieveByUsername(username) != null) {
+                request.setAttribute("errorMessage", "Questo username è già registrato.");
+                request.getRequestDispatcher("/jsp/registrazione.jsp").forward(request, response);
+                return;
+            }
+
             // 4. Creazione del Bean e salvataggio (la password verrà cifrata nel DAO)
             UtenteBean nuovoUtente = new UtenteBean();
-            nuovoUtente.setNome(nome.trim());
-            nuovoUtente.setCognome(cognome.trim());
-            nuovoUtente.setEmail(email.trim());
+            nuovoUtente.setNome(nome);
+            nuovoUtente.setCognome(cognome);
+            nuovoUtente.setEmail(email);
             nuovoUtente.setPassword(password); // Ci pensa UtenteDAOImpl a farne l'hash
-            nuovoUtente.setUsername(username.trim());
-            nuovoUtente.setTelefono(telefono != null ? telefono.trim() : null);
+            nuovoUtente.setUsername(username);
+            nuovoUtente.setTelefono(telefono);
             nuovoUtente.setAdmin(false); // Un utente che si registra da solo è sempre un cliente
 
             utenteDAO.doSave(nuovoUtente);
