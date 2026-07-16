@@ -13,6 +13,7 @@ import model.bean.UtenteBean;
 import model.dao.UtenteDAO;
 import model.dao.impl.UtenteDAOImpl;
 
+
 @WebServlet("/LoginServlet")
 public class LoginServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
@@ -64,7 +65,7 @@ public class LoginServlet extends HttpServlet {
                 // 4. Controllo del Ruolo per il Reindirizzamento
                 if (utente.isAdmin()) {
                     // Se è un amministratore, lo mandiamo alla dashboard admin
-                    response.sendRedirect(request.getContextPath() + "/admin/dashboard.jsp");
+                    response.sendRedirect(request.getContextPath() + "/jsp/admin/dashboard.jsp");
                 } else {
                     // Se è un cliente normale, lo mandiamo alla homepage o al catalogo
                     response.sendRedirect(request.getContextPath() + "/CatalogoServlet");

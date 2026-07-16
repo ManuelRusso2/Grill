@@ -58,7 +58,7 @@ public class ProdottoDAOImpl implements ProdottoDAO {
             ps.setString(5, prodotto.getTipo());
             ps.setBoolean(6, prodotto.isAttivo());
             
-            if (prodotto.getIdCollezione() > 0) {
+            if (prodotto.getIdCollezione() != null && prodotto.getIdCollezione() > 0) {
                 ps.setInt(7, prodotto.getIdCollezione());
             } else {
                 ps.setNull(7, Types.INTEGER); // Gestisce la foreign key opzionale se non legata a una collezione
@@ -81,7 +81,7 @@ public class ProdottoDAOImpl implements ProdottoDAO {
             ps.setString(5, prodotto.getTipo());
             ps.setBoolean(6, prodotto.isAttivo());
             
-            if (prodotto.getIdCollezione() > 0) {
+            if (prodotto.getIdCollezione() != null && prodotto.getIdCollezione() > 0) {
                 ps.setInt(7, prodotto.getIdCollezione());
             } else {
                 ps.setNull(7, Types.INTEGER);
