@@ -32,7 +32,7 @@ public class LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         // Se un utente prova ad accedere a questa servlet in GET, lo reindirizziamo al form di login
-        response.sendRedirect(request.getContextPath() + "/jsp/login.jsp");
+        response.sendRedirect(request.getContextPath() + "/jsp/common/login.jsp");
     }
 
     
@@ -47,7 +47,7 @@ public class LoginServlet extends HttpServlet {
         // Validazione base lato server per sicurezza extra
         if (email == null || email.trim().isEmpty() || password == null || password.trim().isEmpty()) {
             request.setAttribute("errorMessage", "Email e password sono obbligatorie.");
-            request.getRequestDispatcher("/jsp/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/jsp/common/login.jsp").forward(request, response);
             return;
         }
 
@@ -65,7 +65,7 @@ public class LoginServlet extends HttpServlet {
                 // 4. Controllo del Ruolo per il Reindirizzamento
                 if (utente.isAdmin()) {
                     // Se è un amministratore, lo mandiamo alla dashboard admin
-                    response.sendRedirect(request.getContextPath() + "/jsp/admin/dashboard.jsp");
+                    response.sendRedirect(request.getContextPath() + "/AdminOrdiniServlet");
                 } else {
                     // Se è un cliente normale, lo mandiamo alla homepage o al catalogo
                     response.sendRedirect(request.getContextPath() + "/CatalogoServlet");
@@ -74,7 +74,7 @@ public class LoginServlet extends HttpServlet {
             } else {
                 // Credenziali errate: impostiamo un messaggio di errore inline e torniamo alla pagina di login
                 request.setAttribute("errorMessage", "Email o password errate. Riprova.");
-                request.getRequestDispatcher("/jsp/login.jsp").forward(request, response);
+                request.getRequestDispatcher("/jsp/common/login.jsp").forward(request, response);
             }
 
         } catch (SQLException e) {

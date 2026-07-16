@@ -30,7 +30,7 @@ public class RegistrationServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         // Se si accede in GET, mostriamo semplicemente la pagina del form
-        response.sendRedirect(request.getContextPath() + "/jsp/registrazione.jsp");
+        response.sendRedirect(request.getContextPath() + "/jsp/user/registrazione.jsp");
     }
 
     
@@ -64,7 +64,7 @@ public class RegistrationServlet extends HttpServlet {
             username == null || !username.matches(usernameRegex)) {
             
             request.setAttribute("errorMessage", "Dati inseriti non validi o non conformi.");
-            request.getRequestDispatcher("/jsp/registrazione.jsp").forward(request, response);
+            request.getRequestDispatcher("/jsp/user/registrazione.jsp").forward(request, response);
             return;
         }
 
@@ -72,13 +72,13 @@ public class RegistrationServlet extends HttpServlet {
             // 3. Controllo se lo username o l'email esistono già
             if (utenteDAO.doRetrieveByEmail(email) != null) {
                 request.setAttribute("errorMessage", "Questa email è già registrata.");
-                request.getRequestDispatcher("/jsp/registrazione.jsp").forward(request, response);
+                request.getRequestDispatcher("/jsp/user/registrazione.jsp").forward(request, response);
                 return;
             }
 
             if (utenteDAO.doRetrieveByUsername(username) != null) {
                 request.setAttribute("errorMessage", "Questo username è già registrato.");
-                request.getRequestDispatcher("/jsp/registrazione.jsp").forward(request, response);
+                request.getRequestDispatcher("/jsp/user/registrazione.jsp").forward(request, response);
                 return;
             }
 
@@ -96,7 +96,7 @@ public class RegistrationServlet extends HttpServlet {
 
             // 5. Messaggio di successo e reindirizzamento al Login
             request.setAttribute("successMessage", "Registrazione completata con successo! Adesso puoi accedere.");
-            request.getRequestDispatcher("/jsp/login.jsp").forward(request, response);
+            request.getRequestDispatcher("/jsp/common/login.jsp").forward(request, response);
 
         } catch (SQLException e) {
             e.printStackTrace();

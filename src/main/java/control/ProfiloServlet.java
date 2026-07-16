@@ -41,7 +41,7 @@ public class ProfiloServlet extends HttpServlet {
 		
 		if (utente == null) {
 			// Se l'utente non è autenticato, viene reindirizzato alla pagina di login
-			response.sendRedirect(request.getContextPath() + "/jsp/login.jsp");
+			response.sendRedirect(request.getContextPath() + "/jsp/common/login.jsp");
 			return;
 		}
 

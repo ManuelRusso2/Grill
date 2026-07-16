@@ -63,7 +63,7 @@ public class CheckoutServlet extends HttpServlet {
 		
 		if (utente == null) {
 			// Se non è loggato, reindirizziamo alla pagina di login
-			response.sendRedirect(request.getContextPath() + "/jsp/login.jsp");
+			response.sendRedirect(request.getContextPath() + "/jsp/common/login.jsp");
 			return;
 		}
 
@@ -84,7 +84,7 @@ public class CheckoutServlet extends HttpServlet {
 			request.setAttribute("totaleCarrello", calcolaTotale(prodottiInCarrello));
 			
 			// Inoltriamo la richiesta alla pagina di inserimento dati spedizione/pagamento
-			request.getRequestDispatcher("/jsp/checkout.jsp").forward(request, response);
+			request.getRequestDispatcher("/jsp/user/checkout.jsp").forward(request, response);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -102,7 +102,7 @@ public class CheckoutServlet extends HttpServlet {
 		HttpSession session = request.getSession(false);
 		UtenteBean utente = session != null ? (UtenteBean) session.getAttribute("utente") : null;
 		if (utente == null) {
-			response.sendRedirect(request.getContextPath() + "/jsp/login.jsp");
+			response.sendRedirect(request.getContextPath() + "/jsp/common/login.jsp");
 			return;
 		}
 
@@ -140,7 +140,7 @@ public class CheckoutServlet extends HttpServlet {
 			request.setAttribute("indirizzoConsegna", indirizzoConsegna);
 			
 			// Reindirizziamo l'utente alla schermata di successo
-			request.getRequestDispatcher("/jsp/ordine-confermato.jsp").forward(request, response);
+			request.getRequestDispatcher("/jsp/user/ordine-confermato.jsp").forward(request, response);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);

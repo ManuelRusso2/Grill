@@ -52,7 +52,7 @@ public class DettaglioProdottoServlet extends HttpServlet {
             request.setAttribute("prodotto", prodotto);
             
             // Inoltriamo alla pagina JSP dedicata
-            request.getRequestDispatcher("/jsp/dettaglio-prodotto.jsp").forward(request, response);
+            request.getRequestDispatcher("/jsp/common/dettaglio-prodotto.jsp").forward(request, response);
             
         } catch (NumberFormatException e) {
             // Se l'id non è un numero valido

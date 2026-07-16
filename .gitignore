@@ -11,3 +11,4 @@
 
 # Ignore the server configuration (if it's in your project)
 **/Servers/
+/bin/

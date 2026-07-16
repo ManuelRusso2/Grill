@@ -39,7 +39,7 @@ public class CatalogoServlet extends HttpServlet {
             request.setAttribute("prodotti", prodotti);
             
             // 3. Inoltriamo la richiesta alla JSP del catalogo (che visualizzerà i dati)
-            request.getRequestDispatcher("/jsp/catalogo.jsp").forward(request, response);
+            request.getRequestDispatcher("/jsp/common/catalogo.jsp").forward(request, response);
             
         } catch (SQLException e) {
             e.printStackTrace();

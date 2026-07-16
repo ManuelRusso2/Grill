@@ -45,7 +45,7 @@ public class DettaglioOrdineServlet extends HttpServlet {
 		UtenteBean utente = session != null ? (UtenteBean) session.getAttribute("utente") : null;
 		if (utente == null) {
 			// Se non è loggato, reindirizziamo alla pagina di login
-			response.sendRedirect(request.getContextPath() + "/jsp/login.jsp");
+			response.sendRedirect(request.getContextPath() + "/jsp/common/login.jsp");
 			return;
 		}
 
@@ -87,7 +87,7 @@ public class DettaglioOrdineServlet extends HttpServlet {
 			request.setAttribute("dettagliOrdine", dettagli); // Lista delle righe d'ordine contenenti l'integrità storica
 			
 			// Inoltriamo il flusso di esecuzione alla pagina di visualizzazione
-			request.getRequestDispatcher("/jsp/dettaglio-ordine.jsp").forward(request, response);
+			request.getRequestDispatcher("/jsp/common/dettaglio-ordine.jsp").forward(request, response);
 			
 		} catch (NumberFormatException e) {
 			// Se l'ID passato nell'URL non è un numero valido, restituiamo un errore 400 (Bad Request)

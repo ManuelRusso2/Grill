@@ -46,7 +46,7 @@ public class CarrelloServlet extends HttpServlet {
 
         // Se l'utente non è loggato, lo rimandiamo al login (Requisito di sicurezza)
         if (utente == null) {
-            response.sendRedirect(request.getContextPath() + "/jsp/login.jsp");
+            response.sendRedirect(request.getContextPath() + "/jsp/common/login.jsp");
             return;
         }
 
@@ -73,7 +73,7 @@ public class CarrelloServlet extends HttpServlet {
             Map<ProdottoBean, Integer> prodottiInCarrello = contenutoDAO.doRetrieveProdottiInCarrello(carrello.getIdCarrello());
             request.setAttribute("prodottiCarrello", prodottiInCarrello);
             
-            request.getRequestDispatcher("/jsp/carrello.jsp").forward(request, response);
+            request.getRequestDispatcher("/jsp/user/carrello.jsp").forward(request, response);
 
         } catch (SQLException e) {
             e.printStackTrace();
