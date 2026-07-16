@@ -18,7 +18,6 @@ import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.element.Cell;
 import com.itextpdf.layout.properties.HorizontalAlignment;
-import com.itextpdf.layout.properties.VerticalAlignment;
 
 import model.bean.AcquistoBean;
 import model.bean.OrdineBean;

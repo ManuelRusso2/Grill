@@ -1,11 +1,12 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%-- Importiamo JSTL --%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%-- Nota: Se usi Tomcat 10 cambia gli URI in "jakarta.tags.core" e "jakarta.tags.fmt" --%>
+
 <%@ include file="/jsp/common/header.jspf" %>
 <%@ include file="/jsp/common/menu.jspf" %>
-<%
-    Map prodotti = (Map) request.getAttribute("prodottiCarrello");
-    Double totale = (Double) request.getAttribute("totaleCarrello");
-    if (totale == null) totale = 0.0;
-%>
+
 <main class="container">
     <h1>Checkout</h1>
 
@@ -14,31 +15,32 @@
             <tr><th>Prodotto</th><th>Prezzo</th><th>Quantità</th></tr>
         </thead>
         <tbody>
-        <%
-            if (prodotti != null) {
-                for (Object entryObj : prodotti.entrySet()) {
-                    java.util.Map.Entry entry = (java.util.Map.Entry) entryObj;
-                    Object p = entry.getKey();
-                    Integer q = (Integer) entry.getValue();
-                    int id = (Integer) p.getClass().getMethod("getIdProdotto").invoke(p);
-                    String nome = (String) p.getClass().getMethod("getNome").invoke(p);
-                    double prezzo = (Double) p.getClass().getMethod("getCosto").invoke(p);
-        %>
-            <tr>
-                <td><a href="<%=request.getContextPath()%>/DettaglioProdottoServlet?id=<%=id%>"><%=nome%></a></td>
-                <td>€<%=String.format("%.2f", prezzo)%></td>
-                <td><%=q%></td>
-            </tr>
-        <%
-                }
-            }
-        %>
+            <%-- Iteriamo sulla mappa passata dalla servlet --%>
+            <c:forEach var="entry" items="${prodottiCarrello}">
+                <c:set var="prodotto" value="${entry.key}" />
+                <c:set var="quantita" value="${entry.value}" />
+                <tr>
+                    <td>
+                        <a href="${pageContext.request.contextPath}/DettaglioProdottoServlet?id=${prodotto.idProdotto}">
+                            <c:out value="${prodotto.nome}"/>
+                        </a>
+                    </td>
+                    <td>
+                        <fmt:formatNumber value="${prodotto.costo}" type="currency" currencySymbol="€"/>
+                    </td>
+                    <td><c:out value="${quantita}"/></td>
+                </tr>
+            </c:forEach>
         </tbody>
     </table>
 
-    <p>Totale: €<%=String.format("%.2f", totale)%></p>
+    <%-- Mostriamo il totale formattato in euro. Se è vuoto o null, mostra €0,00 --%>
+    <p>
+        Totale: 
+        <fmt:formatNumber value="${not empty totaleCarrello ? totaleCarrello : 0.0}" type="currency" currencySymbol="€"/>
+    </p>
 
-    <form method="post" action="<%=request.getContextPath()%>/CheckoutServlet">
+    <form method="post" action="${pageContext.request.contextPath}/CheckoutServlet">
         <label>Metodo pagamento:
             <select name="metodoPagamento">
                 <option value="Carta">Carta</option>
