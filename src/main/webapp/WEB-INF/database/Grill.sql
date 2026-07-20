@@ -4,7 +4,7 @@ USE grill;
 
 CREATE TABLE IF NOT EXISTS utente(
     id_utente INTEGER AUTO_INCREMENT PRIMARY KEY,
-    email VARCHAR(100),
+    email VARCHAR(100) NOT NULL UNIQUE,
     nome VARCHAR(50) NOT NULL,
     cognome VARCHAR(50) NOT NULL,
     isAdmin BOOLEAN NOT NULL,
@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS acquisto(
     
     FOREIGN KEY(id_utente) REFERENCES utente(id_utente)
         ON UPDATE CASCADE
-        ON DELETE CASCADE
+        ON DELETE RESTRICT 
 );
 
 CREATE TABLE IF NOT EXISTS collezione(
@@ -52,7 +52,6 @@ CREATE TABLE IF NOT EXISTS ordine(
     id_acquisto INTEGER NOT NULL,
     id_prodotto INTEGER NOT NULL,
     prezzo_unitario DOUBLE NOT NULL CHECK(prezzo_unitario > 0),
-    data_acquisto DATETIME DEFAULT CURRENT_TIMESTAMP,
     iva DECIMAL(4,2) NOT NULL CHECK (iva >= 0),
     quantita_acquistata INTEGER NOT NULL CHECK(quantita_acquistata > 0),
     stato_spedizione VARCHAR(20) NOT NULL,

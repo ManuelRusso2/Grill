@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,60 +20,95 @@ public class UtenteDAOImpl implements UtenteDAO {
     private static final String INSERT_UTENTE = 
         "INSERT INTO utente (nome, cognome, email, password, username, telefono, isAdmin) VALUES (?, ?, ?, ?, ?, ?, ?)";
     
-    
     private static final String SELECT_BY_EMAIL = 
         "SELECT id_utente, nome, cognome, email, password, username, telefono, isAdmin FROM utente WHERE email = ?";
-
 
     private static final String SELECT_BY_USERNAME = 
         "SELECT id_utente, nome, cognome, email, password, username, telefono, isAdmin FROM utente WHERE username = ?";
     
-    
     private static final String SELECT_BY_ID = 
         "SELECT id_utente, nome, cognome, email, password, username, telefono, isAdmin FROM utente WHERE id_utente = ?";
-    
     
     private static final String SELECT_BY_LOGIN = 
         "SELECT id_utente, nome, cognome, email, password, username, telefono, isAdmin FROM utente WHERE email = ? AND password = ?";
     
-    
     private static final String SELECT_ALL_CLIENTI = 
         "SELECT id_utente, nome, cognome, email, password, username, telefono, isAdmin FROM utente WHERE isAdmin = false";
 
-    
     @Override
     public void doSave(UtenteBean utente) throws SQLException {
-        try (Connection con = ConnessioneDB.getConnection();
-             PreparedStatement ps = con.prepareStatement(INSERT_UTENTE)) {
+        String insertCarrello = "INSERT INTO carrello (id_utente) VALUES (?)";
+        
+        Connection con = null;
+        PreparedStatement psUtente = null;
+        PreparedStatement psCarrello = null;
+        ResultSet generatedKeys = null;
+
+        try {
+            con = ConnessioneDB.getConnection();
             
-            ps.setString(1, utente.getNome());
-            ps.setString(2, utente.getCognome());
-            ps.setString(3, utente.getEmail());
+            // 1. Disattiviamo l'auto-commit per gestire la transazione manualmente
+            con.setAutoCommit(false);
+
+            // 2. Prepariamo la query chiedendo a MySQL di restituire la chiave primaria generata
+            psUtente = con.prepareStatement(INSERT_UTENTE, Statement.RETURN_GENERATED_KEYS);
             
-            // REQUISITO: Cifriamo la password prima di salvarla nel DB
+            psUtente.setString(1, utente.getNome());
+            psUtente.setString(2, utente.getCognome());
+            psUtente.setString(3, utente.getEmail());
+            
             String passwordCifrata = hashPassword(utente.getPassword());
-            ps.setString(4, passwordCifrata);
+            psUtente.setString(4, passwordCifrata);
             
-            ps.setString(5, utente.getUsername());
-            ps.setString(6, utente.getTelefono());
-            ps.setBoolean(7, utente.isAdmin());
+            psUtente.setString(5, utente.getUsername());
+            psUtente.setString(6, utente.getTelefono());
+            psUtente.setBoolean(7, utente.isAdmin());
             
-            ps.executeUpdate();
+            psUtente.executeUpdate();
+            
+            // 3. Recuperiamo l'ID appena generato da MySQL
+            generatedKeys = psUtente.getGeneratedKeys();
+            int idUtenteGenerato = -1;
+            if (generatedKeys.next()) {
+                idUtenteGenerato = generatedKeys.getInt(1);
+                utente.setIdUtente(idUtenteGenerato); // Aggiorniamo il Bean
+            } else {
+                throw new SQLException("Errore: Impossibile recuperare l'ID utente generato.");
+            }
+
+            // 4. Creiamo il carrello associato a quel preciso ID utente
+            psCarrello = con.prepareStatement(insertCarrello);
+            psCarrello.setInt(1, idUtenteGenerato);
+            psCarrello.executeUpdate();
+            
+            // 5. Se tutto è andato a buon fine, salviamo definitivamente sul DB
+            con.commit();
+            
+        } catch (SQLException e) {
+            // Se qualcosa fallisce, annulliamo ogni modifica per evitare dati orfani
+            if (con != null) {
+                try {
+                    con.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            throw e; // Rilanciamo l'eccezione alla Servlet
+        } finally {
+            // Chiudiamo tutte le risorse esplicitamente nel blocco finally
+            if (generatedKeys != null) try { generatedKeys.close(); } catch (SQLException e) {}
+            if (psCarrello != null) try { psCarrello.close(); } catch (SQLException e) {}
+            if (psUtente != null) try { psUtente.close(); } catch (SQLException e) {}
+            if (con != null) try { con.close(); } catch (SQLException e) {}
         }
     }
 
-    
-    /**
-     * Recupera un utente verificando email e password.
-     * REQUISITO OBBLIGATORIO: Gestione sessione e cifratura.
-     */
     @Override
     public UtenteBean doRetrieveByLogin(String email, String password) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
              PreparedStatement ps = con.prepareStatement(SELECT_BY_LOGIN)) {
             
             ps.setString(1, email);
-            // Cifriamo la password inserita dall'utente nel form per confrontarla con quella nel DB
             ps.setString(2, hashPassword(password));
             
             try (ResultSet rs = ps.executeQuery()) {
@@ -84,7 +120,6 @@ public class UtenteDAOImpl implements UtenteDAO {
         return null;
     }
 
-    
     @Override
     public UtenteBean doRetrieveByEmail(String email) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
@@ -100,7 +135,6 @@ public class UtenteDAOImpl implements UtenteDAO {
         }
         return null;
     }
-
 
     @Override
     public UtenteBean doRetrieveByUsername(String username) throws SQLException {
@@ -118,7 +152,6 @@ public class UtenteDAOImpl implements UtenteDAO {
         return null;
     }
 
-    
     @Override
     public UtenteBean doRetrieveById(int id) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
@@ -135,7 +168,6 @@ public class UtenteDAOImpl implements UtenteDAO {
         return null;
     }
 
-    
     @Override
     public List<UtenteBean> doRetrieveAllClienti() throws SQLException {
         List<UtenteBean> clienti = new ArrayList<>();
@@ -151,7 +183,6 @@ public class UtenteDAOImpl implements UtenteDAO {
         return clienti;
     }
 
-    
     private UtenteBean mapRow(ResultSet rs) throws SQLException {
         UtenteBean utente = new UtenteBean();
         utente.setIdUtente(rs.getInt("id_utente"));
@@ -165,11 +196,6 @@ public class UtenteDAOImpl implements UtenteDAO {
         return utente;
     }
 
-    
-    /**
-     * METODO HELPER (Privato): Cifra una stringa utilizzando l'algoritmo SHA-256.
-     * Garantisce l'adempimento del vincolo di sicurezza sulle password.
-     */
     private String hashPassword(String password) {
         if (password == null) return null;
         try {
@@ -183,7 +209,6 @@ public class UtenteDAOImpl implements UtenteDAO {
             }
             return hexString.toString();
         } catch (NoSuchAlgorithmException e) {
-            // Se l'algoritmo non viene trovato, rilanciamo un'eccezione a runtime
             throw new RuntimeException("Errore durante la cifratura della password", e);
         }
     }

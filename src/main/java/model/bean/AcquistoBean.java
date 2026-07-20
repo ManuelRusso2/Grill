@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.sql.Timestamp;
 
 public class AcquistoBean implements Serializable {
     private static final long serialVersionUID = 1L;
