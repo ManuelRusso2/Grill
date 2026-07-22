@@ -8,6 +8,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import model.bean.ProdottoBean;
 import model.dao.ProdottoDAO;
@@ -20,79 +21,112 @@ public class AdminProdottoServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        // Inizializziamo il DAO dei prodotti per interagire con il database
         this.prodottoDAO = new ProdottoDAOImpl();
     }
 
+    /**
+     * GET: Gestisce sia la visualizzazione dell'inventario che l'apertura del form in modalità modifica (edit)
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
+        HttpSession session = request.getSession(false);
+
+        // 1. Recupero e pulizia dei Flash Messages salvati in sessione durante la POST
+        if (session != null) {
+            if (session.getAttribute("successMessage") != null) {
+                request.setAttribute("successMessage", session.getAttribute("successMessage"));
+                session.removeAttribute("successMessage");
+            }
+            if (session.getAttribute("errorMessage") != null) {
+                request.setAttribute("errorMessage", session.getAttribute("errorMessage"));
+                session.removeAttribute("errorMessage");
+            }
+        }
+
+        String action = request.getParameter("action");
+
         try {
-            // 1. L'admin deve poter gestire l'intero inventario
-            // Recuperiamo tutti i prodotti (sia attivi che disattivi/nascosti)
+            // 2. Se l'azione è "edit", recuperiamo il singolo prodotto e andiamo al form di modifica
+            if ("edit".equalsIgnoreCase(action)) {
+                String idParam = request.getParameter("id");
+                if (idParam != null && !idParam.isEmpty()) {
+                    int idProdotto = Integer.parseInt(idParam);
+                    ProdottoBean prodotto = prodottoDAO.doRetrieveByKey(idProdotto);
+
+                    if (prodotto != null) {
+                        request.setAttribute("prodotto", prodotto);
+                        request.getRequestDispatcher("/jsp/admin/nuovo-prodotto.jsp").forward(request, response);
+                        return;
+                    } else {
+                        if (session != null) session.setAttribute("errorMessage", "Prodotto richiesto non trovato.");
+                    }
+                }
+            }
+
+            // 3. Flusso standard: recupero di tutto l'inventario (attivi e disattivi)
             List<ProdottoBean> tuttiIProdotti = prodottoDAO.doRetrieveAllAdmin();
-            
-            // 2. Prepariamo i dati per la pagina di gestione
             request.setAttribute("prodottiAdmin", tuttiIProdotti);
             
-            // 3. Inoltriamo la richiesta alla JSP del pannello amministrativo
+            // 4. Inoltro alla tabella di gestione prodotti
             request.getRequestDispatcher("/jsp/admin/gestione-prodotti.jsp").forward(request, response);
             
+        } catch (NumberFormatException e) {
+            if (session != null) session.setAttribute("errorMessage", "ID prodotto non valido.");
+            response.sendRedirect(request.getContextPath() + "/AdminProdottoServlet");
         } catch (SQLException e) {
             e.printStackTrace();
-            // Errore 500: rimandiamo alla pagina di errore generica configurata nel web.xml
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
+    /**
+     * POST: Gestisce le operazioni di scrittura nel DB (save, update, delete) applicando il pattern PRG
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // 1. Recuperiamo l'azione da compiere (save, update, delete)
+        HttpSession session = request.getSession(true);
         String action = request.getParameter("action");
 
         try {
             if (action != null) {
                 if ("save".equalsIgnoreCase(action)) {
-                    // Creazione nuovo prodotto
                     ProdottoBean prodotto = leggiProdottoDaRequest(request, false);
                     prodottoDAO.doSave(prodotto);
-                    
+                    session.setAttribute("successMessage", "Prodotto \"" + prodotto.getNome() + "\" inserito con successo!");
+
                 } else if ("update".equalsIgnoreCase(action)) {
-                    // Modifica prodotto esistente
                     ProdottoBean prodotto = leggiProdottoDaRequest(request, true);
                     prodottoDAO.doUpdate(prodotto);
-                    
+                    session.setAttribute("successMessage", "Prodotto ID #" + prodotto.getIdProdotto() + " aggiornato con successo!");
+
                 } else if ("delete".equalsIgnoreCase(action)) {
-                    // Eliminazione logica o fisica del prodotto tramite ID
                     int idProdotto = Integer.parseInt(request.getParameter("id"));
                     prodottoDAO.doDelete(idProdotto);
+                    session.setAttribute("successMessage", "Prodotto ID #" + idProdotto + " disattivato/eliminato con successo.");
                 }
             }
 
-            // 2. Pattern POST-Redirect-GET: Reindirizziamo a questa servlet in GET 
-            // per ricaricare la lista aggiornata ed evitare che un refresh del browser ri-esegua l'azione
-            response.sendRedirect(request.getContextPath() + "/AdminProdottoServlet");
-            
         } catch (NumberFormatException e) {
-            // Se i parametri numerici (ID, costo, quantità) sono corrotti o vuoti
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+            session.setAttribute("errorMessage", "Errore nei dati inseriti: verifica che prezzo e quantità siano numeri validi.");
         } catch (SQLException e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            session.setAttribute("errorMessage", "Errore di persistenza nel Database: " + e.getMessage());
         }
+
+        // Redirect in GET alla Servlet per ricaricare la vista ed evitare doppi invii
+        response.sendRedirect(request.getContextPath() + "/AdminProdottoServlet");
     }
 
-    
     /**
-     * METODO HELPER: Estrae i parametri HTTP inviati dal form e li mappa in un ProdottoBean.
+     * METODO HELPER: Estrae e valida i parametri HTTP inviati dai form per costruire un ProdottoBean
      */
-    private ProdottoBean leggiProdottoDaRequest(HttpServletRequest request, boolean conId) {
+    private ProdottoBean leggiProdottoDaRequest(HttpServletRequest request, boolean conId) throws NumberFormatException {
         ProdottoBean prodotto = new ProdottoBean();
 
-        // Se stiamo modificando (update), dobbiamo obbligatoriamente recuperare la chiave primaria
         if (conId) {
             prodotto.setIdProdotto(Integer.parseInt(request.getParameter("id")));
         }
@@ -103,19 +137,15 @@ public class AdminProdottoServlet extends HttpServlet {
         prodotto.setQuantita(Integer.parseInt(request.getParameter("quantita")));
         prodotto.setTipo(request.getParameter("tipo"));
 
-        // GESTIONE STATO ATTIVO DINAMICO:
-        // Spesso nei form si usa una checkbox per attivare/disattivare un prodotto.
-        // Se la checkbox non è selezionata, il browser NON invia il parametro (sarà null).
+        // Gestione checkbox/stato attivo
         String attivoParam = request.getParameter("attivo");
         if (attivoParam != null) {
-            // Gestisce sia stringhe come "true" sia il valore tipico delle checkbox "on"
             prodotto.setAttivo("true".equalsIgnoreCase(attivoParam) || "on".equalsIgnoreCase(attivoParam));
         } else {
-            // Se il parametro non viene inviato, lo impostiamo a true di default
-            prodotto.setAttivo(conId ? false : true); 
+            prodotto.setAttivo(!conId); 
         }
 
-        // Se il prodotto non appartiene a nessuna collezione particolare, impostiamo a null
+        // Gestione ID Collezione opzionale
         String idCollezione = request.getParameter("idCollezione");
         if (idCollezione != null && !idCollezione.trim().isEmpty()) {
             prodotto.setIdCollezione(Integer.parseInt(idCollezione.trim()));

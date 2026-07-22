@@ -28,7 +28,6 @@ public class CarrelloServlet extends HttpServlet {
     private CarrelloDAO carrelloDAO;
     private ContenutoDAO contenutoDAO;
 
-    
     @Override
     public void init() throws ServletException {
         this.prodottoDAO = new ProdottoDAOImpl();
@@ -36,40 +35,36 @@ public class CarrelloServlet extends HttpServlet {
         this.contenutoDAO = new ContenutoDAOImpl();
     }
 
-    
+    /**
+     * GET: Gestisce ESCLUSIVAMENTE la visualizzazione del carrello (Read-Only)
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
-        HttpSession session = request.getSession(true);
-        UtenteBean utente = (UtenteBean) session.getAttribute("utente");
+        HttpSession session = request.getSession(false);
+        UtenteBean utente = (session != null) ? (UtenteBean) session.getAttribute("utente") : null;
 
-        // Se l'utente non è loggato, lo rimandiamo al login (Requisito di sicurezza)
+        // Controllo autenticazione utente
         if (utente == null) {
             response.sendRedirect(request.getContextPath() + "/jsp/common/login.jsp");
             return;
         }
 
-        String action = request.getParameter("action");
-
         try {
-            // Recuperiamo o creiamo il carrello associato all'utente loggato
             CarrelloBean carrello = ottieniOCreaCarrello(utente.getIdUtente());
 
-            if (action != null) {
-                if (action.equalsIgnoreCase("add")) {
-                    aggiungiProdotto(request, carrello);
-                } else if (action.equalsIgnoreCase("remove")) {
-                    rimuoviProdotto(request, carrello);
-                } else if (action.equalsIgnoreCase("update")) {
-                    aggiornaQuantita(request, carrello);
-                }
-                // Dopo qualsiasi operazione di modifica, facciamo un redirect per evitare doppi invii in caso di refresh
-                response.sendRedirect(request.getContextPath() + "/CarrelloServlet");
-                return;
+            // Consumo dei "Flash Messages" dalla sessione per la request della JSP
+            if (session.getAttribute("successMessage") != null) {
+                request.setAttribute("successMessage", session.getAttribute("successMessage"));
+                session.removeAttribute("successMessage");
             }
-            
-            // Se l'azione è null, recuperiamo gli elementi correnti dal DB e li mostriamo nella JSP
+            if (session.getAttribute("errorMessage") != null) {
+                request.setAttribute("errorMessage", session.getAttribute("errorMessage"));
+                session.removeAttribute("errorMessage");
+            }
+
+            // Recupera il contenuto aggiornato del carrello
             Map<ProdottoBean, Integer> prodottiInCarrello = contenutoDAO.doRetrieveProdottiInCarrello(carrello.getIdCarrello());
             request.setAttribute("prodottiCarrello", prodottiInCarrello);
             
@@ -81,26 +76,80 @@ public class CarrelloServlet extends HttpServlet {
         }
     }
 
+    /**
+     * POST: Gestisce ESCLUSIVAMENTE le modifiche al carrello (Add, Remove, Update)
+     */
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+            throws ServletException, IOException {
+        
+        HttpSession session = request.getSession(false);
+        UtenteBean utente = (session != null) ? (UtenteBean) session.getAttribute("utente") : null;
+
+        if (utente == null) {
+            response.sendRedirect(request.getContextPath() + "/jsp/common/login.jsp");
+            return;
+        }
+
+        String action = request.getParameter("action");
+
+        try {
+            CarrelloBean carrello = ottieniOCreaCarrello(utente.getIdUtente());
+
+            if (action != null) {
+                if (action.equalsIgnoreCase("add")) {
+                    aggiungiProdotto(request, session, carrello);
+                } else if (action.equalsIgnoreCase("remove")) {
+                    rimuoviProdotto(request, session, carrello);
+                } else if (action.equalsIgnoreCase("update")) {
+                    aggiornaQuantita(request, session, carrello);
+                }
+            }
+            
+            // Redirect (PRG) per evitare doppi invii di modifiche al refresh del browser
+            response.sendRedirect(request.getContextPath() + "/CarrelloServlet");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+    }
+
     private CarrelloBean ottieniOCreaCarrello(int idUtente) throws SQLException {
         CarrelloBean carrello = carrelloDAO.doRetrieveByUtente(idUtente);
         if (carrello == null) {
-            // Se non ha ancora un carrello sul DB, lo creiamo
             carrello = new CarrelloBean();
             carrello.setIdUtente(idUtente);
             carrelloDAO.doSave(carrello);
-            // Recuperiamo l'oggetto appena creato comprensivo del suo ID generato
             carrello = carrelloDAO.doRetrieveByUtente(idUtente);
         }
         return carrello;
     }
 
-    private void aggiungiProdotto(HttpServletRequest request, CarrelloBean carrello) throws SQLException {
-        int idProdotto = Integer.parseInt(request.getParameter("id"));
+    private void aggiungiProdotto(HttpServletRequest request, HttpSession session, CarrelloBean carrello) throws SQLException {
+        int idProdotto = estraiIdProdotto(request);
+        
+        int quantitaDaAggiungere = 1;
+        try {
+            String qtyParam = request.getParameter("quantita");
+            if (qtyParam != null && !qtyParam.trim().isEmpty()) {
+                quantitaDaAggiungere = Integer.parseInt(qtyParam.trim());
+            }
+        } catch (NumberFormatException e) {
+            session.setAttribute("errorMessage", "Formato quantità non valido.");
+            return;
+        }
+
+        if (idProdotto <= 0 || quantitaDaAggiungere <= 0) {
+            session.setAttribute("errorMessage", "Dati prodotto o quantità non validi.");
+            return;
+        }
+
         ProdottoBean prodotto = prodottoDAO.doRetrieveByKey(idProdotto);
         
         if (prodotto != null && prodotto.isAttivo() && prodotto.getQuantita() > 0) {
-            // Recupera la quantità attuale nel carrello per questo prodotto
             Map<ProdottoBean, Integer> prodottiInCarrello = contenutoDAO.doRetrieveProdottiInCarrello(carrello.getIdCarrello());
+            
             int quantitaAttuale = 0;
             for (ProdottoBean p : prodottiInCarrello.keySet()) {
                 if (p.getIdProdotto() == idProdotto) {
@@ -109,36 +158,63 @@ public class CarrelloServlet extends HttpServlet {
                 }
             }
             
-            // Verifica che la quantità totale non superi lo stock
-            if (quantitaAttuale + 1 <= prodotto.getQuantita()) {
-                contenutoDAO.doAddProduct(carrello.getIdCarrello(), prodotto.getIdProdotto(), 1);
+            if (quantitaAttuale + quantitaDaAggiungere <= prodotto.getQuantita()) {
+                contenutoDAO.doAddProduct(carrello.getIdCarrello(), prodotto.getIdProdotto(), quantitaDaAggiungere);
+                session.setAttribute("successMessage", "Prodotto \"" + prodotto.getNome() + "\" aggiunto al carrello!");
+            } else {
+                session.setAttribute("errorMessage", "Impossibile aggiungere: quantità richiesta superiore alla disponibilità in magazzino.");
             }
+        } else {
+            session.setAttribute("errorMessage", "Il prodotto selezionato non è al momento disponibile.");
         }
     }
 
-    private void rimuoviProdotto(HttpServletRequest request, CarrelloBean carrello) throws SQLException {
-        int idProdotto = Integer.parseInt(request.getParameter("id"));
-        // Rimuove completamente il prodotto dal carrello
-        contenutoDAO.doRemoveProduct(carrello.getIdCarrello(), idProdotto);
+    private void rimuoviProdotto(HttpServletRequest request, HttpSession session, CarrelloBean carrello) throws SQLException {
+        int idProdotto = estraiIdProdotto(request);
+        if (idProdotto > 0) {
+            contenutoDAO.doRemoveProduct(carrello.getIdCarrello(), idProdotto);
+            session.setAttribute("successMessage", "Prodotto rimosso dal carrello.");
+        }
     }
 
-    private void aggiornaQuantita(HttpServletRequest request, CarrelloBean carrello) throws SQLException {
-        int idProdotto = Integer.parseInt(request.getParameter("id"));
-        int nuovaQuantita = Integer.parseInt(request.getParameter("quantita"));
+    private void aggiornaQuantita(HttpServletRequest request, HttpSession session, CarrelloBean carrello) throws SQLException {
+        int idProdotto = estraiIdProdotto(request);
+        int nuovaQuantita = -1;
+
+        try {
+            nuovaQuantita = Integer.parseInt(request.getParameter("quantita"));
+        } catch (NumberFormatException e) {
+            session.setAttribute("errorMessage", "Formato quantità non valido.");
+            return;
+        }
+
+        if (idProdotto <= 0) {
+            session.setAttribute("errorMessage", "Prodotto non valido.");
+            return;
+        }
         
         ProdottoBean prodotto = prodottoDAO.doRetrieveByKey(idProdotto);
+        
         if (prodotto != null && nuovaQuantita > 0 && nuovaQuantita <= prodotto.getQuantita()) {
-            // Aggiorna la quantità alla cifra esatta passata dal form
             contenutoDAO.doUpdateQuantity(carrello.getIdCarrello(), idProdotto, nuovaQuantita);
+            session.setAttribute("successMessage", "Quantità aggiornata con successo.");
         } else if (nuovaQuantita <= 0) {
-            // Se la quantità scende a 0 o meno, lo rimuoviamo direttamente
             contenutoDAO.doRemoveProduct(carrello.getIdCarrello(), idProdotto);
+            session.setAttribute("successMessage", "Prodotto rimosso dal carrello.");
+        } else {
+            session.setAttribute("errorMessage", "Quantità non disponibile a magazzino.");
         }
     }
 
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
-            throws ServletException, IOException {
-        doGet(request, response);
+    private int estraiIdProdotto(HttpServletRequest request) {
+        try {
+            String idStr = request.getParameter("id");
+            if (idStr == null || idStr.isEmpty()) {
+                idStr = request.getParameter("idProdotto");
+            }
+            return (idStr != null && !idStr.isEmpty()) ? Integer.parseInt(idStr) : -1;
+        } catch (NumberFormatException e) {
+            return -1;
+        }
     }
 }

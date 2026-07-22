@@ -1,17 +1,31 @@
-<%@ page import="model.bean.UtenteBean" %>
-<%
-    UtenteBean utenteMenu = (UtenteBean) session.getAttribute("utente");
-    boolean isAdminMenu = utenteMenu != null && utenteMenu.isAdmin();
-%>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<%-- 1. Link sempre visibili a tutti i visitatori --%>
 <a href="${pageContext.request.contextPath}/CatalogoServlet">Catalogo</a>
-<a href="${pageContext.request.contextPath}/CarrelloServlet">Carrello</a>
-<% if (utenteMenu == null) { %>
-    <a href="${pageContext.request.contextPath}/jsp/common/login.jsp">Login</a>
-    <a href="${pageContext.request.contextPath}/jsp/user/registrazione.jsp">Registrazione</a>
-<% } else { %>
-    <a href="${pageContext.request.contextPath}/ProfiloServlet">Profilo</a>
-    <a href="${pageContext.request.contextPath}/LogoutServlet">Logout</a>
-    <% if (isAdminMenu) { %>
-        <a href="${pageContext.request.contextPath}/AdminOrdiniServlet">Admin</a>
-    <% } %>
-<% } %>
+
+<%-- 2. Gestione condizionale basata sullo stato della sessione tramite EL --%>
+<c:choose>
+    <c:when test="${not empty sessionScope.utente}">
+        <a href="${pageContext.request.contextPath}/CarrelloServlet">Carrello</a>
+        <a href="${pageContext.request.contextPath}/ProfiloServlet">Profilo</a>
+        
+        <%-- 3. Se l'utente è un Amministratore (richiama automaticamente utente.isAdmin()) --%>
+        <c:if test="${sessionScope.utente.admin}">
+            <a href="${pageContext.request.contextPath}/AdminProdottoServlet" class="nav-admin">Gestione Prodotti</a>
+            <a href="${pageContext.request.contextPath}/AdminOrdiniServlet" class="nav-admin">Gestione Ordini</a>
+        </c:if>
+
+        <a href="${pageContext.request.contextPath}/LogoutServlet">Logout</a>
+    </c:when>
+    
+    <c:otherwise>
+        <%-- Visibile solo agli utenti non autenticati (Guest) --%>
+        <a href="${pageContext.request.contextPath}/jsp/common/login.jsp">Login</a>
+        <a href="${pageContext.request.contextPath}/jsp/user/registrazione.jsp">Registrazione</a>
+    </c:otherwise>
+</c:choose>
+
+        </nav> <%-- Chiude .nav-links (aperto in header.jspf) --%>
+    </div> <%-- Chiude .container (aperto in header.jspf) --%>
+</header> <%-- Chiude l'intestazione principale PRIMA del tag <main> delle singole pagine --%>
