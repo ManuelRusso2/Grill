@@ -11,17 +11,22 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import model.bean.ProdottoBean;
+import model.bean.CategoriaBean;
 import model.dao.ProdottoDAO;
+import model.dao.CategoriaDAO;
 import model.dao.impl.ProdottoDAOImpl;
+import model.dao.impl.CategoriaDAOImpl;
 
 @WebServlet("/AdminProdottoServlet")
 public class AdminProdottoServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private ProdottoDAO prodottoDAO;
+    private CategoriaDAO categoriaDAO;
 
     @Override
     public void init() throws ServletException {
         this.prodottoDAO = new ProdottoDAOImpl();
+        this.categoriaDAO = new CategoriaDAOImpl();
     }
 
     /**
@@ -48,7 +53,15 @@ public class AdminProdottoServlet extends HttpServlet {
         String action = request.getParameter("action");
 
         try {
-            // 2. Se l'azione è "edit", recuperiamo il singolo prodotto e andiamo al form di modifica
+            // 2. Se l'azione è "new", andiamo direttamente al form di creazione con le categorie
+            if ("new".equalsIgnoreCase(action)) {
+                List<CategoriaBean> categorie = categoriaDAO.doRetrieveAll();
+                request.setAttribute("categorie", categorie);
+                request.getRequestDispatcher("/jsp/admin/nuovo-prodotto.jsp").forward(request, response);
+                return;
+            }
+
+            // 3. Se l'azione è "edit", recuperiamo il singolo prodotto e andiamo al form di modifica
             if ("edit".equalsIgnoreCase(action)) {
                 String idParam = request.getParameter("id");
                 if (idParam != null && !idParam.isEmpty()) {
@@ -57,6 +70,9 @@ public class AdminProdottoServlet extends HttpServlet {
 
                     if (prodotto != null) {
                         request.setAttribute("prodotto", prodotto);
+                        // Carica le categorie per il select nel form
+                        List<CategoriaBean> categorie = categoriaDAO.doRetrieveAll();
+                        request.setAttribute("categorie", categorie);
                         request.getRequestDispatcher("/jsp/admin/nuovo-prodotto.jsp").forward(request, response);
                         return;
                     } else {
@@ -65,11 +81,21 @@ public class AdminProdottoServlet extends HttpServlet {
                 }
             }
 
-            // 3. Flusso standard: recupero di tutto l'inventario (attivi e disattivi)
+            // 4. Flusso standard: recupero di tutto l'inventario (attivi e disattivi)
             List<ProdottoBean> tuttiIProdotti = prodottoDAO.doRetrieveAllAdmin();
             request.setAttribute("prodottiAdmin", tuttiIProdotti);
             
-            // 4. Inoltro alla tabella di gestione prodotti
+            // Carica le categorie per il select nel form (quando creo un nuovo prodotto)
+            List<CategoriaBean> categorie = categoriaDAO.doRetrieveAll();
+            request.setAttribute("categorie", categorie);
+            // Recupero eventuali alert amministrativi generati da altre operazioni (es. prodotto esaurito)
+            java.util.List<String> adminAlerts = (java.util.List<String>) getServletContext().getAttribute("adminAlerts");
+            if (adminAlerts != null && !adminAlerts.isEmpty()) {
+                request.setAttribute("adminAlerts", adminAlerts);
+                // Rimuoviamo gli alert dal contesto dopo averli passati alla request per evitare ripetizioni
+                getServletContext().removeAttribute("adminAlerts");
+            }
+            // 5. Inoltro alla tabella di gestione prodotti
             request.getRequestDispatcher("/jsp/admin/gestione-prodotti.jsp").forward(request, response);
             
         } catch (NumberFormatException e) {
@@ -93,6 +119,7 @@ public class AdminProdottoServlet extends HttpServlet {
 
         try {
             if (action != null) {
+                // Gestioni prodotti normali
                 if ("save".equalsIgnoreCase(action)) {
                     ProdottoBean prodotto = leggiProdottoDaRequest(request, false);
                     prodottoDAO.doSave(prodotto);
@@ -110,15 +137,26 @@ public class AdminProdottoServlet extends HttpServlet {
                 }
             }
 
-        } catch (NumberFormatException e) {
+            } catch (NumberFormatException e) {
             session.setAttribute("errorMessage", "Errore nei dati inseriti: verifica che prezzo e quantità siano numeri validi.");
         } catch (SQLException e) {
             e.printStackTrace();
             session.setAttribute("errorMessage", "Errore di persistenza nel Database: " + e.getMessage());
         }
 
+        // 1.b Recupero eventuali alert amministrativi generati da altre operazioni (es. prodotto esaurito)
+        java.util.List<String> adminAlerts = (java.util.List<String>) getServletContext().getAttribute("adminAlerts");
+        if (adminAlerts != null && !adminAlerts.isEmpty()) {
+            request.setAttribute("adminAlerts", adminAlerts);
+            // Rimuoviamo gli alert dal contesto dopo averli passati alla request per evitare ripetizioni
+            getServletContext().removeAttribute("adminAlerts");
+        }
+
         // Redirect in GET alla Servlet per ricaricare la vista ed evitare doppi invii
-        response.sendRedirect(request.getContextPath() + "/AdminProdottoServlet");
+        // (se non è stata già mandata una risposta AJAX)
+        if (!response.isCommitted()) {
+            response.sendRedirect(request.getContextPath() + "/AdminProdottoServlet");
+        }
     }
 
     /**

@@ -16,15 +16,14 @@
     </c:if>
 
     <%-- Form aggiornato con action in Expression Language --%>
-    <form id="registerForm" method="post" action="${pageContext.request.contextPath}/RegistrationServlet">
+<form id="registerForm" method="post" action="${pageContext.request.contextPath}/RegistrationServlet" data-contextpath="${pageContext.request.contextPath}">
         <label>Nome: <input type="text" name="nome" required></label><br>
         <label>Cognome: <input type="text" name="cognome" required></label><br>
         
         <label>Email: <input id="email" type="email" name="email" required></label>
         <span id="emailError" class="error-message" style="display:none;color:red"></span><br>
         
-        <label>Username: <input id="username" type="text" name="username" required></label>
-        <span id="usernameError" class="error-message" style="display:none;color:red"></span><br>
+        <%-- Username rimosso: non più richiesto in fase di registrazione --%>
         
         <label>Password: <input type="password" name="password" required></label><br>
         <label>Telefono: <input type="text" name="telefono"></label><br>

@@ -3,7 +3,7 @@
  * Combina controlli asincroni AJAX (in tempo reale) e validazione sincrona finale sul form.
  */
 document.addEventListener("DOMContentLoaded", function () {
-    
+
     // ==========================================
     // 1. CONTROLLO AJAX IN TEMPO REALE (SULL'EMAIL)
     // ==========================================
@@ -11,43 +11,99 @@ document.addEventListener("DOMContentLoaded", function () {
     const registerForm = document.getElementById("registerForm");
 
     if (emailInput) {
-        // L'evento 'blur' si attiva quando l'utente sposta il cursore (focus) fuori dal campo email
-        emailInput.addEventListener("blur", function() {
-            const emailValore = emailInput.value.trim();
-            const emailErrorSpan = document.getElementById("emailError");
+        const emailErrorSpan = document.getElementById("emailError");
+        // Regex robusta per la validazione della sintassi email
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+        let emailTimer = null;
+
+        // Funzione per nascondere il messaggio di errore
+        function clearEmailError() {
+            if (emailErrorSpan) {
+                emailErrorSpan.textContent = '';
+                emailErrorSpan.style.display = 'none';
+            }
+            emailInput.style.borderColor = '';
+            delete emailInput.dataset.exists;
+        }
+
+        // Funzione che verifica sintassi e, se valida, esistenza via AJAX
+        function checkEmail(emailValore) {
             if (!emailErrorSpan) return;
 
-            // Espressione regolare per la validazione sintattica dell'indirizzo email
-            const emailRegex = /^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\.[a-zA-Z]{2,}$/;
+            // Se il campo è vuoto, puliamo l'errore e usciamo
+            if (!emailValore) {
+                clearEmailError();
+                return;
+            }
 
-            // 1.1 Validazione sintattica immediata (lato client)
+            // 1. Validazione Sintattica
             if (!emailRegex.test(emailValore)) {
                 emailErrorSpan.textContent = "Inserisci un indirizzo email valido.";
                 emailErrorSpan.style.display = "block";
                 emailInput.style.borderColor = "red";
-                return; // Interrompiamo l'esecuzione: inutile interrogare il DB se la sintassi è errata
+                delete emailInput.dataset.exists;
+                return;
             }
 
-            // 1.2 Validazione asincrona (AJAX): Controlliamo sul DB se l'email è già in uso
-            fetch(`../VerificaEmailServlet?email=${encodeURIComponent(emailValore)}`)
-                .then(response => response.json()) // Convertiamo la risposta HTTP in formato JSON
+            // Se la sintassi è corretta, puliamo temporaneamente l'errore in attesa del server
+            clearEmailError();
+            emailInput.style.borderColor = "green"; // Segnala sintassi ok
+
+            // Recupera il ContextPath dall'action del form se presente, altrimenti usa fallback
+            let contextPath = "";
+            if (registerForm && registerForm.action) {
+                const actionUrl = new URL(registerForm.action, window.location.href);
+                // Prende la prima parte del path (es: /NomeProgetto)
+                contextPath = actionUrl.pathname.substring(0, actionUrl.pathname.indexOf('/', 1));
+            }
+
+            // 2. Controllo Esistenza via AJAX
+            const servletUrl = `${contextPath}/VerificaEmailServlet?email=${encodeURIComponent(emailValore)}`;
+
+            fetch(servletUrl)
+                .then(resp => {
+                    if (!resp.ok) throw new Error("Errore risposta server");
+                    return resp.json();
+                })
                 .then(data => {
-                    if (data.exists) {
-                        // Se l'email esiste già sul database, mostriamo l'errore inline
+                    if (data && data.exists) {
                         emailErrorSpan.textContent = "Questa email è già registrata.";
                         emailErrorSpan.style.display = "block";
                         emailInput.style.borderColor = "red";
-                        // Utilizziamo un attributo 'dataset' personalizzato per salvare lo stato dell'errore
                         emailInput.dataset.exists = "true";
                     } else {
-                        // Se l'email è libera, coloriamo il bordo di verde e nascondiamo l'errore
-                        emailErrorSpan.textContent = "";
-                        emailErrorSpan.style.display = "none";
-                        emailInput.style.borderColor = "green";
-                        emailInput.dataset.exists = "false";
+                        // Email valida e disponibile
+                        clearEmailError();
+                        emailInput.style.borderColor = 'green';
+                        emailInput.dataset.exists = 'false';
                     }
                 })
-                .catch(error => console.error("Errore AJAX:", error));
+                .catch(err => {
+                    console.error('Errore durante la verifica AJAX:', err);
+                    // In caso di errore server/rete, non blocchiamo l'utente sul controllo AJAX
+                    clearEmailError();
+                });
+        }
+
+        // Evento Input (digitazione): azzera l'errore e avvia un debounce di 400ms
+        emailInput.addEventListener('input', function() {
+            const value = emailInput.value.trim();
+            
+            // Pulisce errori pendenti mentre l'utente sta scrivendo
+            if (!value || emailRegex.test(value)) {
+                clearEmailError();
+            }
+
+            if (emailTimer) clearTimeout(emailTimer);
+            emailTimer = setTimeout(() => checkEmail(value), 400);
+        });
+
+        // Evento Blur (perdita di focus)
+        emailInput.addEventListener('blur', function() {
+            const value = emailInput.value.trim();
+            if (emailTimer) clearTimeout(emailTimer);
+            checkEmail(value);
         });
     }
 
@@ -55,35 +111,12 @@ document.addEventListener("DOMContentLoaded", function () {
     // 2. VALIDAZIONE FINALE AL MOMENTO DEL SUBMIT
     // ==========================================
     if (registerForm) {
-        // L'evento 'submit' intercetta il click sul pulsante di invio del form
         registerForm.addEventListener("submit", function(event) {
-            let isValid = true; // Flag di stato della validazione del form
+            let isValid = true;
 
-            // Reset preventivo di tutti i messaggi di errore precedenti
-            const errorSpans = document.querySelectorAll(".error-message");
-            errorSpans.forEach(span => {
-                span.textContent = "";
-                span.style.display = "none";
-            });
+            // 2.1 (Username rimosso) - validazione lato client gestita solo per campi rimasti
 
-            // 2.1 Controllo di validità del campo Username
-            const usernameInput = document.getElementById("username");
-            // Regex: solo caratteri alfanumerici o underscore, lunghezza compresa tra 4 e 20 caratteri
-            const usernameRegex = /^[a-zA-Z0-9_]{4,20}$/;
-            
-            if (usernameInput && !usernameRegex.test(usernameInput.value.trim())) {
-                const errorSpan = document.getElementById("usernameError");
-                if (errorSpan) {
-                    errorSpan.textContent = "L'username deve contenere solo lettere, numeri o '_' (4-20 caratteri).";
-                    errorSpan.style.display = "block";
-                }
-                // Se è il primo errore rilevato, impostiamo il focus automatico della tastiera sul campo
-                if (isValid) usernameInput.focus();
-                isValid = false;
-            }
-
-            // 2.2 Controllo sullo stato dell'email (proveniente dal controllo asincrono AJAX)
-            // Impediamo l'invio del form se l'evento blur ha accertato che l'email è già registrata
+            // 2.2 Controllo duplicato Email (da dataset AJAX)
             if (emailInput && emailInput.dataset.exists === "true") {
                 const errorSpan = document.getElementById("emailError");
                 if (errorSpan) {
@@ -94,9 +127,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 isValid = false;
             }
 
-            // 2.3 Blocco della sottomissione
             if (!isValid) {
-                // Invocando event.preventDefault(), impediamo al browser di ricaricare la pagina ed inviare i dati alla Servlet
                 event.preventDefault();
             }
         });

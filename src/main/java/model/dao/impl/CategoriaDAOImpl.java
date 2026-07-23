@@ -2,6 +2,7 @@ package model.dao.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -35,12 +36,19 @@ public class CategoriaDAOImpl implements CategoriaDAO {
     @Override
     public void doSave(CategoriaBean categoria) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
-             PreparedStatement ps = con.prepareStatement(INSERT_CATEGORIA)) {
+             PreparedStatement ps = con.prepareStatement(INSERT_CATEGORIA, Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setString(1, categoria.getNome());
             ps.setString(2, categoria.getDescrizione());
 
-            ps.executeUpdate();
+            int rows = ps.executeUpdate();
+            if (rows > 0) {
+                try (ResultSet keys = ps.getGeneratedKeys()) {
+                    if (keys.next()) {
+                        categoria.setIdCategoria(keys.getInt(1));
+                    }
+                }
+            }
         }
     }
 

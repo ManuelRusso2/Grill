@@ -43,25 +43,21 @@ public class RegistrationServlet extends HttpServlet {
         String cognome = request.getParameter("cognome");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-        String username = request.getParameter("username");
         String telefono = request.getParameter("telefono");
 
         nome = nome != null ? nome.trim() : null;
         cognome = cognome != null ? cognome.trim() : null;
         email = email != null ? email.trim() : null;
         password = password != null ? password.trim() : null;
-        username = username != null ? username.trim() : null;
         telefono = telefono != null ? telefono.trim() : null;
 
         // 2. Validazione Campi lato Server (Espressioni Regolari)
         String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[a-zA-Z]{2,}$";
-        String usernameRegex = "^[a-zA-Z0-9_]{4,20}$"; // da 4 a 20 caratteri, alfanumerico e underscore
 
         if (nome == null || nome.isEmpty() || 
             cognome == null || cognome.isEmpty() ||
             email == null || !email.matches(emailRegex) || 
-            password == null || password.length() < 6 ||
-            username == null || !username.matches(usernameRegex)) {
+            password == null || password.length() < 6) {
             
             request.setAttribute("errorMessage", "Dati inseriti non validi o non conformi.");
             request.getRequestDispatcher("/jsp/user/registrazione.jsp").forward(request, response);
@@ -69,15 +65,9 @@ public class RegistrationServlet extends HttpServlet {
         }
 
         try {
-            // 3. Controllo se lo username o l'email esistono già
+            // 3. Controllo se l'email esiste già
             if (utenteDAO.doRetrieveByEmail(email) != null) {
                 request.setAttribute("errorMessage", "Questa email è già registrata.");
-                request.getRequestDispatcher("/jsp/user/registrazione.jsp").forward(request, response);
-                return;
-            }
-
-            if (utenteDAO.doRetrieveByUsername(username) != null) {
-                request.setAttribute("errorMessage", "Questo username è già registrato.");
                 request.getRequestDispatcher("/jsp/user/registrazione.jsp").forward(request, response);
                 return;
             }
@@ -88,7 +78,7 @@ public class RegistrationServlet extends HttpServlet {
             nuovoUtente.setCognome(cognome);
             nuovoUtente.setEmail(email);
             nuovoUtente.setPassword(password); // Ci pensa UtenteDAOImpl a farne l'hash
-            nuovoUtente.setUsername(username);
+            // username rimosso: non impostiamo più questo campo
             nuovoUtente.setTelefono(telefono);
             nuovoUtente.setAdmin(false); // Un utente che si registra da solo è sempre un cliente
 

@@ -86,7 +86,17 @@ public class CarrelloServlet extends HttpServlet {
         HttpSession session = request.getSession(false);
         UtenteBean utente = (session != null) ? (UtenteBean) session.getAttribute("utente") : null;
 
+        boolean isAjax = "XMLHttpRequest".equals(request.getHeader("X-Requested-With"));
+
+        // Se l'utente non è autenticato
         if (utente == null) {
+            if (isAjax) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write("{\"error\": \"login_required\", \"redirect\": \"" + request.getContextPath() + "/jsp/common/login.jsp\"}");
+                return;
+            }
             response.sendRedirect(request.getContextPath() + "/jsp/common/login.jsp");
             return;
         }
@@ -105,12 +115,54 @@ public class CarrelloServlet extends HttpServlet {
                     aggiornaQuantita(request, session, carrello);
                 }
             }
-            
-            // Redirect (PRG) per evitare doppi invii di modifiche al refresh del browser
+
+            // Calcolo totale pezzi nel carrello con controllo null-safe
+            Map<ProdottoBean, Integer> prodottiInCarrello = contenutoDAO.doRetrieveProdottiInCarrello(carrello.getIdCarrello());
+            int totalItems = 0;
+            if (prodottiInCarrello != null) {
+                for (Map.Entry<ProdottoBean, Integer> entry : prodottiInCarrello.entrySet()) {
+                    if (entry.getValue() != null) {
+                        totalItems += entry.getValue();
+                    }
+                }
+            }
+
+            // Risposta per chiamate AJAX
+            if (isAjax) {
+                String errorMessage = (String) session.getAttribute("errorMessage");
+                String successMessage = (String) session.getAttribute("successMessage");
+                
+                // Consumo messaggi di sessione
+                session.removeAttribute("errorMessage");
+                session.removeAttribute("successMessage");
+
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+
+                if (errorMessage != null) {
+                    response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    String cleanErr = errorMessage.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", " ");
+                    response.getWriter().write("{\"success\": false, \"message\": \"" + cleanErr + "\"}");
+                } else {
+                    String cleanSucc = (successMessage != null) 
+                            ? successMessage.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", " ") 
+                            : "";
+                    response.getWriter().write("{\"success\": true, \"cartCount\": " + totalItems + ", \"message\": \"" + cleanSucc + "\"}");
+                }
+                return;
+            }
+
+            // Fallback sottomissione standard senza AJAX (PRG Pattern)
             response.sendRedirect(request.getContextPath() + "/CarrelloServlet");
 
         } catch (SQLException e) {
             e.printStackTrace();
+            if (isAjax) {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                response.setContentType("application/json");
+                response.getWriter().write("{\"success\": false, \"message\": \"Errore interno del server.\"}");
+                return;
+            }
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
@@ -151,10 +203,12 @@ public class CarrelloServlet extends HttpServlet {
             Map<ProdottoBean, Integer> prodottiInCarrello = contenutoDAO.doRetrieveProdottiInCarrello(carrello.getIdCarrello());
             
             int quantitaAttuale = 0;
-            for (ProdottoBean p : prodottiInCarrello.keySet()) {
-                if (p.getIdProdotto() == idProdotto) {
-                    quantitaAttuale = prodottiInCarrello.get(p);
-                    break;
+            if (prodottiInCarrello != null) {
+                for (ProdottoBean p : prodottiInCarrello.keySet()) {
+                    if (p.getIdProdotto() == idProdotto) {
+                        quantitaAttuale = prodottiInCarrello.get(p);
+                        break;
+                    }
                 }
             }
             

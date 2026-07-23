@@ -15,7 +15,7 @@
                 <th>Nome</th>
                 <th>Cognome</th>
                 <th>Email</th>
-                <th>Username</th>
+                <!-- Username rimosso -->
                 <th>Azioni</th>
             </tr>
         </thead>
@@ -30,7 +30,7 @@
                         <td><c:out value="${c.nome}" /></td>
                         <td><c:out value="${c.cognome}" /></td>
                         <td><c:out value="${c.email}" /></td>
-                        <td><c:out value="${c.username}" /></td>
+                        <!-- Username rimosso -->
                         
                         <td>
                             <%-- 3. Form delle azioni amministrative con Context Path dinamico --%>
@@ -46,7 +46,7 @@
             <%-- 4. Feedback nel caso in cui la lista dei clienti sia vuota --%>
             <c:if test="${empty clienti}">
                 <tr>
-                    <td colspan="6" style="text-align: center; font-style: italic; color: #777;">
+                    <td colspan="5" style="text-align: center; font-style: italic; color: #777;">
                         Nessun cliente registrato nel sistema.
                     </td>
                 </tr>

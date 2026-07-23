@@ -21,19 +21,16 @@ public class UtenteDAOImpl implements UtenteDAO {
         "INSERT INTO utente (nome, cognome, email, password, username, telefono, isAdmin) VALUES (?, ?, ?, ?, ?, ?, ?)";
     
     private static final String SELECT_BY_EMAIL = 
-        "SELECT id_utente, nome, cognome, email, password, username, telefono, isAdmin FROM utente WHERE email = ?";
+        "SELECT id_utente, nome, cognome, email, password, telefono, isAdmin FROM utente WHERE email = ?";
 
-    private static final String SELECT_BY_USERNAME = 
-        "SELECT id_utente, nome, cognome, email, password, username, telefono, isAdmin FROM utente WHERE username = ?";
-    
     private static final String SELECT_BY_ID = 
-        "SELECT id_utente, nome, cognome, email, password, username, telefono, isAdmin FROM utente WHERE id_utente = ?";
+        "SELECT id_utente, nome, cognome, email, password, telefono, isAdmin FROM utente WHERE id_utente = ?";
     
     private static final String SELECT_BY_LOGIN = 
-        "SELECT id_utente, nome, cognome, email, password, username, telefono, isAdmin FROM utente WHERE email = ? AND password = ?";
+        "SELECT id_utente, nome, cognome, email, password, telefono, isAdmin FROM utente WHERE email = ? AND password = ?";
     
     private static final String SELECT_ALL_CLIENTI = 
-        "SELECT id_utente, nome, cognome, email, password, username, telefono, isAdmin FROM utente WHERE isAdmin = false";
+        "SELECT id_utente, nome, cognome, email, password, telefono, isAdmin FROM utente WHERE isAdmin = false";
 
     @Override
     public void doSave(UtenteBean utente) throws SQLException {
@@ -59,8 +56,16 @@ public class UtenteDAOImpl implements UtenteDAO {
             
             String passwordCifrata = hashPassword(utente.getPassword());
             psUtente.setString(4, passwordCifrata);
-            
-            psUtente.setString(5, utente.getUsername());
+
+            // Generiamo un username automatico (dato che il campo non è più richiesto in fase di registrazione)
+            String baseUsername = "user";
+            if (utente.getEmail() != null && utente.getEmail().contains("@")) {
+                baseUsername = utente.getEmail().split("@")[0].replaceAll("[^A-Za-z0-9_]", "_");
+                if (baseUsername.isEmpty()) baseUsername = "user";
+                if (baseUsername.length() > 24) baseUsername = baseUsername.substring(0, 24);
+            }
+            String usernameGenerated = baseUsername + "_" + (int)(Math.random() * 9000 + 1000);
+            psUtente.setString(5, usernameGenerated);
             psUtente.setString(6, utente.getTelefono());
             psUtente.setBoolean(7, utente.isAdmin());
             
@@ -107,10 +112,10 @@ public class UtenteDAOImpl implements UtenteDAO {
     public UtenteBean doRetrieveByLogin(String email, String password) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
              PreparedStatement ps = con.prepareStatement(SELECT_BY_LOGIN)) {
-            
+
             ps.setString(1, email);
             ps.setString(2, hashPassword(password));
-            
+
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return mapRow(rs);
@@ -124,24 +129,8 @@ public class UtenteDAOImpl implements UtenteDAO {
     public UtenteBean doRetrieveByEmail(String email) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
              PreparedStatement ps = con.prepareStatement(SELECT_BY_EMAIL)) {
-            
+
             ps.setString(1, email);
-            
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return mapRow(rs);
-                }
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public UtenteBean doRetrieveByUsername(String username) throws SQLException {
-        try (Connection con = ConnessioneDB.getConnection();
-             PreparedStatement ps = con.prepareStatement(SELECT_BY_USERNAME)) {
-
-            ps.setString(1, username);
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -156,9 +145,9 @@ public class UtenteDAOImpl implements UtenteDAO {
     public UtenteBean doRetrieveById(int id) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
              PreparedStatement ps = con.prepareStatement(SELECT_BY_ID)) {
-            
+
             ps.setInt(1, id);
-            
+
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     return mapRow(rs);
@@ -190,7 +179,6 @@ public class UtenteDAOImpl implements UtenteDAO {
         utente.setCognome(rs.getString("cognome"));
         utente.setEmail(rs.getString("email"));
         utente.setPassword(rs.getString("password"));
-        utente.setUsername(rs.getString("username"));
         utente.setTelefono(rs.getString("telefono"));
         utente.setAdmin(rs.getBoolean("isAdmin"));
         return utente;

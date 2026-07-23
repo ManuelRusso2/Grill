@@ -11,7 +11,6 @@ public class UtenteBean implements Serializable {
     private String cognome;
     private boolean isAdmin;
     private String password;
-    private String username;
     private String telefono;
 
     
@@ -67,12 +66,6 @@ public class UtenteBean implements Serializable {
     }
 
     
-    public String getUsername() { 
-    	return username; 
-    }
-    public void setUsername(String username) { 
-    	this.username = username; 
-    }
     
     
     public String getTelefono() { 
@@ -111,7 +104,7 @@ public class UtenteBean implements Serializable {
         return "Utente{" +
         		", idUtente" + idUtente + '\'' +
         		", email='" + email + '\'' +
-                ", username='" + username + '\'' +
+                
                 ", password='" + password + '\'' +
                 ", nome='" + nome + '\'' +
                 ", cognome='" + cognome + '\'' +

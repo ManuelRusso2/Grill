@@ -223,6 +223,39 @@ public class CheckoutServlet extends HttpServlet {
 						psOrdine.addBatch(); // Aggiungiamo la singola query al blocco di esecuzione
 					}
 					psOrdine.executeBatch(); // Eseguiamo tutte le inserzioni delle righe in un solo colpo
+
+					// 2.b Decremento delle quantità dei prodotti e controllo esaurimento
+					try (PreparedStatement psUpdateQty = con.prepareStatement("UPDATE prodotto SET quantita = quantita - ? WHERE id_prodotto = ?");
+					     PreparedStatement psSelectQty = con.prepareStatement("SELECT quantita, nome FROM prodotto WHERE id_prodotto = ?")) {
+					    for (Map.Entry<ProdottoBean, Integer> entry : prodottiInCarrello.entrySet()) {
+					        ProdottoBean prodotto = entry.getKey();
+					        int quantita = entry.getValue();
+					        // Decrementa
+					        psUpdateQty.setInt(1, quantita);
+					        psUpdateQty.setInt(2, prodotto.getIdProdotto());
+					        psUpdateQty.executeUpdate();
+					        // Verifica nuova quantità
+					        psSelectQty.setInt(1, prodotto.getIdProdotto());
+					        try (ResultSet rsQ = psSelectQty.executeQuery()) {
+					            if (rsQ.next()) {
+					                int nuovaQ = rsQ.getInt("quantita");
+					                String nomeProd = rsQ.getString("nome");
+					                if (nuovaQ <= 0) {
+					                    // Aggiungi avviso amministratore (dal contesto servlet)
+					                    String alert = "Prodotto esaurito: " + nomeProd + " (ID: " + prodotto.getIdProdotto() + ")";
+					                    synchronized (getServletContext()) {
+					                        java.util.List<String> alerts = (java.util.List<String>) getServletContext().getAttribute("adminAlerts");
+					                        if (alerts == null) {
+					                            alerts = new java.util.ArrayList<>();
+					                            getServletContext().setAttribute("adminAlerts", alerts);
+					                        }
+					                        alerts.add(alert);
+					                    }
+					                }
+					            }
+					        }
+					    }
+					}
 				}
 
 				// 3. Svuotamento del carrello dell'utente (Tabella 'contenuto')

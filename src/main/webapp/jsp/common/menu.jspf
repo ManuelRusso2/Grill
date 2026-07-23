@@ -7,12 +7,15 @@
 <%-- 2. Gestione condizionale basata sullo stato della sessione tramite EL --%>
 <c:choose>
     <c:when test="${not empty sessionScope.utente}">
-        <a href="${pageContext.request.contextPath}/CarrelloServlet">Carrello</a>
+        <a href="${pageContext.request.contextPath}/CarrelloServlet" id="nav-cart-link">
+            Carrello <span id="cart-count" class="badge"><c:if test="${not empty cartCount}">(<c:out value="${cartCount}"/>)</c:if></span>
+        </a>
         <a href="${pageContext.request.contextPath}/ProfiloServlet">Profilo</a>
         
         <%-- 3. Se l'utente è un Amministratore (richiama automaticamente utente.isAdmin()) --%>
         <c:if test="${sessionScope.utente.admin}">
             <a href="${pageContext.request.contextPath}/AdminProdottoServlet" class="nav-admin">Gestione Prodotti</a>
+            <a href="${pageContext.request.contextPath}/AdminCategoriaServlet" class="nav-admin">Gestione Categorie</a>
             <a href="${pageContext.request.contextPath}/AdminOrdiniServlet" class="nav-admin">Gestione Ordini</a>
         </c:if>
 

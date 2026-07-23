@@ -33,11 +33,7 @@ public interface UtenteDAO {
      */
     UtenteBean doRetrieveByEmail(String email) throws SQLException;
 
-    /**
-     * Cerca un utente tramite username.
-     * Requisiti: Registrazione e vincoli di unicità.
-     */
-    UtenteBean doRetrieveByUsername(String username) throws SQLException;
+    // Username rimosso: non è più previsto il recupero per username
 
     /**
      * Cerca un utente tramite il suo ID (Chiave Primaria).
