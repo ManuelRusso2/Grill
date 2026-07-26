@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
             div.className = "suggestion-item"; // Classe CSS per la formattazione grafica
             
             // Usiamo 'textContent' per prevenire attacchi di tipo XSS (Cross-Site Scripting)
-            div.textContent = `${item.nome} - €${Number(item.prezzo).toFixed(2)}`;
+            div.textContent = `${item.nome} — €${Number(item.prezzo).toFixed(2)}`;
             
             // Evento click sul suggerimento: reindirizza l'utente alla servlet di dettaglio del prodotto
             div.addEventListener("click", () => {

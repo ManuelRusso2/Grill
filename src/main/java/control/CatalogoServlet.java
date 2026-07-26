@@ -13,12 +13,15 @@ import javax.servlet.http.HttpServletResponse;
 import model.bean.ProdottoBean;
 import model.bean.UtenteBean;
 import model.bean.CarrelloBean;
+import model.bean.CategoriaBean;
 import model.dao.ProdottoDAO;
 import model.dao.CarrelloDAO;
 import model.dao.ContenutoDAO;
+import model.dao.CategoriaDAO;
 import model.dao.impl.ProdottoDAOImpl;
 import model.dao.impl.CarrelloDAOImpl;
 import model.dao.impl.ContenutoDAOImpl;
+import model.dao.impl.CategoriaDAOImpl;
 
 
 @WebServlet("/CatalogoServlet")
@@ -26,11 +29,13 @@ public class CatalogoServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     
     private ProdottoDAO prodottoDAO;
+    private CategoriaDAO categoriaDAO;
 
     
     @Override
     public void init() throws ServletException {
         this.prodottoDAO = new ProdottoDAOImpl();
+        this.categoriaDAO = new CategoriaDAOImpl();
     }
 
     
@@ -39,10 +44,17 @@ public class CatalogoServlet extends HttpServlet {
             throws ServletException, IOException {
         
         try {
-            // 1. Recuperiamo tutti i prodotti attivi dal database
-            List<ProdottoBean> prodotti = prodottoDAO.doRetrieveAllClienti(); // Usa il metodo corretto del tuo ProdottoDAO
-
-            // 2. Salviamo la lista come attributo della richiesta HTTP
+            // 1. Filtro per categoria se presente il parametro
+            String categoriaParam = request.getParameter("categoria");
+            List<ProdottoBean> prodotti;
+            if (categoriaParam != null && !categoriaParam.trim().isEmpty()) {
+                int idCategoria = Integer.parseInt(categoriaParam);
+                prodotti = prodottoDAO.doRetrieveByCategoria(idCategoria);
+                CategoriaBean categoriaAttiva = categoriaDAO.doRetrieveById(idCategoria);
+                request.setAttribute("categoriaAttiva", categoriaAttiva);
+            } else {
+                prodotti = prodottoDAO.doRetrieveAllClienti();
+            }
             request.setAttribute("prodotti", prodotti);
 
             // 2b. Se l'utente è autenticato, calcoliamo il numero di articoli nel carrello per mostrare il badge

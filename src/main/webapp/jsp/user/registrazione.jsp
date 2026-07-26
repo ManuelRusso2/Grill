@@ -1,5 +1,4 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%-- Importiamo JSTL per gestire la visualizzazione condizionale dei messaggi --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <%@ include file="/jsp/common/header.jspf" %>
@@ -8,27 +7,51 @@
 <main class="container">
     <h1>Registrazione</h1>
 
-    <%-- 🌟 BLOCCO FEEDBACK: Mostra gli errori di validazione o duplicati inviati dalla Servlet --%>
-    <c:if test="${not empty errorMessage}">
-        <div class="alert alert-danger" style="color: red; background-color: #fee2e2; padding: 10px; border-radius: 4px; margin-bottom: 15px;">
-            <c:out value="${errorMessage}" />
-        </div>
-    </c:if>
+    <form id="registerForm" method="post" action="${pageContext.request.contextPath}/RegistrationServlet">
 
-    <%-- Form aggiornato con action in Expression Language --%>
-<form id="registerForm" method="post" action="${pageContext.request.contextPath}/RegistrationServlet" data-contextpath="${pageContext.request.contextPath}">
-        <label>Nome: <input type="text" name="nome" required></label><br>
-        <label>Cognome: <input type="text" name="cognome" required></label><br>
-        
-        <label>Email: <input id="email" type="email" name="email" required></label>
-        <span id="emailError" class="error-message" style="display:none;color:red"></span><br>
-        
-        <%-- Username rimosso: non più richiesto in fase di registrazione --%>
-        
-        <label>Password: <input type="password" name="password" required></label><br>
-        <label>Telefono: <input type="text" name="telefono"></label><br>
-        
-        <button type="submit">Registrati</button>
+        <div class="form-group">
+            <label for="nome">Nome *</label>
+            <input id="nome" type="text" name="nome" value="<c:out value='${formNome}'/>" class="<c:if test='${not empty errNome}'>input-error</c:if>">
+            <c:if test="${not empty errNome}">
+                <span class="field-error"><c:out value="${errNome}"/></span>
+            </c:if>
+        </div>
+
+        <div class="form-group">
+            <label for="cognome">Cognome *</label>
+            <input id="cognome" type="text" name="cognome" value="<c:out value='${formCognome}'/>" class="<c:if test='${not empty errCognome}'>input-error</c:if>">
+            <c:if test="${not empty errCognome}">
+                <span class="field-error"><c:out value="${errCognome}"/></span>
+            </c:if>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email *</label>
+            <input id="email" type="email" name="email" value="<c:out value='${formEmail}'/>" class="<c:if test='${not empty errEmail}'>input-error</c:if>" autocomplete="off">
+            <span id="emailError" class="field-error" style="display:none;"></span>
+            <c:if test="${not empty errEmail}">
+                <span class="field-error"><c:out value="${errEmail}"/></span>
+            </c:if>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password *</label>
+            <input id="password" type="password" name="password" class="<c:if test='${not empty errPassword}'>input-error</c:if>">
+            <span id="passwordHint" class="field-hint">Minimo 6 caratteri, almeno una maiuscola e un numero.</span>
+            <c:if test="${not empty errPassword}">
+                <span class="field-error"><c:out value="${errPassword}"/></span>
+            </c:if>
+        </div>
+
+        <div class="form-group">
+            <label for="telefono">Telefono <span class="optional">(opzionale)</span></label>
+            <input id="telefono" type="text" name="telefono" value="<c:out value='${formTelefono}'/>" class="<c:if test='${not empty errTelefono}'>input-error</c:if>">
+            <c:if test="${not empty errTelefono}">
+                <span class="field-error"><c:out value="${errTelefono}"/></span>
+            </c:if>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Registrati</button>
     </form>
 
     <script src="${pageContext.request.contextPath}/js/validazione.js"></script>

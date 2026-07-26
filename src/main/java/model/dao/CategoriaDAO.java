@@ -37,8 +37,12 @@ public interface CategoriaDAO {
 
     
     /**
+     * Restituisce le categorie associate a un prodotto tramite la tabella tipologia.
+     */
+    List<CategoriaBean> doRetrieveByProdotto(int idProdotto) throws SQLException;
+
+    /**
      * Elimina fisicamente una categoria dal database.
-     * @param idCategoria ID della categoria da eliminare
      */
     boolean doDelete(int idCategoria) throws SQLException;
 }

@@ -46,30 +46,35 @@
         </div>
 
         <div style="margin-bottom: 15px;">
-            <label for="tipo" style="display: block; margin-bottom: 5px; font-weight: 600;">Categoria:</label>
-            <div style="display: flex; gap: 10px; align-items: flex-end;">
+            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Categorie:</label>
+            <div style="display: flex; gap: 10px; align-items: flex-start;">
                 <div style="flex: 1;">
-                    <select id="tipo" name="tipo" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-                        <option value="">-- Seleziona una categoria --</option>
+                    <select id="idCategoria" name="idCategoria" multiple
+                            style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; min-height: 120px;">
                         <c:if test="${not empty categorie}">
                             <c:forEach var="cat" items="${categorie}">
-                                <option value="${cat.nome}" data-id="${cat.idCategoria}" 
-                                        ${isEdit && prodotto.tipo == cat.nome ? 'selected' : ''}>
+                                <c:set var="selezionata" value="false" />
+                                <c:if test="${isEdit}">
+                                    <c:forEach var="catProd" items="${prodotto.categorie}">
+                                        <c:if test="${catProd.idCategoria == cat.idCategoria}">
+                                            <c:set var="selezionata" value="true" />
+                                        </c:if>
+                                    </c:forEach>
+                                </c:if>
+                                <option value="${cat.idCategoria}" ${selezionata ? 'selected' : ''}>
                                     <c:out value="${cat.nome}" />
                                 </option>
                             </c:forEach>
                         </c:if>
                     </select>
+                    <small style="color:#6b7280;">Tieni premuto Ctrl (o Cmd su Mac) per selezionare più categorie.</small>
                 </div>
-                <a href="${pageContext.request.contextPath}/AdminCategoriaServlet?action=new" class="btn-edit" style="padding: 8px 15px; background-color: #6b7280; color: white; border: none; border-radius: 4px; text-decoration: none; display: inline-block; white-space: nowrap;">
+                <a href="${pageContext.request.contextPath}/AdminCategoriaServlet?action=new" class="btn-edit"
+                   style="padding: 8px 15px; background-color: #6b7280; color: white; border: none; border-radius: 4px; text-decoration: none; display: inline-block; white-space: nowrap;">
                     ➕ Nuova Categoria
                 </a>
             </div>
         </div>
-
-        <!-- gestione categorie spostata nella sezione dedicata AdminCategoriaServlet -->
-
-        <!-- Gestione categorie rimossa da questa pagina; usare AdminCategoriaServlet per operazioni complete -->
 
         <div style="margin-bottom: 20px;">
             <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">

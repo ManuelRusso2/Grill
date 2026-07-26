@@ -8,9 +8,19 @@
     <title>Grill - E-Commerce</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/style.css">
     <script src="${pageContext.request.contextPath}/js/cart-badge.js" defer></script>
+    <script src="${pageContext.request.contextPath}/js/search.js" defer></script>
 </head>
 <body>
 <header class="site-header">
     <div class="container navbar">
         <a class="brand" href="${pageContext.request.contextPath}/index.jsp">Grill</a>
+
+        <c:set var="currentPath" value="${pageContext.request.servletPath}" />
+        <c:if test="${currentPath != '/jsp/common/login.jsp' and currentPath != '/jsp/user/registrazione.jsp'}">
+        <div class="search-wrapper">
+            <input type="text" id="searchInput" class="search-input" placeholder="Cerca prodotti..." autocomplete="off">
+            <div id="searchSuggestions" class="search-suggestions" style="display:none;"></div>
+        </div>
+        </c:if>
+
         <nav class="nav-links">

@@ -173,22 +173,27 @@ public class AdminProdottoServlet extends HttpServlet {
         prodotto.setDescrizione(request.getParameter("descrizione"));
         prodotto.setCosto(Double.parseDouble(request.getParameter("costo")));
         prodotto.setQuantita(Integer.parseInt(request.getParameter("quantita")));
-        prodotto.setTipo(request.getParameter("tipo"));
 
-        // Gestione checkbox/stato attivo
         String attivoParam = request.getParameter("attivo");
-        if (attivoParam != null) {
-            prodotto.setAttivo("true".equalsIgnoreCase(attivoParam) || "on".equalsIgnoreCase(attivoParam));
-        } else {
-            prodotto.setAttivo(!conId); 
-        }
+        prodotto.setAttivo(attivoParam != null && ("true".equalsIgnoreCase(attivoParam) || "on".equalsIgnoreCase(attivoParam)));
 
-        // Gestione ID Collezione opzionale
         String idCollezione = request.getParameter("idCollezione");
         if (idCollezione != null && !idCollezione.trim().isEmpty()) {
             prodotto.setIdCollezione(Integer.parseInt(idCollezione.trim()));
         } else {
             prodotto.setIdCollezione(null);
+        }
+
+        // Categorie selezionate dal form (multi-select)
+        String[] idCategorie = request.getParameterValues("idCategoria");
+        if (idCategorie != null) {
+            List<CategoriaBean> categorie = new java.util.ArrayList<>();
+            for (String idCat : idCategorie) {
+                CategoriaBean cat = new CategoriaBean();
+                cat.setIdCategoria(Integer.parseInt(idCat));
+                categorie.add(cat);
+            }
+            prodotto.setCategorie(categorie);
         }
 
         return prodotto;

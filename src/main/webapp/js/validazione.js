@@ -1,135 +1,142 @@
-/**
- * Gestione della validazione della registrazione lato client.
- * Combina controlli asincroni AJAX (in tempo reale) e validazione sincrona finale sul form.
- */
 document.addEventListener("DOMContentLoaded", function () {
 
-    // ==========================================
-    // 1. CONTROLLO AJAX IN TEMPO REALE (SULL'EMAIL)
-    // ==========================================
-    const emailInput = document.getElementById("email");
-    const registerForm = document.getElementById("registerForm");
+    const form        = document.getElementById("registerForm");
+    const nomeInput   = document.getElementById("nome");
+    const cognomeInput= document.getElementById("cognome");
+    const emailInput  = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const telefonoInput = document.getElementById("telefono");
 
-    if (emailInput) {
-        const emailErrorSpan = document.getElementById("emailError");
-        // Regex robusta per la validazione della sintassi email
-        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!form) return;
 
-        let emailTimer = null;
+    const emailRegex    = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const telefonoRegex = /^[0-9+\s\-]{7,20}$/;
 
-        // Funzione per nascondere il messaggio di errore
-        function clearEmailError() {
-            if (emailErrorSpan) {
-                emailErrorSpan.textContent = '';
-                emailErrorSpan.style.display = 'none';
-            }
-            emailInput.style.borderColor = '';
-            delete emailInput.dataset.exists;
+    // ── Helpers ──────────────────────────────────────────────────────────────
+
+    function showError(input, message) {
+        input.classList.add("input-error");
+        input.classList.remove("input-ok");
+        let span = input.parentElement.querySelector(".field-error-js");
+        if (!span) {
+            span = document.createElement("span");
+            span.className = "field-error field-error-js";
+            input.insertAdjacentElement("afterend", span);
         }
-
-        // Funzione che verifica sintassi e, se valida, esistenza via AJAX
-        function checkEmail(emailValore) {
-            if (!emailErrorSpan) return;
-
-            // Se il campo è vuoto, puliamo l'errore e usciamo
-            if (!emailValore) {
-                clearEmailError();
-                return;
-            }
-
-            // 1. Validazione Sintattica
-            if (!emailRegex.test(emailValore)) {
-                emailErrorSpan.textContent = "Inserisci un indirizzo email valido.";
-                emailErrorSpan.style.display = "block";
-                emailInput.style.borderColor = "red";
-                delete emailInput.dataset.exists;
-                return;
-            }
-
-            // Se la sintassi è corretta, puliamo temporaneamente l'errore in attesa del server
-            clearEmailError();
-            emailInput.style.borderColor = "green"; // Segnala sintassi ok
-
-            // Recupera il ContextPath dall'action del form se presente, altrimenti usa fallback
-            let contextPath = "";
-            if (registerForm && registerForm.action) {
-                const actionUrl = new URL(registerForm.action, window.location.href);
-                // Prende la prima parte del path (es: /NomeProgetto)
-                contextPath = actionUrl.pathname.substring(0, actionUrl.pathname.indexOf('/', 1));
-            }
-
-            // 2. Controllo Esistenza via AJAX
-            const servletUrl = `${contextPath}/VerificaEmailServlet?email=${encodeURIComponent(emailValore)}`;
-
-            fetch(servletUrl)
-                .then(resp => {
-                    if (!resp.ok) throw new Error("Errore risposta server");
-                    return resp.json();
-                })
-                .then(data => {
-                    if (data && data.exists) {
-                        emailErrorSpan.textContent = "Questa email è già registrata.";
-                        emailErrorSpan.style.display = "block";
-                        emailInput.style.borderColor = "red";
-                        emailInput.dataset.exists = "true";
-                    } else {
-                        // Email valida e disponibile
-                        clearEmailError();
-                        emailInput.style.borderColor = 'green';
-                        emailInput.dataset.exists = 'false';
-                    }
-                })
-                .catch(err => {
-                    console.error('Errore durante la verifica AJAX:', err);
-                    // In caso di errore server/rete, non blocchiamo l'utente sul controllo AJAX
-                    clearEmailError();
-                });
-        }
-
-        // Evento Input (digitazione): azzera l'errore e avvia un debounce di 400ms
-        emailInput.addEventListener('input', function() {
-            const value = emailInput.value.trim();
-            
-            // Pulisce errori pendenti mentre l'utente sta scrivendo
-            if (!value || emailRegex.test(value)) {
-                clearEmailError();
-            }
-
-            if (emailTimer) clearTimeout(emailTimer);
-            emailTimer = setTimeout(() => checkEmail(value), 400);
-        });
-
-        // Evento Blur (perdita di focus)
-        emailInput.addEventListener('blur', function() {
-            const value = emailInput.value.trim();
-            if (emailTimer) clearTimeout(emailTimer);
-            checkEmail(value);
-        });
+        span.textContent = message;
+        span.style.display = "block";
     }
 
-    // ==========================================
-    // 2. VALIDAZIONE FINALE AL MOMENTO DEL SUBMIT
-    // ==========================================
-    if (registerForm) {
-        registerForm.addEventListener("submit", function(event) {
-            let isValid = true;
+    function clearError(input) {
+        input.classList.remove("input-error");
+        input.classList.add("input-ok");
+        const span = input.parentElement.querySelector(".field-error-js");
+        if (span) span.style.display = "none";
+    }
 
-            // 2.1 (Username rimosso) - validazione lato client gestita solo per campi rimasti
+    // ── Validatori per campo ─────────────────────────────────────────────────
 
-            // 2.2 Controllo duplicato Email (da dataset AJAX)
-            if (emailInput && emailInput.dataset.exists === "true") {
-                const errorSpan = document.getElementById("emailError");
-                if (errorSpan) {
-                    errorSpan.textContent = "Impossibile procedere: l'email è già associata a un altro account.";
-                    errorSpan.style.display = "block";
+    function validateNome() {
+        const v = nomeInput.value.trim();
+        if (!v) { showError(nomeInput, "Il nome è obbligatorio."); return false; }
+        if (v.length < 2) { showError(nomeInput, "Il nome deve contenere almeno 2 caratteri."); return false; }
+        clearError(nomeInput); return true;
+    }
+
+    function validateCognome() {
+        const v = cognomeInput.value.trim();
+        if (!v) { showError(cognomeInput, "Il cognome è obbligatorio."); return false; }
+        if (v.length < 2) { showError(cognomeInput, "Il cognome deve contenere almeno 2 caratteri."); return false; }
+        clearError(cognomeInput); return true;
+    }
+
+    function validatePassword() {
+        const v = passwordInput.value;
+        if (!v) { showError(passwordInput, "La password è obbligatoria."); return false; }
+        if (v.length < 6) { showError(passwordInput, "La password deve contenere almeno 6 caratteri."); return false; }
+        if (!/[A-Z]/.test(v)) { showError(passwordInput, "La password deve contenere almeno una lettera maiuscola."); return false; }
+        if (!/[0-9]/.test(v)) { showError(passwordInput, "La password deve contenere almeno un numero."); return false; }
+        clearError(passwordInput); return true;
+    }
+
+    function validateTelefono() {
+        const v = telefonoInput.value.trim();
+        if (v && !telefonoRegex.test(v)) {
+            showError(telefonoInput, "Inserisci un numero di telefono valido (es. 333 1234567).");
+            return false;
+        }
+        clearError(telefonoInput); return true;
+    }
+
+    // ── Validazione email con debounce + AJAX ────────────────────────────────
+
+    let emailTimer = null;
+
+    function validateEmailSyntax() {
+        const v = emailInput.value.trim();
+        if (!v) { showError(emailInput, "L'email è obbligatoria."); return false; }
+        if (!emailRegex.test(v)) { showError(emailInput, "Inserisci un indirizzo email valido (es. nome@dominio.it)."); return false; }
+        return true;
+    }
+
+    function checkEmailAjax(value) {
+        if (!validateEmailSyntax()) return;
+        const contextPath = form.getAttribute("data-contextpath") || "";
+        fetch(`${contextPath}/VerificaEmailServlet?email=${encodeURIComponent(value)}`)
+            .then(r => r.json())
+            .then(data => {
+                if (data && data.exists) {
+                    showError(emailInput, "Questa email è già registrata.");
+                    emailInput.dataset.exists = "true";
+                } else {
+                    clearError(emailInput);
+                    emailInput.dataset.exists = "false";
                 }
-                if (isValid) emailInput.focus();
-                isValid = false;
-            }
-
-            if (!isValid) {
-                event.preventDefault();
-            }
-        });
+            })
+            .catch(() => clearError(emailInput));
     }
+
+    emailInput.addEventListener("input", function () {
+        clearTimeout(emailTimer);
+        const v = emailInput.value.trim();
+        if (!v || !emailRegex.test(v)) {
+            validateEmailSyntax();
+            return;
+        }
+        clearError(emailInput);
+        emailTimer = setTimeout(() => checkEmailAjax(v), 400);
+    });
+
+    emailInput.addEventListener("blur", function () {
+        clearTimeout(emailTimer);
+        checkEmailAjax(emailInput.value.trim());
+    });
+
+    // ── Listener blur per gli altri campi ────────────────────────────────────
+
+    nomeInput.addEventListener("blur", validateNome);
+    cognomeInput.addEventListener("blur", validateCognome);
+    passwordInput.addEventListener("blur", validatePassword);
+    passwordInput.addEventListener("input", validatePassword);
+    telefonoInput.addEventListener("blur", validateTelefono);
+
+    // ── Validazione finale al submit ─────────────────────────────────────────
+
+    form.addEventListener("submit", function (e) {
+        const ok = [
+            validateNome(),
+            validateCognome(),
+            validateEmailSyntax(),
+            validatePassword(),
+            validateTelefono()
+        ].every(Boolean);
+
+        if (emailInput.dataset.exists === "true") {
+            showError(emailInput, "Questa email è già registrata.");
+            e.preventDefault();
+            return;
+        }
+
+        if (!ok) e.preventDefault();
+    });
 });

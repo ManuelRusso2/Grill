@@ -34,6 +34,7 @@ public class RicercaAjaxServlet extends HttpServlet {
         
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
+        response.setHeader("Cache-Control", "no-store");
         
         String query = request.getParameter("query");
         
@@ -54,7 +55,6 @@ public class RicercaAjaxServlet extends HttpServlet {
                 ProdottoBean p = prodottiTrovati.get(i);
                 json.append("{");
                 json.append("\"id\":").append(p.getIdProdotto()).append(",");
-                // Usiamo i backslash per evitare che eventuali virgolette nel nome rompano il JSON
                 json.append("\"nome\":\"").append(p.getNome().replace("\"", "\\\"")).append("\",");
                 json.append("\"prezzo\":").append(p.getCosto());
                 json.append("}");

@@ -53,8 +53,15 @@ public class UserFilter implements Filter {
         
         // Se l'utente non è loggato
         if (utente == null) {
-            // Reindirizza alla pagina di login
-            httpResponse.sendRedirect(httpRequest.getContextPath() + "/jsp/common/login.jsp");
+            boolean isAjax = "XMLHttpRequest".equals(httpRequest.getHeader("X-Requested-With"));
+            if (isAjax) {
+                httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                httpResponse.setContentType("application/json");
+                httpResponse.setCharacterEncoding("UTF-8");
+                httpResponse.getWriter().write("{\"success\": false, \"redirect\": \"" + httpRequest.getContextPath() + "/jsp/common/login.jsp\"}");
+            } else {
+                httpResponse.sendRedirect(httpRequest.getContextPath() + "/jsp/common/login.jsp");
+            }
         } else {
             // Se è loggato, permette alla richiesta di proseguire verso la destinazione originale
             chain.doFilter(request, response);

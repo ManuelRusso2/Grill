@@ -92,7 +92,7 @@
                         <th style="padding: 12px; text-align: left; font-weight: bold;">Descrizione</th>
                         <th style="padding: 12px; text-align: right; font-weight: bold;">Prezzo</th>
                         <th style="padding: 12px; text-align: center; font-weight: bold;">Quantità</th>
-                        <th style="padding: 12px; text-align: center; font-weight: bold;">Tipo</th>
+                        <th style="padding: 12px; text-align: center; font-weight: bold;">Categorie</th>
                         <th style="padding: 12px; text-align: center; font-weight: bold;">Stato</th>
                         <th style="padding: 12px; text-align: center; font-weight: bold;">Azioni</th>
                     </tr>
@@ -116,7 +116,14 @@
                                 <c:out value="${prodotto.quantita}" />
                             </td>
                             <td style="padding: 12px; text-align: center;">
-                                <c:out value="${empty prodotto.tipo ? '—' : prodotto.tipo}" />
+                                <c:choose>
+                                    <c:when test="${not empty prodotto.categorie}">
+                                        <c:forEach var="cat" items="${prodotto.categorie}" varStatus="s">
+                                            <c:out value="${cat.nome}" /><c:if test="${!s.last}">, </c:if>
+                                        </c:forEach>
+                                    </c:when>
+                                    <c:otherwise>—</c:otherwise>
+                                </c:choose>
                             </td>
                             <td style="padding: 12px; text-align: center;">
                                 <span style="padding: 4px 8px; border-radius: 12px; font-size: 0.85em; font-weight: 600; ${prodotto.attivo ? 'background-color: #d1fae5; color: #065f46;' : 'background-color: #fee2e2; color: #991b1b;'}">

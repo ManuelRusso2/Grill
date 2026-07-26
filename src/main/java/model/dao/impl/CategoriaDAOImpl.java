@@ -29,6 +29,10 @@ public class CategoriaDAOImpl implements CategoriaDAO {
         "SELECT id_categoria, nome, descrizione FROM categoria ORDER BY nome";
 
     
+    private static final String SELECT_BY_PRODOTTO =
+        "SELECT c.id_categoria, c.nome, c.descrizione FROM categoria c " +
+        "JOIN tipologia t ON c.id_categoria = t.id_categoria WHERE t.id_prodotto = ?";
+
     private static final String DELETE_CATEGORIA =
         "DELETE FROM categoria WHERE id_categoria = ?";
 
@@ -99,6 +103,21 @@ public class CategoriaDAOImpl implements CategoriaDAO {
     }
 
     
+    @Override
+    public List<CategoriaBean> doRetrieveByProdotto(int idProdotto) throws SQLException {
+        List<CategoriaBean> categorie = new ArrayList<>();
+        try (Connection con = ConnessioneDB.getConnection();
+             PreparedStatement ps = con.prepareStatement(SELECT_BY_PRODOTTO)) {
+            ps.setInt(1, idProdotto);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    categorie.add(mapRow(rs));
+                }
+            }
+        }
+        return categorie;
+    }
+
     @Override
     public boolean doDelete(int idCategoria) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
