@@ -38,7 +38,6 @@ CREATE TABLE IF NOT EXISTS prodotto(
     descrizione VARCHAR(1024) NOT NULL,
     costo DOUBLE NOT NULL CHECK(costo > 0),
     quantita INTEGER NOT NULL,
-    tipo VARCHAR(50) NOT NULL,
     attivo BOOLEAN DEFAULT TRUE,
     id_collezione INTEGER,
     
@@ -88,7 +87,7 @@ CREATE TABLE IF NOT EXISTS categoria(
     descrizione VARCHAR(1024)
 );
 
-CREATE TABLE IF NOT EXISTS tipologia(
+CREATE TABLE IF NOT EXISTS prodotto_categoria(
     id_prodotto INTEGER NOT NULL,
     id_categoria INTEGER NOT NULL,
     PRIMARY KEY(id_prodotto, id_categoria),
@@ -182,110 +181,110 @@ INSERT INTO collezione (nome_collezione, descrizione) VALUES
 -- POPOLAMENTO TABELLA PRODOTTO
 -- ===================================================
 
-INSERT INTO prodotto (nome, descrizione, costo, quantita, tipo, attivo, id_collezione) VALUES 
+INSERT INTO prodotto (nome, descrizione, costo, quantita, attivo, id_collezione) VALUES 
 
 -- 1. PEACE AND LOVE (id_collezione = 1) - Dark & Olive Editions
-('Good Vibes Leather Varsity Jacket - Dark', 'Giacca bomber varsity in pelle nera con grafiche rosse e bianche a contrasto.', 249.90, 20, 'Giacca', true, 1),
-('Good Vibes Leather Varsity Jacket - Olive', 'Giacca bomber varsity in pelle verde militare con inserti panna e toni terrosi.', 249.90, 20, 'Giacca', true, 1),
-('Spread Love Oversized Hoodie - Dark', 'Felpa oversize con cappuccio in cotone pesante nero con grafica Peace & Love.', 89.90, 35, 'Felpa', true, 1),
-('Spread Love Oversized Hoodie - Olive', 'Felpa oversize verde oliva con cappuccio e grafiche calde ad alta densita.', 89.90, 35, 'Felpa', true, 1),
-('Stay Positive Graphic Tee - Dark', 'T-shirt grafica relaxed fit su fondo nero con stampa posizionata.', 45.00, 50, 'T-Shirt', true, 1),
-('Stay Positive Graphic Tee - Olive', 'T-shirt grafica color panna con dettagli verde militare e logo Grill.', 45.00, 50, 'T-Shirt', true, 1),
-('Peace and Love Cap', 'Cappellino con visiera e ricamo frontale Peace, Love, Grill.', 35.00, 40, 'Accessorio', true, 1),
-('Peace and Love Bottle', 'Borraccia termica in acciaio inox 500ml con finitura opaca.', 29.90, 30, 'Accessorio', true, 1),
-('Peace and Love Bag', 'Marsupio utility regolabile con tasche multiple e stampa ad impatto.', 49.90, 25, 'Accessorio', true, 1),
+('Good Vibes Leather Varsity Jacket - Dark', 'Giacca bomber varsity in pelle nera con grafiche rosse e bianche a contrasto.', 249.90, 20, true, 1),
+('Good Vibes Leather Varsity Jacket - Olive', 'Giacca bomber varsity in pelle verde militare con inserti panna e toni terrosi.', 249.90, 20, true, 1),
+('Spread Love Oversized Hoodie - Dark', 'Felpa oversize con cappuccio in cotone pesante nero con grafica Peace & Love.', 89.90, 35, true, 1),
+('Spread Love Oversized Hoodie - Olive', 'Felpa oversize verde oliva con cappuccio e grafiche calde ad alta densita.', 89.90, 35, true, 1),
+('Stay Positive Graphic Tee - Dark', 'T-shirt grafica relaxed fit su fondo nero con stampa posizionata.', 45.00, 50, true, 1),
+('Stay Positive Graphic Tee - Olive', 'T-shirt grafica color panna con dettagli verde militare e logo Grill.', 45.00, 50, true, 1),
+('Peace and Love Cap', 'Cappellino con visiera e ricamo frontale Peace, Love, Grill.', 35.00, 40, true, 1),
+('Peace and Love Bottle', 'Borraccia termica in acciaio inox 500ml con finitura opaca.', 29.90, 30, true, 1),
+('Peace and Love Bag', 'Marsupio utility regolabile con tasche multiple e stampa ad impatto.', 49.90, 25, true, 1),
 
 -- 2. FLOWLESS (id_collezione = 2)
-('Flow State Leather Bomber', 'Giacca bomber in vera pelle total black con finiture minimal e lining personalizzato.', 279.90, 15, 'Giacca', true, 2),
-('Mind Free Oversized Hoodie', 'Felpa hoodie oversize nera in cotone 480gsm con mantra Mind Free ricamato.', 95.00, 30, 'Felpa', true, 2),
-('Pure Flow Graphic Tee', 'T-shirt streetwear nera con stampa gommata tono su tono.', 49.90, 45, 'T-Shirt', true, 2),
-('Flowless Cap', 'Cappellino strutturato total black con logo arcuato Flowless.', 35.00, 40, 'Accessorio', true, 2),
-('Flowless Bottle', 'Borraccia termica total black opaca ad alto isolamento.', 29.90, 30, 'Accessorio', true, 2),
-('Flowless Bag', 'Borsa crossbody tattica in nylon ad alta resistenza.', 55.00, 20, 'Accessorio', true, 2),
+('Flow State Leather Bomber', 'Giacca bomber in vera pelle total black con finiture minimal e lining personalizzato.', 279.90, 15, true, 2),
+('Mind Free Oversized Hoodie', 'Felpa hoodie oversize nera in cotone 480gsm con mantra Mind Free ricamato.', 95.00, 30, true, 2),
+('Pure Flow Graphic Tee', 'T-shirt streetwear nera con stampa gommata tono su tono.', 49.90, 45, true, 2),
+('Flowless Cap', 'Cappellino strutturato total black con logo arcuato Flowless.', 35.00, 40, true, 2),
+('Flowless Bottle', 'Borraccia termica total black opaca ad alto isolamento.', 29.90, 30, true, 2),
+('Flowless Bag', 'Borsa crossbody tattica in nylon ad alta resistenza.', 55.00, 20, true, 2),
 
 -- 3. FREEFLOW (id_collezione = 3)
-('Total Sync Heavy Hoodie', 'Felpa pesante con cappuccio doppio strato ed estetica urban minimal.', 99.90, 25, 'Felpa', true, 3),
-('New Frontier Crewneck', 'Maglione girocollo in maglia tecnica essenziale per esplorazione urbana.', 85.00, 30, 'Felpa', true, 3),
-('Exploration Relaxed Tee', 'T-shirt dal taglio morbido e traspirante con stampa posteriore.', 42.00, 40, 'T-Shirt', true, 3),
-('Freeflow Cap', 'Cappellino baseball rigido con regolatore in metallo.', 35.00, 35, 'Accessorio', true, 3),
-('Freeflow Beanie', 'Berretto in maglia a costine elasticizzata con patch gommata.', 28.00, 50, 'Accessorio', true, 3),
-('Freeflow Headphones', 'Cuffie wireless over-ear personalizzate con audio ad alta fedelta.', 129.90, 15, 'Accessorio', true, 3),
-('Freeflow Bottle', 'Borraccia ergonomica satinata con gancio da moschettone.', 29.90, 30, 'Accessorio', true, 3),
-('Freeflow Bag', 'Zaino monospalla compatto con scomparto hi-tech.', 59.90, 20, 'Accessorio', true, 3),
+('Total Sync Heavy Hoodie', 'Felpa pesante con cappuccio doppio strato ed estetica urban minimal.', 99.90, 25, true, 3),
+('New Frontier Crewneck', 'Maglione girocollo in maglia tecnica essenziale per esplorazione urbana.', 85.00, 30, true, 3),
+('Exploration Relaxed Tee', 'T-shirt dal taglio morbido e traspirante con stampa posteriore.', 42.00, 40, true, 3),
+('Freeflow Cap', 'Cappellino baseball rigido con regolatore in metallo.', 35.00, 35, true, 3),
+('Freeflow Beanie', 'Berretto in maglia a costine elasticizzata con patch gommata.', 28.00, 50, true, 3),
+('Freeflow Headphones', 'Cuffie wireless over-ear personalizzate con audio ad alta fedelta.', 129.90, 15, true, 3),
+('Freeflow Bottle', 'Borraccia ergonomica satinata con gancio da moschettone.', 29.90, 30, true, 3),
+('Freeflow Bag', 'Zaino monospalla compatto con scomparto hi-tech.', 59.90, 20, true, 3),
 
 -- 4. REALITY (id_collezione = 4) - Navy, Earth Brown, Burgundy, Forest Olive
-('Visionary Leather Jacket - Deep Navy', 'Giacca in pelle coordinata tonalita blu notte profondo.', 269.90, 12, 'Giacca', true, 4),
-('Visionary Leather Jacket - Earth Brown', 'Giacca in pelle marrone cioccolato sofisticata e contemporanea.', 269.90, 12, 'Giacca', true, 4),
-('Visionary Leather Jacket - Burgundy', 'Giacca in pelle bordeaux intensa con dettagli rifiniti a mano.', 269.90, 12, 'Giacca', true, 4),
-('Visionary Leather Jacket - Forest Olive', 'Giacca in pelle verde militare per un look utility ad impatto.', 269.90, 12, 'Giacca', true, 4),
-('Reality Orbit Heavy Hoodie - Deep Navy', 'Felpa oversize blu notte con grafica orbitale e tipografia astratta.', 89.90, 25, 'Felpa', true, 4),
-('Reality Orbit Heavy Hoodie - Earth Brown', 'Felpa pesante marrone e crema con grafica Orbit gommata.', 89.90, 25, 'Felpa', true, 4),
-('True Mindset Boxy Tee - Burgundy', 'T-shirt boxy fit bordeaux con stampa statement Reality.', 45.00, 35, 'T-Shirt', true, 4),
-('True Mindset Boxy Tee - Forest Olive', 'T-shirt boxy fit verde foresta con dettagli a contrasto.', 45.00, 35, 'T-Shirt', true, 4),
-('Reality Cap', 'Cappellino con ricamo orbitale tridimensionale.', 35.00, 40, 'Accessorio', true, 4),
-('Reality Bottle', 'Borraccia termica 750ml con stampa Reality Orbit.', 32.00, 25, 'Accessorio', true, 4),
-('Reality Bag', 'Marsupio scomparto doppio per uso quotidiano.', 48.00, 30, 'Accessorio', true, 4),
+('Visionary Leather Jacket - Deep Navy', 'Giacca in pelle coordinata tonalita blu notte profondo.', 269.90, 12, true, 4),
+('Visionary Leather Jacket - Earth Brown', 'Giacca in pelle marrone cioccolato sofisticata e contemporanea.', 269.90, 12, true, 4),
+('Visionary Leather Jacket - Burgundy', 'Giacca in pelle bordeaux intensa con dettagli rifiniti a mano.', 269.90, 12, true, 4),
+('Visionary Leather Jacket - Forest Olive', 'Giacca in pelle verde militare per un look utility ad impatto.', 269.90, 12, true, 4),
+('Reality Orbit Heavy Hoodie - Deep Navy', 'Felpa oversize blu notte con grafica orbitale e tipografia astratta.', 89.90, 25, true, 4),
+('Reality Orbit Heavy Hoodie - Earth Brown', 'Felpa pesante marrone e crema con grafica Orbit gommata.', 89.90, 25, true, 4),
+('True Mindset Boxy Tee - Burgundy', 'T-shirt boxy fit bordeaux con stampa statement Reality.', 45.00, 35, true, 4),
+('True Mindset Boxy Tee - Forest Olive', 'T-shirt boxy fit verde foresta con dettagli a contrasto.', 45.00, 35, true, 4),
+('Reality Cap', 'Cappellino con ricamo orbitale tridimensionale.', 35.00, 40, true, 4),
+('Reality Bottle', 'Borraccia termica 750ml con stampa Reality Orbit.', 32.00, 25, true, 4),
+('Reality Bag', 'Marsupio scomparto doppio per uso quotidiano.', 48.00, 30, true, 4),
 
 -- 5. PEACE AND LOVE X FLOWLESS (id_collezione = 5)
-('Crossover Hybrid Leather Bomber', 'Bomber ibrido in pelle total black con dettagli crossover ricamati.', 299.90, 15, 'Giacca', true, 5),
-('Flow & Love Heavy Hoodie', 'Felpa pesante nera con fusione tra logo fiammeggiante e font Flowless.', 99.90, 30, 'Felpa', true, 5),
-('Dual Identity Graphic Tee', 'T-shirt nera a contrasto ad alta densita di stampa.', 49.90, 40, 'T-Shirt', true, 5),
-('Peace and Love x Flowless Cap', 'Cappellino nero con doppio logo gommato sul fronte.', 38.00, 35, 'Accessorio', true, 5),
-('Peace and Love x Flowless Bottle', 'Borraccia termica total black crossover ediz. limitata.', 35.00, 25, 'Accessorio', true, 5),
-('Peace and Love x Flowless Bag', 'Tracolla tecnica rinforzata con fibbie metalliche.', 65.00, 20, 'Accessorio', true, 5),
+('Crossover Hybrid Leather Bomber', 'Bomber ibrido in pelle total black con dettagli crossover ricamati.', 299.90, 15, true, 5),
+('Flow & Love Heavy Hoodie', 'Felpa pesante nera con fusione tra logo fiammeggiante e font Flowless.', 99.90, 30, true, 5),
+('Dual Identity Graphic Tee', 'T-shirt nera a contrasto ad alta densita di stampa.', 49.90, 40, true, 5),
+('Peace and Love x Flowless Cap', 'Cappellino nero con doppio logo gommato sul fronte.', 38.00, 35, true, 5),
+('Peace and Love x Flowless Bottle', 'Borraccia termica total black crossover ediz. limitata.', 35.00, 25, true, 5),
+('Peace and Love x Flowless Bag', 'Tracolla tecnica rinforzata con fibbie metalliche.', 65.00, 20, true, 5),
 
 -- 6. SPEED (id_collezione = 6) - Asphalt, Off-Road Sand, Night Racing Olive
-('Fast Driven Motion Hoodie - Asphalt Black', 'Felpa racing nera con grafiche motion blur sfumate a contrasto.', 92.00, 30, 'Felpa', true, 6),
-('Fast Driven Motion Hoodie - Off-Road Sand', 'Felpa sabbia e crema con accenti rosso corsa e dettagli graffiati.', 92.00, 30, 'Felpa', true, 6),
-('Fast Driven Motion Hoodie - Night Racing Olive', 'Felpa verde militare con dettagli verde acido ad alta visibilita.', 92.00, 30, 'Felpa', true, 6),
-('Beyond Speed Racing Tee - Asphalt Black', 'T-shirt grafica traspirante motorsport ad alte prestazioni.', 45.00, 40, 'T-Shirt', true, 6),
-('Beyond Speed Racing Tee - Off-Road Sand', 'T-shirt deserto e sabbia con stampa grafica stile motocross.', 45.00, 40, 'T-Shirt', true, 6),
-('Speed Cap', 'Cappellino racing da baseball con visiera sagomata.', 35.00, 45, 'Accessorio', true, 6),
-('Speed Bottle', 'Borraccia sportiva con tappo rapido a pressione.', 28.00, 35, 'Accessorio', true, 6),
-('Speed Bag', 'Marsupio tecnico da viaggio ad aggancio rapido.', 52.00, 25, 'Accessorio', true, 6),
+('Fast Driven Motion Hoodie - Asphalt Black', 'Felpa racing nera con grafiche motion blur sfumate a contrasto.', 92.00, 30, true, 6),
+('Fast Driven Motion Hoodie - Off-Road Sand', 'Felpa sabbia e crema con accenti rosso corsa e dettagli graffiati.', 92.00, 30, true, 6),
+('Fast Driven Motion Hoodie - Night Racing Olive', 'Felpa verde militare con dettagli verde acido ad alta visibilita.', 92.00, 30, true, 6),
+('Beyond Speed Racing Tee - Asphalt Black', 'T-shirt grafica traspirante motorsport ad alte prestazioni.', 45.00, 40, true, 6),
+('Beyond Speed Racing Tee - Off-Road Sand', 'T-shirt deserto e sabbia con stampa grafica stile motocross.', 45.00, 40, true, 6),
+('Speed Cap', 'Cappellino racing da baseball con visiera sagomata.', 35.00, 45, true, 6),
+('Speed Bottle', 'Borraccia sportiva con tappo rapido a pressione.', 28.00, 35, true, 6),
+('Speed Bag', 'Marsupio tecnico da viaggio ad aggancio rapido.', 52.00, 25, true, 6),
 
 -- 7. BUILT DIFFERENT (id_collezione = 7) - Chocolate, Cream, Slate, Pitch Black
-('Stand Out Heavy Hoodie - Chocolate Brown', 'Felpa marrone scuro ultra-morbida con doppio logo GRILL retro.', 89.90, 25, 'Felpa', true, 7),
-('Stand Out Heavy Hoodie - Cream', 'Felpa panna essenziale con grafica centrale marrone a contrasto.', 89.90, 25, 'Felpa', true, 7),
-('Stand Out Heavy Hoodie - Washed Slate', 'Felpa grigio antracite con effetto vintage lavato.', 89.90, 25, 'Felpa', true, 7),
-('Real Ingredients Boxy Tee - Pitch Black', 'T-shirt dal taglio relaxed nero profondo con stampa ad alta densita.', 42.00, 40, 'T-Shirt', true, 7),
-('Real Ingredients Boxy Tee - Cream', 'T-shirt chiara vestibilita boxy con ricamo sul petto.', 42.00, 40, 'T-Shirt', true, 7),
-('Built Different Cap', 'Cappellino stile retrò con cinturino in pelle.', 35.00, 40, 'Accessorio', true, 7),
-('Built Different Bottle', 'Borraccia termica con finitura gommata piacevole al tatto.', 29.90, 30, 'Accessorio', true, 7),
-('Built Different Bag', 'Marsupio utility capiente per tutti i giorni.', 45.00, 30, 'Accessorio', true, 7),
+('Stand Out Heavy Hoodie - Chocolate Brown', 'Felpa marrone scuro ultra-morbida con doppio logo GRILL retro.', 89.90, 25, true, 7),
+('Stand Out Heavy Hoodie - Cream', 'Felpa panna essenziale con grafica centrale marrone a contrasto.', 89.90, 25, true, 7),
+('Stand Out Heavy Hoodie - Washed Slate', 'Felpa grigio antracite con effetto vintage lavato.', 89.90, 25, true, 7),
+('Real Ingredients Boxy Tee - Pitch Black', 'T-shirt dal taglio relaxed nero profondo con stampa ad alta densita.', 42.00, 40, true, 7),
+('Real Ingredients Boxy Tee - Cream', 'T-shirt chiara vestibilita boxy con ricamo sul petto.', 42.00, 40, true, 7),
+('Built Different Cap', 'Cappellino stile retrò con cinturino in pelle.', 35.00, 40, true, 7),
+('Built Different Bottle', 'Borraccia termica con finitura gommata piacevole al tatto.', 29.90, 30, true, 7),
+('Built Different Bag', 'Marsupio utility capiente per tutti i giorni.', 45.00, 30, true, 7),
 
 -- 8. BLOOM (id_collezione = 8)
-('70s Soul Bloom Varsity Bomber', 'Giacca bomber stile anni 70 con patch floreali e colletto a costine.', 219.90, 15, 'Giacca', true, 8),
-('Free Spirit Bloom Hoodie', 'Felpa colorata con grafica tramonto psichedelica e font ondulato.', 85.00, 30, 'Felpa', true, 8),
-('Peace & Freedom Retro Tee', 'T-shirt stile vintage con illustrazioni floreali e toni caldi.', 42.00, 45, 'T-Shirt', true, 8),
-('Bloom Cap', 'Cappellino ricamato con motivi floreali multicolor.', 32.00, 35, 'Accessorio', true, 8),
-('Bloom Crochet Hat', 'Cappello lavorato all uncinetto stile hippie retro.', 38.00, 20, 'Accessorio', true, 8),
-('Bloom Bottle', 'Borraccia con pattern floreale nostalgico.', 28.00, 30, 'Accessorio', true, 8),
-('Bloom Bag', 'Borsa shopper in tela di cotone pesante ricamata.', 39.90, 25, 'Accessorio', true, 8),
+('70s Soul Bloom Varsity Bomber', 'Giacca bomber stile anni 70 con patch floreali e colletto a costine.', 219.90, 15, true, 8),
+('Free Spirit Bloom Hoodie', 'Felpa colorata con grafica tramonto psichedelica e font ondulato.', 85.00, 30, true, 8),
+('Peace & Freedom Retro Tee', 'T-shirt stile vintage con illustrazioni floreali e toni caldi.', 42.00, 45, true, 8),
+('Bloom Cap', 'Cappellino ricamato con motivi floreali multicolor.', 32.00, 35, true, 8),
+('Bloom Crochet Hat', 'Cappello lavorato all uncinetto stile hippie retro.', 38.00, 20, true, 8),
+('Bloom Bottle', 'Borraccia con pattern floreale nostalgico.', 28.00, 30, true, 8),
+('Bloom Bag', 'Borsa shopper in tela di cotone pesante ricamata.', 39.90, 25, true, 8),
 
 -- 9. METAL (id_collezione = 9)
-('Noise Empire Flight Bomber', 'Giacca bomber da volo stile metalcore con dettagli distressed e zip metalliche.', 239.90, 15, 'Giacca', true, 9),
-('Heavy Noise Acid-Wash Hoodie', 'Felpa con lavaggio acido grigio scuro e grafica teschio sanguigno.', 95.00, 30, 'Felpa', true, 9),
-('Skull Empire Washed Tee', 'T-shirt con lavaggio vintage washed e font spigoloso band metal.', 48.00, 50, 'T-Shirt', true, 9),
-('Metal Cap', 'Cappellino nero distrutturato con spille metalliche e font gothic.', 35.00, 35, 'Accessorio', true, 9),
-('Metal Bottle', 'Borraccia in metallo grezzo satinato con incisione laser.', 32.00, 30, 'Accessorio', true, 9),
-('Metal Bag', 'Borsa tracolla rinforzata con borchie e chiusure in metallo.', 59.90, 20, 'Accessorio', true, 9),
+('Noise Empire Flight Bomber', 'Giacca bomber da volo stile metalcore con dettagli distressed e zip metalliche.', 239.90, 15, true, 9),
+('Heavy Noise Acid-Wash Hoodie', 'Felpa con lavaggio acido grigio scuro e grafica teschio sanguigno.', 95.00, 30, true, 9),
+('Skull Empire Washed Tee', 'T-shirt con lavaggio vintage washed e font spigoloso band metal.', 48.00, 50, true, 9),
+('Metal Cap', 'Cappellino nero distrutturato con spille metalliche e font gothic.', 35.00, 35, true, 9),
+('Metal Bottle', 'Borraccia in metallo grezzo satinato con incisione laser.', 32.00, 30, true, 9),
+('Metal Bag', 'Borsa tracolla rinforzata con borchie e chiusure in metallo.', 59.90, 20, true, 9),
 
 -- 10. DEVIL (id_collezione = 10)
-('Hellfire MA-1 Flight Bomber', 'Giacca bomber MA-1 con fiamme sulle maniche e fodera interna rossa inferno.', 249.90, 15, 'Giacca', true, 10),
-('Infernal Flame Heavy Hoodie', 'Felpa con cappuccio pesante e illustrazioni dettagliate di demoni cornuti.', 95.00, 30, 'Felpa', true, 10),
-('Horned Demon Boxy Tee', 'T-shirt vestibilita boxy con simboli mistici e grafica infuocata.', 48.00, 45, 'T-Shirt', true, 10),
-('Devil Cap', 'Cappellino gothic con ricamo di corna rosse in rilievo.', 35.00, 40, 'Accessorio', true, 10),
-('Devil Bottle', 'Borraccia nera lucida con dettagli rossi ad alto contrasto.', 29.90, 30, 'Accessorio', true, 10),
-('Devil Bag', 'Marsupio tattico con moschettoni metallici e tirazip fiammeggianti.', 55.00, 25, 'Accessorio', true, 10),
+('Hellfire MA-1 Flight Bomber', 'Giacca bomber MA-1 con fiamme sulle maniche e fodera interna rossa inferno.', 249.90, 15, true, 10),
+('Infernal Flame Heavy Hoodie', 'Felpa con cappuccio pesante e illustrazioni dettagliate di demoni cornuti.', 95.00, 30, true, 10),
+('Horned Demon Boxy Tee', 'T-shirt vestibilita boxy con simboli mistici e grafica infuocata.', 48.00, 45, true, 10),
+('Devil Cap', 'Cappellino gothic con ricamo di corna rosse in rilievo.', 35.00, 40, true, 10),
+('Devil Bottle', 'Borraccia nera lucida con dettagli rossi ad alto contrasto.', 29.90, 30, true, 10),
+('Devil Bag', 'Marsupio tattico con moschettoni metallici e tirazip fiammeggianti.', 55.00, 25, true, 10),
 
 -- 11. ELEVATE (id_collezione = 11)
-('Masterpiece Leather Jacket', 'Giacca in pelle di agnello di prima scelta con finiture sartoriali e dettagli di lusso.', 389.90, 10, 'Giacca', true, 11),
-('Crown Oversized Leather Bomber', 'Bomber in pelle oversize con ricami tridimensionali ad alta densita.', 349.90, 10, 'Giacca', true, 11),
-('Quiet Luxury Heavy Hoodie', 'Felpa in cotone pettinato ad altissima grammatura (500gsm) total black magnetica.', 120.00, 20, 'Felpa', true, 11),
-('Elevate Cap', 'Cappellino di lusso con placchetta in metallo dorato/satinato.', 45.00, 30, 'Accessorio', true, 11),
-('Elevate Bag', 'Borsa da viaggio premium in pelle e nylon ad alta densita.', 89.90, 15, 'Accessorio', true, 11),
-('Elevate Bottle', 'Borraccia termica di lusso con finitura opaca e dettagli incisi.', 38.00, 25, 'Accessorio', true, 11);
+('Masterpiece Leather Jacket', 'Giacca in pelle di agnello di prima scelta con finiture sartoriali e dettagli di lusso.', 389.90, 10, true, 11),
+('Crown Oversized Leather Bomber', 'Bomber in pelle oversize con ricami tridimensionali ad alta densita.', 349.90, 10, true, 11),
+('Quiet Luxury Heavy Hoodie', 'Felpa in cotone pettinato ad altissima grammatura (500gsm) total black magnetica.', 120.00, 20, true, 11),
+('Elevate Cap', 'Cappellino di lusso con placchetta in metallo dorato/satinato.', 45.00, 30, true, 11),
+('Elevate Bag', 'Borsa da viaggio premium in pelle e nylon ad alta densita.', 89.90, 15, true, 11),
+('Elevate Bottle', 'Borraccia termica di lusso con finitura opaca e dettagli incisi.', 38.00, 25, true, 11);
 
 
 -- ===================================================
@@ -324,12 +323,12 @@ INSERT INTO categoria (nome, descrizione) VALUES
 
 
 -- ===================================================
--- POPOLAMENTO TABELLA TIPOLOGIA (Mappa Prodotto <-> Categoria)
+-- POPOLAMENTO TABELLA PRODOTTO_CATEGORIA (Mappa Prodotto <-> Categoria)
 -- ID Categorie: 1=Giacche, 2=Felpe, 3=T-Shirt, 4=Accessori, 5=Pelle
 -- ===================================================
 
 
-INSERT INTO tipologia (id_prodotto, id_categoria) VALUES 
+INSERT INTO prodotto_categoria (id_prodotto, id_categoria) VALUES 
 
 -- ---------------------------------------------------
 -- 1. PEACE AND LOVE (Prodotti 1 - 9)
