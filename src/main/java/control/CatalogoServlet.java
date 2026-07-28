@@ -53,7 +53,7 @@ public class CatalogoServlet extends HttpServlet {
                 CategoriaBean categoriaAttiva = categoriaDAO.doRetrieveById(idCategoria);
                 request.setAttribute("categoriaAttiva", categoriaAttiva);
             } else {
-                prodotti = prodottoDAO.doRetrieveAllClienti();
+                prodotti = prodottoDAO.doRetrieveAllClientiRaggruppati();
             }
             request.setAttribute("prodotti", prodotti);
 

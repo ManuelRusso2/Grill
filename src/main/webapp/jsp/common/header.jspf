@@ -18,7 +18,8 @@
         <c:set var="currentPath" value="${pageContext.request.servletPath}" />
         <c:if test="${currentPath != '/jsp/common/login.jsp' and currentPath != '/jsp/user/registrazione.jsp'}">
         <div class="search-wrapper">
-            <input type="text" id="searchInput" class="search-input" placeholder="Cerca prodotti..." autocomplete="off">
+            <input type="text" id="searchInput" class="search-input" placeholder="Cerca prodotti..." autocomplete="off"
+                   data-context-path="${pageContext.request.contextPath}">
             <div id="searchSuggestions" class="search-suggestions" style="display:none;"></div>
         </div>
         </c:if>

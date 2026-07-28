@@ -10,14 +10,14 @@
 
     <%-- 2. Feedback di successo (es. reindirizzamento post-registrazione) --%>
     <c:if test="${not empty successMessage}">
-        <div class="alert alert-success" style="color: #065f46; background-color: #d1fae5; border: 1px solid #a7f3d0; padding: 10px; border-radius: 4px; margin-bottom: 15px;">
+        <div class="alert alert-success">
             <c:out value="${successMessage}" />
         </div>
     </c:if>
 
     <%-- 3. Feedback di errore (es. credenziali errate o accesso negato) --%>
     <c:if test="${not empty errorMessage}">
-        <div class="alert alert-danger" style="color: #991b1b; background-color: #fee2e2; border: 1px solid #fecaca; padding: 10px; border-radius: 4px; margin-bottom: 15px;">
+        <div class="alert alert-danger">
             <c:out value="${errorMessage}" />
         </div>
     </c:if>

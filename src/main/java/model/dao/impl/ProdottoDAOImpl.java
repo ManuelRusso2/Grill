@@ -32,25 +32,40 @@ public class ProdottoDAOImpl implements ProdottoDAO {
     private static final String SELECT_ALL_CLIENTI =
         "SELECT id_prodotto, nome, descrizione, costo, quantita, attivo, id_collezione FROM prodotto WHERE attivo = true";
 
+    // Restituisce un solo prodotto per ogni nome base (parte prima di ' - '), il primo per id
+    private static final String SELECT_ALL_CLIENTI_RAGGRUPPATI =
+        "SELECT MIN(id_prodotto) as id_prodotto, " +
+        "SUBSTRING_INDEX(nome, ' - ', 1) as nome, " +
+        "MIN(descrizione) as descrizione, MIN(costo) as costo, " +
+        "SUM(quantita) as quantita, true as attivo, MIN(id_collezione) as id_collezione " +
+        "FROM prodotto WHERE attivo = true " +
+        "GROUP BY SUBSTRING_INDEX(nome, ' - ', 1) " +
+        "ORDER BY MIN(id_prodotto)";
+
+    private static final String SELECT_VARIANTI =
+        "SELECT id_prodotto, nome, descrizione, costo, quantita, attivo, id_collezione " +
+        "FROM prodotto WHERE attivo = true AND SUBSTRING_INDEX(nome, ' - ', 1) = ? " +
+        "ORDER BY id_prodotto";
+
     private static final String SELECT_ALL_ADMIN =
         "SELECT id_prodotto, nome, descrizione, costo, quantita, attivo, id_collezione FROM prodotto";
 
     private static final String SELECT_BY_SEARCH =
-        "SELECT DISTINCT p.id_prodotto, p.nome, p.descrizione, p.costo, p.quantita, p.attivo, p.id_collezione " +
-        "FROM prodotto p LEFT JOIN tipologia t ON p.id_prodotto = t.id_prodotto " +
+        "SELECT DISTINCT p.id_prodotto, p.nome, p.costo " +
+        "FROM prodotto p LEFT JOIN prodotto_categoria t ON p.id_prodotto = t.id_prodotto " +
         "LEFT JOIN categoria c ON t.id_categoria = c.id_categoria " +
         "WHERE p.attivo = true AND (p.nome LIKE ? OR p.descrizione LIKE ? OR c.nome LIKE ?) LIMIT 8";
 
     private static final String SELECT_BY_CATEGORIA =
         "SELECT p.id_prodotto, p.nome, p.descrizione, p.costo, p.quantita, p.attivo, p.id_collezione " +
-        "FROM prodotto p JOIN tipologia t ON p.id_prodotto = t.id_prodotto " +
+        "FROM prodotto p JOIN prodotto_categoria t ON p.id_prodotto = t.id_prodotto " +
         "WHERE p.attivo = true AND t.id_categoria = ?";
 
     private static final String DELETE_TIPOLOGIA =
-        "DELETE FROM tipologia WHERE id_prodotto = ?";
+        "DELETE FROM prodotto_categoria WHERE id_prodotto = ?";
 
     private static final String INSERT_TIPOLOGIA =
-        "INSERT INTO tipologia (id_prodotto, id_categoria) VALUES (?, ?)";
+        "INSERT INTO prodotto_categoria (id_prodotto, id_categoria) VALUES (?, ?)";
 
     @Override
     public void doSave(ProdottoBean prodotto) throws SQLException {
@@ -175,8 +190,41 @@ public class ProdottoDAOImpl implements ProdottoDAO {
     }
 
     @Override
-    public List<ProdottoBean> doRetrieveBySearch(String query) throws SQLException {
+    public List<ProdottoBean> doRetrieveAllClientiRaggruppati() throws SQLException {
         List<ProdottoBean> prodotti = new ArrayList<>();
+        try (Connection con = ConnessioneDB.getConnection();
+             PreparedStatement ps = con.prepareStatement(SELECT_ALL_CLIENTI_RAGGRUPPATI);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                ProdottoBean p = new ProdottoBean();
+                p.setIdProdotto(rs.getInt("id_prodotto"));
+                p.setNome(rs.getString("nome"));
+                p.setDescrizione(rs.getString("descrizione"));
+                p.setCosto(rs.getDouble("costo"));
+                p.setQuantita(rs.getInt("quantita"));
+                p.setAttivo(true);
+                p.setIdCollezione(rs.getInt("id_collezione"));
+                prodotti.add(p);
+            }
+        }
+        return prodotti;
+    }
+
+    @Override
+    public List<ProdottoBean> doRetrieveVarianti(String nomeBase) throws SQLException {
+        List<ProdottoBean> prodotti = new ArrayList<>();
+        try (Connection con = ConnessioneDB.getConnection();
+             PreparedStatement ps = con.prepareStatement(SELECT_VARIANTI)) {
+            ps.setString(1, nomeBase);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) prodotti.add(mapRow(rs));
+            }
+        }
+        return prodotti;
+    }
+
+    @Override
+    public List<ProdottoBean> doRetrieveBySearch(String query) throws SQLException {        List<ProdottoBean> prodotti = new ArrayList<>();
         try (Connection con = ConnessioneDB.getConnection();
              PreparedStatement ps = con.prepareStatement(SELECT_BY_SEARCH)) {
             String like = "%" + query + "%";
@@ -184,7 +232,13 @@ public class ProdottoDAOImpl implements ProdottoDAO {
             ps.setString(2, like);
             ps.setString(3, like);
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) prodotti.add(mapRow(rs));
+                while (rs.next()) {
+                    ProdottoBean p = new ProdottoBean();
+                    p.setIdProdotto(rs.getInt("id_prodotto"));
+                    p.setNome(rs.getString("nome"));
+                    p.setCosto(rs.getDouble("costo"));
+                    prodotti.add(p);
+                }
             }
         }
         return prodotti;

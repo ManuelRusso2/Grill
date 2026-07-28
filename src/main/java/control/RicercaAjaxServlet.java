@@ -44,35 +44,30 @@ public class RicercaAjaxServlet extends HttpServlet {
             return;
         }
 
+        PrintWriter out = response.getWriter();
         try {
             List<ProdottoBean> prodottiTrovati = prodottoDAO.doRetrieveBySearch(query.trim());
             
-            // Costruiamo manualmente l'array JSON di oggetti
-            StringBuilder json = new StringBuilder();
-            json.append("[");
-            
+            StringBuilder json = new StringBuilder("[");
             for (int i = 0; i < prodottiTrovati.size(); i++) {
                 ProdottoBean p = prodottiTrovati.get(i);
-                json.append("{");
-                json.append("\"id\":").append(p.getIdProdotto()).append(",");
-                json.append("\"nome\":\"").append(p.getNome().replace("\"", "\\\"")).append("\",");
-                json.append("\"prezzo\":").append(p.getCosto());
-                json.append("}");
-                
-                if (i < prodottiTrovati.size() - 1) {
-                    json.append(","); // Virgola tra gli oggetti, tranne l'ultimo
-                }
+                if (i > 0) json.append(",");
+                json.append("{")
+                   .append("\"id\":").append(p.getIdProdotto()).append(",")
+                   .append("\"nome\":\"").append(p.getNome().replace("\\", "\\\\").replace("\"", "\\\"")).append("\",")
+                   .append("\"prezzo\":").append(p.getCosto())
+                   .append("}");
             }
-            
             json.append("]");
             
-            PrintWriter out = response.getWriter();
             out.print(json.toString());
             out.flush();
             
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            out.print("[]");
+            out.flush();
         }
     }
 

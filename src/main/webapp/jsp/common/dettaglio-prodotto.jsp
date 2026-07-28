@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <%@ include file="/jsp/common/header.jspf" %>
 <%@ include file="/jsp/common/menu.jspf" %>
@@ -12,10 +13,31 @@
     </c:if>
 
     <c:if test="${not empty prodotto}">
-        <h1><c:out value="${prodotto.nome}" /></h1>
+        <h1>
+            <c:choose>
+                <c:when test="${not empty nomeBase}"><c:out value="${nomeBase}" /></c:when>
+                <c:otherwise><c:out value="${prodotto.nome}" /></c:otherwise>
+            </c:choose>
+        </h1>
         <p><c:out value="${prodotto.descrizione}" /></p>
         <p>Prezzo: <fmt:formatNumber value="${prodotto.costo}" type="currency" currencySymbol="€" /></p>
-        <p>Disponibilità: <c:out value="${prodotto.quantita}" /></p>
+
+        <%-- Selettore varianti colore --%>
+        <c:if test="${not empty varianti}">
+            <div class="varianti-wrapper">
+                <p class="varianti-label">Colore:</p>
+                <div class="varianti-list">
+                    <c:forEach var="v" items="${varianti}">
+                        <c:set var="colore" value="${fn:contains(v.nome, ' - ') ? fn:substringAfter(v.nome, ' - ') : v.nome}" />
+                        <a href="${pageContext.request.contextPath}/DettaglioProdottoServlet?id=${v.idProdotto}"
+                           class="variante-btn ${v.idProdotto == prodotto.idProdotto ? 'active' : ''} ${v.quantita <= 0 ? 'esaurito' : ''}">
+                            <c:out value="${colore}" />
+                        </a>
+                    </c:forEach>
+                </div>
+            </div>
+        </c:if>
+
         <c:if test="${not empty prodotto.categorie}">
             <p>Categorie:
                 <c:forEach var="cat" items="${prodotto.categorie}" varStatus="s">

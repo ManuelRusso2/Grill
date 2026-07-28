@@ -21,4 +21,8 @@ public interface ProdottoDAO {
     List<ProdottoBean> doRetrieveByCategoria(int idCategoria) throws SQLException;
 
     List<ProdottoBean> doRetrieveBySearch(String query) throws SQLException;
+
+    List<ProdottoBean> doRetrieveAllClientiRaggruppati() throws SQLException;
+
+    List<ProdottoBean> doRetrieveVarianti(String nomeBase) throws SQLException;
 }

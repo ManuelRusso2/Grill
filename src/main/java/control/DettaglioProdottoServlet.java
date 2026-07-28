@@ -2,6 +2,7 @@ package control;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -50,6 +51,16 @@ public class DettaglioProdottoServlet extends HttpServlet {
             
             // Salviamo il prodotto trovato nei dettagli della richiesta
             request.setAttribute("prodotto", prodotto);
+
+            // Carica le varianti (stesso nome base, colori diversi)
+            String nomeBase = prodotto.getNome().contains(" - ")
+                ? prodotto.getNome().substring(0, prodotto.getNome().lastIndexOf(" - "))
+                : prodotto.getNome();
+            List<ProdottoBean> varianti = prodottoDAO.doRetrieveVarianti(nomeBase);
+            if (varianti.size() > 1) {
+                request.setAttribute("varianti", varianti);
+                request.setAttribute("nomeBase", nomeBase);
+            }
             
             // Inoltriamo alla pagina JSP dedicata
             request.getRequestDispatcher("/jsp/common/dettaglio-prodotto.jsp").forward(request, response);
