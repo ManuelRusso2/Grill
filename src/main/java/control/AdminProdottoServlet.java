@@ -70,7 +70,6 @@ public class AdminProdottoServlet extends HttpServlet {
 
                     if (prodotto != null) {
                         request.setAttribute("prodotto", prodotto);
-                        // Carica le categorie per il select nel form
                         List<CategoriaBean> categorie = categoriaDAO.doRetrieveAll();
                         request.setAttribute("categorie", categorie);
                         request.getRequestDispatcher("/jsp/admin/nuovo-prodotto.jsp").forward(request, response);
@@ -85,17 +84,26 @@ public class AdminProdottoServlet extends HttpServlet {
             List<ProdottoBean> tuttiIProdotti = prodottoDAO.doRetrieveAllAdmin();
             request.setAttribute("prodottiAdmin", tuttiIProdotti);
             
-            // Carica le categorie per il select nel form (quando creo un nuovo prodotto)
             List<CategoriaBean> categorie = categoriaDAO.doRetrieveAll();
             request.setAttribute("categorie", categorie);
-            // Recupero eventuali alert amministrativi generati da altre operazioni (es. prodotto esaurito)
-            java.util.List<String> adminAlerts = (java.util.List<String>) getServletContext().getAttribute("adminAlerts");
-            if (adminAlerts != null && !adminAlerts.isEmpty()) {
-                request.setAttribute("adminAlerts", adminAlerts);
-                // Rimuoviamo gli alert dal contesto dopo averli passati alla request per evitare ripetizioni
-                getServletContext().removeAttribute("adminAlerts");
+
+            // 5. Gestione thread-safe e corretta degli Admin Alerts
+            synchronized (getServletContext()) {
+                Object rawAlerts = getServletContext().getAttribute("adminAlerts");
+                if (rawAlerts instanceof java.util.List<?>) {
+                    @SuppressWarnings("unchecked")
+                    java.util.List<String> adminAlerts = (java.util.List<String>) rawAlerts;
+                    
+                    if (!adminAlerts.isEmpty()) {
+                        // Passiamo una copia della lista alla Request
+                        request.setAttribute("adminAlerts", new java.util.ArrayList<>(adminAlerts));
+                        // Svuotiamo la lista condivisa anziché rimuovere l'attributo
+                        adminAlerts.clear();
+                    }
+                }
             }
-            // 5. Inoltro alla tabella di gestione prodotti
+
+            // 6. Inoltro alla tabella di gestione prodotti
             request.getRequestDispatcher("/jsp/admin/gestione-prodotti.jsp").forward(request, response);
             
         } catch (NumberFormatException e) {
@@ -119,7 +127,7 @@ public class AdminProdottoServlet extends HttpServlet {
 
         try {
             if (action != null) {
-                // Gestioni prodotti normali
+                // Gestione operazioni prodotto
                 if ("save".equalsIgnoreCase(action)) {
                     ProdottoBean prodotto = leggiProdottoDaRequest(request, false);
                     prodottoDAO.doSave(prodotto);
@@ -137,23 +145,17 @@ public class AdminProdottoServlet extends HttpServlet {
                 }
             }
 
-            } catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             session.setAttribute("errorMessage", "Errore nei dati inseriti: verifica che prezzo e quantità siano numeri validi.");
         } catch (SQLException e) {
             e.printStackTrace();
             session.setAttribute("errorMessage", "Errore di persistenza nel Database: " + e.getMessage());
         }
 
-        // 1.b Recupero eventuali alert amministrativi generati da altre operazioni (es. prodotto esaurito)
-        java.util.List<String> adminAlerts = (java.util.List<String>) getServletContext().getAttribute("adminAlerts");
-        if (adminAlerts != null && !adminAlerts.isEmpty()) {
-            request.setAttribute("adminAlerts", adminAlerts);
-            // Rimuoviamo gli alert dal contesto dopo averli passati alla request per evitare ripetizioni
-            getServletContext().removeAttribute("adminAlerts");
-        }
+        // NOTA: La lettura di "adminAlerts" è stata RIMOSTA da qui. 
+        // Viene già gestita interamente nel doGet(...) quando la pagina viene ricaricata dopo il redirect.
 
-        // Redirect in GET alla Servlet per ricaricare la vista ed evitare doppi invii
-        // (se non è stata già mandata una risposta AJAX)
+        // Redirect in GET alla Servlet per evitare doppi invii di form
         if (!response.isCommitted()) {
             response.sendRedirect(request.getContextPath() + "/AdminProdottoServlet");
         }

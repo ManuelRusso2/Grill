@@ -149,7 +149,6 @@ public class ContenutoDAOImpl implements ContenutoDAO {
                     prodotto.setDescrizione(rs.getString("descrizione"));
                     prodotto.setCosto(rs.getDouble("costo"));
                     prodotto.setQuantita(rs.getInt("disponibilita")); // Quantità rimasta in magazzino
-                    prodotto.setTipo(rs.getString("tipo"));
                     prodotto.setAttivo(rs.getBoolean("attivo"));
                     prodotto.setIdCollezione(rs.getInt("id_collezione"));
 

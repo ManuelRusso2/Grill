@@ -225,26 +225,37 @@ public class CheckoutServlet extends HttpServlet {
 					psOrdine.executeBatch(); // Eseguiamo tutte le inserzioni delle righe in un solo colpo
 
 					// 2.b Decremento delle quantità dei prodotti e controllo esaurimento
-					try (PreparedStatement psUpdateQty = con.prepareStatement("UPDATE prodotto SET quantita = quantita - ? WHERE id_prodotto = ?");
-					     PreparedStatement psSelectQty = con.prepareStatement("SELECT quantita, nome FROM prodotto WHERE id_prodotto = ?")) {
+					String sqlUpdateQty = "UPDATE prodotto SET quantita = quantita - ? WHERE id_prodotto = ?";
+					String sqlSelectQty = "SELECT quantita, nome FROM prodotto WHERE id_prodotto = ?";
+
+					try (PreparedStatement psUpdateQty = con.prepareStatement(sqlUpdateQty);
+					     PreparedStatement psSelectQty = con.prepareStatement(sqlSelectQty)) {
+
 					    for (Map.Entry<ProdottoBean, Integer> entry : prodottiInCarrello.entrySet()) {
 					        ProdottoBean prodotto = entry.getKey();
-					        int quantita = entry.getValue();
-					        // Decrementa
-					        psUpdateQty.setInt(1, quantita);
+					        int quantitaAcquistata = entry.getValue();
+
+					        // 1. Decrementa la quantità nel database
+					        psUpdateQty.setInt(1, quantitaAcquistata);
 					        psUpdateQty.setInt(2, prodotto.getIdProdotto());
 					        psUpdateQty.executeUpdate();
-					        // Verifica nuova quantità
+
+					        // 2. Verifica la quantità rimanente
 					        psSelectQty.setInt(1, prodotto.getIdProdotto());
 					        try (ResultSet rsQ = psSelectQty.executeQuery()) {
 					            if (rsQ.next()) {
 					                int nuovaQ = rsQ.getInt("quantita");
 					                String nomeProd = rsQ.getString("nome");
+
+					                // Se il prodotto è esaurito o sotto zero, crea l'alert
 					                if (nuovaQ <= 0) {
-					                    // Aggiungi avviso amministratore (dal contesto servlet)
 					                    String alert = "Prodotto esaurito: " + nomeProd + " (ID: " + prodotto.getIdProdotto() + ")";
+					                    
+					                    // Sincronizzazione thread-safe per ServletContext
 					                    synchronized (getServletContext()) {
+					                        @SuppressWarnings("unchecked")
 					                        java.util.List<String> alerts = (java.util.List<String>) getServletContext().getAttribute("adminAlerts");
+					                        
 					                        if (alerts == null) {
 					                            alerts = new java.util.ArrayList<>();
 					                            getServletContext().setAttribute("adminAlerts", alerts);

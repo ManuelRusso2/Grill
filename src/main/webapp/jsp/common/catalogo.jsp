@@ -15,7 +15,7 @@
         </c:choose>
     </h1>
 
-    <%-- Toast Notifica per aggiunta asincrona via AJAX --%>
+    <%-- Notifica per aggiunta asincrona via AJAX --%>
     <div id="cart-toast" style="display:none; position: fixed; top: 20px; right: 20px; z-index: 9999; padding: 12px 20px; border-radius: 6px; font-weight: bold; color: white; box-shadow: 0 4px 10px rgba(0,0,0,0.15); transition: opacity 0.3s ease;">
     </div>
 
