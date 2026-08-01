@@ -47,6 +47,11 @@
         </c:if>
 
         <c:choose>
+            <c:when test="${isAdmin}">
+                <div style="padding: 15px; border-radius: 6px; background-color: #FEE2E2; border: 1px solid #FCA5A5; color: #991B1B; font-weight: 500;">
+                    <p>🔒 Gli amministratori non possono acquistare prodotti dal catalogo.</p>
+                </div>
+            </c:when>
             <c:when test="${prodotto.quantita > 0}">
                 <form method="post" action="${pageContext.request.contextPath}/CarrelloServlet" id="add-to-cart-form">
                     <input type="hidden" name="action" value="add">

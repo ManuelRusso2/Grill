@@ -51,6 +51,12 @@ public class CarrelloServlet extends HttpServlet {
             return;
         }
 
+        // Blocchiamo accesso al carrello per gli admin
+        if (utente.isAdmin()) {
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Gli amministratori non possono accedere al carrello.");
+            return;
+        }
+
         try {
             CarrelloBean carrello = ottieniOCreaCarrello(utente.getIdUtente());
 
@@ -98,6 +104,19 @@ public class CarrelloServlet extends HttpServlet {
                 return;
             }
             response.sendRedirect(request.getContextPath() + "/jsp/common/login.jsp");
+            return;
+        }
+
+        // Blocchiamo accesso al carrello per gli admin
+        if (utente.isAdmin()) {
+            if (isAjax) {
+                response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                response.setContentType("application/json");
+                response.setCharacterEncoding("UTF-8");
+                response.getWriter().write("{\"success\": false, \"message\": \"Gli amministratori non possono aggiungere prodotti al carrello.\"}");
+                return;
+            }
+            response.sendError(HttpServletResponse.SC_FORBIDDEN, "Gli amministratori non possono aggiungere prodotti al carrello.");
             return;
         }
 

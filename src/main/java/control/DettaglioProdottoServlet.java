@@ -8,10 +8,15 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import model.bean.ProdottoBean;
+import model.bean.UtenteBean;
+import model.bean.CategoriaBean;
 import model.dao.ProdottoDAO;
+import model.dao.CategoriaDAO;
 import model.dao.impl.ProdottoDAOImpl;
+import model.dao.impl.CategoriaDAOImpl;
 
 
 @WebServlet("/DettaglioProdottoServlet")
@@ -19,11 +24,13 @@ public class DettaglioProdottoServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     
     private ProdottoDAO prodottoDAO;
+    private CategoriaDAO categoriaDAO;
 
     
     @Override
     public void init() throws ServletException {
         this.prodottoDAO = new ProdottoDAOImpl();
+        this.categoriaDAO = new CategoriaDAOImpl();
     }
 
     
@@ -40,6 +47,10 @@ public class DettaglioProdottoServlet extends HttpServlet {
         }
 
         try {
+            // Carica tutte le categorie per il menu
+            List<CategoriaBean> allCategorie = categoriaDAO.doRetrieveAll();
+            request.setAttribute("categorie", allCategorie);
+            
             int idProdotto = Integer.parseInt(idParam);
             ProdottoBean prodotto = prodottoDAO.doRetrieveByKey(idProdotto);
             
@@ -60,6 +71,15 @@ public class DettaglioProdottoServlet extends HttpServlet {
             if (varianti.size() > 1) {
                 request.setAttribute("varianti", varianti);
                 request.setAttribute("nomeBase", nomeBase);
+            }
+            
+            // Controlla se l'utente è admin
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                UtenteBean utente = (UtenteBean) session.getAttribute("utente");
+                if (utente != null) {
+                    request.setAttribute("isAdmin", utente.isAdmin());
+                }
             }
             
             // Inoltriamo alla pagina JSP dedicata

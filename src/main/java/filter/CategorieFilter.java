@@ -2,6 +2,7 @@ package filter;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -28,16 +29,17 @@ public class CategorieFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        HttpServletRequest httpRequest = (HttpServletRequest) request;
-        // Carica le categorie solo per richieste GET (pagine HTML), non per POST AJAX
-        if ("GET".equalsIgnoreCase(httpRequest.getMethod())) {
-            try {
-                List<CategoriaBean> categorie = categoriaDAO.doRetrieveAll();
+        try {
+            List<CategoriaBean> categorie = categoriaDAO.doRetrieveAll();
+            if (categorie != null) {
                 request.setAttribute("categorie", categorie);
-            } catch (SQLException e) {
-                e.printStackTrace();
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            // Continua anche se fallisce il caricamento delle categorie
+            request.setAttribute("categorie", new ArrayList<CategoriaBean>());
         }
+        
         chain.doFilter(request, response);
     }
 

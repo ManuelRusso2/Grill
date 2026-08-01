@@ -30,8 +30,8 @@ public class ContenutoDAOImpl implements ContenutoDAO {
     
     // Query con JOIN per recuperare i dettagli del prodotto e la quantità nel carrello
     private static final String SELECT_PRODOTTI_JOIN =
-        "SELECT p.id_prodotto, p.nome, p.descrizione, p.costo, p.quantita AS disponibilita, p.tipo, p.attivo, p.id_collezione, c.quantita AS quantita_carrello " +
-        "FROM contenuto c JOIN prodotto p ON c.id_prodotto = p.id_prodotto WHERE c.id_carrello = ?";
+    	    "SELECT p.id_prodotto, p.nome, p.descrizione, p.costo, p.quantita AS disponibilita, p.attivo, p.id_collezione, c.quantita AS quantita_carrello " +
+    	    "FROM contenuto c JOIN prodotto p ON c.id_prodotto = p.id_prodotto WHERE c.id_carrello = ?";
 
     
     @Override

@@ -44,6 +44,10 @@ public class CatalogoServlet extends HttpServlet {
             throws ServletException, IOException {
         
         try {
+            // 0. Carica tutte le categorie per il menu
+            List<CategoriaBean> allCategorie = categoriaDAO.doRetrieveAll();
+            request.setAttribute("categorie", allCategorie);
+            
             // 1. Filtro per categoria se presente il parametro
             String categoriaParam = request.getParameter("categoria");
             List<ProdottoBean> prodotti;
@@ -62,18 +66,24 @@ public class CatalogoServlet extends HttpServlet {
             if (session != null) {
                 UtenteBean utente = (UtenteBean) session.getAttribute("utente");
                 if (utente != null) {
-                    CarrelloDAO carrelloDAO = new CarrelloDAOImpl();
-                    ContenutoDAO contenutoDAO = new ContenutoDAOImpl();
-                    CarrelloBean carrello = carrelloDAO.doRetrieveByUtente(utente.getIdUtente());
-                    if (carrello != null) {
-                        java.util.Map<ProdottoBean, Integer> prodottiInCarrello = contenutoDAO.doRetrieveProdottiInCarrello(carrello.getIdCarrello());
-                        int totalItems = 0;
-                        if (prodottiInCarrello != null) {
-                            for (Integer q : prodottiInCarrello.values()) {
-                                if (q != null) totalItems += q;
+                    // Passiamo al JSP se l'utente è admin
+                    request.setAttribute("isAdmin", utente.isAdmin());
+                    
+                    // Se l'utente è admin, non calcoliamo il carrello
+                    if (!utente.isAdmin()) {
+                        CarrelloDAO carrelloDAO = new CarrelloDAOImpl();
+                        ContenutoDAO contenutoDAO = new ContenutoDAOImpl();
+                        CarrelloBean carrello = carrelloDAO.doRetrieveByUtente(utente.getIdUtente());
+                        if (carrello != null) {
+                            java.util.Map<ProdottoBean, Integer> prodottiInCarrello = contenutoDAO.doRetrieveProdottiInCarrello(carrello.getIdCarrello());
+                            int totalItems = 0;
+                            if (prodottiInCarrello != null) {
+                                for (Integer q : prodottiInCarrello.values()) {
+                                    if (q != null) totalItems += q;
+                                }
                             }
+                            request.setAttribute("cartCount", totalItems);
                         }
-                        request.setAttribute("cartCount", totalItems);
                     }
                 }
             }
