@@ -9,7 +9,7 @@
     
     <h1>${isEdit ? 'Modifica Prodotto' : 'Aggiungi Nuovo Prodotto'}</h1>
 
-    <form method="post" action="<%=request.getContextPath()%>/AdminProdottoServlet" style="max-width: 600px; margin: 0 auto;">
+    <form method="post" action="${pageContext.request.contextPath}/AdminProdottoServlet" class="form-container">
         <%-- Campo nascosto per l'azione (save o update) --%>
         <input type="hidden" name="action" value="${isEdit ? 'update' : 'save'}">
         
@@ -18,39 +18,38 @@
             <input type="hidden" name="id" value="${prodotto.idProdotto}">
         </c:if>
 
-        <div style="margin-bottom: 15px;">
-            <label for="nome" style="display: block; margin-bottom: 5px; font-weight: 600;">Nome Prodotto:</label>
+        <div class="form-group">
+            <label for="nome" class="form-label">Nome Prodotto:</label>
             <input type="text" id="nome" name="nome" 
                    value="${isEdit ? prodotto.nome : ''}" 
-                   required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                   required class="form-control">
         </div>
 
-        <div style="margin-bottom: 15px;">
-            <label for="descrizione" style="display: block; margin-bottom: 5px; font-weight: 600;">Descrizione:</label>
+        <div class="form-group">
+            <label for="descrizione" class="form-label">Descrizione:</label>
             <textarea id="descrizione" name="descrizione" 
-                      required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; min-height: 100px; font-family: inherit; resize: vertical;">${isEdit ? prodotto.descrizione : ''}</textarea>
+                      required class="form-control form-textarea">${isEdit ? prodotto.descrizione : ''}</textarea>
         </div>
 
-        <div style="margin-bottom: 15px;">
-            <label for="costo" style="display: block; margin-bottom: 5px; font-weight: 600;">Prezzo (€):</label>
+        <div class="form-group">
+            <label for="costo" class="form-label">Prezzo (€):</label>
             <input type="number" id="costo" name="costo" step="0.01" min="0"
                    value="${isEdit ? prodotto.costo : ''}" 
-                   required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                   required class="form-control">
         </div>
 
-        <div style="margin-bottom: 15px;">
-            <label for="quantita" style="display: block; margin-bottom: 5px; font-weight: 600;">Quantità:</label>
+        <div class="form-group">
+            <label for="quantita" class="form-label">Quantità:</label>
             <input type="number" id="quantita" name="quantita" min="0"
                    value="${isEdit ? prodotto.quantita : ''}" 
-                   required style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+                   required class="form-control">
         </div>
 
-        <div style="margin-bottom: 15px;">
-            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Categorie:</label>
-            <div style="display: flex; gap: 10px; align-items: flex-start;">
-                <div style="flex: 1;">
-                    <select id="idCategoria" name="idCategoria" multiple
-                            style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; min-height: 120px;">
+        <div class="form-group">
+            <label class="form-label">Categorie:</label>
+            <div class="category-input-group">
+                <div class="category-select-wrapper">
+                    <select id="idCategoria" name="idCategoria" multiple class="form-control form-select-multiple">
                         <c:if test="${not empty categorie}">
                             <c:forEach var="cat" items="${categorie}">
                                 <c:set var="selezionata" value="false" />
@@ -67,29 +66,28 @@
                             </c:forEach>
                         </c:if>
                     </select>
-                    <small style="color:#6b7280;">Tieni premuto Ctrl (o Cmd su Mac) per selezionare più categorie.</small>
+                    <small class="form-help-text">Tieni premuto Ctrl (o Cmd su Mac) per selezionare più categorie.</small>
                 </div>
-                <a href="${pageContext.request.contextPath}/AdminCategoriaServlet?action=new" class="btn-edit"
-                   style="padding: 8px 15px; background-color: #6b7280; color: white; border: none; border-radius: 4px; text-decoration: none; display: inline-block; white-space: nowrap;">
+                <a href="${pageContext.request.contextPath}/AdminCategoriaServlet?action=new" class="btn-secondary">
                     ➕ Nuova Categoria
                 </a>
             </div>
         </div>
 
-        <div style="margin-bottom: 20px;">
-            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+        <div class="form-group-lg">
+            <label class="checkbox-label">
                 <input type="checkbox" name="attivo" 
                        ${isEdit ? (prodotto.attivo ? 'checked' : '') : 'checked'} 
-                       style="width: 18px; height: 18px; cursor: pointer;">
-                <span style="font-weight: 600;">Prodotto Attivo</span>
+                       class="form-checkbox">
+                <span>Prodotto Attivo</span>
             </label>
         </div>
 
-        <div style="display: flex; gap: 10px;">
-            <button type="submit" class="btn-add" style="padding: 10px 25px; border-radius: 4px; cursor: pointer; font-weight: 600;">
+        <div class="form-actions">
+            <button type="submit" class="btn-add btn-submit">
                 ${isEdit ? '💾 Salva Modifiche' : '➕ Crea Prodotto'}
             </button>
-            <a href="${pageContext.request.contextPath}/AdminProdottoServlet" class="btn-edit" style="padding: 10px 25px; border-radius: 4px; text-decoration: none; display: inline-flex; align-items: center; font-weight: 600;">
+            <a href="${pageContext.request.contextPath}/AdminProdottoServlet" class="btn-edit btn-cancel">
                 ← Annulla
             </a>
         </div>

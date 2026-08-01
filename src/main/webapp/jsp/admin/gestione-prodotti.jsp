@@ -10,12 +10,12 @@
 
     <%-- 1. BLOCCO FEEDBACK UTENTE --%>
     <c:if test="${not empty successMessage}">
-        <div class="alert alert-success" style="color: #065f46; background-color: #d1fae5; border: 1px solid #a7f3d0; padding: 12px; border-radius: 4px; margin-bottom: 20px;">
+        <div class="alert alert-success">
             ✓ <c:out value="${successMessage}" />
         </div>
     </c:if>
     <c:if test="${not empty errorMessage}">
-        <div class="alert alert-danger" style="color: #991b1b; background-color: #fee2e2; border: 1px solid #fecaca; padding: 12px; border-radius: 4px; margin-bottom: 20px;">
+        <div class="alert alert-danger">
             ✗ <c:out value="${errorMessage}" />
         </div>
     </c:if>
@@ -29,39 +29,35 @@
     </c:forEach>
 
     <c:if test="${hasEsauriti}">
-        <div style="margin-bottom: 35px; background-color: #fef2f2; border: 1px solid #fecaca; padding: 16px; border-radius: 8px;">
-            <h2 style="color: #991b1b; margin-top: 0; font-size: 1.3em; display: flex; align-items: center; gap: 8px;">
-                ⚠️ Prodotti Esauriti
-            </h2>
-            <table style="width: 100%; border-collapse: collapse; margin-top: 10px; background-color: #ffffff;">
+        <div class="alert-box-out-of-stock">
+            <h2>⚠️ Prodotti Esauriti</h2>
+            <table class="table-custom table-out-of-stock">
                 <thead>
-                    <tr style="background-color: #fee2e2; border-bottom: 2px solid #fca5a5; color: #991b1b;">
-                        <th style="padding: 10px; text-align: left;">ID</th>
-                        <th style="padding: 10px; text-align: left;">Nome</th>
-                        <th style="padding: 10px; text-align: right;">Prezzo</th>
-                        <th style="padding: 10px; text-align: center;">Quantità</th>
-                        <th style="padding: 10px; text-align: center;">Stato</th>
-                        <th style="padding: 10px; text-align: center;">Azioni</th>
+                    <tr>
+                        <th class="text-left">ID</th>
+                        <th class="text-left">Nome</th>
+                        <th class="text-right">Prezzo</th>
+                        <th class="text-center">Quantità</th>
+                        <th class="text-center">Stato</th>
+                        <th class="text-center">Azioni</th>
                     </tr>
                 </thead>
                 <tbody>
                     <c:forEach var="prodotto" items="${prodottiAdmin}">
                         <c:if test="${prodotto.quantita <= 0}">
-                            <tr style="border-bottom: 1px solid #fee2e2;">
-                                <td style="padding: 10px;"><c:out value="${prodotto.idProdotto}" /></td>
-                                <td style="padding: 10px; font-weight: 600;"><c:out value="${prodotto.nome}" /></td>
-                                <td style="padding: 10px; text-align: right;">
+                            <tr>
+                                <td><c:out value="${prodotto.idProdotto}" /></td>
+                                <td class="font-semibold"><c:out value="${prodotto.nome}" /></td>
+                                <td class="text-right">
                                     <fmt:formatNumber value="${prodotto.costo}" type="currency" currencySymbol="€" />
                                 </td>
-                                <td style="padding: 10px; text-align: center; color: #dc2626; font-weight: bold;">0</td>
-                                <td style="padding: 10px; text-align: center;">
-                                    <span style="padding: 4px 8px; border-radius: 12px; font-size: 0.85em; font-weight: 600; background-color: #fee2e2; color: #991b1b;">
-                                        Esaurito
-                                    </span>
+                                <td class="text-center text-out-of-stock">0</td>
+                                <td class="text-center">
+                                    <span class="badge badge-danger">Esaurito</span>
                                 </td>
-                                <td style="padding: 10px; text-align: center;">
+                                <td class="text-center">
                                     <a href="${pageContext.request.contextPath}/AdminProdottoServlet?action=edit&id=${prodotto.idProdotto}" 
-                                       class="btn-edit" style="padding: 5px 10px; text-decoration: none; border-radius: 3px; font-size: 0.9em;">
+                                       class="btn-edit btn-edit-sm">
                                         ✏️ Rifornisci / Modifica
                                     </a>
                                 </td>
@@ -74,8 +70,8 @@
     </c:if>
 
     <%-- 3. PULSANTE AGGIUNGI NUOVO PRODOTTO --%>
-    <div style="margin-bottom: 25px;">
-        <a href="${pageContext.request.contextPath}/AdminProdottoServlet?action=new" class="btn-add" style="padding: 10px 20px; text-decoration: none; display: inline-block; border-radius: 4px;">
+    <div class="actions-bar">
+        <a href="${pageContext.request.contextPath}/AdminProdottoServlet?action=new" class="btn-add">
             ➕ Aggiungi Nuovo Prodotto
         </a>
     </div>
@@ -84,38 +80,38 @@
     <c:choose>
         <c:when test="${not empty prodottiAdmin}">
             <h2>Tutti i Prodotti</h2>
-            <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+            <table class="table-custom">
                 <thead>
-                    <tr style="background-color: #f3f4f6; border-bottom: 2px solid #d1d5db;">
-                        <th style="padding: 12px; text-align: left; font-weight: bold;">ID</th>
-                        <th style="padding: 12px; text-align: left; font-weight: bold;">Nome</th>
-                        <th style="padding: 12px; text-align: left; font-weight: bold;">Descrizione</th>
-                        <th style="padding: 12px; text-align: right; font-weight: bold;">Prezzo</th>
-                        <th style="padding: 12px; text-align: center; font-weight: bold;">Quantità</th>
-                        <th style="padding: 12px; text-align: center; font-weight: bold;">Categorie</th>
-                        <th style="padding: 12px; text-align: center; font-weight: bold;">Stato</th>
-                        <th style="padding: 12px; text-align: center; font-weight: bold;">Azioni</th>
+                    <tr>
+                        <th class="text-left">ID</th>
+                        <th class="text-left">Nome</th>
+                        <th class="text-left">Descrizione</th>
+                        <th class="text-right">Prezzo</th>
+                        <th class="text-center">Quantità</th>
+                        <th class="text-center">Categorie</th>
+                        <th class="text-center">Stato</th>
+                        <th class="text-center">Azioni</th>
                     </tr>
                 </thead>
                 <tbody>
                     <c:forEach var="prodotto" items="${prodottiAdmin}" varStatus="status">
-                        <tr style="border-bottom: 1px solid #e5e7eb; ${status.index % 2 == 0 ? 'background-color: #fafafa;' : ''}">
-                            <td style="padding: 12px;">
+                        <tr class="${status.index % 2 == 0 ? 'row-zebra' : ''}">
+                            <td>
                                 <c:out value="${prodotto.idProdotto}" />
                             </td>
-                            <td style="padding: 12px; font-weight: 500;">
+                            <td class="font-medium">
                                 <c:out value="${prodotto.nome}" />
                             </td>
-                            <td style="padding: 12px; color: #6b7280; max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                            <td class="col-desc">
                                 <c:out value="${prodotto.descrizione}" />
                             </td>
-                            <td style="padding: 12px; text-align: right; font-weight: 600;">
+                            <td class="text-right font-semibold">
                                 <fmt:formatNumber value="${prodotto.costo}" type="currency" currencySymbol="€" />
                             </td>
-                            <td style="padding: 12px; text-align: center;">
+                            <td class="text-center">
                                 <c:out value="${prodotto.quantita}" />
                             </td>
-                            <td style="padding: 12px; text-align: center;">
+                            <td class="text-center">
                                 <c:choose>
                                     <c:when test="${not empty prodotto.categorie}">
                                         <c:forEach var="cat" items="${prodotto.categorie}" varStatus="s">
@@ -125,26 +121,25 @@
                                     <c:otherwise>—</c:otherwise>
                                 </c:choose>
                             </td>
-                            <td style="padding: 12px; text-align: center;">
-                                <span style="padding: 4px 8px; border-radius: 12px; font-size: 0.85em; font-weight: 600; ${prodotto.attivo ? 'background-color: #d1fae5; color: #065f46;' : 'background-color: #fee2e2; color: #991b1b;'}">
+                            <td class="text-center">
+                                <span class="badge ${prodotto.attivo ? 'badge-active' : 'badge-inactive'}">
                                     ${prodotto.attivo ? 'Attivo' : 'Inattivo'}
                                 </span>
                             </td>
-                            <td style="padding: 12px; text-align: center; white-space: nowrap;">
-                                <a href="${pageContext.request.contextPath}/AdminProdottoServlet?action=edit&id=${prodotto.idProdotto}" 
-                                   class="btn-edit" style="padding: 6px 12px; text-decoration: none; display: inline-block; margin-right: 5px; border-radius: 3px;">
+                            <td class="text-center nowrap">
+                                <a href="${pageContext.request.contextPath}/AdminProdottoServlet?action=edit&id=${prodotto.idProdotto}" class="btn-edit">
                                     ✏️ Modifica
                                 </a>
 
-                                <form method="post" action="${pageContext.request.contextPath}/AdminProdottoServlet" 
-                                      style="display: inline;" 
-                                      onsubmit="return confirm('Sei sicuro di voler eliminare il prodotto &quot;' + '${prodotto.nome}'.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/&quot;/g, '&quot;') + '&quot;?');">
-                                    <input type="hidden" name="action" value="delete">
-                                    <input type="hidden" name="id" value="${prodotto.idProdotto}">
-                                    <button type="submit" class="btn-delete" style="padding: 6px 12px; border-radius: 3px;">
-                                        🗑️ Elimina
-                                    </button>
-                                </form>
+								<form method="post" action="${pageContext.request.contextPath}/AdminProdottoServlet" 
+								      class="inline-form" 
+								      onsubmit="return confirm('Sei sicuro di voler eliminare il prodotto \'${fn:escapeXml(prodotto.nome)}\'?');">
+								    <input type="hidden" name="action" value="delete">
+								    <input type="hidden" name="id" value="${prodotto.idProdotto}">
+								    <button type="submit" class="btn-delete">
+								        🗑️ Elimina
+								    </button>
+								</form>
                             </td>
                         </tr>
                     </c:forEach>
@@ -153,11 +148,9 @@
         </c:when>
 
         <c:otherwise>
-            <div style="text-align: center; padding: 50px 20px; background-color: #f9fafb; border-radius: 6px; border: 1px solid #e5e7eb;">
-                <p style="font-size: 1.1em; color: #64748b; margin-bottom: 20px;">
-                    Il catalogo è attualmente vuoto. Inizia ad aggiungere prodotti!
-                </p>
-                <a href="${pageContext.request.contextPath}/AdminProdottoServlet?action=new" class="btn-add" style="padding: 10px 20px; text-decoration: none; display: inline-block; border-radius: 4px;">
+            <div class="empty-state">
+                <p>Il catalogo è attualmente vuoto. Inizia ad aggiungere prodotti!</p>
+                <a href="${pageContext.request.contextPath}/AdminProdottoServlet?action=new" class="btn-add">
                     ➕ Aggiungi il Primo Prodotto
                 </a>
             </div>
