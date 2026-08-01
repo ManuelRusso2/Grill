@@ -12,10 +12,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import model.bean.AcquistoBean;
+import model.bean.CategoriaBean;
 import model.dao.AcquistoDAO;
 import model.dao.UtenteDAO;
+import model.dao.CategoriaDAO;
 import model.dao.impl.AcquistoDAOImpl;
 import model.dao.impl.UtenteDAOImpl;
+import model.dao.impl.CategoriaDAOImpl;
 
 @WebServlet("/AdminOrdiniServlet")
 public class AdminOrdiniServlet extends HttpServlet {
@@ -23,12 +26,14 @@ public class AdminOrdiniServlet extends HttpServlet {
 
     private AcquistoDAO acquistoDAO;
     private UtenteDAO utenteDAO;
+    private CategoriaDAO categoriaDAO;
 
     @Override
     public void init() throws ServletException {
         // Inizializziamo i DAO necessari per gestire gli ordini e recuperare i clienti
         this.acquistoDAO = new AcquistoDAOImpl();
         this.utenteDAO = new UtenteDAOImpl();
+        this.categoriaDAO = new CategoriaDAOImpl();
     }
 
     @Override
@@ -36,6 +41,10 @@ public class AdminOrdiniServlet extends HttpServlet {
 			throws ServletException, IOException {
 
 		try {
+			// 0. Carica tutte le categorie per il menu
+			List<CategoriaBean> allCategorie = categoriaDAO.doRetrieveAll();
+			request.setAttribute("categorie", allCategorie);
+			
 			// 1. Recupero dei parametri di filtro inviati dal form della JSP
 			String clienteParam = request.getParameter("clienteId");
 			String dataDaParam = request.getParameter("dataDa");

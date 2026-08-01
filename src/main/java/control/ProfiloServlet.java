@@ -12,8 +12,11 @@ import javax.servlet.http.HttpSession;
 
 import model.bean.AcquistoBean;
 import model.bean.UtenteBean;
+import model.bean.CategoriaBean;
 import model.dao.AcquistoDAO;
+import model.dao.CategoriaDAO;
 import model.dao.impl.AcquistoDAOImpl;
+import model.dao.impl.CategoriaDAOImpl;
 
 /**
  * Servlet che gestisce la visualizzazione del profilo utente e del suo storico ordini.
@@ -24,11 +27,13 @@ public class ProfiloServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private AcquistoDAO acquistoDAO;
+	private CategoriaDAO categoriaDAO;
 
 	@Override
 	public void init() throws ServletException {
 		// Inizializziamo il DAO per recuperare la lista degli acquisti dell'utente
 		this.acquistoDAO = new AcquistoDAOImpl();
+		this.categoriaDAO = new CategoriaDAOImpl();
 	}
 
 	@Override
@@ -46,6 +51,10 @@ public class ProfiloServlet extends HttpServlet {
 		}
 
 		try {
+			// 0. Carica tutte le categorie per il menu
+			List<CategoriaBean> allCategorie = categoriaDAO.doRetrieveAll();
+			request.setAttribute("categorie", allCategorie);
+			
 			// 2. Recupero dello storico degli acquisti mirato direttamente tramite query SQL sul DB
 			// Usiamo l'id dell'utente memorizzato nell'oggetto utente della sessione
 			List<AcquistoBean> acquisti = acquistoDAO.doRetrieveByUtente(utente.getIdUtente());

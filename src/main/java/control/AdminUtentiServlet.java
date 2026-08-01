@@ -10,19 +10,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import model.bean.UtenteBean;
+import model.bean.CategoriaBean;
 import model.dao.UtenteDAO;
+import model.dao.CategoriaDAO;
 import model.dao.impl.UtenteDAOImpl;
+import model.dao.impl.CategoriaDAOImpl;
 
 @WebServlet("/AdminUtentiServlet")
 public class AdminUtentiServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     private UtenteDAO utenteDAO;
+    private CategoriaDAO categoriaDAO;
 
     @Override
     public void init() throws ServletException {
         // Inizializziamo il DAO per la gestione degli utenti
         this.utenteDAO = new UtenteDAOImpl();
+        this.categoriaDAO = new CategoriaDAOImpl();
     }
 
     @Override
@@ -30,6 +35,10 @@ public class AdminUtentiServlet extends HttpServlet {
             throws ServletException, IOException {
 
         try {
+            // 0. Carica tutte le categorie per il menu
+            List<CategoriaBean> allCategorie = categoriaDAO.doRetrieveAll();
+            request.setAttribute("categorie", allCategorie);
+            
             // 1. Recuperiamo dal Database solo gli utenti con ruolo 'Cliente' (escludendo gli amministratori)
             List<UtenteBean> clienti = utenteDAO.doRetrieveAllClienti();
             

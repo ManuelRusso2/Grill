@@ -30,7 +30,7 @@ public class UtenteDAOImpl implements UtenteDAO {
         "SELECT id_utente, nome, cognome, email, password, telefono, isAdmin, data_registrazione FROM utente WHERE email = ? AND password = ?";
 
     private static final String SELECT_ALL_CLIENTI =
-        "SELECT id_utente, nome, cognome, email, password, telefono, isAdmin, data_registrazione FROM utente WHERE isAdmin = false";
+        "SELECT id_utente, nome, cognome, email, password, telefono, isAdmin FROM utente WHERE isAdmin = false";
 
     @Override
     public void doSave(UtenteBean utente) throws SQLException {
@@ -142,13 +142,6 @@ public class UtenteDAOImpl implements UtenteDAO {
         utente.setPassword(rs.getString("password"));
         utente.setTelefono(rs.getString("telefono"));
         utente.setAdmin(rs.getBoolean("isAdmin"));
-        
-        // Recupera data_registrazione se disponibile nel DB, altrimenti sarà null
-        try {
-            utente.setDataRegistrazione(rs.getTimestamp("data_registrazione"));
-        } catch (SQLException e) {
-            // Campo data_registrazione non presente nel ResultSet, rimane null
-        }
         
         return utente;
     }
