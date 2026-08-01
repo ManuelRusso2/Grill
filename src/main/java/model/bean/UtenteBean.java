@@ -1,6 +1,7 @@
 package model.bean;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 public class UtenteBean implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -12,6 +13,7 @@ public class UtenteBean implements Serializable {
     private boolean isAdmin;
     private String password;
     private String telefono;
+    private Timestamp dataRegistrazione;
 
     
     // Costruttore vuoto
@@ -76,6 +78,14 @@ public class UtenteBean implements Serializable {
     }
     
     
+    public Timestamp getDataRegistrazione() {
+    	return dataRegistrazione;
+    }
+    public void setDataRegistrazione(Timestamp dataRegistrazione) {
+    	this.dataRegistrazione = dataRegistrazione;
+    }
+    
+    
     /**
      * Confronta due oggetti UtenteBean basandosi sull'idUtente numerico.
      */
@@ -104,12 +114,12 @@ public class UtenteBean implements Serializable {
         return "Utente{" +
         		", idUtente" + idUtente + '\'' +
         		", email='" + email + '\'' +
-                
                 ", password='" + password + '\'' +
                 ", nome='" + nome + '\'' +
                 ", cognome='" + cognome + '\'' +
                 ", isAdmin=" + isAdmin +
                 ", telefono='" + telefono + '\'' +
+                ", dataRegistrazione=" + dataRegistrazione +
                 '}';
     }
 }

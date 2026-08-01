@@ -8,7 +8,45 @@
 
 <main class="container">
     <h1>Profilo</h1>
-    <p>Benvenuto! Qui trovi lo storico dei tuoi ordini.</p>
+    
+    <%-- SEZIONE: Dettagli Profilo Utente --%>
+    <c:if test="${not empty sessionScope.utente}">
+        <div class="profile-card">
+            <h2>Informazioni Personali</h2>
+            <div class="profile-details">
+                <div class="detail-row">
+                    <span class="detail-label">Nome:</span>
+                    <span class="detail-value"><c:out value="${sessionScope.utente.nome}" /></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Cognome:</span>
+                    <span class="detail-value"><c:out value="${sessionScope.utente.cognome}" /></span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Email:</span>
+                    <span class="detail-value"><c:out value="${sessionScope.utente.email}" /></span>
+                </div>
+                <c:if test="${not empty sessionScope.utente.telefono}">
+                    <div class="detail-row">
+                        <span class="detail-label">Telefono:</span>
+                        <span class="detail-value"><c:out value="${sessionScope.utente.telefono}" /></span>
+                    </div>
+                </c:if>
+                <c:if test="${not empty sessionScope.utente.dataRegistrazione}">
+                    <div class="detail-row">
+                        <span class="detail-label">Registrato dal:</span>
+                        <span class="detail-value">
+                            <fmt:formatDate value="${sessionScope.utente.dataRegistrazione}" pattern="dd/MM/yyyy HH:mm" />
+                        </span>
+                    </div>
+                </c:if>
+            </div>
+        </div>
+    </c:if>
+
+    <%-- SEZIONE: Storico Ordini --%>
+    <h2>Storico Ordini</h2>
+    <p>Qui trovi lo storico dei tuoi ordini.</p>
 
     <table>
         <thead>

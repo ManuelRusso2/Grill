@@ -546,7 +546,59 @@ button:hover, .btn:hover {
 }
 
 /* ==========================================================================
-   6. PAGINE DI ERRORE (404, 403, 500)
+   7. PAGINA PROFILO
+   ========================================================================== */
+
+.profile-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 30px;
+    margin-bottom: 50px;
+    max-width: 600px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.profile-card h2 {
+    font-size: 20px;
+    margin-bottom: 25px;
+    color: var(--text-light);
+    font-weight: 700;
+}
+
+.profile-details {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    font-weight: 700;
+    color: var(--text-gray);
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    min-width: 140px;
+}
+
+.detail-value {
+    color: var(--text-light);
+    text-align: right;
+    flex: 1;
+}
+
+/* ==========================================================================
    ========================================================================== */
 
 /* Layout contenitore per centrare la card nello schermo */
