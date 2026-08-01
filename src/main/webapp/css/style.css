@@ -544,3 +544,102 @@ button:hover, .btn:hover {
     cursor: not-allowed;
     pointer-events: none;
 }
+
+/* ==========================================================================
+   6. PAGINE DI ERRORE (404, 403, 500)
+   ========================================================================== */
+
+/* Layout contenitore per centrare la card nello schermo */
+.error-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 60vh;
+    text-align: center;
+}
+
+/* Card dell'errore ben distanziata e isolata */
+.error-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 50px 40px;
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Distanziamento del codice d'errore (404, 403, 500) */
+.error-card .error-code {
+    font-size: 80px;
+    color: var(--accent-yellow);
+    line-height: 1;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Titolo dell'errore */
+.error-card h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: var(--text-light);
+}
+
+/* Spaziatura tra i paragrafi di testo */
+.error-card p {
+    color: var(--text-gray);
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+/* Contenitore Bottoni: risolve il problema del width: 100% e della sovrapposizione */
+.error-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    width: 100%;
+    margin-top: 35px; /* Spazio generoso per non toccare i testi sopra */
+    flex-wrap: wrap;
+}
+
+/* Sovrascrive il width: 100% generico solo per i bottoni dell'errore */
+.error-actions .btn {
+    width: auto; 
+    min-width: 180px;
+    display: inline-block;
+    text-align: center;
+    margin-top: 0;
+}
+
+/* Pulsante Secondario */
+.btn-secondary {
+    background-color: transparent;
+    color: var(--text-light);
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: var(--text-light);
+    color: var(--text-light);
+}
+
+/* Dettagli tecnici per l'errore 500 */
+.error-details {
+    margin-top: 25px;
+    width: 100%;
+    text-align: left;
+}
+
+.error-details pre {
+    background-color: var(--bg-input) !important;
+    color: #ff4a4a;
+    border: 1px solid var(--border-color);
+    margin-top: 10px;
+}
