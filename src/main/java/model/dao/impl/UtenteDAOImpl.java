@@ -21,13 +21,13 @@ public class UtenteDAOImpl implements UtenteDAO {
         "INSERT INTO utente (nome, cognome, email, password, telefono, isAdmin) VALUES (?, ?, ?, ?, ?, ?)";
 
     private static final String SELECT_BY_EMAIL =
-        "SELECT id_utente, nome, cognome, email, password, telefono, isAdmin, data_registrazione FROM utente WHERE email = ?";
+        "SELECT id_utente, nome, cognome, email, password, telefono, isAdmin FROM utente WHERE email = ?";
 
     private static final String SELECT_BY_ID =
-        "SELECT id_utente, nome, cognome, email, password, telefono, isAdmin, data_registrazione FROM utente WHERE id_utente = ?";
+        "SELECT id_utente, nome, cognome, email, password, telefono, isAdmin FROM utente WHERE id_utente = ?";
 
     private static final String SELECT_BY_LOGIN =
-        "SELECT id_utente, nome, cognome, email, password, telefono, isAdmin, data_registrazione FROM utente WHERE email = ? AND password = ?";
+        "SELECT id_utente, nome, cognome, email, password, telefono, isAdmin FROM utente WHERE email = ? AND password = ?";
 
     private static final String SELECT_ALL_CLIENTI =
         "SELECT id_utente, nome, cognome, email, password, telefono, isAdmin FROM utente WHERE isAdmin = false";

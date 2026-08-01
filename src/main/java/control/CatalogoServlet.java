@@ -61,19 +61,19 @@ public class CatalogoServlet extends HttpServlet {
             }
             request.setAttribute("prodotti", prodotti);
 
-            // 2b. Se l'utente è autenticato, calcoliamo il numero di articoli nel carrello per mostrare il badge
+            // 2. Calcolo badge carrello per utenti non-admin
             HttpSession session = request.getSession(false);
             if (session != null) {
                 UtenteBean utente = (UtenteBean) session.getAttribute("utente");
                 if (utente != null) {
-                    // Passiamo al JSP se l'utente è admin
                     request.setAttribute("isAdmin", utente.isAdmin());
                     
-                    // Se l'utente è admin, non calcoliamo il carrello
                     if (!utente.isAdmin()) {
                         CarrelloDAO carrelloDAO = new CarrelloDAOImpl();
                         ContenutoDAO contenutoDAO = new ContenutoDAOImpl();
                         CarrelloBean carrello = carrelloDAO.doRetrieveByUtente(utente.getIdUtente());
+                        
+                        // CONTROLLO DI SICUREZZA: Verifichiamo che il carrello esista
                         if (carrello != null) {
                             java.util.Map<ProdottoBean, Integer> prodottiInCarrello = contenutoDAO.doRetrieveProdottiInCarrello(carrello.getIdCarrello());
                             int totalItems = 0;
@@ -83,17 +83,19 @@ public class CatalogoServlet extends HttpServlet {
                                 }
                             }
                             request.setAttribute("cartCount", totalItems);
+                        } else {
+                            // Se non esiste ancora un carrello, il conteggio è 0
+                            request.setAttribute("cartCount", 0);
                         }
                     }
                 }
             }
 
-            // 3. Inoltriamo la richiesta alla JSP del catalogo (che visualizzerà i dati)
+            // 3. Forward alla JSP
             request.getRequestDispatcher("/jsp/common/catalogo.jsp").forward(request, response);
 
-        } catch (SQLException e) {
+        } catch (Exception e) { // Cattura sia SQLException sia NullPointerException o errori di parsing
             e.printStackTrace();
-            // Invia l'errore 500 che mostrerà la pagina di errore personalizzata configurata in web.xml
             response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
