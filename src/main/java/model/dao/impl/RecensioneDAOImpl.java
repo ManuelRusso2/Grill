@@ -25,7 +25,12 @@ public class RecensioneDAOImpl implements RecensioneDAO {
 
     
     private static final String SELECT_BY_PRODOTTO =
-        "SELECT id_recensione, data_recensione, descrizione, valutazione, id_prodotto, id_utente FROM recensione WHERE id_prodotto = ? ORDER BY data_recensione DESC";
+    	    "SELECT r.id_recensione, r.data_recensione, r.descrizione, r.valutazione, r.id_prodotto, r.id_utente, " +
+    	    "u.nome, u.cognome, u.email " +
+    	    "FROM recensione r " +
+    	    "JOIN utente u ON r.id_utente = u.id_utente " +
+    	    "WHERE r.id_prodotto = ? " +
+    	    "ORDER BY r.data_recensione DESC";
 
     
     private static final String SELECT_BY_UTENTE =
@@ -149,7 +154,7 @@ public class RecensioneDAOImpl implements RecensioneDAO {
     }
 
     
-    private RecensioneBean mapRow(ResultSet rs) throws SQLException {
+private RecensioneBean mapRow(ResultSet rs) throws SQLException {
         RecensioneBean recensione = new RecensioneBean();
         recensione.setIdRecensione(rs.getInt("id_recensione"));
         recensione.setDataRecensione(rs.getTimestamp("data_recensione"));
@@ -157,6 +162,16 @@ public class RecensioneDAOImpl implements RecensioneDAO {
         recensione.setValutazione(rs.getDouble("valutazione"));
         recensione.setIdProdotto(rs.getInt("id_prodotto"));
         recensione.setIdUtente(rs.getInt("id_utente"));
+
+        // Legge i dati utente se presenti nella query (tramite JOIN)
+        try {
+            recensione.setNomeUtente(rs.getString("nome"));
+            recensione.setCognomeUtente(rs.getString("cognome"));
+            recensione.setEmailUtente(rs.getString("email"));
+        } catch (SQLException e) {
+            // Se la query non include la JOIN con utente, ignora l'eccezione
+        }
+
         return recensione;
     }
 }

@@ -1,7 +1,6 @@
 package control;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 import javax.servlet.http.HttpSession;
 import javax.servlet.ServletException;

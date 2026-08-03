@@ -13,6 +13,10 @@ public class RecensioneBean implements Serializable {
     private int idProdotto;
 	private int idUtente;
 
+	
+	private String nomeUtente;
+    private String cognomeUtente;
+    private String emailUtente;
     
     // Costruttore vuoto
     public RecensioneBean() {}
@@ -66,6 +70,30 @@ public class RecensioneBean implements Serializable {
     	this.idUtente = idUtente; 
     }
 
+    
+    public String getNomeUtente() { 
+    	return nomeUtente; 
+    }
+    public void setNomeUtente(String nomeUtente) { 
+    	this.nomeUtente = nomeUtente; 
+    }
+
+    
+    public String getCognomeUtente() { 
+    	return cognomeUtente; 
+    }
+    public void setCognomeUtente(String cognomeUtente) { 
+    	this.cognomeUtente = cognomeUtente; 
+    }
+
+    
+    public String getEmailUtente() { 
+    	return emailUtente; 
+    }
+    public void setEmailUtente(String emailUtente) { 
+    	this.emailUtente = emailUtente; 
+    }
+    
     
     @Override
     public String toString() {

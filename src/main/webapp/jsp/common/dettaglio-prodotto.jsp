@@ -114,6 +114,86 @@
                 <button disabled>Esaurito</button>
             </c:otherwise>
         </c:choose>
+
+        <%-- SEZIONE RECENSIONI --%>
+        <hr class="section-divider">
+        
+        <section class="reviews-section">
+            <h2>Recensioni del prodotto</h2>
+
+            <%-- Form per inviare una recensione --%>
+            <c:choose>
+                <c:when test="${not empty sessionScope.utente && !isAdmin}">
+                    <div class="review-form-card">
+                        <h3>Lascia una recensione</h3>
+                        <form action="${pageContext.request.contextPath}/AggiungiRecensioneServlet" method="post">
+                            <input type="hidden" name="idProdotto" value="${prodotto.idProdotto}">
+                            
+                            <div class="form-group">
+                                <label for="valutazione">Voto:</label>
+                                <select name="valutazione" id="valutazione" class="form-control" required>
+                                    <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
+                                    <option value="4">⭐⭐⭐⭐ (4/5)</option>
+                                    <option value="3">⭐⭐⭐ (3/5)</option>
+                                    <option value="2">⭐⭐ (2/5)</option>
+                                    <option value="1">⭐ (1/5)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="descrizione">La tua opinione:</label>
+                                <textarea name="descrizione" id="descrizione" class="form-control" rows="4" required placeholder="Scrivi una recensione..."></textarea>
+                            </div>
+
+                            <button type="submit" class="btn-submit-review">Invia Recensione</button>
+                        </form>
+                    </div>
+                </c:when>
+                <c:when test="${empty sessionScope.utente}">
+                    <p class="review-login-prompt">
+                        <a href="${pageContext.request.contextPath}/jsp/common/login.jsp">Accedi</a> per inserire una recensione.
+                    </p>
+                </c:when>
+            </c:choose>
+
+	<%-- Lista delle recensioni già presenti --%>
+	        <c:choose>
+	            <c:when test="${not empty recensioni}">
+	                <div class="reviews-list">
+	                    <c:forEach var="rec" items="${recensioni}">
+	                        <div class="review-item">
+	                            <div class="review-meta">
+	                                <span class="review-author">
+	                                    <c:out value="${rec.nomeUtente}" /> <c:out value="${rec.cognomeUtente}" />
+	                                    <small class="review-email">(<c:out value="${rec.emailUtente}" />)</small>
+	                                </span>
+	                                <span class="review-stars">
+	                                    <c:forEach begin="1" end="${rec.valutazione}">★</c:forEach>
+	                                </span>
+	                                <span class="review-date">
+	                                    <fmt:formatDate value="${rec.dataRecensione}" pattern="dd/MM/yyyy HH:mm" />
+	                                </span>
+	
+	                                <%-- TASTO ELIMINA VISIBILE SOLO AGLI ADMIN --%>
+	                                <c:if test="${isAdmin}">
+	                                    <form action="${pageContext.request.contextPath}/EliminaRecensioneServlet" method="post" class="delete-review-form" onsubmit="return confirm('Sei sicuro di voler eliminare questa recensione?');">
+	                                        <input type="hidden" name="idRecensione" value="${rec.idRecensione}">
+	                                        <input type="hidden" name="idProdotto" value="${prodotto.idProdotto}">
+	                                        <button type="submit" class="btn-delete-review">🗑️ Elimina</button>
+	                                    </form>
+	                                </c:if>
+	                            </div>
+	                            <p class="review-text"><c:out value="${rec.descrizione}" /></p>
+	                        </div>
+	                    </c:forEach>
+	                </div>
+	            </c:when>
+	            <c:otherwise>
+	                <p class="no-reviews-msg">Nessuna recensione presente per questo prodotto. Sii il primo a recensirlo!</p>
+	            </c:otherwise>
+	        </c:choose>
+        </section>
+
     </c:if>
 
 </main>

@@ -13,11 +13,13 @@ import javax.servlet.http.HttpSession;
 import model.bean.ProdottoBean;
 import model.bean.UtenteBean;
 import model.bean.CategoriaBean;
+import model.bean.RecensioneBean;
 import model.dao.ProdottoDAO;
 import model.dao.CategoriaDAO;
+import model.dao.RecensioneDAO;
 import model.dao.impl.ProdottoDAOImpl;
 import model.dao.impl.CategoriaDAOImpl;
-
+import model.dao.impl.RecensioneDAOImpl;
 
 @WebServlet("/DettaglioProdottoServlet")
 public class DettaglioProdottoServlet extends HttpServlet {
@@ -25,15 +27,15 @@ public class DettaglioProdottoServlet extends HttpServlet {
     
     private ProdottoDAO prodottoDAO;
     private CategoriaDAO categoriaDAO;
+    private RecensioneDAO recensioneDAO;
 
-    
     @Override
     public void init() throws ServletException {
         this.prodottoDAO = new ProdottoDAOImpl();
         this.categoriaDAO = new CategoriaDAOImpl();
+        this.recensioneDAO = new RecensioneDAOImpl();
     }
 
-    
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
@@ -41,29 +43,25 @@ public class DettaglioProdottoServlet extends HttpServlet {
         String idParam = request.getParameter("id");
         
         if (idParam == null || idParam.trim().isEmpty()) {
-            // Se non viene passato un ID valido, rimandiamo al catalogo
             response.sendRedirect(request.getContextPath() + "/CatalogoServlet");
             return;
         }
 
         try {
-            // Carica tutte le categorie per il menu
             List<CategoriaBean> allCategorie = categoriaDAO.doRetrieveAll();
             request.setAttribute("categorie", allCategorie);
             
             int idProdotto = Integer.parseInt(idParam);
             ProdottoBean prodotto = prodottoDAO.doRetrieveByKey(idProdotto);
             
-            // Sicurezza: Se il prodotto non esiste o non è attivo (e chi naviga non è admin), non mostrarlo
             if (prodotto == null || !prodotto.isAttivo()) {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND); // Errore 404
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
                 return;
             }
             
-            // Salviamo il prodotto trovato nei dettagli della richiesta
             request.setAttribute("prodotto", prodotto);
 
-            // Carica le varianti (stesso nome base, colori diversi)
+            // Carica le varianti
             String nomeBase = prodotto.getNome().contains(" - ")
                 ? prodotto.getNome().substring(0, prodotto.getNome().lastIndexOf(" - "))
                 : prodotto.getNome();
@@ -73,6 +71,10 @@ public class DettaglioProdottoServlet extends HttpServlet {
                 request.setAttribute("nomeBase", nomeBase);
             }
             
+            // --- RECUPERO RECENSIONI ---
+            List<RecensioneBean> recensioni = recensioneDAO.doRetrieveByProdotto(idProdotto);
+            request.setAttribute("recensioni", recensioni);
+
             // Controlla se l'utente è admin
             HttpSession session = request.getSession(false);
             if (session != null) {
@@ -82,15 +84,13 @@ public class DettaglioProdottoServlet extends HttpServlet {
                 }
             }
             
-            // Inoltriamo alla pagina JSP dedicata
             request.getRequestDispatcher("/jsp/common/dettaglio-prodotto.jsp").forward(request, response);
             
         } catch (NumberFormatException e) {
-            // Se l'id non è un numero valido
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST); // Errore 400
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST);
         } catch (SQLException e) {
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); // Errore 500
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 
