@@ -18,37 +18,37 @@ public class ProdottoDAOImpl implements ProdottoDAO {
     private final CategoriaDAO categoriaDAO = new CategoriaDAOImpl();
 
     private static final String INSERT_PRODOTTO =
-        "INSERT INTO prodotto (nome, descrizione, costo, quantita, attivo, id_collezione) VALUES (?, ?, ?, ?, ?, ?)";
+        "INSERT INTO prodotto (nome, descrizione, costo, quantita, attivo, id_collezione, immagine) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
     private static final String UPDATE_PRODOTTO =
-        "UPDATE prodotto SET nome = ?, descrizione = ?, costo = ?, quantita = ?, attivo = ?, id_collezione = ? WHERE id_prodotto = ?";
+        "UPDATE prodotto SET nome = ?, descrizione = ?, costo = ?, quantita = ?, attivo = ?, id_collezione = ?, immagine = ? WHERE id_prodotto = ?";
 
     private static final String DELETE_LOGIC_PRODOTTO =
         "UPDATE prodotto SET attivo = false WHERE id_prodotto = ?";
 
     private static final String SELECT_BY_KEY =
-        "SELECT id_prodotto, nome, descrizione, costo, quantita, attivo, id_collezione FROM prodotto WHERE id_prodotto = ?";
+        "SELECT id_prodotto, nome, descrizione, costo, quantita, attivo, immagine, id_collezione FROM prodotto WHERE id_prodotto = ?";
 
     private static final String SELECT_ALL_CLIENTI =
-        "SELECT id_prodotto, nome, descrizione, costo, quantita, attivo, id_collezione FROM prodotto WHERE attivo = true";
+        "SELECT id_prodotto, nome, descrizione, costo, quantita, attivo, immagine, id_collezione FROM prodotto WHERE attivo = true";
 
     // Restituisce un solo prodotto per ogni nome base (parte prima di ' - '), il primo per id
     private static final String SELECT_ALL_CLIENTI_RAGGRUPPATI =
         "SELECT MIN(id_prodotto) as id_prodotto, " +
         "SUBSTRING_INDEX(nome, ' - ', 1) as nome, " +
         "MIN(descrizione) as descrizione, MIN(costo) as costo, " +
-        "SUM(quantita) as quantita, true as attivo, MIN(id_collezione) as id_collezione " +
+        "SUM(quantita) as quantita, true as attivo, MIN(immagine) as immagine, MIN(id_collezione) as id_collezione " +
         "FROM prodotto WHERE attivo = true " +
         "GROUP BY SUBSTRING_INDEX(nome, ' - ', 1) " +
         "ORDER BY MIN(id_prodotto)";
 
     private static final String SELECT_VARIANTI =
-        "SELECT id_prodotto, nome, descrizione, costo, quantita, attivo, id_collezione " +
+        "SELECT id_prodotto, nome, descrizione, costo, quantita, attivo, immagine, id_collezione " +
         "FROM prodotto WHERE attivo = true AND SUBSTRING_INDEX(nome, ' - ', 1) = ? " +
         "ORDER BY id_prodotto";
 
     private static final String SELECT_ALL_ADMIN =
-        "SELECT id_prodotto, nome, descrizione, costo, quantita, attivo, id_collezione FROM prodotto";
+        "SELECT id_prodotto, nome, descrizione, costo, quantita, attivo, immagine, id_collezione FROM prodotto";
 
     private static final String SELECT_BY_SEARCH =
         "SELECT DISTINCT p.id_prodotto, p.nome, p.costo " +
@@ -57,7 +57,7 @@ public class ProdottoDAOImpl implements ProdottoDAO {
         "WHERE p.attivo = true AND (p.nome LIKE ? OR p.descrizione LIKE ? OR c.nome LIKE ?) LIMIT 8";
 
     private static final String SELECT_BY_CATEGORIA =
-        "SELECT p.id_prodotto, p.nome, p.descrizione, p.costo, p.quantita, p.attivo, p.id_collezione " +
+        "SELECT p.id_prodotto, p.nome, p.descrizione, p.costo, p.quantita, p.attivo, p.immagine, p.id_collezione " +
         "FROM prodotto p JOIN prodotto_categoria t ON p.id_prodotto = t.id_prodotto " +
         "WHERE p.attivo = true AND t.id_categoria = ?";
 
@@ -83,6 +83,12 @@ public class ProdottoDAOImpl implements ProdottoDAO {
                         ps.setInt(6, prodotto.getIdCollezione());
                     } else {
                         ps.setNull(6, Types.INTEGER);
+                    }
+                    // immagine (path relativo dentro la webapp, es. images/xxx.jpg)
+                    if (prodotto.getImmagine() != null && !prodotto.getImmagine().trim().isEmpty()) {
+                        ps.setString(7, prodotto.getImmagine());
+                    } else {
+                        ps.setString(7, "images/default.jpg");
                     }
                     ps.executeUpdate();
                     try (ResultSet keys = ps.getGeneratedKeys()) {
@@ -116,7 +122,12 @@ public class ProdottoDAOImpl implements ProdottoDAO {
                     } else {
                         ps.setNull(6, Types.INTEGER);
                     }
-                    ps.setInt(7, prodotto.getIdProdotto());
+                    if (prodotto.getImmagine() != null && !prodotto.getImmagine().trim().isEmpty()) {
+                        ps.setString(7, prodotto.getImmagine());
+                    } else {
+                        ps.setString(7, "images/default.jpg");
+                    }
+                    ps.setInt(8, prodotto.getIdProdotto());
                     ps.executeUpdate();
                 }
                 // Riscrive le categorie del prodotto
@@ -203,7 +214,8 @@ public class ProdottoDAOImpl implements ProdottoDAO {
                 p.setCosto(rs.getDouble("costo"));
                 p.setQuantita(rs.getInt("quantita"));
                 p.setAttivo(true);
-                p.setIdCollezione(rs.getInt("id_collezione"));
+                    p.setImmagine(rs.getString("immagine"));
+                    p.setIdCollezione(rs.getInt("id_collezione"));
                 prodotti.add(p);
             }
         }
@@ -264,6 +276,12 @@ public class ProdottoDAOImpl implements ProdottoDAO {
         prodotto.setCosto(rs.getDouble("costo"));
         prodotto.setQuantita(rs.getInt("quantita"));
         prodotto.setAttivo(rs.getBoolean("attivo"));
+        // immagine may be present in the ResultSet
+        try {
+            prodotto.setImmagine(rs.getString("immagine"));
+        } catch (SQLException e) {
+            // ignore if column not present
+        }
         prodotto.setIdCollezione(rs.getInt("id_collezione"));
         try {
             prodotto.setCategorie(categoriaDAO.doRetrieveByProdotto(prodotto.getIdProdotto()));

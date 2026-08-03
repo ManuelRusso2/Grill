@@ -19,6 +19,11 @@
                 <c:otherwise><c:out value="${prodotto.nome}" /></c:otherwise>
             </c:choose>
         </h1>
+        <c:if test="${not empty prodotto.immagine}">
+            <div class="product-image-wrapper">
+                <img class="product-image" src="${pageContext.request.contextPath}/${prodotto.immagine}" alt="${prodotto.nome}" />
+            </div>
+        </c:if>
         <p><c:out value="${prodotto.descrizione}" /></p>
         <p>Prezzo: <fmt:formatNumber value="${prodotto.costo}" type="currency" currencySymbol="€" /></p>
 

@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS prodotto(
     costo DOUBLE NOT NULL CHECK(costo > 0),
     quantita INTEGER NOT NULL,
     attivo BOOLEAN DEFAULT TRUE,
+    immagine VARCHAR(255) DEFAULT 'images/default.jpg',
     id_collezione INTEGER,
     
     FOREIGN KEY(id_collezione) REFERENCES collezione(id_collezione)

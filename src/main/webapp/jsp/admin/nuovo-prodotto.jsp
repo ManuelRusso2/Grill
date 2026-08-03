@@ -32,6 +32,12 @@
         </div>
 
         <div class="form-group">
+            <label for="immagine" class="form-label">Percorso Immagine (es. images/prodotto.jpg):</label>
+            <input type="text" id="immagine" name="immagine"
+                   value="${isEdit ? prodotto.immagine : 'images/default.jpg'}" 
+                   class="form-control">
+        </div>
+        <div class="form-group">
             <label for="costo" class="form-label">Prezzo (€):</label>
             <input type="number" id="costo" name="costo" step="0.01" min="0"
                    value="${isEdit ? prodotto.costo : ''}" 

@@ -198,6 +198,14 @@ public class AdminProdottoServlet extends HttpServlet {
             prodotto.setCategorie(categorie);
         }
 
+        // Immagine (path relativo all'applicazione, es. images/prodotto.jpg)
+        String immagine = request.getParameter("immagine");
+        if (immagine != null && !immagine.trim().isEmpty()) {
+            prodotto.setImmagine(immagine.trim());
+        } else {
+            prodotto.setImmagine("images/default.jpg");
+        }
+
         return prodotto;
     }
 }

@@ -14,6 +14,7 @@ public class ProdottoBean implements Serializable {
     private boolean attivo;
     private Integer idCollezione;
     private List<CategoriaBean> categorie;
+    private String immagine;
 
     public ProdottoBean() {}
 
@@ -41,6 +42,9 @@ public class ProdottoBean implements Serializable {
     public List<CategoriaBean> getCategorie() { return categorie; }
     public void setCategorie(List<CategoriaBean> categorie) { this.categorie = categorie; }
 
+    public String getImmagine() { return immagine; }
+    public void setImmagine(String immagine) { this.immagine = immagine; }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
@@ -61,6 +65,7 @@ public class ProdottoBean implements Serializable {
                 ", quantita=" + quantita +
                 ", attivo=" + attivo +
                 ", idCollezione=" + idCollezione +
+                ", immagine='" + immagine + '\'' +
                 ", categorie=" + categorie + '}';
     }
 }
