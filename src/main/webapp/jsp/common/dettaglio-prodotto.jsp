@@ -9,7 +9,9 @@
 <main class="container">
 
     <c:if test="${empty prodotto}">
-        <p>Prodotto non trovato.</p>
+        <div class="empty-state">
+            <p>Prodotto non trovato.</p>
+        </div>
     </c:if>
 
     <c:if test="${not empty prodotto}">
@@ -19,101 +21,109 @@
                 <c:otherwise><c:out value="${prodotto.nome}" /></c:otherwise>
             </c:choose>
         </h1>
+        
         <c:if test="${not empty prodotto.immagine}">
             <div class="product-image-wrapper">
                 <img class="product-image" src="${pageContext.request.contextPath}/${prodotto.immagine}" alt="${prodotto.nome}" />
             </div>
         </c:if>
-        <p><c:out value="${prodotto.descrizione}" /></p>
-        <p>Prezzo: <fmt:formatNumber value="${prodotto.costo}" type="currency" currencySymbol="€" /></p>
 
-        <%-- Selettore varianti colore --%>
-        <c:if test="${not empty varianti}">
-            <div class="varianti-wrapper">
-                <p class="varianti-label">Colore:</p>
-                <div class="varianti-list">
-                    <c:forEach var="v" items="${varianti}">
-                        <c:set var="colore" value="${fn:contains(v.nome, ' - ') ? fn:substringAfter(v.nome, ' - ') : v.nome}" />
-                        <a href="${pageContext.request.contextPath}/DettaglioProdottoServlet?id=${v.idProdotto}"
-                           class="variante-btn ${v.idProdotto == prodotto.idProdotto ? 'active' : ''} ${v.quantita <= 0 ? 'esaurito' : ''}">
-                            <c:out value="${colore}" />
-                        </a>
+        <div class="product-details-info">
+            <p class="product-description"><c:out value="${prodotto.descrizione}" /></p>
+            <p class="product-price">Prezzo: <span><fmt:formatNumber value="${prodotto.costo}" type="currency" currencySymbol="€" /></span></p>
+
+            <%-- Selettore varianti colore --%>
+            <c:if test="${not empty varianti}">
+                <div class="varianti-wrapper">
+                    <p class="varianti-label">Colore:</p>
+                    <div class="varianti-list">
+                        <c:forEach var="v" items="${varianti}">
+                            <c:set var="colore" value="${fn:contains(v.nome, ' - ') ? fn:substringAfter(v.nome, ' - ') : v.nome}" />
+                            <a href="${pageContext.request.contextPath}/DettaglioProdottoServlet?id=${v.idProdotto}"
+                               class="variante-btn ${v.idProdotto == prodotto.idProdotto ? 'active' : ''} ${v.quantita <= 0 ? 'esaurito' : ''}">
+                                <c:out value="${colore}" />
+                            </a>
+                        </c:forEach>
+                    </div>
+                </div>
+            </c:if>
+
+            <c:if test="${not empty prodotto.categorie}">
+                <p class="product-categories">Categorie:
+                    <c:forEach var="cat" items="${prodotto.categorie}" varStatus="s">
+                        <c:out value="${cat.nome}" /><c:if test="${!s.last}">, </c:if>
                     </c:forEach>
-                </div>
-            </div>
-        </c:if>
+                </p>
+            </c:if>
 
-        <c:if test="${not empty prodotto.categorie}">
-            <p>Categorie:
-                <c:forEach var="cat" items="${prodotto.categorie}" varStatus="s">
-                    <c:out value="${cat.nome}" /><c:if test="${!s.last}">, </c:if>
-                </c:forEach>
-            </p>
-        </c:if>
+            <%-- Form di Acquisto / Notifica Admin --%>
+            <div class="product-actions-wrapper">
+                <c:choose>
+                    <c:when test="${isAdmin}">
+                        <div class="admin-notice">
+                            🔒 Gli amministratori non possono acquistare prodotti dal catalogo.
+                        </div>
+                    </c:when>
+                    <c:when test="${prodotto.quantita > 0}">
+                        <form method="post" action="${pageContext.request.contextPath}/CarrelloServlet" id="add-to-cart-form" class="add-to-cart-form">
+                            <input type="hidden" name="action" value="add">
+                            <input type="hidden" name="idProdotto" value="${prodotto.idProdotto}">
+                            <input type="number" name="quantita" value="1" min="1" max="${prodotto.quantita}" class="input-qty">
+                            <button type="submit" class="btn">Aggiungi al carrello</button>
+                        </form>
 
-        <c:choose>
-            <c:when test="${isAdmin}">
-                <div style="padding: 15px; border-radius: 6px; background-color: #FEE2E2; border: 1px solid #FCA5A5; color: #991B1B; font-weight: 500;">
-                    <p>🔒 Gli amministratori non possono acquistare prodotti dal catalogo.</p>
-                </div>
-            </c:when>
-            <c:when test="${prodotto.quantita > 0}">
-                <form method="post" action="${pageContext.request.contextPath}/CarrelloServlet" id="add-to-cart-form">
-                    <input type="hidden" name="action" value="add">
-                    <input type="hidden" name="idProdotto" value="${prodotto.idProdotto}">
-                    <input type="number" name="quantita" value="1" min="1" max="${prodotto.quantita}">
-                    <button type="submit">Aggiungi al carrello</button>
-                </form>
-                <div id="cart-toast" style="display:none; position:fixed; top:20px; right:20px; z-index:9999; padding:12px 20px; border-radius:6px; font-weight:bold; color:white; box-shadow:0 4px 10px rgba(0,0,0,0.15); transition:opacity 0.3s ease;"></div>
-                <script>
-                document.addEventListener("DOMContentLoaded", function () {
-                    const form = document.getElementById("add-to-cart-form");
-                    const toast = document.getElementById("cart-toast");
+                        <div id="cart-toast" class="toast"></div>
 
-                    function showToast(message, isSuccess) {
-                        toast.textContent = message;
-                        toast.style.backgroundColor = isSuccess ? "#10B981" : "#EF4444";
-                        toast.style.display = "block";
-                        toast.style.opacity = "1";
-                        setTimeout(() => {
-                            toast.style.opacity = "0";
-                            setTimeout(() => { toast.style.display = "none"; }, 300);
-                        }, 2500);
-                    }
+                        <script>
+                        document.addEventListener("DOMContentLoaded", function () {
+                            const form = document.getElementById("add-to-cart-form");
+                            const toast = document.getElementById("cart-toast");
 
-                    form.addEventListener("submit", function (e) {
-                        e.preventDefault();
-                        const params = new URLSearchParams(new FormData(form));
-                        fetch(form.getAttribute("action"), {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/x-www-form-urlencoded",
-                                "X-Requested-With": "XMLHttpRequest"
-                            },
-                            body: params.toString()
-                        })
-                        .then(async r => {
-                            const text = await r.text();
-                            let data;
-                            try { data = JSON.parse(text); } catch(err) { showToast("Errore di risposta dal server.", false); return; }
-                            if (r.status === 401) { window.location.href = data.redirect || "${pageContext.request.contextPath}/jsp/common/login.jsp"; return; }
-                            if (r.ok && data.success) {
-                                showToast(data.message || "Prodotto aggiunto al carrello!", true);
-                                const badge = document.getElementById("cart-count");
-                                if (badge) { const c = parseInt(data.cartCount, 10) || 0; badge.textContent = c > 0 ? "(" + c + ")" : ""; }
-                            } else {
-                                showToast(data.message || "Impossibile aggiungere il prodotto.", false);
+                            function showToast(message, isSuccess) {
+                                toast.textContent = message;
+                                toast.className = "toast " + (isSuccess ? "toast-success" : "toast-error");
+                                toast.classList.add("show");
+                                
+                                setTimeout(() => {
+                                    toast.classList.remove("show");
+                                }, 2500);
                             }
-                        })
-                        .catch(() => showToast("Errore di connessione.", false));
-                    });
-                });
-                </script>
-            </c:when>
-            <c:otherwise>
-                <button disabled>Esaurito</button>
-            </c:otherwise>
-        </c:choose>
+
+                            form.addEventListener("submit", function (e) {
+                                e.preventDefault();
+                                const params = new URLSearchParams(new FormData(form));
+                                fetch(form.getAttribute("action"), {
+                                    method: "POST",
+                                    headers: {
+                                        "Content-Type": "application/x-www-form-urlencoded",
+                                        "X-Requested-With": "XMLHttpRequest"
+                                    },
+                                    body: params.toString()
+                                })
+                                .then(async r => {
+                                    const text = await r.text();
+                                    let data;
+                                    try { data = JSON.parse(text); } catch(err) { showToast("Errore di risposta dal server.", false); return; }
+                                    if (r.status === 401) { window.location.href = data.redirect || "${pageContext.request.contextPath}/jsp/common/login.jsp"; return; }
+                                    if (r.ok && data.success) {
+                                        showToast(data.message || "Prodotto aggiunto al carrello!", true);
+                                        const badge = document.getElementById("cart-count");
+                                        if (badge) { const c = parseInt(data.cartCount, 10) || 0; badge.textContent = c > 0 ? "(" + c + ")" : ""; }
+                                    } else {
+                                        showToast(data.message || "Impossibile aggiungere il prodotto.", false);
+                                    }
+                                })
+                                .catch(() => showToast("Errore di connessione.", false));
+                            });
+                        });
+                        </script>
+                    </c:when>
+                    <c:otherwise>
+                        <button class="btn btn-secondary" disabled>Esaurito</button>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+        </div>
 
         <%-- SEZIONE RECENSIONI --%>
         <hr class="section-divider">
@@ -156,42 +166,42 @@
                 </c:when>
             </c:choose>
 
-	<%-- Lista delle recensioni già presenti --%>
-	        <c:choose>
-	            <c:when test="${not empty recensioni}">
-	                <div class="reviews-list">
-	                    <c:forEach var="rec" items="${recensioni}">
-	                        <div class="review-item">
-	                            <div class="review-meta">
-	                                <span class="review-author">
-	                                    <c:out value="${rec.nomeUtente}" /> <c:out value="${rec.cognomeUtente}" />
-	                                    <small class="review-email">(<c:out value="${rec.emailUtente}" />)</small>
-	                                </span>
-	                                <span class="review-stars">
-	                                    <c:forEach begin="1" end="${rec.valutazione}">★</c:forEach>
-	                                </span>
-	                                <span class="review-date">
-	                                    <fmt:formatDate value="${rec.dataRecensione}" pattern="dd/MM/yyyy HH:mm" />
-	                                </span>
-	
-	                                <%-- TASTO ELIMINA VISIBILE SOLO AGLI ADMIN --%>
-	                                <c:if test="${isAdmin}">
-	                                    <form action="${pageContext.request.contextPath}/EliminaRecensioneServlet" method="post" class="delete-review-form" onsubmit="return confirm('Sei sicuro di voler eliminare questa recensione?');">
-	                                        <input type="hidden" name="idRecensione" value="${rec.idRecensione}">
-	                                        <input type="hidden" name="idProdotto" value="${prodotto.idProdotto}">
-	                                        <button type="submit" class="btn-delete-review">🗑️ Elimina</button>
-	                                    </form>
-	                                </c:if>
-	                            </div>
-	                            <p class="review-text"><c:out value="${rec.descrizione}" /></p>
-	                        </div>
-	                    </c:forEach>
-	                </div>
-	            </c:when>
-	            <c:otherwise>
-	                <p class="no-reviews-msg">Nessuna recensione presente per questo prodotto. Sii il primo a recensirlo!</p>
-	            </c:otherwise>
-	        </c:choose>
+            <%-- Lista delle recensioni già presenti --%>
+            <c:choose>
+                <c:when test="${not empty recensioni}">
+                    <div class="reviews-list">
+                        <c:forEach var="rec" items="${recensioni}">
+                            <div class="review-item">
+                                <div class="review-meta">
+                                    <span class="review-author">
+                                        <c:out value="${rec.nomeUtente}" /> <c:out value="${rec.cognomeUtente}" />
+                                        <small class="review-email">(<c:out value="${rec.emailUtente}" />)</small>
+                                    </span>
+                                    <span class="review-stars">
+                                        <c:forEach begin="1" end="${rec.valutazione}">★</c:forEach>
+                                    </span>
+                                    <span class="review-date">
+                                        <fmt:formatDate value="${rec.dataRecensione}" pattern="dd/MM/yyyy HH:mm" />
+                                    </span>
+
+                                    <%-- TASTO ELIMINA VISIBILE SOLO AGLI ADMIN --%>
+                                    <c:if test="${isAdmin}">
+                                        <form action="${pageContext.request.contextPath}/EliminaRecensioneServlet" method="post" class="delete-review-form" onsubmit="return confirm('Sei sicuro di voler eliminare questa recensione?');">
+                                            <input type="hidden" name="idRecensione" value="${rec.idRecensione}">
+                                            <input type="hidden" name="idProdotto" value="${prodotto.idProdotto}">
+                                            <button type="submit" class="btn-delete-review">🗑️ Elimina</button>
+                                        </form>
+                                    </c:if>
+                                </div>
+                                <p class="review-text"><c:out value="${rec.descrizione}" /></p>
+                            </div>
+                        </c:forEach>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <p class="no-reviews-msg">Nessuna recensione presente per questo prodotto. Sii il primo a recensirlo!</p>
+                </c:otherwise>
+            </c:choose>
         </section>
 
     </c:if>

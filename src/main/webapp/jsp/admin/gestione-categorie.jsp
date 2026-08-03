@@ -9,54 +9,61 @@
     <h1>Gestione Categorie</h1>
 
     <c:if test="${not empty successMessage}">
-        <div class="alert-success">
+        <div class="alert alert-success">
             <c:out value="${successMessage}" />
         </div>
     </c:if>
     <c:if test="${not empty errorMessage}">
-        <div class="alert-error">
+        <div class="alert alert-danger">
             <c:out value="${errorMessage}" />
         </div>
     </c:if>
 
-    <div class="actions-bar">
-        <a href="${pageContext.request.contextPath}/AdminCategoriaServlet?action=new" class="btn-add">➕ Nuova Categoria</a>
+    <div class="admin-toolbar">
+        <h2>Elenco Categorie</h2>
+        <a href="${pageContext.request.contextPath}/AdminCategoriaServlet?action=new" class="btn btn-small">➕ Nuova Categoria</a>
     </div>
 
-    <table class="table-custom">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Nome</th>
-                <th>Descrizione</th>
-                <th class="text-center">Azioni</th>
-            </tr>
-        </thead>
-        <tbody>
-            <c:if test="${not empty categorie}">
-                <c:forEach var="cat" items="${categorie}">
-                    <tr class="table-row">
-                        <td><c:out value="${cat.idCategoria}"/></td>
-                        <td><c:out value="${cat.nome}"/></td>
-                        <td class="col-desc"><c:out value="${cat.descrizione}"/></td>
-                        <td class="col-actions text-center">
-                            <a href="${pageContext.request.contextPath}/AdminCategoriaServlet?action=edit&id=${cat.idCategoria}" class="btn-edit">✏️ Modifica</a>
-                            <form method="post" action="${pageContext.request.contextPath}/AdminCategoriaServlet" class="inline-form" onsubmit="return confirm('Eliminare la categoria ${cat.nome}?');">
-                                <input type="hidden" name="action" value="delete">
-                                <input type="hidden" name="id" value="${cat.idCategoria}">
-                                <button type="submit" class="btn-delete">🗑️ Elimina</button>
-                            </form>
-                        </td>
-                    </tr>
-                </c:forEach>
-            </c:if>
-            <c:if test="${empty categorie}">
+    <div class="admin-table-wrapper">
+        <table class="admin-table">
+            <thead>
                 <tr>
-                    <td colspan="4" class="empty-row">Nessuna categoria presente.</td>
+                    <th style="width: 80px;">ID</th>
+                    <th style="width: 250px;">Nome</th>
+                    <th>Descrizione</th>
+                    <th style="width: 180px; text-align: right;">Azioni</th>
                 </tr>
-            </c:if>
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                <c:choose>
+                    <c:when test="${not empty categorie}">
+                        <c:forEach var="cat" items="${categorie}">
+                            <tr>
+                                <td><strong>#${cat.idCategoria}</strong></td>
+                                <td><c:out value="${cat.nome}"/></td>
+                                <td><c:out value="${cat.descrizione}"/></td>
+                                <td style="text-align: right;">
+                                    <div class="action-cell" style="justify-content: flex-end;">
+                                        <a href="${pageContext.request.contextPath}/AdminCategoriaServlet?action=edit&id=${cat.idCategoria}" class="btn-edit">Modifica</a>
+                                        <form method="post" action="${pageContext.request.contextPath}/AdminCategoriaServlet" class="action-form" onsubmit="return confirm('Eliminare la categoria ${cat.nome}?');">
+                                            <input type="hidden" name="action" value="delete">
+                                            <input type="hidden" name="id" value="${cat.idCategoria}">
+                                            <button type="submit" class="btn-delete">Elimina</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </c:when>
+                    <c:otherwise>
+                        <tr>
+                            <td colspan="4" class="empty-table-msg">Nessuna categoria presente nel database.</td>
+                        </tr>
+                    </c:otherwise>
+                </c:choose>
+            </tbody>
+        </table>
+    </div>
 </main>
 
 <%@ include file="/jsp/common/footer.jspf" %>
