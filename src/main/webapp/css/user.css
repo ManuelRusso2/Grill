@@ -1,0 +1,847 @@
+/* ==========================================================================
+   1. PAGINE: CATALOGO E CARD PRODOTTI
+   ========================================================================== */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 25px;
+}
+
+.card {
+    background-color: var(--bg-card);
+    border-radius: 6px;
+    padding: 25px 20px;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(155, 81, 224, 0.15);
+}
+
+.card h3 {
+    font-size: 18px;
+    margin-bottom: 15px;
+    flex-grow: 1;
+}
+
+.card .price {
+    color: var(--primary-purple);
+    font-size: 26px;
+    font-weight: 800;
+    margin-bottom: 20px;
+}
+
+.add-to-cart-form {
+    display: flex;
+    gap: 10px;
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+    max-width: 100%;
+}
+
+.input-qty {
+    width: 60px;
+    text-align: center;
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--text-gray);
+    padding: 60px 20px;
+    background-color: rgba(255,255,255,0.02);
+    border: 1px dashed var(--border-color);
+    border-radius: 6px;
+}
+
+.product-thumb {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-bottom: 12px;
+}
+
+.varianti-wrapper {
+    margin: 20px 0;
+}
+
+.varianti-label {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-gray);
+    margin-bottom: 10px;
+}
+
+.varianti-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.variante-btn {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1px solid var(--border-color);
+    color: var(--text-light);
+    background-color: var(--bg-card);
+    transition: all 0.2s ease;
+}
+
+.variante-btn:hover {
+    border-color: var(--primary-purple);
+    color: var(--text-light);
+}
+
+.variante-btn.active {
+    border-color: var(--accent-yellow);
+    color: var(--accent-yellow);
+    background-color: rgba(204, 255, 0, 0.08);
+}
+
+.variante-btn.esaurito {
+    opacity: 0.4;
+    text-decoration: line-through;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* ==========================================================================
+   2. DETTAGLIO PRODOTTO
+   ========================================================================== */
+.product-details-info {
+    max-width: 600px;
+    margin: 0 auto 30px auto;
+}
+
+.product-image-wrapper { 
+    text-align: center; 
+    margin: 18px 0; 
+}
+
+.product-image {
+    width: 100%;
+    max-width: 520px;
+    height: auto;
+    object-fit: contain;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+.product-description {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--text-light);
+    margin-bottom: 15px;
+}
+
+.product-price {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-gray);
+    margin-bottom: 20px;
+}
+
+.product-price span {
+    color: var(--primary-purple);
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.product-categories {
+    font-size: 14px;
+    color: var(--text-gray);
+    margin: 15px 0;
+}
+
+.product-actions-wrapper {
+    margin-top: 25px;
+    max-width: 320px;
+}
+
+/* ==========================================================================
+   3. SEZIONE RECENSIONI (SCHEDA PRODOTTO)
+   ========================================================================== */
+.section-divider {
+    margin: 50px 0;
+    border: 0;
+    border-top: 1px solid var(--border-color);
+}
+
+.reviews-section {
+    margin-top: 40px;
+}
+
+.reviews-section h2 {
+    font-family: var(--font-headings);
+    font-size: 24px;
+    font-weight: 900;
+    text-transform: uppercase;
+    font-style: italic;
+    color: var(--text-light);
+    margin-bottom: 25px;
+}
+
+.review-form-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 25px;
+    margin-bottom: 35px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.review-form-card form {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+    box-shadow: none;
+}
+
+.review-form-card h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: var(--accent-yellow);
+    text-transform: uppercase;
+}
+
+.review-form-card select.form-control,
+.review-form-card textarea.form-control {
+    width: 100%;
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-light);
+    font-family: var(--font-body);
+    font-size: 14px;
+    padding: 12px;
+    transition: border-color 0.3s ease;
+}
+
+.review-form-card select.form-control:focus,
+.review-form-card textarea.form-control:focus {
+    outline: none;
+    border-color: var(--primary-purple);
+}
+
+.review-form-card textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.btn-submit-review {
+    background-color: var(--accent-yellow);
+    color: #000 !important;
+    font-family: var(--font-headings);
+    font-weight: 800;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    width: auto;
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.btn-submit-review:hover {
+    background-color: #e0ff4d;
+    color: #000 !important;
+    transform: translateY(-2px);
+}
+
+.reviews-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.review-item {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.review-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.review-author {
+    font-weight: 700;
+    color: var(--text-light);
+    font-size: 14px;
+}
+
+.review-email {
+    color: var(--text-gray);
+    font-weight: 400;
+    font-size: 13px;
+    margin-left: 4px;
+}
+
+.review-stars {
+    color: var(--accent-yellow);
+    font-size: 16px;
+    letter-spacing: 2px;
+}
+
+.review-date {
+    font-size: 12px;
+    color: var(--text-gray);
+    margin-left: auto;
+}
+
+.review-text {
+    color: var(--text-light);
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+    opacity: 0.9;
+}
+
+.delete-review-form {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+    max-width: fit-content;
+}
+
+.btn-delete-review {
+    background-color: rgba(255, 74, 74, 0.15);
+    color: #ff4a4a !important;
+    border: 1px solid #ff4a4a;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+    width: auto;
+}
+
+.btn-delete-review:hover {
+    background-color: #ff4a4a;
+    color: #ffffff !important;
+}
+
+.review-login-prompt,
+.no-reviews-msg {
+    color: var(--text-gray);
+    font-style: italic;
+    font-size: 14px;
+}
+
+.review-login-prompt a {
+    color: var(--accent-yellow);
+    text-decoration: underline;
+}
+
+.review-login-prompt a:hover {
+    color: var(--text-light);
+}
+
+/* ==========================================================================
+   4. PAGINA PROFILO & RECENSIONI UTENTE
+   ========================================================================== */
+.profile-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 30px;
+    margin-bottom: 50px;
+    max-width: 600px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.profile-card h2 {
+    font-size: 20px;
+    margin-bottom: 25px;
+    color: var(--text-light);
+    font-weight: 700;
+}
+
+.profile-details {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    font-weight: 700;
+    color: var(--text-gray);
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+    min-width: 140px;
+}
+
+.detail-value {
+    color: var(--text-light);
+    text-align: right;
+    flex: 1;
+}
+
+.user-review {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.user-review .review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+}
+
+.user-review .review-header strong {
+    font-size: 16px;
+    color: var(--text-light);
+    font-weight: 700;
+}
+
+.user-review .review-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.user-review .review-rating {
+    color: var(--accent-yellow);
+    font-size: 16px;
+    letter-spacing: 2px;
+}
+
+.user-review .review-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border-color);
+}
+
+.user-review .review-actions form {
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+    max-width: fit-content;
+    display: inline-block;
+}
+
+.user-review .btn-action {
+    background-color: var(--accent-yellow);
+    color: #000000;
+    font-family: var(--font-headings);
+    font-weight: 800;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+    width: auto;
+    display: inline-block;
+}
+
+.user-review .btn-action:hover {
+    background-color: #e0ff4d;
+    transform: translateY(-2px);
+}
+
+.user-review .btn-action.btn-delete {
+    background-color: rgba(255, 74, 74, 0.15);
+    color: #ff4a4a;
+    border: 1px solid #ff4a4a;
+}
+
+.user-review .btn-action.btn-delete:hover {
+    background-color: #ff4a4a;
+    color: #ffffff;
+}
+
+/* ==========================================================================
+   5. CARRELLO
+   ========================================================================== */
+.cart-product-title {
+    font-weight: 600;
+    color: var(--text-light);
+}
+
+.cart-product-title:hover {
+    color: var(--accent-yellow);
+}
+
+.cart-update-form {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    box-shadow: none;
+    max-width: 100%;
+}
+
+.cart-update-form .input-qty {
+    width: 60px;
+    padding: 6px 8px;
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-light);
+    text-align: center;
+    font-size: 14px;
+}
+
+.cart-remove-form {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    box-shadow: none;
+    max-width: fit-content;
+}
+
+.cart-summary {
+    margin-top: 25px;
+    background-color: var(--bg-card);
+    padding: 25px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 15px;
+}
+
+.cart-summary h2 {
+    font-size: 22px;
+    margin-bottom: 0;
+    color: var(--text-light);
+    font-weight: 800;
+    text-align: right;
+    text-transform: none;
+    font-style: normal;
+}
+
+.cart-summary h2 span {
+    color: var(--primary-purple);
+    font-size: 28px;
+}
+
+.cart-actions-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.cart-actions-group form {
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+    max-width: fit-content;
+    display: inline-block;
+}
+
+.cart-summary .btn-checkout,
+.empty-state .btn-checkout {
+    display: inline-block;
+    width: auto;
+    min-width: 200px;
+    padding: 14px 28px;
+    font-size: 15px;
+    text-align: center;
+    margin: 0;
+}
+
+.cart-summary .btn-empty-cart {
+    background-color: rgba(255, 74, 74, 0.15) !important;
+    color: #ff4a4a !important;
+    border: 1px solid #ff4a4a !important;
+    font-family: var(--font-headings);
+    font-weight: 800;
+    padding: 14px 20px;
+    font-size: 13px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+    width: auto;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.cart-summary .btn-empty-cart:hover {
+    background-color: #ff4a4a !important;
+    color: #ffffff !important;
+    transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   6. CHECKOUT
+   ========================================================================== */
+.checkout-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 30px;
+    align-items: start;
+}
+
+.checkout-summary-card,
+.checkout-form-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.checkout-summary-card h2,
+.checkout-form-card h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: var(--text-light);
+    font-weight: 700;
+}
+
+.checkout-table {
+    margin-bottom: 20px;
+}
+
+.checkout-total {
+    text-align: right;
+    padding-top: 15px;
+    border-top: 1px solid var(--border-color);
+}
+
+.checkout-total p {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-light);
+}
+
+.checkout-total span {
+    color: var(--primary-purple);
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.checkout-form-card form {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+    box-shadow: none;
+}
+
+.checkout-form-card select {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    color: var(--text-light);
+    font-family: inherit;
+    font-size: 14px;
+    transition: border-color 0.3s;
+}
+
+.payment-method-section {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.payment-method-section h3 {
+    font-size: 16px;
+    color: var(--accent-yellow);
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+}
+
+.form-row .form-group {
+    flex: 1;
+}
+
+.btn-checkout-submit {
+    margin-top: 25px;
+}
+
+/* ==========================================================================
+   7. STORICO ORDINI UTENTE
+   ========================================================================== */
+.orders-section {
+    margin-top: 40px;
+}
+
+.section-title {
+    font-size: 22px;
+    color: var(--text-light);
+    font-weight: 700;
+    margin-bottom: 6px;
+    text-align: left;
+    font-style: normal;
+    text-transform: none;
+}
+
+.section-subtitle {
+    font-size: 14px;
+    color: var(--text-gray);
+    margin-bottom: 20px;
+}
+
+.order-price {
+    font-weight: 700;
+    color: var(--primary-purple);
+}
+
+.order-link {
+    color: var(--accent-yellow);
+    font-weight: 600;
+    font-size: 13px;
+    text-transform: uppercase;
+    transition: color 0.2s ease;
+}
+
+.order-link:hover {
+    color: var(--text-light);
+    text-decoration: underline;
+}
+
+.empty-table-msg {
+    text-align: center !important;
+    font-style: italic;
+    color: var(--text-gray) !important;
+    padding: 30px 20px !important;
+}
+
+/* ==========================================================================
+   8. PAGINE DI ERRORE
+   ========================================================================== */
+.error-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    min-height: 60vh;
+    text-align: center;
+}
+
+.error-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 50px 40px;
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.error-card .error-code {
+    font-size: 80px;
+    color: var(--accent-yellow);
+    line-height: 1;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.error-card h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: var(--text-light);
+}
+
+.error-card p {
+    color: var(--text-gray);
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.error-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    width: 100%;
+    margin-top: 35px;
+    flex-wrap: wrap;
+}
+
+.error-actions .btn {
+    width: auto; 
+    min-width: 180px;
+    display: inline-block;
+    text-align: center;
+    margin-top: 0;
+}
+
+.error-details {
+    margin-top: 25px;
+    width: 100%;
+    text-align: left;
+}
+
+.error-details pre {
+    background-color: var(--bg-input) !important;
+    color: #ff4a4a;
+    border: 1px solid var(--border-color);
+    margin-top: 10px;
+}

@@ -1,0 +1,21 @@
+/* ==========================================================================
+   RESPONSIVE MEDIA QUERIES
+   ========================================================================== */
+
+/* Tablet & Layout a colonna singola (max 900px) */
+@media (max-width: 900px) {
+    .admin-edit-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Tablet & Mobile (max 850px) */
+@media (max-width: 850px) {
+    .checkout-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-grid-2col {
+        grid-template-columns: 1fr;
+    }
+}
