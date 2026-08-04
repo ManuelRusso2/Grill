@@ -82,12 +82,23 @@
                 </tbody>
             </table>
 
-            <%-- Riquadro Totale e pulsante Checkout --%>
+			<%-- Riquadro Totale e azioni carrello --%>
             <div class="cart-summary">
                 <h2>Totale Ordine: <span><fmt:formatNumber value="${totaleCarrello}" type="currency" currencySymbol="€" /></span></h2>
-                <a href="${pageContext.request.contextPath}/CheckoutServlet" class="btn btn-checkout">
-                    Procedi al Checkout
-                </a>
+                
+                <div class="cart-actions-group">
+                    <a href="${pageContext.request.contextPath}/CheckoutServlet" class="btn btn-checkout">
+                        Procedi al Checkout
+                    </a>
+
+                    <%-- Form per svuotare il carrello con stile secondario (Rosso tenue) --%>
+                    <form method="post" action="${pageContext.request.contextPath}/CarrelloServlet">
+                        <input type="hidden" name="action" value="empty" />
+                        <button type="submit" class="btn-empty-cart" onclick="return confirm('Sei sicuro di voler svuotare completamente il carrello?');">
+                            Svuota Carrello
+                        </button>
+                    </form>
+                </div>
             </div>
         </c:when>
 

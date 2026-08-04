@@ -44,6 +44,7 @@
         <c:if test="${sessionScope.utente.admin}">
             <a href="${pageContext.request.contextPath}/AdminProdottoServlet" class="nav-admin">Gestione Prodotti</a>
             <a href="${pageContext.request.contextPath}/AdminCategoriaServlet" class="nav-admin">Gestione Categorie</a>
+            <a href="${pageContext.request.contextPath}/AdminRecensioniServlet" class="nav-admin">Gestione Recensioni</a>
             <a href="${pageContext.request.contextPath}/AdminOrdiniServlet" class="nav-admin">Gestione Ordini</a>
         </c:if>
 

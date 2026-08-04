@@ -15,36 +15,40 @@ public class RecensioneDAOImpl implements RecensioneDAO {
     private static final String INSERT_RECENSIONE =
         "INSERT INTO recensione (descrizione, valutazione, id_prodotto, id_utente) VALUES (?, ?, ?, ?)";
 
-    
     private static final String UPDATE_RECENSIONE =
         "UPDATE recensione SET descrizione = ?, valutazione = ? WHERE id_recensione = ?";
 
-    
     private static final String SELECT_BY_ID =
         "SELECT id_recensione, data_recensione, descrizione, valutazione, id_prodotto, id_utente FROM recensione WHERE id_recensione = ?";
 
-    
     private static final String SELECT_BY_PRODOTTO =
-    	    "SELECT r.id_recensione, r.data_recensione, r.descrizione, r.valutazione, r.id_prodotto, r.id_utente, " +
-    	    "u.nome, u.cognome, u.email " +
-    	    "FROM recensione r " +
-    	    "JOIN utente u ON r.id_utente = u.id_utente " +
-    	    "WHERE r.id_prodotto = ? " +
-    	    "ORDER BY r.data_recensione DESC";
+        "SELECT r.id_recensione, r.data_recensione, r.descrizione, r.valutazione, r.id_prodotto, r.id_utente, " +
+        "u.nome, u.cognome, u.email " +
+        "FROM recensione r " +
+        "JOIN utente u ON r.id_utente = u.id_utente " +
+        "WHERE r.id_prodotto = ? " +
+        "ORDER BY r.data_recensione DESC";
 
-    
     private static final String SELECT_BY_UTENTE =
-        "SELECT id_recensione, data_recensione, descrizione, valutazione, id_prodotto, id_utente FROM recensione WHERE id_utente = ? ORDER BY data_recensione DESC";
+        "SELECT r.id_recensione, r.data_recensione, r.descrizione, r.valutazione, r.id_prodotto, r.id_utente, " +
+        "u.nome, u.cognome, u.email, p.nome AS nome_prodotto " +
+        "FROM recensione r " +
+        "LEFT JOIN utente u ON r.id_utente = u.id_utente " +
+        "LEFT JOIN prodotto p ON r.id_prodotto = p.id_prodotto " +
+        "WHERE r.id_utente = ? " +
+        "ORDER BY r.data_recensione DESC";
 
-    
     private static final String SELECT_ALL =
-        "SELECT id_recensione, data_recensione, descrizione, valutazione, id_prodotto, id_utente FROM recensione ORDER BY data_recensione DESC";
+        "SELECT r.id_recensione, r.data_recensione, r.descrizione, r.valutazione, r.id_prodotto, r.id_utente, " +
+        "u.nome, u.cognome, u.email, p.nome AS nome_prodotto " +
+        "FROM recensione r " +
+        "LEFT JOIN utente u ON r.id_utente = u.id_utente " +
+        "LEFT JOIN prodotto p ON r.id_prodotto = p.id_prodotto " +
+        "ORDER BY r.data_recensione DESC";
 
-    
     private static final String DELETE_RECENSIONE =
         "DELETE FROM recensione WHERE id_recensione = ?";
 
-    
     @Override
     public void doSave(RecensioneBean recensione) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
@@ -59,7 +63,6 @@ public class RecensioneDAOImpl implements RecensioneDAO {
         }
     }
 
-    
     @Override
     public void doUpdate(RecensioneBean recensione) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
@@ -73,7 +76,6 @@ public class RecensioneDAOImpl implements RecensioneDAO {
         }
     }
 
-    
     @Override
     public RecensioneBean doRetrieveById(int idRecensione) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
@@ -90,7 +92,6 @@ public class RecensioneDAOImpl implements RecensioneDAO {
         return null;
     }
 
-    
     @Override
     public List<RecensioneBean> doRetrieveByProdotto(int idProdotto) throws SQLException {
         List<RecensioneBean> recensioni = new ArrayList<>();
@@ -108,7 +109,6 @@ public class RecensioneDAOImpl implements RecensioneDAO {
         return recensioni;
     }
 
-    
     @Override
     public List<RecensioneBean> doRetrieveByUtente(int idUtente) throws SQLException {
         List<RecensioneBean> recensioni = new ArrayList<>();
@@ -126,7 +126,6 @@ public class RecensioneDAOImpl implements RecensioneDAO {
         return recensioni;
     }
 
-    
     @Override
     public List<RecensioneBean> doRetrieveAll() throws SQLException {
         List<RecensioneBean> recensioni = new ArrayList<>();
@@ -141,7 +140,6 @@ public class RecensioneDAOImpl implements RecensioneDAO {
         return recensioni;
     }
 
-    
     @Override
     public boolean doDelete(int idRecensione) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection();
@@ -153,8 +151,7 @@ public class RecensioneDAOImpl implements RecensioneDAO {
         }
     }
 
-    
-private RecensioneBean mapRow(ResultSet rs) throws SQLException {
+    private RecensioneBean mapRow(ResultSet rs) throws SQLException {
         RecensioneBean recensione = new RecensioneBean();
         recensione.setIdRecensione(rs.getInt("id_recensione"));
         recensione.setDataRecensione(rs.getTimestamp("data_recensione"));
@@ -169,7 +166,14 @@ private RecensioneBean mapRow(ResultSet rs) throws SQLException {
             recensione.setCognomeUtente(rs.getString("cognome"));
             recensione.setEmailUtente(rs.getString("email"));
         } catch (SQLException e) {
-            // Se la query non include la JOIN con utente, ignora l'eccezione
+            // Ignora se la colonna non è presente
+        }
+
+        // Legge il nome del prodotto se presente nella query (tramite JOIN)
+        try {
+            recensione.setNomeProdotto(rs.getString("nome_prodotto"));
+        } catch (SQLException e) {
+            // Ignora se la colonna non è presente
         }
 
         return recensione;

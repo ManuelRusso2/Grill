@@ -132,6 +132,15 @@ public class CarrelloServlet extends HttpServlet {
                     rimuoviProdotto(request, session, carrello);
                 } else if (action.equalsIgnoreCase("update")) {
                     aggiornaQuantita(request, session, carrello);
+                } else if (action.equalsIgnoreCase("empty") || action.equalsIgnoreCase("svuota")) {
+                    // Svuota completamente il carrello
+                    boolean emptied = carrelloDAO.doEmpty(carrello.getIdCarrello());
+                    if (emptied) {
+                        session.setAttribute("successMessage", "Carrello svuotato con successo.");
+                    } else {
+                        // Anche se non ci sono righe cancellate, consideriamo il carrello come vuoto
+                        session.setAttribute("successMessage", "Carrello svuotato.");
+                    }
                 }
             }
 

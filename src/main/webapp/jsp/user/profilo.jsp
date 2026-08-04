@@ -88,6 +88,50 @@
             </tbody>
         </table>
     </div>
+
+<%-- SEZIONE: Recensioni Personali --%>
+    <div class="reviews-section">
+        <h2 class="section-title">Le tue Recensioni</h2>
+        <p class="section-subtitle">Qui trovi tutte le recensioni che hai lasciato sui prodotti di Grill. Puoi modificarle o rimuoverle.</p>
+
+        <c:choose>
+            <c:when test="${not empty recensioniUtente}">
+                <c:forEach var="rec" items="${recensioniUtente}">
+                    <div class="user-review">
+                        <div class="review-header">
+                            <strong><c:out value="${rec.nomeProdotto}" /></strong>
+                            <span class="review-date">
+                                <fmt:formatDate value="${rec.dataRecensione}" pattern="dd/MM/yyyy HH:mm" />
+                            </span>
+                        </div>
+                        <div class="review-body">
+                            <div class="review-rating">
+                                <c:forEach begin="1" end="${rec.valutazione}">★</c:forEach>
+                            </div>
+                            <p class="review-text"><c:out value="${rec.descrizione}" /></p>
+                        </div>
+                        <div class="review-actions">
+                            <c:if test="${sessionScope.utente != null and (sessionScope.utente.idUtente == rec.idUtente or sessionScope.utente.admin)}">
+                                <form action="${pageContext.request.contextPath}/ModificaRecensioneServlet" method="get">
+                                    <input type="hidden" name="idRecensione" value="${rec.idRecensione}" />
+                                    <button type="submit" class="btn-action">Modifica</button>
+                                </form>
+                                <form action="${pageContext.request.contextPath}/EliminaRecensioneUtenteServlet" method="post" onsubmit="return confirm('Sei sicuro di voler eliminare questa recensione?');">
+                                    <input type="hidden" name="idRecensione" value="${rec.idRecensione}" />
+                                    <input type="hidden" name="idProdotto" value="${rec.idProdotto}" />
+                                    <button type="submit" class="btn-action btn-delete">Elimina</button>
+                                </form>
+                            </c:if>
+                        </div>
+                    </div>
+                </c:forEach>
+            </c:when>
+            <c:otherwise>
+                <p class="no-reviews-msg">Non hai ancora lasciato recensioni.</p>
+            </c:otherwise>
+        </c:choose>
+    </div>
+    
 </main>
 
 <%@ include file="/jsp/common/footer.jspf" %>

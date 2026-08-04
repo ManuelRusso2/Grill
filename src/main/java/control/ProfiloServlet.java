@@ -15,8 +15,10 @@ import model.bean.UtenteBean;
 import model.bean.CategoriaBean;
 import model.dao.AcquistoDAO;
 import model.dao.CategoriaDAO;
+import model.dao.RecensioneDAO;
 import model.dao.impl.AcquistoDAOImpl;
 import model.dao.impl.CategoriaDAOImpl;
+import model.dao.impl.RecensioneDAOImpl;
 
 /**
  * Servlet che gestisce la visualizzazione del profilo utente e del suo storico ordini.
@@ -28,12 +30,14 @@ public class ProfiloServlet extends HttpServlet {
 
 	private AcquistoDAO acquistoDAO;
 	private CategoriaDAO categoriaDAO;
+	private RecensioneDAO recensioneDAO;
 
 	@Override
 	public void init() throws ServletException {
 		// Inizializziamo il DAO per recuperare la lista degli acquisti dell'utente
 		this.acquistoDAO = new AcquistoDAOImpl();
 		this.categoriaDAO = new CategoriaDAOImpl();
+		  this.recensioneDAO = new RecensioneDAOImpl();
 	}
 
 	@Override
@@ -61,8 +65,11 @@ public class ProfiloServlet extends HttpServlet {
 			
 			// 3. Salviamo la lista come attributo di richiesta per renderla visibile alla JSP
 			request.setAttribute("acquisti", acquisti);
-			
-			// 4. Inoltriamo la richiesta (Forward) alla JSP del profilo utente
+            
+            // 4. Recupero delle recensioni scritte dall'utente
+            request.setAttribute("recensioniUtente", recensioneDAO.doRetrieveByUtente(utente.getIdUtente()));
+
+			// 5. Inoltriamo la richiesta (Forward) alla JSP del profilo utente
 			request.getRequestDispatcher("/jsp/user/profilo.jsp").forward(request, response);
 			
 		} catch (SQLException e) {

@@ -17,6 +17,8 @@ public class RecensioneBean implements Serializable {
 	private String nomeUtente;
     private String cognomeUtente;
     private String emailUtente;
+    // Nome del prodotto recensito (utile quando la query include la join con la tabella prodotto)
+    private String nomeProdotto;
     
     // Costruttore vuoto
     public RecensioneBean() {}
@@ -92,6 +94,14 @@ public class RecensioneBean implements Serializable {
     }
     public void setEmailUtente(String emailUtente) { 
     	this.emailUtente = emailUtente; 
+    }
+    
+    public String getNomeProdotto() {
+        return nomeProdotto;
+    }
+
+    public void setNomeProdotto(String nomeProdotto) {
+        this.nomeProdotto = nomeProdotto;
     }
     
     
