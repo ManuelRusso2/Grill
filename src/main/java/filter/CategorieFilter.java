@@ -29,6 +29,16 @@ public class CategorieFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
+        
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        String path = httpRequest.getRequestURI().substring(httpRequest.getContextPath().length());
+
+        // Escludi le risorse statiche dall'esecuzione del filtro e dalle query SQL
+        if (path.startsWith("/images/") || path.startsWith("/css/") || path.startsWith("/js/")) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         try {
             List<CategoriaBean> categorie = categoriaDAO.doRetrieveAll();
             if (categorie != null) {
@@ -36,7 +46,6 @@ public class CategorieFilter implements Filter {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            // Continua anche se fallisce il caricamento delle categorie
             request.setAttribute("categorie", new ArrayList<CategoriaBean>());
         }
         
