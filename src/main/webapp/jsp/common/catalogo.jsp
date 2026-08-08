@@ -22,11 +22,13 @@
                 <c:forEach var="p" items="${prodotti}">
                     <c:if test="${p.attivo}">
                         <div class="card">
-                            <a href="${pageContext.request.contextPath}/DettaglioProdottoServlet?id=${p.idProdotto}">
-                                <img class="product-thumb" src="${pageContext.request.contextPath}/${p.immagine}" alt="${p.nome}" />
+                            <a href="<c:url value='/DettaglioProdottoServlet?id=${p.idProdotto}'/>">
+                                <img class="product-thumb" 
+                                     src="<c:url value='/${p.immagine.startsWith("/") ? p.immagine.substring(1) : p.immagine}'/>" 
+                                     alt="<c:out value='${p.nome}'/>" />
                             </a>
                             <h3>
-                                <a href="${pageContext.request.contextPath}/DettaglioProdottoServlet?id=${p.idProdotto}">
+                                <a href="<c:url value='/DettaglioProdottoServlet?id=${p.idProdotto}'/>">
                                     <c:out value="${p.nome}" />
                                 </a>
                             </h3>

@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS prodotto(
     costo DOUBLE NOT NULL CHECK(costo > 0),
     quantita INTEGER NOT NULL,
     attivo BOOLEAN DEFAULT TRUE,
-    immagine VARCHAR(255) DEFAULT 'images/default.jpg',
+    immagine VARCHAR(255) NOT NULL,
     id_collezione INTEGER,
     
     FOREIGN KEY(id_collezione) REFERENCES collezione(id_collezione)
@@ -164,7 +164,6 @@ INSERT INTO prodotto (nome, descrizione, costo, quantita, attivo, immagine, id_c
 
 -- 2. FLOWLESS (id_collezione = 2)
 ('Flow State Leather Bomber', 'Giacca bomber in vera pelle total black con finiture minimal e lining personalizzato.', 279.90, 15, true, 'images/Giacche/Flowless/Nero-Fronte.png', 2),
-('Mind Free Oversized Hoodie', 'Felpa hoodie oversize nera in cotone 480gsm con mantra Mind Free ricamato.', 95.00, 30, true, 'images/Felpe/Flowless/Crema-Fronte.png', 2),
 ('Pure Flow Graphic Tee', 'T-shirt streetwear nera con stampa gommata tono su tono.', 49.90, 45, true, 'images/Magliette/Flowless/Nera-Fronte.png', 2),
 ('Flowless Cap', 'Cappellino strutturato total black con logo arcuato Flowless.', 35.00, 40, true, 'images/Cappelli/Flowless/Nero.png', 2),
 ('Flowless Bottle', 'Borraccia termica total black opaca ad alto isolamento.', 29.90, 30, true, 'images/Borracce/Flowless/Nera.png', 2),
@@ -176,7 +175,6 @@ INSERT INTO prodotto (nome, descrizione, costo, quantita, attivo, immagine, id_c
 ('Exploration Relaxed Tee', 'T-shirt dal taglio morbido e traspirante con stampa posteriore.', 42.00, 40, true, 'images/Magliette/Freeflow/Grigio-Fronte-1.png', 3),
 ('Freeflow Cap', 'Cappellino baseball rigido con regolatore in metallo.', 35.00, 35, true, 'images/Cappelli/Freeflow/Nero.png', 3),
 ('Freeflow Beanie', 'Berretto in maglia a costine elasticizzata con patch gommata.', 28.00, 50, true, 'images/Cappelli/Freeflow/Crema.png', 3),
-('Freeflow Headphones', 'Cuffie wireless over-ear personalizzate con audio ad alta fedelta.', 129.90, 15, true, 'images/default.jpg', 3),
 ('Freeflow Bottle', 'Borraccia ergonomica satinata con gancio da moschettone.', 29.90, 30, true, 'images/Borracce/Freeflow/Nera.png', 3),
 ('Freeflow Bag', 'Zaino monospalla compatto con scomparto hi-tech.', 59.90, 20, true, 'images/Marsupi/Freeflow/Nero.png', 3),
 
@@ -228,7 +226,6 @@ INSERT INTO prodotto (nome, descrizione, costo, quantita, attivo, immagine, id_c
 ('Free Spirit Bloom Hoodie', 'Felpa colorata con grafica tramonto psichedelica e font ondulato.', 85.00, 30, true, 'images/Felpe/Bloom/Crema-Fronte.png', 8),
 ('Peace & Freedom Retro Tee', 'T-shirt stile vintage con illustrazioni floreali e toni caldi.', 42.00, 45, true, 'images/Magliette/Bloom/Crema-Retro.png', 8),
 ('Bloom Cap', 'Cappellino ricamato con motifs floreali multicolor.', 32.00, 35, true, 'images/Cappelli/Bloom/Crema.png', 8),
-('Bloom Crochet Hat', 'Cappello lavorato all uncinetto stile hippie retro.', 38.00, 20, true, 'images/default.jpg', 8),
 ('Bloom Bottle - Crema', 'Borraccia con pattern floreale nostalgico variante Crema.', 28.00, 30, true, 'images/Borracce/Bloom/Crema.png', 8),
 ('Bloom Bag', 'Borsa shopper in tela di cotone pesante ricamata.', 39.90, 25, true, 'images/Marsupi/Bloom/Crema.png', 8),
 
@@ -295,96 +292,93 @@ INSERT INTO prodotto_categoria (id_prodotto, id_categoria) VALUES
 (8, 4),
 (9, 4),
 
--- 2. FLOWLESS (Prodotti 10 - 15)
+-- 2. FLOWLESS (Prodotti 10 - 14)
 (10, 1), (10, 5),
-(11, 2),
-(12, 3),
+(11, 3),
+(12, 4),
 (13, 4),
 (14, 4),
-(15, 4),
 
--- 3. FREEFLOW (Prodotti 16 - 23)
+-- 3. FREEFLOW (Prodotti 15 - 21)
+(15, 2),
 (16, 2),
-(17, 2),
-(18, 3),
+(17, 3),
+(18, 4),
 (19, 4),
 (20, 4),
 (21, 4),
-(22, 4),
-(23, 4),
 
--- 4. REALITY (Prodotti 24 - 34)
+-- 4. REALITY (Prodotti 22 - 32)
+(22, 1), (22, 5),
+(23, 1), (23, 5),
 (24, 1), (24, 5),
 (25, 1), (25, 5),
-(26, 1), (26, 5),
-(27, 1), (27, 5),
-(28, 2),
-(29, 2),
-(30, 3),
-(31, 3),
+(26, 2),
+(27, 2),
+(28, 3),
+(29, 3),
+(30, 4),
+(31, 4),
 (32, 4),
-(33, 4),
-(34, 4),
 
--- 5. PEACE AND LOVE X FLOWLESS (Prodotti 35 - 40)
-(35, 1), (35, 5),
-(36, 2),
-(37, 3),
+-- 5. PEACE AND LOVE X FLOWLESS (Prodotti 33 - 38)
+(33, 1), (33, 5),
+(34, 2),
+(35, 3),
+(36, 4),
+(37, 4),
 (38, 4),
-(39, 4),
-(40, 4),
 
--- 6. SPEED (Prodotti 41 - 48)
+-- 6. SPEED (Prodotti 39 - 46)
+(39, 2),
+(40, 2),
 (41, 2),
-(42, 2),
-(43, 2),
-(44, 3),
-(45, 3),
+(42, 3),
+(43, 3),
+(44, 4),
+(45, 4),
 (46, 4),
-(47, 4),
-(48, 4),
 
--- 7. BUILT DIFFERENT (Prodotti 49 - 58)
+-- 7. BUILT DIFFERENT (Prodotti 47 - 56)
+(47, 2),
+(48, 2),
 (49, 2),
-(50, 2),
-(51, 2),
-(52, 3),
-(53, 3),
+(50, 3),
+(51, 3),
+(52, 4),
+(53, 4),
 (54, 4),
 (55, 4),
 (56, 4),
-(57, 4),
-(58, 4),
 
--- 8. BLOOM (Prodotti 59 - 65)
-(59, 1),
-(60, 2),
-(61, 3),
+-- 8. BLOOM (Prodotti 57 - 62)
+(57, 1),
+(58, 2),
+(59, 3),
+(60, 4),
+(61, 4),
 (62, 4),
-(63, 4),
-(64, 4),
-(65, 4),
 
--- 9. METAL (Prodotti 66 - 71)
-(66, 1),
-(67, 2),
-(68, 3),
-(69, 4),
-(70, 4),
-(71, 4),
+-- 9. METAL (Prodotti 63 - 68)
+(63, 1),
+(64, 2),
+(65, 3),
+(66, 4),
+(67, 4),
+(68, 4),
 
--- 10. DEVIL (Prodotti 72 - 77)
-(72, 1),
-(73, 2),
-(74, 3),
-(75, 4),
-(76, 4),
-(77, 4),
+-- 10. DEVIL (Prodotti 69 - 74)
+(69, 1),
+(70, 2),
+(71, 3),
+(72, 4),
+(73, 4),
+(74, 4),
 
--- 11. ELEVATE (Prodotti 78 - 83)
-(78, 1), (78, 5),
-(79, 1), (79, 5),
-(80, 2),
-(81, 4),
-(82, 4),
-(83, 4);
+-- 11. ELEVATE (Prodotti 75 - 80)
+(75, 1), (75, 5),
+(76, 1), (76, 5),
+(77, 2),
+(78, 4),
+(79, 4),
+(80, 4);
