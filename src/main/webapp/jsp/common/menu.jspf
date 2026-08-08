@@ -18,10 +18,10 @@
 
 <c:if test="${not isAuthPage}">
 
-<a href="${pageContext.request.contextPath}/CatalogoServlet">Catalogo</a>
+<a href="${pageContext.request.contextPath}/CatalogoServlet" class="nav-link">Catalogo</a>
 
 <div class="nav-dropdown">
-    <a href="#" class="nav-dropdown-toggle">Categorie &#9660;</a>
+    <a href="#" class="nav-dropdown-toggle nav-link">Categorie &#9660;</a>
     <div class="nav-dropdown-menu">
         <c:forEach var="cat" items="${categorie}">
             <a href="${pageContext.request.contextPath}/CatalogoServlet?categoria=${cat.idCategoria}">
@@ -33,13 +33,7 @@
 
 <c:choose>
     <c:when test="${not empty sessionScope.utente}">
-        <%-- Link al carrello: nascosto se l'utente è admin --%>
-        <c:if test="${not sessionScope.utente.admin}">
-            <a href="${pageContext.request.contextPath}/CarrelloServlet" id="nav-cart-link">
-                Carrello <span id="cart-count" class="badge"><c:if test="${not empty cartCount}">(<c:out value="${cartCount}"/>)</c:if></span>
-            </a>
-        </c:if>
-        <a href="${pageContext.request.contextPath}/ProfiloServlet">Profilo</a>
+        <a href="${pageContext.request.contextPath}/ProfiloServlet" class="nav-link">Profilo</a>
 
         <c:if test="${sessionScope.utente.admin}">
             <a href="${pageContext.request.contextPath}/AdminProdottoServlet" class="nav-admin">Gestione Prodotti</a>
@@ -48,11 +42,19 @@
             <a href="${pageContext.request.contextPath}/AdminOrdiniServlet" class="nav-admin">Gestione Ordini</a>
         </c:if>
 
-        <a href="${pageContext.request.contextPath}/LogoutServlet">Logout</a>
+        <a href="${pageContext.request.contextPath}/LogoutServlet" class="nav-link">Logout</a>
+
+        <c:if test="${not sessionScope.utente.admin}">
+            <span class="nav-spacer" aria-hidden="true"></span>
+            <a href="${pageContext.request.contextPath}/CarrelloServlet" id="nav-cart-link" class="nav-cart-link">
+                <img src="${pageContext.request.contextPath}/images/carrello.png" alt="Carrello" class="nav-cart-icon">
+                <span id="cart-count" class="badge"><c:if test="${not empty cartCount}"><c:out value="${cartCount}"/></c:if></span>
+            </a>
+        </c:if>
     </c:when>
     <c:otherwise>
-        <a href="${pageContext.request.contextPath}/jsp/common/login.jsp">Login</a>
-        <a href="${pageContext.request.contextPath}/jsp/user/registrazione.jsp">Registrazione</a>
+        <a href="${pageContext.request.contextPath}/jsp/common/login.jsp" class="nav-link">Login</a>
+        <a href="${pageContext.request.contextPath}/jsp/user/registrazione.jsp" class="nav-link">Registrazione</a>
     </c:otherwise>
 </c:choose>
 
