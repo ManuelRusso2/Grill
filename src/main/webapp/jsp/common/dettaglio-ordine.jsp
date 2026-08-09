@@ -73,12 +73,15 @@
                         </tbody>
                     </table>
 
-                    <div class="order-actions-footer">
-                        <p class="success-tracking-text success-tracking-spacing">
-                            Puoi consultare tutti i tuoi acquisti nella sezione dedicata.
-                        </p>
-                        <a href="${pageContext.request.contextPath}/ProfiloServlet" class="btn btn-catalog">Torna al Profilo</a>
-                    </div>
+					<div class="order-actions-footer">
+					    <p class="success-tracking-text success-tracking-spacing">
+					        Puoi consultare tutti i tuoi acquisti nella sezione dedicata.
+					    </p>
+					    <div class="order-actions-group">
+					        <a href="${pageContext.request.contextPath}/FatturaServlet?id=${acquisto.idAcquisto}" target="_blank" class="btn btn-catalog">SCARICA FATTURA PDF</a>
+					        <a href="${pageContext.request.contextPath}/ProfiloServlet" class="btn btn-catalog">TORNA AL PROFILO</a>
+					    </div>
+					</div>
 
                 </c:when>
                 <c:otherwise>

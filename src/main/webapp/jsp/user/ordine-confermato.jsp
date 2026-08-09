@@ -48,9 +48,10 @@
                     Potete tracciare lo stato del vostro ordine nella sezione <a href="<%=request.getContextPath()%>/ProfiloServlet" class="order-link">Profilo</a>.
                 </p>
 
-                <div class="success-actions">
-                    <a href="<%=request.getContextPath()%>/CatalogoServlet" class="btn btn-catalog">Continua lo Shopping</a>
-                </div>
+				<div class="success-actions">
+				    <a href="<%=request.getContextPath()%>/FatturaServlet?id=<%=ordineId%>" target="_blank" class="btn btn-catalog">SCARICA FATTURA PDF</a>
+				    <a href="<%=request.getContextPath()%>/CatalogoServlet" class="btn btn-catalog">CONTINUA LO SHOPPING</a>
+				</div>
             </div>
         <% } else { %>
             <div class="error-card">
