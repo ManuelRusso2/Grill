@@ -6,7 +6,7 @@
 <%@ include file="/jsp/common/header.jspf" %>
 <%@ include file="/jsp/common/menu.jspf" %>
 
-<main class="container">
+<main class="container product-details-container">
 
     <c:if test="${empty prodotto}">
         <div class="empty-state">
@@ -15,117 +15,139 @@
     </c:if>
 
     <c:if test="${not empty prodotto}">
-        <h1>
-            <c:choose>
-                <c:when test="${not empty nomeBase}"><c:out value="${nomeBase}" /></c:when>
-                <c:otherwise><c:out value="${prodotto.nome}" /></c:otherwise>
-            </c:choose>
-        </h1>
-        
-        <c:if test="${not empty prodotto.immagine}">
+        <%-- Card Principale a 2 colonne (Immagine a sinistra, Info a destra) --%>
+        <div class="product-details-card">
+            
+            <%-- COLONNA SINISTRA: Immagine --%>
             <div class="product-image-wrapper">
-                <img class="product-image" src="${pageContext.request.contextPath}/${prodotto.immagine}" alt="${prodotto.nome}" />
-            </div>
-        </c:if>
-
-        <div class="product-details-info">
-            <p class="product-description"><c:out value="${prodotto.descrizione}" /></p>
-            <p class="product-price">Prezzo: <span><fmt:formatNumber value="${prodotto.costo}" type="currency" currencySymbol="€" /></span></p>
-
-            <%-- Selettore varianti colore --%>
-            <c:if test="${not empty varianti}">
-                <div class="varianti-wrapper">
-                    <p class="varianti-label">Colore:</p>
-                    <div class="varianti-list">
-                        <c:forEach var="v" items="${varianti}">
-                            <c:set var="colore" value="${fn:contains(v.nome, ' - ') ? fn:substringAfter(v.nome, ' - ') : v.nome}" />
-                            <a href="${pageContext.request.contextPath}/DettaglioProdottoServlet?id=${v.idProdotto}"
-                               class="variante-btn ${v.idProdotto == prodotto.idProdotto ? 'active' : ''} ${v.quantita <= 0 ? 'esaurito' : ''}">
-                                <c:out value="${colore}" />
-                            </a>
-                        </c:forEach>
-                    </div>
-                </div>
-            </c:if>
-
-            <c:if test="${not empty prodotto.categorie}">
-                <p class="product-categories">Categorie:
-                    <c:forEach var="cat" items="${prodotto.categorie}" varStatus="s">
-                        <c:out value="${cat.nome}" /><c:if test="${!s.last}">, </c:if>
-                    </c:forEach>
-                </p>
-            </c:if>
-
-            <%-- Form di Acquisto / Notifica Admin --%>
-            <div class="product-actions-wrapper">
                 <c:choose>
-                    <c:when test="${isAdmin}">
-                        <div class="admin-notice">
-                            🔒 Gli amministratori non possono acquistare prodotti dal catalogo.
-                        </div>
-                    </c:when>
-                    <c:when test="${prodotto.quantita > 0}">
-                        <form method="post" action="${pageContext.request.contextPath}/CarrelloServlet" id="add-to-cart-form" class="add-to-cart-form">
-                            <input type="hidden" name="action" value="add">
-                            <input type="hidden" name="idProdotto" value="${prodotto.idProdotto}">
-                            <input type="number" name="quantita" value="1" min="1" max="${prodotto.quantita}" class="input-qty">
-                            <button type="submit" class="btn">Aggiungi al carrello</button>
-                        </form>
-
-                        <div id="cart-toast" class="toast"></div>
-
-                        <script>
-                        document.addEventListener("DOMContentLoaded", function () {
-                            const form = document.getElementById("add-to-cart-form");
-                            const toast = document.getElementById("cart-toast");
-
-                            function showToast(message, isSuccess) {
-                                toast.textContent = message;
-                                toast.className = "toast " + (isSuccess ? "toast-success" : "toast-error");
-                                toast.classList.add("show");
-                                
-                                setTimeout(() => {
-                                    toast.classList.remove("show");
-                                }, 2500);
-                            }
-
-                            form.addEventListener("submit", function (e) {
-                                e.preventDefault();
-                                const params = new URLSearchParams(new FormData(form));
-                                fetch(form.getAttribute("action"), {
-                                    method: "POST",
-                                    headers: {
-                                        "Content-Type": "application/x-www-form-urlencoded",
-                                        "X-Requested-With": "XMLHttpRequest"
-                                    },
-                                    body: params.toString()
-                                })
-                                .then(async r => {
-                                    const text = await r.text();
-                                    let data;
-                                    try { data = JSON.parse(text); } catch(err) { showToast("Errore di risposta dal server.", false); return; }
-                                    if (r.status === 401) { window.location.href = data.redirect || "${pageContext.request.contextPath}/jsp/common/login.jsp"; return; }
-                                    if (r.ok && data.success) {
-                                        showToast(data.message || "Prodotto aggiunto al carrello!", true);
-                                        const badges = document.querySelectorAll("#cart-count, .cart-badge, .badge-cart");
-                                        badges.forEach(badge => {
-                                            const c = parseInt(data.cartCount, 10) || 0;
-                                            badge.textContent = c > 0 ? c : "";
-                                        });
-                                    } else {
-                                        showToast(data.message || "Impossibile aggiungere il prodotto.", false);
-                                    }
-                                })
-                                .catch(() => showToast("Errore di connessione.", false));
-                            });
-                        });
-                        </script>
+                    <c:when test="${not empty prodotto.immagine}">
+                        <img class="product-image" 
+                             src="${pageContext.request.contextPath}/${prodotto.immagine.startsWith('/') ? prodotto.immagine.substring(1) : prodotto.immagine}" 
+                             alt="<c:out value='${prodotto.nome}' />" />
                     </c:when>
                     <c:otherwise>
-                        <button class="btn btn-secondary" disabled>Esaurito</button>
+                        <img class="product-image" 
+                             src="${pageContext.request.contextPath}/images/default.jpg" 
+                             alt="Immagine non disponibile" />
                     </c:otherwise>
                 </c:choose>
             </div>
+
+            <%-- COLONNA DESTRA: Dettagli e Azioni --%>
+            <div class="product-details-info">
+                <h1>
+                    <c:choose>
+                        <c:when test="${not empty nomeBase}"><c:out value="${nomeBase}" /></c:when>
+                        <c:otherwise><c:out value="${prodotto.nome}" /></c:otherwise>
+                    </c:choose>
+                </h1>
+
+                <p class="product-description"><c:out value="${prodotto.descrizione}" /></p>
+                
+                <p class="product-price">
+                    Prezzo: <span><fmt:formatNumber value="${prodotto.costo}" type="currency" currencySymbol="€" /></span>
+                </p>
+
+                <%-- Selettore varianti colore --%>
+                <c:if test="${not empty varianti}">
+                    <div class="varianti-wrapper">
+                        <p class="varianti-label">Colore:</p>
+                        <div class="varianti-list">
+                            <c:forEach var="v" items="${varianti}">
+                                <c:set var="colore" value="${fn:contains(v.nome, ' - ') ? fn:substringAfter(v.nome, ' - ') : v.nome}" />
+                                <a href="${pageContext.request.contextPath}/DettaglioProdottoServlet?id=${v.idProdotto}"
+                                   class="variante-btn ${v.idProdotto == prodotto.idProdotto ? 'active' : ''} ${v.quantita <= 0 ? 'esaurito' : ''}">
+                                    <c:out value="${colore}" />
+                                </a>
+                            </c:forEach>
+                        </div>
+                    </div>
+                </c:if>
+
+                <c:if test="${not empty prodotto.categorie}">
+                    <p class="product-categories">Categorie: 
+                        <c:forEach var="cat" items="${prodotto.categorie}" varStatus="s">
+                            <c:out value="${cat.nome}" /><c:if test="${!s.last}">, </c:if>
+                        </c:forEach>
+                    </p>
+                </c:if>
+
+                <%-- Form di Acquisto / Notifica Admin --%>
+                <div class="product-actions-wrapper">
+                    <c:choose>
+                        <c:when test="${isAdmin}">
+                            <div class="admin-notice">
+                                🔒 Gli amministratori non possono acquistare prodotti dal catalogo.
+                            </div>
+                        </c:when>
+                        <c:when test="${prodotto.quantita > 0}">
+                            <form method="post" action="${pageContext.request.contextPath}/CarrelloServlet" id="add-to-cart-form" class="add-to-cart-form">
+                                <input type="hidden" name="action" value="add">
+                                <input type="hidden" name="idProdotto" value="${prodotto.idProdotto}">
+                                <input type="number" name="quantita" value="1" min="1" max="${prodotto.quantita}" class="input-qty">
+                                <button type="submit" class="btn">Aggiungi al carrello</button>
+                            </form>
+
+                            <div id="cart-toast" class="toast"></div>
+
+                            <script>
+                            document.addEventListener("DOMContentLoaded", function () {
+                                const form = document.getElementById("add-to-cart-form");
+                                const toast = document.getElementById("cart-toast");
+
+                                function showToast(message, isSuccess) {
+                                    if(!toast) return;
+                                    toast.textContent = message;
+                                    toast.className = "toast " + (isSuccess ? "toast-success" : "toast-error");
+                                    toast.classList.add("show");
+                                    
+                                    setTimeout(() => {
+                                        toast.classList.remove("show");
+                                    }, 2500);
+                                }
+
+                                if(form) {
+                                    form.addEventListener("submit", function (e) {
+                                        e.preventDefault();
+                                        const params = new URLSearchParams(new FormData(form));
+                                        fetch(form.getAttribute("action"), {
+                                            method: "POST",
+                                            headers: {
+                                                "Content-Type": "application/x-www-form-urlencoded",
+                                                "X-Requested-With": "XMLHttpRequest"
+                                            },
+                                            body: params.toString()
+                                        })
+                                        .then(async r => {
+                                            const text = await r.text();
+                                            let data;
+                                            try { data = JSON.parse(text); } catch(err) { showToast("Errore di risposta dal server.", false); return; }
+                                            if (r.status === 401) { window.location.href = data.redirect || "${pageContext.request.contextPath}/jsp/common/login.jsp"; return; }
+                                            if (r.ok && data.success) {
+                                                showToast(data.message || "Prodotto aggiunto al carrello!", true);
+                                                const badges = document.querySelectorAll("#cart-count, .cart-badge, .badge-cart");
+                                                badges.forEach(badge => {
+                                                    const c = parseInt(data.cartCount, 10) || 0;
+                                                    badge.textContent = c > 0 ? c : "";
+                                                });
+                                            } else {
+                                                showToast(data.message || "Impossibile aggiungere il prodotto.", false);
+                                            }
+                                        })
+                                        .catch(() => showToast("Errore di connessione.", false));
+                                    });
+                                }
+                            });
+                            </script>
+                        </c:when>
+                        <c:otherwise>
+                            <button class="btn btn-secondary" disabled>Esaurito</button>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+            </div>
+
         </div>
 
         <%-- SEZIONE RECENSIONI --%>

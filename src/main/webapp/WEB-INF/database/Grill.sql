@@ -167,7 +167,7 @@ INSERT INTO prodotto (nome, descrizione, costo, quantita, attivo, immagine, id_c
 ('Pure Flow Graphic Tee', 'T-shirt streetwear nera con stampa gommata tono su tono.', 49.90, 45, true, 'images/Magliette/Flowless/Nera-Fronte.png', 2),
 ('Flowless Cap', 'Cappellino strutturato total black con logo arcuato Flowless.', 35.00, 40, true, 'images/Cappelli/Flowless/Nero.png', 2),
 ('Flowless Bottle', 'Borraccia termica total black opaca ad alto isolamento.', 29.90, 30, true, 'images/Borracce/Flowless/Nera.png', 2),
-('Flowless Bag', 'Borsa crossbody tattica in nylon ad alta resistenza.', 55.00, 20, true, 'images/Marsupi/Freeflow/Nero.png', 2),
+('Flowless Bag', 'Borsa crossbody tattica in nylon ad alta resistenza.', 55.00, 20, true, 'images/Marsupi/Flowless/Nero.png', 2),
 
 -- 3. FREEFLOW (id_collezione = 3)
 ('Total Sync Heavy Hoodie', 'Felpa pesante con cappuccio doppio strato ed estetica urban minimal.', 99.90, 25, true, 'images/Felpe/Freeflow/Nero-Fronte.png', 3),

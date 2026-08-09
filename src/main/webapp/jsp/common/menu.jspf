@@ -23,6 +23,9 @@
 <div class="nav-dropdown">
     <a href="#" class="nav-dropdown-toggle nav-link">Categorie &#9660;</a>
     <div class="nav-dropdown-menu">
+        <a href="${pageContext.request.contextPath}/CollezioniServlet" style="font-weight: 700; color: var(--accent-yellow); border-bottom: 1px solid var(--border-color); margin-bottom: 6px; padding-bottom: 8px;">
+            ✨ Tutte le Collezioni
+        </a>
         <c:forEach var="cat" items="${categorie}">
             <a href="${pageContext.request.contextPath}/CatalogoServlet?categoria=${cat.idCategoria}">
                 <c:out value="${cat.nome}" />
@@ -60,7 +63,7 @@
 
 </c:if>
 
-        </nav>
+</nav>
 
 <script>
 document.addEventListener("DOMContentLoaded", function () {
@@ -79,5 +82,5 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 </script>
-    </div>
+</div>
 </header>

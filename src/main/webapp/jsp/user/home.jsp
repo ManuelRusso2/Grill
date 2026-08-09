@@ -31,30 +31,7 @@
             
             <div class="products-scroll-wrapper">
                 <div class="products-scroll-track" id="productsTrack">
-                    
-                    <!-- I prodotti vengono stampati direttamente da JSP -->
-                    <c:choose>
-                        <c:when test="${not empty prodotti}">
-                            <c:forEach var="prodotto" items="${prodotti}">
-                                <div class="product-card-scroll">
-                                    <div class="product-image-scroll">
-                                        <img src="${pageContext.request.contextPath}/${prodotto.immagine}" alt="${prodotto.nome}">
-                                    </div>
-                                    <div class="product-info-scroll">
-                                        <h3>${prodotto.nome}</h3>
-                                        <p class="price">€<fmt:formatNumber value="${prodotto.costo}" pattern="#,##0.00" /></p>
-                                        <a href="${pageContext.request.contextPath}/DettaglioProdottoServlet?id=${prodotto.idProdotto}" class="btn btn-small">
-                                            Dettagli
-                                        </a>
-                                    </div>
-                                </div>
-                            </c:forEach>
-                        </c:when>
-                        <c:otherwise>
-                            <p style="text-align: center; width: 100%; color: var(--text-gray);">Nessun prodotto in evidenza al momento.</p>
-                        </c:otherwise>
-                    </c:choose>
-
+                    <!-- I prodotti verranno caricati dinamicamente via AJAX dall'API -->
                 </div>
             </div>
             
@@ -86,7 +63,7 @@
     const contextPath = '${pageContext.request.contextPath}';
     let currentSlide = 0;
 
-    // --- Logica Carousel ---
+    // --- Logica Carousel Collezioni ---
     function initCarousel() {
         const track = document.getElementById('carouselTrack');
         const indicators = document.getElementById('carouselIndicators');
@@ -96,11 +73,11 @@
         collections.forEach((img, index) => {
             const slide = document.createElement('div');
             slide.className = 'carousel-slide';
-            slide.innerHTML = `<img src="\${contextPath}/images/Collezioni/\${img}" alt="\${img}">`;
+            slide.innerHTML = '<img src="' + contextPath + '/images/Collezioni/' + img + '" alt="' + img + '">';
             track.appendChild(slide);
             
             const indicator = document.createElement('button');
-            indicator.className = `indicator \${index == 0 ? 'active' : ''}`;
+            indicator.className = 'indicator ' + (index === 0 ? 'active' : '');
             indicator.dataset.index = index;
             indicator.addEventListener('click', () => goToSlide(index));
             indicators.appendChild(indicator);
@@ -114,10 +91,10 @@
         const track = document.getElementById('carouselTrack');
         if (!track) return;
         const offset = -currentSlide * 100;
-        track.style.transform = `translateX(\${offset}%)`;
+        track.style.transform = 'translateX(' + offset + '%)';
         
         document.querySelectorAll('.indicator').forEach((indicator, index) => {
-            indicator.classList.toggle('active', index == currentSlide);
+            indicator.classList.toggle('active', index === currentSlide);
         });
     }
 
@@ -138,53 +115,90 @@
         updateCarousel();
     }
 
-    // --- Logica Scroll Prodotti ---
+    // --- Logica Scroll Prodotti in Evidenza ---
     let currentProductScroll = 0;
     const CARD_WIDTH = 25; 
     const GAP = 1.6; 
     const CARD_WITH_GAP = CARD_WIDTH + GAP;
-    
-    const productsTrack = document.getElementById('productsTrack');
-    const totalProducts = productsTrack ? document.querySelectorAll('.product-card-scroll').length : 0;
-    
-    if (productsTrack) {
-        document.getElementById('scrollPrevBtn').addEventListener('click', () => {
-            if (currentProductScroll > 0) {
-                currentProductScroll--;
-                updateProductScroll();
-            }
-        });
+    let totalProducts = 0;
 
-        document.getElementById('scrollNextBtn').addEventListener('click', () => {
-            const maxScroll = Math.max(0, totalProducts - 4);
-            if (currentProductScroll < maxScroll) {
-                currentProductScroll++;
-                updateProductScroll();
-            }
-        });
+    function loadFeaturedProducts() {
+        fetch(contextPath + '/api/prodotti')
+            .then(response => response.json())
+            .then(prodotti => {
+                const productsTrack = document.getElementById('productsTrack');
+                if (!productsTrack) return;
+
+                if (!prodotti || prodotti.length === 0) {
+                    productsTrack.innerHTML = '<p style="text-align: center; width: 100%; color: var(--text-gray);">Nessun prodotto in evidenza al momento.</p>';
+                    return;
+                }
+
+                totalProducts = prodotti.length;
+                productsTrack.innerHTML = prodotti.map(p => 
+                    '<div class="product-card-scroll">' +
+                        '<div class="product-image-scroll">' +
+                            '<img src="' + contextPath + '/' + p.immagine + '" alt="' + p.nome + '">' +
+                        '</div>' +
+                        '<div class="product-info-scroll">' +
+                            '<h3>' + p.nome + '</h3>' +
+                            '<p class="price">€' + Number(p.costo).toFixed(2) + '</p>' +
+                            '<a href="' + contextPath + '/DettaglioProdottoServlet?id=' + p.idProdotto + '" class="btn btn-small">' +
+                                'Dettagli' +
+                            '</a>' +
+                        '</div>' +
+                    '</div>'
+                ).join('');
+
+                initProductScrollControls();
+            })
+            .catch(err => {
+                console.error('Errore nel recupero prodotti in evidenza:', err);
+            });
+    }
+
+    function initProductScrollControls() {
+        const prevBtn = document.getElementById('scrollPrevBtn');
+        const nextBtn = document.getElementById('scrollNextBtn');
+
+        if (prevBtn && nextBtn) {
+            prevBtn.addEventListener('click', () => {
+                if (currentProductScroll > 0) {
+                    currentProductScroll--;
+                    updateProductScroll();
+                }
+            });
+
+            nextBtn.addEventListener('click', () => {
+                const maxScroll = Math.max(0, totalProducts - 4);
+                if (currentProductScroll < maxScroll) {
+                    currentProductScroll++;
+                    updateProductScroll();
+                }
+            });
+        }
+        updateProductScroll();
     }
 
     function updateProductScroll() {
+        const productsTrack = document.getElementById('productsTrack');
         if (!productsTrack) return;
         const offset = -currentProductScroll * CARD_WITH_GAP;
-        productsTrack.style.transform = `translateX(\${offset}%)`;
+        productsTrack.style.transform = 'translateX(' + offset + '%)';
         
         const prevBtn = document.getElementById('scrollPrevBtn');
         const nextBtn = document.getElementById('scrollNextBtn');
         
-        if(prevBtn) prevBtn.disabled = currentProductScroll == 0;
-        if(nextBtn) nextBtn.disabled = currentProductScroll >= Math.max(0, totalProducts - 4);
+        if (prevBtn) prevBtn.disabled = (currentProductScroll === 0);
+        if (nextBtn) nextBtn.disabled = (currentProductScroll >= Math.max(0, totalProducts - 4));
     }
 
     document.addEventListener('DOMContentLoaded', () => {
         initCarousel();
-        if(totalProducts > 0) {
-            updateProductScroll();
-        }
+        loadFeaturedProducts();
     });
 </script>
 
-<%-- Carica lo script globale delle altre pagine per mantenere sincronizzati click ed eventi futuri --%>
 <c:if test="${not empty sessionScope.utente}">
     <script src="${pageContext.request.contextPath}/js/cart-badge.js"></script>
 </c:if>

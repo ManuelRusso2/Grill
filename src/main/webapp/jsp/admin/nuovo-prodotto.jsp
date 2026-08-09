@@ -41,7 +41,7 @@
                     </div>
                 </div>
 
-                <!-- NUOVA GRAFICA: Griglia di Categorie a Chip/Checkbox -->
+                <!-- GRIGLIA CATEGORIE A CHIP -->
                 <div class="form-group">
                     <label>Categorie associate:</label>
                     <div style="display: flex; gap: 10px; align-items: flex-start;">
@@ -109,7 +109,7 @@
             
             <div class="preview-image-wrapper">
                 <img id="live-preview-img" 
-                     src="${pageContext.request.contextPath}/${isEdit && not empty prodotto.immagine ? prodotto.immagine : 'images/default.jpg'}" 
+                     src="${pageContext.request.contextPath}/images/default.jpg" 
                      alt="Anteprima Prodotto" 
                      class="preview-image"
                      onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/images/default.jpg';">
@@ -173,24 +173,38 @@ document.addEventListener('DOMContentLoaded', function() {
     const previewImg = document.getElementById('live-preview-img');
     const basePath = '${pageContext.request.contextPath}/';
     
-    if(inputImmagine && previewImg) {
-        inputImmagine.addEventListener('input', function() {
-            let path = this.value.trim();
-            if(path === '') path = 'images/default.jpg';
-            
-            if(path.startsWith('http') || path.startsWith('/')) {
-                previewImg.src = path;
-            } else {
-                previewImg.src = basePath + path;
-            }
-        });
+    function updatePreview() {
+        if (!inputImmagine || !previewImg) return;
+
+        let path = inputImmagine.value.trim();
+        if (!path) {
+            previewImg.src = basePath + 'images/default.jpg';
+            return;
+        }
+
+        // Rimuove eventuali slash iniziali per evitare percorsi errati
+        while (path.startsWith('/')) {
+            path = path.substring(1);
+        }
+
+        if (path.startsWith('http://') || path.startsWith('https://')) {
+            previewImg.src = path;
+        } else {
+            previewImg.src = basePath + path;
+        }
+    }
+
+    if (inputImmagine && previewImg) {
+        inputImmagine.addEventListener('input', updatePreview);
+        // Esegue subito la funzione all'avvio per caricare l'immagine salvata
+        updatePreview();
     }
 
     const inputAttivo = document.getElementById('attivo');
     const badgeStatus = document.getElementById('live-status-badge');
-    if(inputAttivo && badgeStatus) {
+    if (inputAttivo && badgeStatus) {
         inputAttivo.addEventListener('change', function() {
-            if(this.checked) {
+            if (this.checked) {
                 badgeStatus.innerHTML = '<span class="badge-disponibile">Pubblicato</span>';
             } else {
                 badgeStatus.innerHTML = '<span class="badge-esaurito">Nascosto</span>';
@@ -200,10 +214,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     const inputQuantita = document.getElementById('quantita');
     const badgeStock = document.getElementById('live-stock-badge');
-    if(inputQuantita && badgeStock) {
+    if (inputQuantita && badgeStock) {
         inputQuantita.addEventListener('input', function() {
             const qty = parseInt(this.value);
-            if(isNaN(qty) || qty === 0) {
+            if (isNaN(qty) || qty === 0) {
                 badgeStock.innerHTML = '<span class="badge-esaurito">Esaurito</span>';
             } else if (qty > 0 && qty <= 5) {
                 badgeStock.innerHTML = '<span class="badge-scarso">In Esaurimento</span>';

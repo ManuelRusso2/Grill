@@ -29,16 +29,12 @@ public class AdminProdottoServlet extends HttpServlet {
         this.categoriaDAO = new CategoriaDAOImpl();
     }
 
-    /**
-     * GET: Gestisce sia la visualizzazione dell'inventario che l'apertura del form in modalità modifica (edit)
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         
         HttpSession session = request.getSession(false);
 
-        // 1. Recupero e pulizia dei Flash Messages salvati in sessione durante la POST
         if (session != null) {
             if (session.getAttribute("successMessage") != null) {
                 request.setAttribute("successMessage", session.getAttribute("successMessage"));
@@ -53,7 +49,6 @@ public class AdminProdottoServlet extends HttpServlet {
         String action = request.getParameter("action");
 
         try {
-            // 2. Se l'azione è "new", andiamo direttamente al form di creazione con le categorie
             if ("new".equalsIgnoreCase(action)) {
                 List<CategoriaBean> categorie = categoriaDAO.doRetrieveAll();
                 request.setAttribute("categorie", categorie);
@@ -61,7 +56,6 @@ public class AdminProdottoServlet extends HttpServlet {
                 return;
             }
 
-            // 3. Se l'azione è "edit", recuperiamo il singolo prodotto e andiamo al form di modifica
             if ("edit".equalsIgnoreCase(action)) {
                 String idParam = request.getParameter("id");
                 if (idParam != null && !idParam.isEmpty()) {
@@ -80,14 +74,12 @@ public class AdminProdottoServlet extends HttpServlet {
                 }
             }
 
-            // 4. Flusso standard: recupero di tutto l'inventario (attivi e disattivi)
             List<ProdottoBean> tuttiIProdotti = prodottoDAO.doRetrieveAllAdmin();
             request.setAttribute("prodottiAdmin", tuttiIProdotti);
             
             List<CategoriaBean> categorie = categoriaDAO.doRetrieveAll();
             request.setAttribute("categorie", categorie);
 
-            // 5. Gestione thread-safe e corretta degli Admin Alerts
             synchronized (getServletContext()) {
                 Object rawAlerts = getServletContext().getAttribute("adminAlerts");
                 if (rawAlerts instanceof java.util.List<?>) {
@@ -95,15 +87,12 @@ public class AdminProdottoServlet extends HttpServlet {
                     java.util.List<String> adminAlerts = (java.util.List<String>) rawAlerts;
                     
                     if (!adminAlerts.isEmpty()) {
-                        // Passiamo una copia della lista alla Request
                         request.setAttribute("adminAlerts", new java.util.ArrayList<>(adminAlerts));
-                        // Svuotiamo la lista condivisa anziché rimuovere l'attributo
                         adminAlerts.clear();
                     }
                 }
             }
 
-            // 6. Inoltro alla tabella di gestione prodotti
             request.getRequestDispatcher("/jsp/admin/gestione-prodotti.jsp").forward(request, response);
             
         } catch (NumberFormatException e) {
@@ -115,9 +104,6 @@ public class AdminProdottoServlet extends HttpServlet {
         }
     }
 
-    /**
-     * POST: Gestisce le operazioni di scrittura nel DB (save, update, delete) applicando il pattern PRG
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -127,7 +113,6 @@ public class AdminProdottoServlet extends HttpServlet {
 
         try {
             if (action != null) {
-                // Gestione operazioni prodotto
                 if ("save".equalsIgnoreCase(action)) {
                     ProdottoBean prodotto = leggiProdottoDaRequest(request, false);
                     prodottoDAO.doSave(prodotto);
@@ -152,18 +137,11 @@ public class AdminProdottoServlet extends HttpServlet {
             session.setAttribute("errorMessage", "Errore di persistenza nel Database: " + e.getMessage());
         }
 
-        // NOTA: La lettura di "adminAlerts" è stata RIMOSTA da qui. 
-        // Viene già gestita interamente nel doGet(...) quando la pagina viene ricaricata dopo il redirect.
-
-        // Redirect in GET alla Servlet per evitare doppi invii di form
         if (!response.isCommitted()) {
             response.sendRedirect(request.getContextPath() + "/AdminProdottoServlet");
         }
     }
 
-    /**
-     * METODO HELPER: Estrae e valida i parametri HTTP inviati dai form per costruire un ProdottoBean
-     */
     private ProdottoBean leggiProdottoDaRequest(HttpServletRequest request, boolean conId) throws NumberFormatException {
         ProdottoBean prodotto = new ProdottoBean();
 
@@ -186,7 +164,6 @@ public class AdminProdottoServlet extends HttpServlet {
             prodotto.setIdCollezione(null);
         }
 
-        // Categorie selezionate dal form (multi-select)
         String[] idCategorie = request.getParameterValues("idCategoria");
         if (idCategorie != null) {
             List<CategoriaBean> categorie = new java.util.ArrayList<>();
@@ -198,10 +175,14 @@ public class AdminProdottoServlet extends HttpServlet {
             prodotto.setCategorie(categorie);
         }
 
-        // Immagine (path relativo all'applicazione, es. images/prodotto.jpg)
+        // Pulisce il percorso immagine rimuovendo gli slash iniziali
         String immagine = request.getParameter("immagine");
         if (immagine != null && !immagine.trim().isEmpty()) {
-            prodotto.setImmagine(immagine.trim());
+            String cleanImg = immagine.trim();
+            while (cleanImg.startsWith("/")) {
+                cleanImg = cleanImg.substring(1);
+            }
+            prodotto.setImmagine(cleanImg);
         } else {
             prodotto.setImmagine("images/default.jpg");
         }

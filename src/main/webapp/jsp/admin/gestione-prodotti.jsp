@@ -74,18 +74,22 @@
         </div>
     </c:if>
 
-    <%-- 3. BARRA SUPERIORE E TABELLA CATALOGO COMPLETO --%>
+    <%-- 3. BARRA SUPERIORE CON RICERCA E TABELLA CATALOGO COMPLETO --%>
     <c:choose>
         <c:when test="${not empty prodottiAdmin}">
             <div class="admin-toolbar">
                 <h2>Tutti i Prodotti</h2>
-                <a href="${pageContext.request.contextPath}/AdminProdottoServlet?action=new" class="btn btn-add">
-                    + Aggiungi Nuovo Prodotto
-                </a>
+                
+                <div class="admin-toolbar-actions">
+                    <input type="text" id="searchProductInput" placeholder="🔍 Cerca per nome, ID, categoria..." class="admin-search-input">
+                    <a href="${pageContext.request.contextPath}/AdminProdottoServlet?action=new" class="btn btn-add">
+                        + Aggiungi Nuovo Prodotto
+                    </a>
+                </div>
             </div>
 
             <div class="admin-table-wrapper">
-                <table class="admin-table">
+                <table class="admin-table" id="mainProductsTable">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -160,5 +164,23 @@
         </c:otherwise>
     </c:choose>
 </main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchProductInput');
+        const table = document.getElementById('mainProductsTable');
+        if (!searchInput || !table) return;
+
+        searchInput.addEventListener('input', function() {
+            const filter = this.value.toLowerCase().trim();
+            const rows = table.querySelectorAll('tbody tr');
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(filter) ? '' : 'none';
+            });
+        });
+    });
+</script>
 
 <%@ include file="/jsp/common/footer.jspf" %>

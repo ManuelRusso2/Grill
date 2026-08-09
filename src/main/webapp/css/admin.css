@@ -723,3 +723,30 @@ td form,
     overflow: hidden;
     margin-bottom: 30px;
 }
+
+/* ==========================================================================
+   7. BARRA DI RICERCA LIVE (ADMIN GESTIONE PRODOTTI)
+   ========================================================================== */
+.admin-toolbar-actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.admin-search-input {
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color);
+    color: var(--text-light);
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    outline: none;
+    min-width: 280px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-search-input:focus {
+    border-color: var(--accent-yellow);
+    box-shadow: 0 0 10px rgba(204, 255, 0, 0.15);
+}
