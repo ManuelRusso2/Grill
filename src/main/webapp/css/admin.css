@@ -1,4 +1,6 @@
-/* RESET PER I FORM NELLE TABELLE ADMIN ED AZIONI */
+/* ==========================================================================
+   RESET & STILI GENERALI ADMIN
+   ========================================================================== */
 td form,
 .admin-table form,
 .cart-table form,
@@ -13,12 +15,7 @@ td form,
     display: inline-block !important;
 }
 
-.admin-form {
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-/* BOTTONI D'AZIONE TABELLE GESTIONALE */
+/* BOTTONI D'AZIONE GENERALI */
 .btn-edit,
 .btn-delete,
 .btn-view {
@@ -83,8 +80,9 @@ td form,
     text-align: center;
 }
 
+
 /* ==========================================================================
-   1. SEZIONE ADMIN (TOOLBAR, GRIGLIE E COMPONENTI)
+   1. SEZIONE: GESTIONE PRODOTTI (TABELLA E LISTA)
    ========================================================================== */
 .admin-table-wrapper {
     background-color: var(--bg-card);
@@ -93,6 +91,56 @@ td form,
     overflow-x: auto;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
     margin-bottom: 30px;
+}
+
+.admin-table-wrapper table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.admin-table-wrapper th,
+.admin-table-wrapper td {
+    padding: 16px;
+    vertical-align: middle;
+    font-size: 13px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.admin-table-wrapper th {
+    background-color: rgba(255, 255, 255, 0.03);
+    color: var(--text-gray);
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+}
+
+.admin-table-wrapper tr:hover td {
+    background-color: rgba(255, 255, 255, 0.015);
+}
+
+.admin-table-wrapper td:nth-child(2) {
+    font-weight: 600;
+    color: var(--text-light);
+    white-space: normal;
+    min-width: 180px;
+}
+
+.admin-table-wrapper td:nth-child(3) {
+    max-width: 280px;
+    white-space: normal;
+    word-break: break-word;
+    color: var(--text-gray);
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.admin-table-wrapper td:nth-child(4),
+.admin-table-wrapper td:nth-child(5) {
+    font-weight: 600;
+    color: var(--text-light);
 }
 
 .admin-toolbar {
@@ -108,6 +156,25 @@ td form,
     font-size: 22px;
     color: var(--text-light);
     font-weight: 700;
+}
+
+.admin-toolbar a {
+    background-color: var(--accent-yellow);
+    color: #000000;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 13px;
+    text-decoration: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.admin-toolbar a:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
 }
 
 .admin-grid-2col {
@@ -149,8 +216,9 @@ td form,
     font-size: 13px;
 }
 
+
 /* ==========================================================================
-   2. LAYOUT ADMIN A DOPPIA COLONNA
+   2. SEZIONE: MODIFICA PRODOTTO & AGGIUNGI PRODOTTO
    ========================================================================== */
 .admin-edit-grid {
     display: grid;
@@ -183,6 +251,84 @@ td form,
     padding: 0;
     background-color: transparent;
     box-shadow: none;
+}
+
+.admin-form-card label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-gray);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.admin-form-card input[type="text"],
+.admin-form-card input[type="number"],
+.admin-form-card textarea,
+.admin-form-card select {
+    width: 100%;
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color);
+    color: var(--text-light);
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 16px;
+}
+
+.admin-form-card input:focus,
+.admin-form-card textarea:focus,
+.admin-form-card select:focus {
+    border-color: var(--accent-yellow);
+}
+
+.admin-form-card textarea {
+    resize: vertical;
+    min-height: 95px;
+}
+
+.admin-form-card button[type="submit"],
+.admin-form-card input[type="submit"],
+.admin-form-card .btn-save {
+    background-color: var(--accent-yellow);
+    color: #000000;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 13px;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-form-card button[type="submit"]:hover,
+.admin-form-card input[type="submit"]:hover,
+.admin-form-card .btn-save:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.admin-form-card a.btn-cancel,
+.admin-form-card .btn-cancel,
+.admin-form-card a:not(.category-chip):not(.btn-save) {
+    color: var(--text-gray);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 10px 16px;
+    transition: color 0.2s;
+    display: inline-block;
+}
+
+.admin-form-card a.btn-cancel:hover,
+.admin-form-card .btn-cancel:hover {
+    color: var(--text-light);
 }
 
 .admin-preview-card {
@@ -234,8 +380,102 @@ td form,
     text-align: center;
 }
 
+
 /* ==========================================================================
-   3. GRIGLIA CHECKBOX CATEGORIE (STYLE BADGE/CHIP)
+   3. SEZIONE: AGGIUNGI CATEGORIA & MODIFICA CATEGORIA
+   ========================================================================== */
+.admin-form {
+    max-width: 600px;
+    margin: 30px auto;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.admin-form label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-gray);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.admin-form input[type="text"],
+.admin-form input[type="number"],
+.admin-form textarea,
+.admin-form select {
+    width: 100%;
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color);
+    color: var(--text-light);
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+    margin-bottom: 16px;
+}
+
+.admin-form input:focus,
+.admin-form textarea:focus,
+.admin-form select:focus {
+    border-color: var(--accent-yellow);
+}
+
+.admin-form textarea {
+    resize: vertical;
+    min-height: 95px;
+}
+
+.admin-form button[type="submit"],
+.admin-form input[type="submit"],
+.admin-form .btn-save {
+    background-color: var(--accent-yellow);
+    color: #000000;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 13px;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-form button[type="submit"]:hover,
+.admin-form input[type="submit"]:hover,
+.admin-form .btn-save:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.admin-form a.btn-cancel,
+.admin-form .btn-cancel,
+.admin-form a {
+    color: var(--text-gray);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 10px 16px;
+    transition: color 0.2s;
+    display: inline-block;
+}
+
+.admin-form a.btn-cancel:hover,
+.admin-form .btn-cancel:hover,
+.admin-form a:hover {
+    color: var(--text-light);
+}
+
+
+/* ==========================================================================
+   4. SEZIONE: COMPONENTI COMUNI (GRIGLIA CHECKBOX CATEGORIE)
    ========================================================================== */
 .categories-checkbox-grid {
     display: flex;
@@ -283,13 +523,35 @@ td form,
     box-shadow: 0 0 10px rgba(204, 255, 0, 0.15);
 }
 
+
 /* ==========================================================================
-   4. GESTIONE UTENTI E RECENSIONI ADMIN
+   5. SEZIONE: GESTIONE UTENTI E RECENSIONI ADMIN
    ========================================================================== */
-.filter-container {
+.admin-reviews-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.admin-reviews-section h1,
+.admin-reviews-section h2 {
+    color: var(--text-light);
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.admin-reviews-section .section-subtitle {
+    margin-bottom: 25px;
+    color: var(--text-gray);
+    text-align: center;
+    font-size: 14px;
+}
+
+.admin-reviews-section .filter-container {
     display: flex;
-    justify-content: flex-end;
-    margin-bottom: 20px;
+    justify-content: center;
+    margin-bottom: 25px;
 }
 
 .filter-form {
@@ -300,6 +562,7 @@ td form,
     padding: 10px 16px;
     border-radius: 6px;
     border: 1px solid var(--border-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .filter-form label {
@@ -335,14 +598,14 @@ td form,
     opacity: 0.8;
 }
 
-.admin-reviews-section {
-    margin-top: 30px;
-}
-
-.admin-reviews-section .section-subtitle {
-    margin-bottom: 20px;
-    color: var(--text-gray);
-    text-align: center;
+.admin-reviews-table {
+    width: 100%;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    margin-bottom: 30px;
 }
 
 .admin-reviews-table .stars {
@@ -367,12 +630,96 @@ td form,
 }
 
 .no-reviews-msg {
-    margin-top: 30px;
+    margin-top: 10px;
     text-align: center;
     font-style: italic;
     color: var(--text-gray);
     padding: 40px 20px;
-    background-color: rgba(255, 255, 255, 0.02);
+    background-color: var(--bg-card);
     border: 1px dashed var(--border-color);
-    border-radius: 6px;
+    border-radius: 8px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+
+/* ==========================================================================
+   6. SEZIONE: GESTIONE ORDINI
+   ========================================================================== */
+.admin-orders-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.admin-orders-section h1,
+.admin-orders-section h2 {
+    color: var(--text-light);
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 8px;
+}
+
+.admin-orders-filter {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    background: var(--bg-card);
+    padding: 14px 20px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-bottom: 25px;
+}
+
+.admin-orders-filter label {
+    font-size: 13px;
+    color: var(--text-gray);
+    font-weight: 600;
+}
+
+.admin-orders-filter select,
+.admin-orders-filter input[type="date"] {
+    background: #121214;
+    color: var(--text-light);
+    border: 1px solid var(--border-color);
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+}
+
+.admin-orders-filter select:focus,
+.admin-orders-filter input[type="date"]:focus {
+    border-color: var(--accent-yellow);
+}
+
+.admin-orders-filter button[type="submit"],
+.admin-orders-filter input[type="submit"],
+.admin-orders-filter .btn-filter {
+    background-color: var(--accent-yellow);
+    color: #000000;
+    padding: 7px 16px;
+    border-radius: 4px;
+    font-weight: 700;
+    font-size: 13px;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.admin-orders-filter button[type="submit"]:hover {
+    opacity: 0.9;
+}
+
+.admin-orders-table {
+    width: 100%;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    margin-bottom: 30px;
 }

@@ -151,8 +151,10 @@
             }
 
             metodoSelect.addEventListener('change', showHide);
+            // Inizializza stato
             showHide();
 
+            // Funzioni validazione...
             function luhnCheck(cardNumber) {
                 const s = cardNumber.replace(/\D/g,'');
                 let sum = 0, odd = false;
@@ -177,17 +179,14 @@
                 const el = document.getElementById(elementId);
                 if (el) {
                     el.textContent = text;
-                    if (text) {
-                        el.classList.add('is-visible');
-                    } else {
-                        el.classList.remove('is-visible');
-                    }
+                    el.style.display = text ? 'block' : 'none'; // Assicura visibilità
                 }
             }
 
             form.addEventListener('submit', function(e){
+                // Reset errori
                 const errors = form.querySelectorAll('.field-error-span');
-                errors.forEach(s => { s.textContent = ''; s.classList.remove('is-visible'); });
+                errors.forEach(s => { s.textContent = ''; s.style.display = 'none'; });
 
                 const metodo = metodoSelect.value;
                 let ok = true;
@@ -218,7 +217,7 @@
 
                 if (!ok) {
                     e.preventDefault();
-                    window.scrollTo({ top: form.offsetTop - 40, behavior: 'smooth' });
+                    window.scrollTo({ top: form.offsetTop - 100, behavior: 'smooth' });
                 }
             });
         })();

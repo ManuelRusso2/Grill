@@ -107,8 +107,11 @@
                                     if (r.status === 401) { window.location.href = data.redirect || "${pageContext.request.contextPath}/jsp/common/login.jsp"; return; }
                                     if (r.ok && data.success) {
                                         showToast(data.message || "Prodotto aggiunto al carrello!", true);
-                                        const badge = document.getElementById("cart-count");
-                                        if (badge) { const c = parseInt(data.cartCount, 10) || 0; badge.textContent = c > 0 ? "(" + c + ")" : ""; }
+                                        const badges = document.querySelectorAll("#cart-count, .cart-badge, .badge-cart");
+                                        badges.forEach(badge => {
+                                            const c = parseInt(data.cartCount, 10) || 0;
+                                            badge.textContent = c > 0 ? c : "";
+                                        });
                                     } else {
                                         showToast(data.message || "Impossibile aggiungere il prodotto.", false);
                                     }

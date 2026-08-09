@@ -63,8 +63,6 @@
     </section>
 </main>
 
-<%@ include file="/jsp/common/footer.jspf" %>
-
 <script>
     // Dati delle collezioni
     const collections = [
@@ -85,7 +83,6 @@
         'Speed.png'
     ];
 
-    // Questo $ serve a JSP per stampare il contextPath in JS (nessun escape necessario)
     const contextPath = '${pageContext.request.contextPath}';
     let currentSlide = 0;
 
@@ -94,10 +91,11 @@
         const track = document.getElementById('carouselTrack');
         const indicators = document.getElementById('carouselIndicators');
         
+        if (!track || !indicators) return;
+
         collections.forEach((img, index) => {
             const slide = document.createElement('div');
             slide.className = 'carousel-slide';
-            // ATTENZIONE: i $ del template JS hanno il \ davanti per non farli rompere da Tomcat
             slide.innerHTML = `<img src="\${contextPath}/images/Collezioni/\${img}" alt="\${img}">`;
             track.appendChild(slide);
             
@@ -114,6 +112,7 @@
 
     function updateCarousel() {
         const track = document.getElementById('carouselTrack');
+        if (!track) return;
         const offset = -currentSlide * 100;
         track.style.transform = `translateX(\${offset}%)`;
         
@@ -121,6 +120,8 @@
             indicator.classList.toggle('active', index == currentSlide);
         });
     }
+
+    setInterval(nextSlide, 5000);
 
     function nextSlide() {
         currentSlide = (currentSlide + 1) % collections.length;
@@ -137,41 +138,37 @@
         updateCarousel();
     }
 
-    // Auto-scroll del carousel ogni 5 secondi
-    setInterval(nextSlide, 5000);
-
-    // --- Logica Scroll Prodotti (adattata per HTML statico) ---
+    // --- Logica Scroll Prodotti ---
     let currentProductScroll = 0;
-    const CARD_WIDTH = 25; // percentuale larghezza card nel CSS
-    const GAP = 1.6; // percentuale margin/gap nel CSS
+    const CARD_WIDTH = 25; 
+    const GAP = 1.6; 
     const CARD_WITH_GAP = CARD_WIDTH + GAP;
     
-    // Contiamo quanti prodotti ha stampato JSP
     const productsTrack = document.getElementById('productsTrack');
     const totalProducts = productsTrack ? document.querySelectorAll('.product-card-scroll').length : 0;
     
-    document.getElementById('scrollPrevBtn').addEventListener('click', () => {
-        if (currentProductScroll > 0) {
-            currentProductScroll--;
-            updateProductScroll();
-        }
-    });
+    if (productsTrack) {
+        document.getElementById('scrollPrevBtn').addEventListener('click', () => {
+            if (currentProductScroll > 0) {
+                currentProductScroll--;
+                updateProductScroll();
+            }
+        });
 
-    document.getElementById('scrollNextBtn').addEventListener('click', () => {
-        // Assume di mostrare 4 prodotti per volta su schermo
-        const maxScroll = Math.max(0, totalProducts - 4);
-        if (currentProductScroll < maxScroll) {
-            currentProductScroll++;
-            updateProductScroll();
-        }
-    });
+        document.getElementById('scrollNextBtn').addEventListener('click', () => {
+            const maxScroll = Math.max(0, totalProducts - 4);
+            if (currentProductScroll < maxScroll) {
+                currentProductScroll++;
+                updateProductScroll();
+            }
+        });
+    }
 
     function updateProductScroll() {
         if (!productsTrack) return;
         const offset = -currentProductScroll * CARD_WITH_GAP;
         productsTrack.style.transform = `translateX(\${offset}%)`;
         
-        // Aggiorna stato disabilitato bottoni ai limiti
         const prevBtn = document.getElementById('scrollPrevBtn');
         const nextBtn = document.getElementById('scrollNextBtn');
         
@@ -179,13 +176,17 @@
         if(nextBtn) nextBtn.disabled = currentProductScroll >= Math.max(0, totalProducts - 4);
     }
 
-    // Inizializza la pagina al caricamento
     document.addEventListener('DOMContentLoaded', () => {
         initCarousel();
-        // Le immagini dei prodotti sono già state caricate dal server (JSP),
-        // aggiorno solo lo stato dei bottoni scroll
         if(totalProducts > 0) {
             updateProductScroll();
         }
     });
 </script>
+
+<%-- Carica lo script globale delle altre pagine per mantenere sincronizzati click ed eventi futuri --%>
+<c:if test="${not empty sessionScope.utente}">
+    <script src="${pageContext.request.contextPath}/js/cart-badge.js"></script>
+</c:if>
+
+<%@ include file="/jsp/common/footer.jspf" %>

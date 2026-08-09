@@ -82,7 +82,7 @@
                 </tbody>
             </table>
 
-			<%-- Riquadro Totale e azioni carrello --%>
+            <%-- Riquadro Totale e azioni carrello --%>
             <div class="cart-summary">
                 <h2>Totale Ordine: <span><fmt:formatNumber value="${totaleCarrello}" type="currency" currencySymbol="€" /></span></h2>
                 
@@ -105,9 +105,13 @@
         <%-- Stato carrello vuoto --%>
         <c:otherwise>
             <div class="empty-state">
-                <p>Il tuo carrello è attualmente vuoto.</p>
-                <a href="${pageContext.request.contextPath}/CatalogoServlet" class="btn btn-checkout">
-                    Torna al Catalogo
+                <div class="empty-state-icon">
+                    <img src="${pageContext.request.contextPath}/images/carrello.png" alt="Carrello Vuoto">
+                </div>
+                <h2>Il tuo carrello è vuoto</h2>
+                <p>Non hai ancora aggiunto nessun articolo. Esplora il nostro catalogo per scoprire tutti i prodotti disponibili!</p>
+                <a href="${pageContext.request.contextPath}/CatalogoServlet" class="btn btn-catalog">
+                    Torna al Catalogo &rarr;
                 </a>
             </div>
         </c:otherwise>
