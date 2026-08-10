@@ -41,6 +41,7 @@
                         <thead>
                             <tr>
                                 <th>ID Prodotto</th>
+                                <th>Taglia</th> <!-- NUOVA COLONNA -->
                                 <th>Prezzo Unitario</th>
                                 <th>IVA</th>
                                 <th>Quantità</th>
@@ -57,6 +58,14 @@
                                                     Prodotto #<c:out value="${item.idProdotto}"/>
                                                 </a>
                                             </td>
+                                            
+                                            <!-- NUOVA CELLA PER LA TAGLIA CON STILE CSS -->
+                                            <td>
+                                                <span class="order-size-badge">
+                                                    <c:out value="${empty item.taglia ? 'Unica' : item.taglia}"/>
+                                                </span>
+                                            </td>
+
                                             <td><fmt:formatNumber value="${item.prezzoUnitario}" type="currency" currencySymbol="€"/></td>
                                             <td><c:out value="${item.iva}"/>%</td>
                                             <td><c:out value="${item.quantitaAcquistata}"/></td>
@@ -66,7 +75,8 @@
                                 </c:when>
                                 <c:otherwise>
                                     <tr>
-                                        <td colspan="5" class="empty-table-msg">Nessun articolo trovato per questo ordine.</td>
+                                        <!-- AGGIORNATO COLSPAN DA 5 A 6 -->
+                                        <td colspan="6" class="empty-table-msg">Nessun articolo trovato per questo ordine.</td>
                                     </tr>
                                 </c:otherwise>
                             </c:choose>

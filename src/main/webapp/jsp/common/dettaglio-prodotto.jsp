@@ -85,8 +85,25 @@
                             <form method="post" action="${pageContext.request.contextPath}/CarrelloServlet" id="add-to-cart-form" class="add-to-cart-form">
                                 <input type="hidden" name="action" value="add">
                                 <input type="hidden" name="idProdotto" value="${prodotto.idProdotto}">
-                                <input type="number" name="quantita" value="1" min="1" max="${prodotto.quantita}" class="input-qty">
-                                <button type="submit" class="btn">Aggiungi al carrello</button>
+                                
+                                <%-- MENU A TENDINA TAGLIE CON NUOVO STILE CSS --%>
+                                <c:if test="${not empty prodotto.taglie}">
+                                    <div class="size-selector-wrapper">
+                                        <label for="taglia">Seleziona Taglia:</label>
+                                        <select name="taglia" id="taglia" required class="size-dropdown">
+                                            <option value="">-- Scegli --</option>
+                                            <c:forEach var="t" items="${fn:split(prodotto.taglie, ',')}">
+                                                <option value="${fn:trim(t)}"><c:out value="${fn:trim(t)}" /></option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
+                                </c:if>
+
+                                <div>
+                                    <label for="quantita">Quantità:</label>
+                                    <input type="number" id="quantita" name="quantita" value="1" min="1" max="${prodotto.quantita}" class="input-qty">
+                                    <button type="submit" class="btn">Aggiungi al carrello</button>
+                                </div>
                             </form>
 
                             <div id="cart-toast" class="toast"></div>

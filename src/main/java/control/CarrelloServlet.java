@@ -208,6 +208,8 @@ public class CarrelloServlet extends HttpServlet {
 
     private void aggiungiProdotto(HttpServletRequest request, HttpSession session, CarrelloBean carrello) throws SQLException {
         int idProdotto = estraiIdProdotto(request);
+        String taglia = request.getParameter("taglia"); // NUOVO: cattura la taglia
+        if (taglia == null) taglia = "";
         
         int quantitaDaAggiungere = 1;
         try {
@@ -233,7 +235,8 @@ public class CarrelloServlet extends HttpServlet {
             int quantitaAttuale = 0;
             if (prodottiInCarrello != null) {
                 for (ProdottoBean p : prodottiInCarrello.keySet()) {
-                    if (p.getIdProdotto() == idProdotto) {
+                    // Controlla sia l'ID che la taglia!
+                    if (p.getIdProdotto() == idProdotto && taglia.equals(p.getTagliaSelezionata())) {
                         quantitaAttuale = prodottiInCarrello.get(p);
                         break;
                     }
@@ -241,8 +244,9 @@ public class CarrelloServlet extends HttpServlet {
             }
             
             if (quantitaAttuale + quantitaDaAggiungere <= prodotto.getQuantita()) {
-                contenutoDAO.doAddProduct(carrello.getIdCarrello(), prodotto.getIdProdotto(), quantitaDaAggiungere);
-                session.setAttribute("successMessage", "Prodotto \"" + prodotto.getNome() + "\" aggiunto al carrello!");
+                // ATTENZIONE: Dovrai aggiornare il tuo DAO per accettare il parametro 'taglia'!
+                contenutoDAO.doAddProduct(carrello.getIdCarrello(), prodotto.getIdProdotto(), quantitaDaAggiungere, taglia);
+                session.setAttribute("successMessage", "Prodotto aggiunto al carrello!");
             } else {
                 session.setAttribute("errorMessage", "Impossibile aggiungere: quantità richiesta superiore alla disponibilità in magazzino.");
             }
@@ -253,14 +257,21 @@ public class CarrelloServlet extends HttpServlet {
 
     private void rimuoviProdotto(HttpServletRequest request, HttpSession session, CarrelloBean carrello) throws SQLException {
         int idProdotto = estraiIdProdotto(request);
+        String taglia = request.getParameter("taglia"); // NUOVO
+        if (taglia == null) taglia = "";
+
         if (idProdotto > 0) {
-            contenutoDAO.doRemoveProduct(carrello.getIdCarrello(), idProdotto);
+            // ATTENZIONE: Aggiorna il DAO per passare la taglia, altrimenti cancella tutte le taglie di quel prodotto!
+            contenutoDAO.doRemoveProduct(carrello.getIdCarrello(), idProdotto, taglia);
             session.setAttribute("successMessage", "Prodotto rimosso dal carrello.");
         }
     }
 
     private void aggiornaQuantita(HttpServletRequest request, HttpSession session, CarrelloBean carrello) throws SQLException {
         int idProdotto = estraiIdProdotto(request);
+        String taglia = request.getParameter("taglia"); // NUOVO
+        if (taglia == null) taglia = "";
+        
         int nuovaQuantita = -1;
 
         try {
@@ -278,10 +289,11 @@ public class CarrelloServlet extends HttpServlet {
         ProdottoBean prodotto = prodottoDAO.doRetrieveByKey(idProdotto);
         
         if (prodotto != null && nuovaQuantita > 0 && nuovaQuantita <= prodotto.getQuantita()) {
-            contenutoDAO.doUpdateQuantity(carrello.getIdCarrello(), idProdotto, nuovaQuantita);
+            // ATTENZIONE: Aggiorna il DAO
+            contenutoDAO.doUpdateQuantity(carrello.getIdCarrello(), idProdotto, nuovaQuantita, taglia);
             session.setAttribute("successMessage", "Quantità aggiornata con successo.");
         } else if (nuovaQuantita <= 0) {
-            contenutoDAO.doRemoveProduct(carrello.getIdCarrello(), idProdotto);
+            contenutoDAO.doRemoveProduct(carrello.getIdCarrello(), idProdotto, taglia);
             session.setAttribute("successMessage", "Prodotto rimosso dal carrello.");
         } else {
             session.setAttribute("errorMessage", "Quantità non disponibile a magazzino.");

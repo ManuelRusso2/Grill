@@ -6,7 +6,7 @@
 <%@ include file="/jsp/common/menu.jspf" %>
 
 <main class="container">
-    <h1 style="text-align: center; margin-bottom: 40px;">Le Nostre Collezioni</h1>
+    <h1 style="text-align: center; margin-bottom: 40px;">LE NOSTRE COLLEZIONI</h1>
 
     <c:choose>
         <c:when test="${not empty collezioniMap}">

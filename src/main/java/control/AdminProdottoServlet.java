@@ -153,6 +153,7 @@ public class AdminProdottoServlet extends HttpServlet {
         prodotto.setDescrizione(request.getParameter("descrizione"));
         prodotto.setCosto(Double.parseDouble(request.getParameter("costo")));
         prodotto.setQuantita(Integer.parseInt(request.getParameter("quantita")));
+        prodotto.setTaglie(request.getParameter("taglie"));
 
         String attivoParam = request.getParameter("attivo");
         prodotto.setAttivo(attivoParam != null && ("true".equalsIgnoreCase(attivoParam) || "on".equalsIgnoreCase(attivoParam)));

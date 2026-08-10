@@ -51,6 +51,10 @@
                                 <a href="${pageContext.request.contextPath}/DettaglioProdottoServlet?id=${prodotto.idProdotto}" class="cart-product-title">
                                     <c:out value="${prodotto.nome}" />
                                 </a>
+                                <%-- MOSTRA LA TAGLIA SOTTO IL NOME CON LA NUOVA CLASSE CSS --%>
+                                <c:if test="${not empty prodotto.tagliaSelezionata}">
+                                    <span class="cart-product-size">Taglia: <c:out value="${prodotto.tagliaSelezionata}" /></span>
+                                </c:if>
                             </td>
                             <td>
                                 <fmt:formatNumber value="${prodotto.costo}" type="currency" currencySymbol="€" />
@@ -60,6 +64,7 @@
                                 <form method="post" action="${pageContext.request.contextPath}/CarrelloServlet" class="cart-update-form">
                                     <input type="hidden" name="action" value="update">
                                     <input type="hidden" name="idProdotto" value="${prodotto.idProdotto}">
+                                    <input type="hidden" name="taglia" value="${prodotto.tagliaSelezionata}">
                                     <input type="number" name="quantita" value="${quantita}" min="1" max="${prodotto.quantita}" class="input-qty">
                                     <button type="submit" class="btn btn-secondary btn-small">Aggiorna</button>
                                 </form>
@@ -72,6 +77,7 @@
                                 <form method="post" action="${pageContext.request.contextPath}/CarrelloServlet" class="cart-remove-form">
                                     <input type="hidden" name="action" value="remove">
                                     <input type="hidden" name="idProdotto" value="${prodotto.idProdotto}">
+                                    <input type="hidden" name="taglia" value="${prodotto.tagliaSelezionata}">
                                     <button type="submit" class="btn-delete" onclick="return confirm('Rimuovere questo prodotto dal carrello?')">
                                         Rimuovi
                                     </button>

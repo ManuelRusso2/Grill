@@ -40,6 +40,13 @@
                                value="${isEdit ? prodotto.quantita : ''}" required>
                     </div>
                 </div>
+                
+                <div class="form-group" style="margin-top: 15px;">
+                    <label for="taglie">Taglie disponibili (opzionale):</label>
+                    <input type="text" id="taglie" name="taglie" 
+                           value="${isEdit ? prodotto.taglie : ''}" placeholder="Es: S, M, L, XL, 42, 44">
+                    <span class="field-hint">Inserisci le taglie separate da una virgola.</span>
+                </div>
 
                 <!-- GRIGLIA CATEGORIE A CHIP -->
                 <div class="form-group">

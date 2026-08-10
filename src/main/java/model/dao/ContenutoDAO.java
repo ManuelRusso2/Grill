@@ -11,22 +11,25 @@ public interface ContenutoDAO {
      * @param idCarrello ID del carrello dell'utente
      * @param idProdotto ID del prodotto da inserire
      * @param quantita Quantità da aggiungere
+     * @param taglia La taglia scelta dall'utente
      */
-    void doAddProduct(int idCarrello, int idProdotto, int quantita) throws SQLException;
+    void doAddProduct(int idCarrello, int idProdotto, int quantita, String taglia) throws SQLException;
 
     
     /**
      * Aggiorna la quantità esatta di un singolo prodotto già presente nel carrello.
      * Utile quando l'utente modifica il numero di articoli direttamente dalla pagina del carrello.
+     * @param taglia La taglia del prodotto da aggiornare
      */
-    void doUpdateQuantity(int idCarrello, int idProdotto, int quantita) throws SQLException;
+    void doUpdateQuantity(int idCarrello, int idProdotto, int quantita, String taglia) throws SQLException;
 
     
     /**
      * Rimuove completamente un singolo prodotto dal carrello.
      * Corrisponde al click sulla "X" o sul pulsante "Rimuovi" nella pagina carrello.
+     * @param taglia La taglia del prodotto da rimuovere
      */
-    void doRemoveProduct(int idCarrello, int idProdotto) throws SQLException;
+    void doRemoveProduct(int idCarrello, int idProdotto, String taglia) throws SQLException;
 
     
     /**

@@ -8,43 +8,24 @@ public class ContenutoBean implements Serializable {
     private int idCarrello;
     private int idProdotto;
     private int quantita;
+    private String taglia; 
 
-    
-    // Costruttore vuoto
     public ContenutoBean() {}
 
-    
-    // Getter e Setter
-    public int getIdCarrello() { 
-    	return idCarrello; 
-    }
-    public void setIdCarrello(int idCarrello) { 
-    	this.idCarrello = idCarrello; 
-    }
+    public int getIdCarrello() { return idCarrello; }
+    public void setIdCarrello(int idCarrello) { this.idCarrello = idCarrello; }
 
-    
-    public int getIdProdotto() { 
-    	return idProdotto; 
-    }
-    public void setIdProdotto(int idProdotto) { 
-    	this.idProdotto = idProdotto; 
-    }
+    public int getIdProdotto() { return idProdotto; }
+    public void setIdProdotto(int idProdotto) { this.idProdotto = idProdotto; }
 
-    
-    public int getQuantita() { 
-    	return quantita; 
-    }
-    public void setQuantita(int quantita) { 
-    	this.quantita = quantita; 
-    }
+    public int getQuantita() { return quantita; }
+    public void setQuantita(int quantita) { this.quantita = quantita; }
 
-    
+    public String getTaglia() { return taglia; }
+    public void setTaglia(String taglia) { this.taglia = taglia; }
+
     @Override
     public String toString() {
-        return "Contenuto{" +
-                "idCarrello=" + idCarrello +
-                ", idProdotto=" + idProdotto +
-                ", quantita=" + quantita +
-                '}';
+        return "Contenuto{idCarrello=" + idCarrello + ", idProdotto=" + idProdotto + ", quantita=" + quantita + ", taglia='" + taglia + "'}";
     }
 }

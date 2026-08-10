@@ -69,6 +69,10 @@
                             </c:if>
                         </c:forEach>
                     </tbody>
+                    <th>Taglie</th>
+                    <td class="text-center">
+        				<c:out value="${empty prodotto.taglie ? 'Unica' : prodotto.taglie}" />
+   					</td>
                 </table>
             </div>
         </div>

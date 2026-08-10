@@ -11,6 +11,7 @@ public class OrdineBean implements Serializable {
     private double iva;
     private int quantitaAcquistata;
     private String statoSpedizione;
+    private String taglia; // NUOVO CAMPO PER LA TAGLIA
     
     // Costruttore vuoto
     public OrdineBean() {}
@@ -64,16 +65,23 @@ public class OrdineBean implements Serializable {
     	this.statoSpedizione = statoSpedizione; 
     }
 
-    
+    public String getTaglia() { 
+        return taglia; 
+    }
+    public void setTaglia(String taglia) { 
+        this.taglia = taglia; 
+    }
+
     @Override
     public String toString() {
-        return "SelezioneBean{" +
+        return "OrdineBean{" +
                 "idAcquisto=" + idAcquisto +
                 ", idProdotto=" + idProdotto +
                 ", prezzoUnitario=" + prezzoUnitario +
                 ", iva=" + iva +
                 ", quantitaAcquistata=" + quantitaAcquistata +
-                ", statoSpedizione=" + statoSpedizione +
+                ", statoSpedizione='" + statoSpedizione + '\'' +
+                ", taglia='" + taglia + '\'' +
                 '}';
     }
 }

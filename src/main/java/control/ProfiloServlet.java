@@ -70,7 +70,7 @@ public class ProfiloServlet extends HttpServlet {
             request.setAttribute("recensioniUtente", recensioneDAO.doRetrieveByUtente(utente.getIdUtente()));
 
 			// 5. Inoltriamo la richiesta (Forward) alla JSP del profilo utente
-			request.getRequestDispatcher("/jsp/user/profilo.jsp").forward(request, response);
+			request.getRequestDispatcher("/jsp/common/profilo.jsp").forward(request, response);
 			
 		} catch (SQLException e) {
 			// Log dell'errore SQL sulla console di Tomcat ed invio dell'errore 500 gestito nel web.xml

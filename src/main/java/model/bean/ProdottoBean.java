@@ -2,6 +2,7 @@ package model.bean;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 public class ProdottoBean implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -15,6 +16,8 @@ public class ProdottoBean implements Serializable {
     private Integer idCollezione;
     private List<CategoriaBean> categorie;
     private String immagine;
+    private String taglie; 
+    private String tagliaSelezionata; 
 
     public ProdottoBean() {}
 
@@ -45,16 +48,24 @@ public class ProdottoBean implements Serializable {
     public String getImmagine() { return immagine; }
     public void setImmagine(String immagine) { this.immagine = immagine; }
 
+    public String getTaglie() { return taglie; }
+    public void setTaglie(String taglie) { this.taglie = taglie; }
+
+    public String getTagliaSelezionata() { return tagliaSelezionata; }
+    public void setTagliaSelezionata(String tagliaSelezionata) { this.tagliaSelezionata = tagliaSelezionata; }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;
         if (obj == null || getClass() != obj.getClass()) return false;
-        return idProdotto == ((ProdottoBean) obj).idProdotto;
+        ProdottoBean that = (ProdottoBean) obj;
+        if (idProdotto != that.idProdotto) return false;
+        return Objects.equals(tagliaSelezionata, that.tagliaSelezionata);
     }
 
     @Override
     public int hashCode() {
-        return 31 + idProdotto;
+        return Objects.hash(idProdotto, tagliaSelezionata);
     }
 
     @Override
@@ -62,10 +73,8 @@ public class ProdottoBean implements Serializable {
         return "Prodotto{idProdotto=" + idProdotto +
                 ", nome='" + nome + '\'' +
                 ", costo=" + costo +
-                ", quantita=" + quantita +
-                ", attivo=" + attivo +
-                ", idCollezione=" + idCollezione +
-                ", immagine='" + immagine + '\'' +
-                ", categorie=" + categorie + '}';
+                ", taglie='" + taglie + '\'' +
+                ", tagliaSelezionata='" + tagliaSelezionata + '\'' +
+                '}';
     }
 }

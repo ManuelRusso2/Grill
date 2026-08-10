@@ -8,6 +8,8 @@
 <main>
     <!-- SEZIONE 1: CAROUSEL DI COLLEZIONI -->
     <section class="carousel-section">
+        <h2>LE NOSTRE COLLEZIONI</h2>
+        
         <div class="carousel-container">
             <button class="carousel-btn carousel-btn-prev" id="prevBtn">&#10094;</button>
             
@@ -41,23 +43,23 @@
 </main>
 
 <script>
-    // Dati delle collezioni
+    // Dati delle collezioni MAPPATI con i rispettivi ID del Database
     const collections = [
-        'Bloom.png',
-        'Built Different.png',
-        'Devil.png',
-        'Elevate.png',
-        'Flowless.png',
-        'Freeflow.png',
-        'Metal.png',
-        'Peace Love (2).png',
-        'Peace Love.png',
-        'Peace X Flowless.png',
-        'Reality (1).png',
-        'Reality (2).png',
-        'Reality (4).png',
-        'Reality.png',
-        'Speed.png'
+        { img: 'Bloom.png', id: 8 },
+        { img: 'Built Different.png', id: 7 },
+        { img: 'Devil.png', id: 10 },
+        { img: 'Elevate.png', id: 11 },
+        { img: 'Flowless.png', id: 2 },
+        { img: 'Freeflow.png', id: 3 },
+        { img: 'Metal.png', id: 9 },
+        { img: 'Peace Love (2).png', id: 1 },
+        { img: 'Peace Love.png', id: 1 },
+        { img: 'Peace X Flowless.png', id: 5 },
+        { img: 'Reality (1).png', id: 4 },
+        { img: 'Reality (2).png', id: 4 },
+        { img: 'Reality (4).png', id: 4 },
+        { img: 'Reality.png', id: 4 },
+        { img: 'Speed.png', id: 6 }
     ];
 
     const contextPath = '${pageContext.request.contextPath}';
@@ -70,10 +72,16 @@
         
         if (!track || !indicators) return;
 
-        collections.forEach((img, index) => {
+        collections.forEach((item, index) => {
             const slide = document.createElement('div');
             slide.className = 'carousel-slide';
-            slide.innerHTML = '<img src="' + contextPath + '/images/Collezioni/' + img + '" alt="' + img + '">';
+            
+            // Link gestito pulito tramite CSS (.carousel-slide a)
+            slide.innerHTML = 
+                '<a href="' + contextPath + '/CollezioniServlet#' + item.id + '">' +
+                    '<img src="' + contextPath + '/images/Collezioni/' + item.img + '" alt="Collezione ' + item.img + '">' +
+                '</a>';
+                
             track.appendChild(slide);
             
             const indicator = document.createElement('button');
@@ -130,7 +138,7 @@
                 if (!productsTrack) return;
 
                 if (!prodotti || prodotti.length === 0) {
-                    productsTrack.innerHTML = '<p style="text-align: center; width: 100%; color: var(--text-gray);">Nessun prodotto in evidenza al momento.</p>';
+                    productsTrack.innerHTML = '<p class="no-featured-msg">Nessun prodotto in evidenza al momento.</p>';
                     return;
                 }
 
@@ -138,7 +146,9 @@
                 productsTrack.innerHTML = prodotti.map(p => 
                     '<div class="product-card-scroll">' +
                         '<div class="product-image-scroll">' +
-                            '<img src="' + contextPath + '/' + p.immagine + '" alt="' + p.nome + '">' +
+                            '<a href="' + contextPath + '/DettaglioProdottoServlet?id=' + p.idProdotto + '">' +
+                                '<img src="' + contextPath + '/' + p.immagine + '" alt="' + p.nome + '">' +
+                            '</a>' +
                         '</div>' +
                         '<div class="product-info-scroll">' +
                             '<h3>' + p.nome + '</h3>' +
