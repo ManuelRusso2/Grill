@@ -38,6 +38,7 @@
                         <tr>
                             <th>ID</th>
                             <th>Nome</th>
+                            <th class="text-center">Taglie</th>
                             <th>Prezzo</th>
                             <th class="text-center">Quantità</th>
                             <th class="text-center">Stato</th>
@@ -50,6 +51,9 @@
                                 <tr>
                                     <td>#<c:out value="${prodotto.idProdotto}" /></td>
                                     <td><strong><c:out value="${prodotto.nome}" /></strong></td>
+                                    <td class="text-center">
+                                        <c:out value="${empty prodotto.taglie ? 'Unica' : prodotto.taglie}" />
+                                    </td>
                                     <td>
                                         <fmt:formatNumber value="${prodotto.costo}" type="currency" currencySymbol="€" />
                                     </td>
@@ -69,10 +73,6 @@
                             </c:if>
                         </c:forEach>
                     </tbody>
-                    <th>Taglie</th>
-                    <td class="text-center">
-        				<c:out value="${empty prodotto.taglie ? 'Unica' : prodotto.taglie}" />
-   					</td>
                 </table>
             </div>
         </div>
@@ -99,6 +99,7 @@
                             <th>ID</th>
                             <th>Nome</th>
                             <th>Descrizione</th>
+                            <th class="text-center">Taglie</th>
                             <th>Prezzo</th>
                             <th class="text-center">Quantità</th>
                             <th class="text-center">Categorie</th>
@@ -113,6 +114,9 @@
                                 <td><strong><c:out value="${prodotto.nome}" /></strong></td>
                                 <td style="max-width: 300px; color: var(--text-gray);">
                                     <c:out value="${prodotto.descrizione}" />
+                                </td>
+                                <td class="text-center">
+                                    <c:out value="${empty prodotto.taglie ? 'Unica' : prodotto.taglie}" />
                                 </td>
                                 <td>
                                     <fmt:formatNumber value="${prodotto.costo}" type="currency" currencySymbol="€" />

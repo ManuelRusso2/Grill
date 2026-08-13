@@ -1,0 +1,144 @@
+/* ==========================================================================
+   3. TABELLE ADMIN & TOOLBAR
+   ========================================================================== */
+.admin-table-wrapper {
+    margin-bottom: 30px;
+    overflow-x: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--bg-card);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.admin-table-wrapper table,
+.admin-reviews-table,
+.admin-orders-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.admin-table-wrapper th,
+.admin-table-wrapper td {
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 13px;
+    vertical-align: middle;
+}
+
+.admin-table-wrapper th {
+    background-color: rgba(255, 255, 255, 0.03);
+    color: var(--text-gray);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.admin-table-wrapper tr:hover td {
+    background-color: rgba(255, 255, 255, 0.015);
+}
+
+.admin-table-wrapper td:nth-child(2) {
+    min-width: 180px;
+    color: var(--text-light);
+    font-weight: 600;
+    white-space: normal;
+}
+
+.admin-table-wrapper td:nth-child(3) {
+    max-width: 280px;
+    color: var(--text-gray);
+    font-size: 12px;
+    line-height: 1.4;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.admin-table-wrapper td:nth-child(4),
+.admin-table-wrapper td:nth-child(5) {
+    color: var(--text-light);
+    font-weight: 600;
+}
+
+.admin-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.admin-toolbar h2 {
+    color: var(--text-light);
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.admin-toolbar a {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 18px;
+    border-radius: 6px;
+    background-color: var(--accent-yellow);
+    color: #000000;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.admin-toolbar a:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.admin-toolbar-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 15px;
+}
+
+.admin-search-input {
+    min-width: 280px;
+    padding: 10px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: var(--bg-input);
+    color: var(--text-light);
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-search-input:focus {
+    border-color: var(--accent-yellow);
+    box-shadow: 0 0 10px rgba(204, 255, 0, 0.15);
+}
+
+.admin-thumb {
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    object-fit: cover;
+}
+
+.action-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.select-status-quick {
+    padding: 6px 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--bg-input);
+    color: var(--text-light);
+    font-size: 13px;
+}

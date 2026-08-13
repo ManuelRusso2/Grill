@@ -1,0 +1,84 @@
+/* ==========================================================================
+   1. UNIFICAZIONE BOTTONI E RESET FORM INTERNI
+   ========================================================================== */
+
+/* Reset Form Generici usati dentro le Card */
+.add-to-cart-form,
+.review-form-card form,
+.checkout-form-card form,
+.cart-actions-group form,
+.cart-update-form,
+.cart-remove-form,
+.delete-review-form,
+.user-review .review-actions form {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+/* Pulsanti Principali Fluo (Giallo Accent) */
+.btn-catalog,
+.btn-checkout,
+.btn-submit,
+.btn-checkout-submit,
+.btn-submit-review,
+.product-actions-wrapper button,
+.product-actions-wrapper input[type="submit"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 28px;
+    border: none;
+    border-radius: 6px;
+    background-color: var(--accent-yellow);
+    color: #000000;
+    font-family: var(--font-headings);
+    font-size: 14px;
+    font-weight: 800;
+    text-decoration: none;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(204, 255, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.btn-catalog:hover,
+.btn-checkout:hover,
+.btn-submit:hover,
+.btn-checkout-submit:hover,
+.btn-submit-review:hover,
+.product-actions-wrapper button:hover,
+.product-actions-wrapper input[type="submit"]:hover {
+    background-color: #e0ff4d;
+    box-shadow: 0 8px 22px rgba(204, 255, 0, 0.35);
+    transform: translateY(-2px);
+}
+
+/* Bottone Secondario */
+.btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 20px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    background-color: transparent;
+    color: var(--text-light);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-secondary:hover {
+    border-color: var(--border-color);
+    background-color: rgba(255, 255, 255, 0.08);
+    color: #ffffff;
+    transform: translateY(-2px);
+}

@@ -1,0 +1,83 @@
+/* ==========================================================================
+   1. RESET & FORM INLINE NELLE TABELLE
+   ========================================================================== */
+.admin-table form,
+.cart-table form,
+.action-form,
+.inline-form,
+td form {
+    display: inline-block;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+/* ==========================================================================
+   2. BOTTONI D'AZIONE (Tabella & Griglie)
+   ========================================================================== */
+.btn-edit,
+.btn-delete,
+.btn-view {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    padding: 6px 12px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    text-decoration: none;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-edit {
+    background-color: rgba(155, 81, 224, 0.15);
+    border-color: var(--primary-purple);
+    color: var(--primary-purple);
+}
+
+.btn-edit:hover {
+    background-color: var(--primary-purple);
+    color: #ffffff;
+}
+
+.btn-delete {
+    background-color: rgba(255, 74, 74, 0.15);
+    border-color: #ff4a4a;
+    color: #ff4a4a;
+}
+
+.btn-delete:hover {
+    background-color: #ff4a4a;
+    color: #ffffff;
+}
+
+.btn-view {
+    background-color: rgba(204, 255, 0, 0.1);
+    border-color: var(--accent-yellow);
+    color: var(--accent-yellow);
+}
+
+.btn-view:hover {
+    background-color: var(--accent-yellow);
+    color: #000000;
+}
+
+.admin-notice {
+    padding: 15px;
+    border: 1px solid #ff4a4a;
+    border-radius: 6px;
+    background-color: rgba(255, 74, 74, 0.12);
+    color: #ff4a4a;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+}

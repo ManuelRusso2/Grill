@@ -1,0 +1,230 @@
+/* ==========================================================================
+   4. FORM ADMIN & ANTEPRIMA
+   ========================================================================== */
+.admin-edit-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 30px;
+    align-items: start;
+    margin-top: 20px;
+}
+
+.admin-form-card,
+.admin-form {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 30px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.admin-form {
+    max-width: 600px;
+    margin: 30px auto;
+}
+
+.admin-form-card h2,
+.admin-preview-card h2 {
+    margin-bottom: 20px;
+    color: var(--text-light);
+    font-size: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.admin-preview-card h2 {
+    text-align: center;
+}
+
+.admin-form-card form {
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+    box-shadow: none;
+}
+
+.admin-form-card label,
+.admin-form label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--text-gray);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.admin-form-card input[type="text"],
+.admin-form-card input[type="number"],
+.admin-form-card textarea,
+.admin-form-card select,
+.admin-form input[type="text"],
+.admin-form input[type="number"],
+.admin-form textarea,
+.admin-form select {
+    width: 100%;
+    margin-bottom: 16px;
+    padding: 10px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: var(--bg-input);
+    color: var(--text-light);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.admin-form-card input:focus,
+.admin-form-card textarea:focus,
+.admin-form-card select:focus,
+.admin-form input:focus,
+.admin-form textarea:focus,
+.admin-form select:focus {
+    border-color: var(--accent-yellow);
+}
+
+.admin-form-card textarea,
+.admin-form textarea {
+    min-height: 95px;
+    resize: vertical;
+}
+
+.admin-form-card button[type="submit"],
+.admin-form-card input[type="submit"],
+.admin-form-card .btn-save,
+.admin-form button[type="submit"],
+.admin-form input[type="submit"],
+.admin-form .btn-save {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    background-color: var(--accent-yellow);
+    color: #000000;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.admin-form-card button[type="submit"]:hover,
+.admin-form-card input[type="submit"]:hover,
+.admin-form-card .btn-save:hover,
+.admin-form button[type="submit"]:hover,
+.admin-form input[type="submit"]:hover,
+.admin-form .btn-save:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.admin-form-card a.btn-cancel,
+.admin-form-card .btn-cancel,
+.admin-form a.btn-cancel,
+.admin-form .btn-cancel {
+    display: inline-block;
+    padding: 10px 16px;
+    color: var(--text-gray);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.admin-form-card a.btn-cancel:hover,
+.admin-form-card .btn-cancel:hover,
+.admin-form a.btn-cancel:hover,
+.admin-form .btn-cancel:hover {
+    color: var(--text-light);
+}
+
+.admin-preview-card {
+    position: sticky;
+    top: 90px;
+    padding: 30px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--bg-card);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.preview-image-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 220px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: var(--bg-input);
+}
+
+.preview-image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.preview-details {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.preview-actions {
+    text-align: center;
+}
+
+/* ==========================================================================
+   5. CHECKBOX CATEGORIE (CHIPS)
+   ========================================================================== */
+.categories-checkbox-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.category-chip {
+    display: inline-flex;
+    align-items: center;
+    margin-bottom: 0;
+    cursor: pointer;
+    user-select: none;
+}
+
+.category-chip input[type="checkbox"] {
+    position: absolute;
+    width: 0;
+    height: 0;
+    opacity: 0;
+}
+
+.category-chip span {
+    padding: 8px 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    background-color: var(--bg-input);
+    color: var(--text-gray);
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.25s ease;
+}
+
+.category-chip:hover span {
+    border-color: var(--primary-purple);
+    color: var(--text-light);
+}
+
+.category-chip input[type="checkbox"]:checked + span {
+    border-color: var(--accent-yellow);
+    background-color: rgba(204, 255, 0, 0.12);
+    color: var(--accent-yellow);
+    font-weight: 700;
+    box-shadow: 0 0 10px rgba(204, 255, 0, 0.15);
+}

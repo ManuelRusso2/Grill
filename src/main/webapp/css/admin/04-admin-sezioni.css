@@ -1,0 +1,149 @@
+/* ==========================================================================
+   6. SEZIONE: ORDINI, UTENTI E RECENSIONI
+   ========================================================================== */
+.admin-reviews-section,
+.admin-orders-section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.admin-reviews-section h1,
+.admin-reviews-section h2,
+.admin-orders-section h1,
+.admin-orders-section h2 {
+    margin-bottom: 8px;
+    color: var(--text-light);
+    font-weight: 700;
+    text-align: center;
+}
+
+.admin-reviews-section .section-subtitle {
+    margin-bottom: 25px;
+    color: var(--text-gray);
+    font-size: 14px;
+    text-align: center;
+}
+
+.admin-reviews-section .filter-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 25px;
+}
+
+.filter-form,
+.admin-orders-filter {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 18px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-card);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.admin-orders-filter {
+    justify-content: flex-end;
+    margin-bottom: 25px;
+}
+
+.filter-form label,
+.admin-orders-filter label {
+    color: var(--text-gray);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.filter-form select,
+.admin-orders-filter select,
+.admin-orders-filter input[type="date"] {
+    padding: 6px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background: #121214;
+    color: var(--text-light);
+    font-size: 13px;
+    outline: none;
+    cursor: pointer;
+}
+
+.filter-form select:focus,
+.admin-orders-filter select:focus,
+.admin-orders-filter input[type="date"]:focus {
+    border-color: var(--accent-yellow);
+}
+
+.admin-orders-filter button[type="submit"],
+.admin-orders-filter input[type="submit"],
+.admin-orders-filter .btn-filter {
+    padding: 7px 16px;
+    border: none;
+    border-radius: 4px;
+    background-color: var(--accent-yellow);
+    color: #000000;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+}
+
+.admin-orders-filter button[type="submit"]:hover {
+    opacity: 0.9;
+}
+
+.btn-reset-filter {
+    margin-left: 5px;
+    color: var(--accent-yellow);
+    font-size: 12px;
+    text-decoration: underline;
+    transition: opacity 0.2s ease;
+}
+
+.btn-reset-filter:hover {
+    opacity: 0.8;
+}
+
+.admin-reviews-table,
+.admin-orders-table {
+    margin-bottom: 30px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--bg-card);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.admin-reviews-table .stars {
+    color: var(--accent-yellow);
+    font-size: 16px;
+    letter-spacing: 1px;
+}
+
+.admin-reviews-table .review-description {
+    max-width: 250px;
+    color: var(--text-light);
+    font-size: 13px;
+    opacity: 0.9;
+    white-space: normal;
+    word-break: break-word;
+}
+
+.admin-reviews-table .text-muted {
+    color: var(--text-gray);
+    font-size: 12px;
+    font-style: italic;
+}
+
+.no-reviews-msg {
+    margin-top: 10px;
+    padding: 40px 20px;
+    border: 1px dashed var(--border-color);
+    border-radius: 8px;
+    background-color: var(--bg-card);
+    color: var(--text-gray);
+    font-style: italic;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}

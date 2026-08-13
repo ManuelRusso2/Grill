@@ -40,8 +40,14 @@ img {
     display: block;
 }
 
+/* Layout Contenitori */
 .container {
     width: min(1100px, calc(100% - 40px));
+    margin: 0 auto;
+}
+
+.container-wide {
+    width: min(1300px, calc(100% - 20px));
     margin: 0 auto;
 }
 
@@ -56,14 +62,6 @@ img {
     background: rgba(10, 8, 18, 0.96);
     border-bottom: 1px solid var(--border-color);
     backdrop-filter: blur(10px);
-}
-
-/* Larghezza bilanciata: stacca i lati dagli estremi senza stringere al centro */
-.site-header .container {
-    width: min(1300px, 90%) !important;
-    max-width: 1300px !important;
-    margin: 0 auto !important;
-    padding: 0 10px;
 }
 
 .navbar {
@@ -84,6 +82,7 @@ img {
     letter-spacing: -1px;
     color: var(--primary-purple);
     transition: color 0.2s ease;
+    margin-left: 20px;
 }
 
 .brand:hover {
@@ -96,8 +95,8 @@ img {
 .search-wrapper {
     position: relative;
     flex: 1 1 auto;
-    max-width: 620px; /* Allunga la barra di ricerca */
-    margin: 0 15px;
+    max-width: 500px;
+    margin: 0 25px;
 }
 
 .search-input {
@@ -160,6 +159,7 @@ img {
     font-weight: 700;
     text-transform: uppercase;
     white-space: nowrap;
+    margin-right: 20px;
 }
 
 .nav-link,
@@ -268,7 +268,7 @@ img {
 }
 
 /* ==========================================================================
-   5. UTILITY & PULSANTI GENERICI
+   5. COMPONENTI GENERICI & UTILITY (Pulsanti, Form Base, Alert)
    ========================================================================== */
 .btn-small {
     background-color: var(--accent-yellow);
@@ -284,6 +284,75 @@ img {
 .btn-small:hover {
     background-color: #e0ff4d;
     transform: translateY(-2px);
+}
+
+/* Generici per i Form */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 18px;
+    color: var(--text-light);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.form-group label {
+    margin-bottom: 6px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: var(--bg-input);
+    color: var(--text-light);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-group input:focus {
+    border-color: var(--primary-purple);
+    box-shadow: 0 0 0 3px rgba(155, 81, 224, 0.2);
+}
+
+.input-error {
+    border-color: #ff4d4d !important;
+}
+
+.field-error {
+    color: #ff4d4d;
+    font-size: 12px;
+    margin-top: 4px;
+    font-weight: normal;
+}
+
+.field-hint, 
+.optional {
+    color: var(--text-gray);
+    font-size: 12px;
+    font-weight: normal;
+}
+
+/* Alert generici */
+.alert {
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    text-align: center;
+}
+
+.alert-success {
+    background: rgba(204, 255, 0, 0.15);
+    border: 1px solid var(--accent-yellow);
+    color: var(--accent-yellow);
+}
+
+.alert-danger {
+    background: rgba(255, 77, 77, 0.15);
+    border: 1px solid #ff4d4d;
+    color: #ff4d4d;
 }
 
 /* ==========================================================================
@@ -313,126 +382,4 @@ img {
 
 .site-footer a:hover {
     color: var(--accent-yellow);
-}
-
-/* ==========================================================================
-   7. FORM LOGIN & REGISTRAZIONE
-   ========================================================================== */
-
-/* Centra il titolo e limita la larghezza della pagina auth */
-main.container h1 {
-    text-align: center;
-    margin-top: 40px;
-    margin-bottom: 24px;
-    font-size: 28px;
-}
-
-/* Card del form centrata */
-#registerForm,
-form[action*="LoginServlet"] {
-    max-width: 440px;
-    margin: 0 auto 60px auto;
-    padding: 32px;
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 14px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-}
-
-/* Gruppi di input e Label */
-.form-group, 
-form[action*="LoginServlet"] label {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 18px;
-    color: var(--text-light);
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.form-group label {
-    margin-bottom: 6px;
-}
-
-/* Campi di testo e Password */
-.form-group input,
-form[action*="LoginServlet"] input[type="email"],
-form[action*="LoginServlet"] input[type="password"] {
-    width: 100%;
-    padding: 11px 14px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    background: var(--bg-input);
-    color: var(--text-light);
-    font-size: 14px;
-    outline: none;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.form-group input:focus,
-form[action*="LoginServlet"] input:focus {
-    border-color: var(--primary-purple);
-    box-shadow: 0 0 0 3px rgba(155, 81, 224, 0.2);
-}
-
-/* Messaggi di Errore e Suggerimenti */
-.input-error {
-    border-color: #ff4d4d !important;
-}
-
-.field-error {
-    color: #ff4d4d;
-    font-size: 12px;
-    margin-top: 4px;
-    font-weight: normal;
-}
-
-.field-hint, .optional {
-    color: var(--text-gray);
-    font-size: 12px;
-    font-weight: normal;
-}
-
-/* Messaggi di Alert per Login */
-.alert {
-    max-width: 440px;
-    margin: 0 auto 20px auto;
-    padding: 12px 16px;
-    border-radius: 8px;
-    font-size: 14px;
-    text-align: center;
-}
-
-.alert-success {
-    background: rgba(204, 255, 0, 0.15);
-    border: 1px solid var(--accent-yellow);
-    color: var(--accent-yellow);
-}
-
-.alert-danger {
-    background: rgba(255, 77, 77, 0.15);
-    border: 1px solid #ff4d4d;
-    color: #ff4d4d;
-}
-
-/* Pulsanti dei Form */
-#registerForm button[type="submit"],
-form[action*="LoginServlet"] button[type="submit"] {
-    width: 100%;
-    margin-top: 10px;
-    padding: 12px;
-    border: none;
-    border-radius: 8px;
-    background: var(--accent-yellow);
-    color: #000000;
-    font-size: 15px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: transform 0.2s ease, background-color 0.2s ease;
-}
-
-#registerForm button[type="submit"]:hover,
-form[action*="LoginServlet"] button[type="submit"]:hover {
-    background-color: #e0ff4d;
-    transform: translateY(-2px);
 }

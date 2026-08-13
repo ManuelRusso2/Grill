@@ -2,26 +2,48 @@
    RESPONSIVE MEDIA QUERIES
    ========================================================================== */
 
-/* Tablet & Layout a colonna singola (max 900px) */
+/* ==========================================================================
+   1. TABLET & LAYOUT A COLONNA SINGOLA (max-width: 900px)
+   ========================================================================== */
 @media (max-width: 900px) {
-    .admin-edit-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* Tablet & Mobile (max 850px) */
-@media (max-width: 850px) {
+    /* Griglie Admin e Checkout a colonna singola */
+    .admin-edit-grid,
+    .admin-grid-2col,
     .checkout-grid {
         grid-template-columns: 1fr;
     }
 
-    .admin-grid-2col {
-        grid-template-columns: 1fr;
+    /* Adattamento anteprima prodotto sticky in Admin */
+    .admin-preview-card {
+        position: static;
+        margin-top: 20px;
     }
 }
 
-/* Mobile & Small Tablet per Home Page */
+/* ==========================================================================
+   2. TABLET PICCOLI E MOBILE (max-width: 768px)
+   ========================================================================== */
 @media (max-width: 768px) {
+    /* --- Header & Navbar --- */
+    .navbar {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .search-wrapper {
+        order: 3; /* Sposta la ricerca sotto il logo e i link */
+        flex: 1 1 100%;
+        max-width: 100%;
+        margin: 10px 0 0 0;
+    }
+
+    .nav-links {
+        gap: 12px;
+        font-size: 12px;
+    }
+
+    /* --- Home Page: Carousel --- */
     .carousel-container {
         gap: 10px;
         padding: 0 10px;
@@ -38,6 +60,7 @@
         font-size: 18px;
     }
 
+    /* --- Home Page: Hero Banner --- */
     .hero-cart-section {
         padding: 40px 20px;
         margin: 30px 20px;
@@ -53,21 +76,38 @@
         font-size: 36px;
     }
 
+    /* --- Home Page: Prodotti in Evidenza --- */
     .products-scroll-section {
         padding: 0 20px;
     }
 
     .products-scroll-section h2 {
-        font-size: 28px;
         margin-bottom: 30px;
+        font-size: 28px;
     }
 
     .product-card-scroll {
         min-width: calc(50% - 10px);
     }
+
+    /* --- Filtri Admin in Mobile --- */
+    .filter-form,
+    .admin-orders-filter {
+        flex-direction: column;
+        align-items: stretch;
+    }
 }
 
+/* ==========================================================================
+   3. MOBILE STRETTO (max-width: 480px)
+   ========================================================================== */
 @media (max-width: 480px) {
+    /* --- Componenti Generici & Auth --- */
+    .auth-card {
+        padding: 20px 16px;
+    }
+
+    /* --- Carousel & Indicatori --- */
     .carousel-section {
         padding: 20px 0;
     }
@@ -84,6 +124,22 @@
         font-size: 16px;
     }
 
+    .carousel-indicators {
+        gap: 6px;
+    }
+
+    /* Correzione bug dimensioni indicatori */
+    .indicator {
+        width: 8px;
+        height: 8px;
+    }
+
+    .indicator.active {
+        width: 12px;
+        height: 12px;
+    }
+
+    /* --- Hero Banner & Prodotti --- */
     .hero-cart-section {
         padding: 30px 15px;
         margin: 20px 15px;
@@ -98,25 +154,11 @@
     }
 
     .products-scroll-section {
-        padding: 0 15px;
         margin: 40px auto;
+        padding: 0 15px;
     }
 
     .product-card-scroll {
         min-width: 100%;
-    }
-
-    .carousel-indicators {
-        gap: 5px;
-    }
-
-    .indicator {
-        width: 100px;
-        height: 10px;
-    }
-
-    .indicator.active {
-        width: 12px;
-        height: 12px;
     }
 }

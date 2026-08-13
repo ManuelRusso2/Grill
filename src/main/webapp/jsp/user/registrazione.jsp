@@ -5,9 +5,9 @@
 <%@ include file="/jsp/common/menu.jspf" %>
 
 <main class="container">
-    <h1>Registrazione</h1>
+    <h1 class="auth-title">Registrazione</h1>
 
-    <form id="registerForm" method="post" action="${pageContext.request.contextPath}/RegistrationServlet">
+    <form id="registerForm" class="auth-card" method="post" action="${pageContext.request.contextPath}/RegistrationServlet">
 
         <div class="form-group">
             <label for="nome">Nome *</label>
@@ -51,7 +51,7 @@
             </c:if>
         </div>
 
-        <button type="submit" class="btn btn-primary">Registrati</button>
+        <button type="submit" class="btn-submit">Registrati</button>
     </form>
 
     <script src="${pageContext.request.contextPath}/js/validazione.js"></script>
