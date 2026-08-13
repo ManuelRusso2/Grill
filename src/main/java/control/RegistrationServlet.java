@@ -7,12 +7,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import javax.servlet.http.HttpSession;
+
 import model.bean.UtenteBean;
 import model.dao.UtenteDAO;
 import model.dao.impl.UtenteDAOImpl;
-
 
 @WebServlet("/RegistrationServlet")
 public class RegistrationServlet extends HttpServlet {
@@ -35,7 +34,6 @@ public class RegistrationServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // 1. Recupero e trim parametri
         String nome     = request.getParameter("nome");
         String cognome  = request.getParameter("cognome");
         String email    = request.getParameter("email");
@@ -48,7 +46,6 @@ public class RegistrationServlet extends HttpServlet {
         password = password != null ? password.trim() : "";
         telefono = telefono != null ? telefono.trim() : "";
 
-        // 2. Validazione campo per campo
         String emailRegex    = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[a-zA-Z]{2,}$";
         String telefonoRegex = "^[0-9+\\s\\-]{7,20}$";
         boolean hasErrors = false;
@@ -97,7 +94,6 @@ public class RegistrationServlet extends HttpServlet {
         }
 
         if (hasErrors) {
-            // Ripopola i campi per non costringere l'utente a riscrivere tutto
             request.setAttribute("formNome", nome);
             request.setAttribute("formCognome", cognome);
             request.setAttribute("formEmail", email);
@@ -107,7 +103,6 @@ public class RegistrationServlet extends HttpServlet {
         }
 
         try {
-            // 3. Controllo email duplicata
             if (utenteDAO.doRetrieveByEmail(email) != null) {
                 request.setAttribute("errEmail", "Questa email è già registrata.");
                 request.setAttribute("formNome", nome);
@@ -118,7 +113,6 @@ public class RegistrationServlet extends HttpServlet {
                 return;
             }
 
-            // 4. Salvataggio
             UtenteBean nuovoUtente = new UtenteBean();
             nuovoUtente.setNome(nome);
             nuovoUtente.setCognome(cognome);
@@ -129,11 +123,11 @@ public class RegistrationServlet extends HttpServlet {
 
             utenteDAO.doSave(nuovoUtente);
 
-            // 5. Login automatico: salviamo l'utente in sessione
             HttpSession session = request.getSession(true);
             session.setAttribute("utente", nuovoUtente);
 
-            response.sendRedirect(request.getContextPath() + "/CatalogoServlet");
+            // Reindirizzamento alla Home Page post-registrazione
+            response.sendRedirect(request.getContextPath() + "/jsp/common/home.jsp");
 
         } catch (SQLException e) {
             e.printStackTrace();

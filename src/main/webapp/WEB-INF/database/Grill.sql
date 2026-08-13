@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS prodotto(
     attivo BOOLEAN DEFAULT TRUE,
     immagine VARCHAR(255) NOT NULL,
     id_collezione INTEGER,
-    taglie VARCHAR(255), -- NUOVA COLONNA PER LE TAGLIE A CATALOGO
+    taglie VARCHAR(255),
     
     FOREIGN KEY(id_collezione) REFERENCES collezione(id_collezione)
         ON UPDATE CASCADE
@@ -51,12 +51,12 @@ CREATE TABLE IF NOT EXISTS prodotto(
 CREATE TABLE IF NOT EXISTS ordine(
     id_acquisto INTEGER NOT NULL,
     id_prodotto INTEGER NOT NULL,
-    taglia VARCHAR(50) NOT NULL, -- NUOVA COLONNA
+    taglia VARCHAR(50) NOT NULL,
     prezzo_unitario DOUBLE NOT NULL CHECK(prezzo_unitario > 0),
     iva DECIMAL(4,2) NOT NULL CHECK (iva >= 0),
     quantita_acquistata INTEGER NOT NULL CHECK(quantita_acquistata > 0),
     stato_spedizione VARCHAR(20) NOT NULL,
-    PRIMARY KEY(id_acquisto, id_prodotto, taglia), -- AGGIORNATA PRIMARY KEY
+    PRIMARY KEY(id_acquisto, id_prodotto, taglia),
     
     FOREIGN KEY(id_acquisto) REFERENCES acquisto(id_acquisto)
         ON UPDATE CASCADE
@@ -116,9 +116,9 @@ CREATE TABLE IF NOT EXISTS carrello(
 CREATE TABLE IF NOT EXISTS contenuto(
     id_carrello INTEGER NOT NULL,
     id_prodotto INTEGER NOT NULL,
-    taglia VARCHAR(50) NOT NULL, -- NUOVA COLONNA
+    taglia VARCHAR(50) NOT NULL,
     quantita INTEGER NOT NULL CHECK(quantita > 0),
-    PRIMARY KEY(id_carrello, id_prodotto, taglia), -- AGGIORNATA PRIMARY KEY
+    PRIMARY KEY(id_carrello, id_prodotto, taglia),
     
     FOREIGN KEY(id_carrello) REFERENCES carrello(id_carrello)
         ON UPDATE CASCADE
@@ -149,30 +149,30 @@ INSERT INTO collezione (nome_collezione, descrizione) VALUES
 
 
 -- ===================================================
--- POPOLAMENTO TABELLA PRODOTTO (Aggiunte le taglie a giacche, felpe e t-shirt!)
+-- POPOLAMENTO TABELLA PRODOTTO
 -- ===================================================
 
 INSERT INTO prodotto (nome, descrizione, costo, quantita, attivo, immagine, id_collezione, taglie) VALUES 
 
--- 1. PEACE AND LOVE (id_collezione = 1)
+-- 1. PEACE AND LOVE (ID 1 - 9)
 ('Good Vibes Leather Varsity Jacket - Dark', 'Giacca bomber varsity in pelle nera con grafiche rosse e bianche a contrasto.', 249.90, 20, true, 'images/Giacche/Peace_And_Love/Nero-Retro.png', 1, 'S, M, L, XL'),
 ('Good Vibes Leather Varsity Jacket - Olive', 'Giacca bomber varsity in pelle verde militare con inserti panna e toni terrosi.', 249.90, 20, true, 'images/Giacche/Peace_And_Love/Verde-Fronte.png', 1, 'M, L, XL'),
 ('Spread Love Oversized Hoodie - Dark', 'Felpa oversize con cappuccio in cotone pesante nero con grafica Peace & Love.', 89.90, 35, true, 'images/Felpe/Peace_And_Love/Nero-Retro.png', 1, 'S, M, L, XL, XXL'),
-('Spread Love Oversized Hoodie - Olive', 'Felpa oversize verde oliva con cappuccio e grafiche calde ad alta densita.', 89.90, 35, true, 'images/Felpe/Peace_And_Love/Crema-Retro.png', 1, 'S, M, L'),
-('Stay Positive Graphic Tee - Dark', 'T-shirt grafica relaxed fit su fondo nero con stampa posizionata.', 45.00, 50, true, 'images/Magliette/Peace_And_Love/Bianca-Fronte.png', 1, 'S, M, L, XL'),
-('Stay Positive Graphic Tee - Olive', 'T-shirt grafica color panna con dettagli verde militare e logo Grill.', 45.00, 50, true, 'images/Magliette/Peace_And_Love/Crema-Fronte.png', 1, 'M, L, XL'),
+('Spread Love Oversized Hoodie - Cream', 'Felpa oversize color crema con cappuccio e grafiche calde ad alta densita.', 89.90, 35, true, 'images/Felpe/Peace_And_Love/Crema-Retro.png', 1, 'S, M, L'),
+('Stay Positive Graphic Tee - White', 'T-shirt grafica relaxed fit con stampa posizionata.', 45.00, 50, true, 'images/Magliette/Peace_And_Love/Bianca-Fronte.png', 1, 'S, M, L, XL'),
+('Stay Positive Graphic Tee - Cream', 'T-shirt grafica color panna con dettagli verde militare, nero e rosso e logo Grill.', 45.00, 50, true, 'images/Magliette/Peace_And_Love/Crema-Fronte.png', 1, 'M, L, XL'),
 ('Peace and Love Cap', 'Cappellino con visiera e ricamo frontale Peace, Love, Grill.', 35.00, 40, true, 'images/Cappelli/Peace_And_Love/Nero.png', 1, NULL),
 ('Peace and Love Bottle', 'Borraccia termica in acciaio inox 500ml con finitura opaca.', 29.90, 30, true, 'images/Borracce/Peace_And_Love/Nera.png', 1, NULL),
 ('Peace and Love Bag', 'Marsupio utility regolabile con tasche multiple e stampa ad impatto.', 49.90, 25, true, 'images/Marsupi/Peace_And_Love/Nero.png', 1, NULL),
 
--- 2. FLOWLESS (id_collezione = 2)
+-- 2. FLOWLESS (ID 10 - 14)
 ('Flow State Leather Bomber', 'Giacca bomber in vera pelle total black con finiture minimal e lining personalizzato.', 279.90, 15, true, 'images/Giacche/Flowless/Nero-Fronte.png', 2, 'S, M, L'),
 ('Pure Flow Graphic Tee', 'T-shirt streetwear nera con stampa gommata tono su tono.', 49.90, 45, true, 'images/Magliette/Flowless/Nera-Fronte.png', 2, 'S, M, L, XL'),
 ('Flowless Cap', 'Cappellino strutturato total black con logo arcuato Flowless.', 35.00, 40, true, 'images/Cappelli/Flowless/Nero.png', 2, NULL),
 ('Flowless Bottle', 'Borraccia termica total black opaca ad alto isolamento.', 29.90, 30, true, 'images/Borracce/Flowless/Nera.png', 2, NULL),
 ('Flowless Bag', 'Borsa crossbody tattica in nylon ad alta resistenza.', 55.00, 20, true, 'images/Marsupi/Flowless/Nero.png', 2, NULL),
 
--- 3. FREEFLOW (id_collezione = 3)
+-- 3. FREEFLOW (ID 15 - 21)
 ('Total Sync Heavy Hoodie', 'Felpa pesante con cappuccio doppio strato ed estetica urban minimal.', 99.90, 25, true, 'images/Felpe/Freeflow/Nero-Fronte.png', 3, 'S, M, L, XL'),
 ('New Frontier Crewneck', 'Maglione girocollo in maglia tecnica essenziale per esplorazione urbana.', 85.00, 30, true, 'images/Felpe/Freeflow/Crema-Fronte.png', 3, 'M, L, XL'),
 ('Exploration Relaxed Tee', 'T-shirt dal taglio morbido e traspirante con stampa posteriore.', 42.00, 40, true, 'images/Magliette/Freeflow/Grigio-Fronte-1.png', 3, 'S, M, L, XL'),
@@ -181,20 +181,18 @@ INSERT INTO prodotto (nome, descrizione, costo, quantita, attivo, immagine, id_c
 ('Freeflow Bottle', 'Borraccia ergonomica satinata con gancio da moschettone.', 29.90, 30, true, 'images/Borracce/Freeflow/Nera.png', 3, NULL),
 ('Freeflow Bag', 'Zaino monospalla compatto con scomparto hi-tech.', 59.90, 20, true, 'images/Marsupi/Freeflow/Nero.png', 3, NULL),
 
--- 4. REALITY (id_collezione = 4)
+-- 4. REALITY (ID 22 - 30)
 ('Visionary Leather Jacket - Deep Navy', 'Giacca in pelle coordinata tonalita blu notte profondo.', 269.90, 12, true, 'images/Giacche/Reality/Blu-Fronte.png', 4, 'S, M, L'),
-('Visionary Leather Jacket - Earth Brown', 'Giacca in pelle marrone cioccolato sofisticata e contemporanea.', 269.90, 12, true, 'images/Giacche/Reality/Rosso-Retro.png', 4, 'M, L'),
-('Visionary Leather Jacket - Burgundy', 'Giacca in pelle bordeaux intensa con dettagli rifiniti a mano.', 269.90, 12, true, 'images/Giacche/Reality/Rosso-Retro.png', 4, 'S, M, L, XL'),
-('Visionary Leather Jacket - Forest Olive', 'Giacca in pelle verde militare per un look utility ad impatto.', 269.90, 12, true, 'images/Giacche/Reality/Blu-Fronte.png', 4, 'L, XL'),
+('Visionary Leather Jacket - Red', 'Giacca in pelle rossa sofisticata e contemporanea.', 269.90, 12, true, 'images/Giacche/Reality/Rosso-Retro.png', 4, 'M, L'),
 ('Reality Orbit Heavy Hoodie - Deep Navy', 'Felpa oversize blu notte con grafica orbitale e tipografia astratta.', 89.90, 25, true, 'images/Felpe/Reality/Blu-Fronte.png', 4, 'S, M, L, XL'),
-('Reality Orbit Heavy Hoodie - Earth Brown', 'Felpa pesante marrone e crema con grafica Orbit gommata.', 89.90, 25, true, 'images/Felpe/Reality/Crema-Fronte.png', 4, 'S, M, L'),
-('True Mindset Boxy Tee - Burgundy', 'T-shirt boxy fit bordeaux con stampa statement Reality.', 45.00, 35, true, 'images/Magliette/Reality/Rosso-Fronte.png', 4, 'S, M, L, XL, XXL'),
+('Reality Orbit Heavy Hoodie - Cream', 'Felpa pesante crema con grafica Orbit gommata.', 89.90, 25, true, 'images/Felpe/Reality/Crema-Fronte.png', 4, 'S, M, L'),
+('True Mindset Boxy Tee - Red', 'T-shirt boxy fit bordeaux con stampa statement Reality.', 45.00, 35, true, 'images/Magliette/Reality/Rosso-Fronte.png', 4, 'S, M, L, XL, XXL'),
 ('True Mindset Boxy Tee - Forest Olive', 'T-shirt boxy fit verde foresta con dettagli a contrasto.', 45.00, 35, true, 'images/Magliette/Reality/Verde-Fronte.png', 4, 'M, L, XL'),
 ('Reality Cap', 'Cappellino con ricamo orbitale tridimensionale.', 35.00, 40, true, 'images/Cappelli/Reality/Blu.png', 4, NULL),
 ('Reality Bottle', 'Borraccia termica 750ml con stampa Reality Orbit.', 32.00, 25, true, 'images/Borracce/Reality/Blu.png', 4, NULL),
 ('Reality Bag', 'Marsupio scomparto doppio per uso quotidiano.', 48.00, 30, true, 'images/Marsupi/Reality/Blu.png', 4, NULL),
 
--- 5. PEACE AND LOVE X FLOWLESS (id_collezione = 5)
+-- 5. PEACE AND LOVE X FLOWLESS (ID 31 - 36)
 ('Crossover Hybrid Leather Bomber', 'Bomber ibrido in pelle total black con dettagli crossover ricamati.', 299.90, 15, true, 'images/Giacche/Flowless_X_Peace_And_Love/Nero-Retro.png', 5, 'M, L, XL'),
 ('Flow & Love Heavy Hoodie', 'Felpa pesante nera con fusione tra logo fiammeggiante e font Flowless.', 99.90, 30, true, 'images/Felpe/Flowless_X_Peace_And_Love/Nero-Retro.png', 5, 'S, M, L, XL'),
 ('Dual Identity Graphic Tee', 'T-shirt nera a contrasto ad alta densita di stampa.', 49.90, 40, true, 'images/Magliette/Flowless_X_Peace_And_Love/Nera-Fronte-1.png', 5, 'S, M, L, XL'),
@@ -202,7 +200,7 @@ INSERT INTO prodotto (nome, descrizione, costo, quantita, attivo, immagine, id_c
 ('Peace and Love x Flowless Bottle', 'Borraccia termica total black crossover ediz. limitata.', 35.00, 25, true, 'images/Borracce/Flowless_X_Peace_And_Love/Nera.png', 5, NULL),
 ('Peace and Love x Flowless Bag', 'Tracolla tecnica rinforzata con fibbie metalliche.', 65.00, 20, true, 'images/Marsupi/Flowless_X_Peace_And_Love/Nero.png', 5, NULL),
 
--- 6. SPEED (id_collezione = 6)
+-- 6. SPEED (ID 37 - 44)
 ('Fast Driven Motion Hoodie - Asphalt Black', 'Felpa racing nera con grafiche motion blur sfumate a contrasto.', 92.00, 30, true, 'images/Felpe/Speed/Nero-Fronte.png', 6, 'S, M, L, XL'),
 ('Fast Driven Motion Hoodie - Off-Road Sand', 'Felpa sabbia e crema con accenti rosso corsa e dettagli graffiati.', 92.00, 30, true, 'images/Felpe/Speed/Crema-Fronte.png', 6, 'M, L, XL'),
 ('Fast Driven Motion Hoodie - Night Racing Olive', 'Felpa verde militare con dettagli verde acido ad alta visibilita.', 92.00, 30, true, 'images/Felpe/Speed/Verde-Fronte.png', 6, 'M, L'),
@@ -212,19 +210,19 @@ INSERT INTO prodotto (nome, descrizione, costo, quantita, attivo, immagine, id_c
 ('Speed Bottle', 'Borraccia sportiva con tappo rapido a pressione.', 28.00, 35, true, 'images/Borracce/Speed/Nera.png', 6, NULL),
 ('Speed Bag', 'Marsupio tecnico da viaggio ad aggancio rapido.', 52.00, 25, true, 'images/Marsupi/Speed/Nero.png', 6, NULL),
 
--- 7. BUILT DIFFERENT (id_collezione = 7)
+-- 7. BUILT DIFFERENT (ID 45 - 54)
 ('Stand Out Heavy Hoodie - Chocolate Brown', 'Felpa marrone scuro ultra-morbida con doppio logo GRILL retro.', 89.90, 25, true, 'images/Felpe/Built_Different/Marrone-Fronte.png', 7, 'S, M, L, XL'),
 ('Stand Out Heavy Hoodie - Cream', 'Felpa panna essenziale con grafica centrale marrone a contrasto.', 89.90, 25, true, 'images/Felpe/Built_Different/Crema-Fronte.png', 7, 'M, L, XL'),
-('Stand Out Heavy Hoodie - Washed Slate', 'Felpa grigio antracite con effetto vintage lavato.', 89.90, 25, true, 'images/Felpe/Built_Different/Nero-Fronte.png', 7, 'S, M, L, XL'),
-('Real Ingredients Boxy Tee - Pitch Black', 'T-shirt dal taglio relaxed nero profondo con stampa ad alta densita.', 42.00, 40, true, 'images/Magliette/Built_Different/Nera-Fronte.png', 7, 'S, M, L, XL'),
+('Stand Out Heavy Hoodie - Black', 'Felpa nera con effetto vintage lavato.', 89.90, 25, true, 'images/Felpe/Built_Different/Nero-Fronte.png', 7, 'S, M, L, XL'),
+('Real Ingredients Boxy Tee - Black', 'T-shirt dal taglio relaxed nero profondo con stampa ad alta densita.', 42.00, 40, true, 'images/Magliette/Built_Different/Nera-Fronte.png', 7, 'S, M, L, XL'),
 ('Real Ingredients Boxy Tee - Cream', 'T-shirt chiara vestibilita boxy con ricamo sul petto.', 42.00, 40, true, 'images/Magliette/Built_Different/Crema-Fronte.png', 7, 'S, M, L'),
 ('Built Different Cap', 'Cappellino stile retrò con cinturino in pelle.', 35.00, 40, true, 'images/Cappelli/Built_Different/Nero.png', 7, NULL),
-('Built Different Bottle - Crema', 'Borraccia termica con finitura gommata variante Crema.', 29.90, 30, true, 'images/Borracce/Built_Different/Crema.png', 7, NULL),
-('Built Different Bottle - Marrone', 'Borraccia termica con finitura gommata variante Marrone.', 29.90, 30, true, 'images/Borracce/Built_Different/Marrone.png', 7, NULL),
-('Built Different Bottle - Nera', 'Borraccia termica con finitura gommata variante Nera.', 29.90, 30, true, 'images/Borracce/Built_Different/Nera.png', 7, NULL),
+('Built Different Bottle - Cream', 'Borraccia termica con finitura gommata variante Crema.', 29.90, 30, true, 'images/Borracce/Built_Different/Crema.png', 7, NULL),
+('Built Different Bottle - Brown', 'Borraccia termica con finitura gommata variante Marrone.', 29.90, 30, true, 'images/Borracce/Built_Different/Marrone.png', 7, NULL),
+('Built Different Bottle - Black', 'Borraccia termica con finitura gommata variante Nera.', 29.90, 30, true, 'images/Borracce/Built_Different/Nera.png', 7, NULL),
 ('Built Different Bag', 'Marsupio utility capiente per tutti i giorni.', 45.00, 30, true, 'images/Marsupi/Built_Different/Nero.png', 7, NULL),
 
--- 8. BLOOM (id_collezione = 8)
+-- 8. BLOOM (ID 55 - 60)
 ('70s Soul Bloom Varsity Bomber', 'Giacca bomber stile anni 70 con patch floreali e colletto a costine.', 219.90, 15, true, 'images/Giacche/Bloom/Crema-Retro.png', 8, 'M, L, XL'),
 ('Free Spirit Bloom Hoodie', 'Felpa colorata con grafica tramonto psichedelica e font ondulato.', 85.00, 30, true, 'images/Felpe/Bloom/Crema-Fronte.png', 8, 'S, M, L'),
 ('Peace & Freedom Retro Tee', 'T-shirt stile vintage con illustrazioni floreali e toni caldi.', 42.00, 45, true, 'images/Magliette/Bloom/Crema-Retro.png', 8, 'S, M, L, XL'),
@@ -232,7 +230,7 @@ INSERT INTO prodotto (nome, descrizione, costo, quantita, attivo, immagine, id_c
 ('Bloom Bottle - Crema', 'Borraccia con pattern floreale nostalgico variante Crema.', 28.00, 30, true, 'images/Borracce/Bloom/Crema.png', 8, NULL),
 ('Bloom Bag', 'Borsa shopper in tela di cotone pesante ricamata.', 39.90, 25, true, 'images/Marsupi/Bloom/Crema.png', 8, NULL),
 
--- 9. METAL (id_collezione = 9)
+-- 9. METAL (ID 61 - 66)
 ('Noise Empire Flight Bomber', 'Giacca bomber da volo stile metalcore con dettagli distressed e zip metalliche.', 239.90, 15, true, 'images/Giacche/Metal/Nero-Retro.png', 9, 'M, L, XL'),
 ('Heavy Noise Acid-Wash Hoodie', 'Felpa con lavaggio acido grigio scuro e grafica teschio sanguigno.', 95.00, 30, true, 'images/Felpe/Metal/Nero-Fronte.png', 9, 'S, M, L, XL'),
 ('Skull Empire Washed Tee', 'T-shirt con lavaggio vintage washed e font spigoloso band metal.', 48.00, 50, true, 'images/Magliette/Metal/Nera-Retro.png', 9, 'S, M, L'),
@@ -240,7 +238,7 @@ INSERT INTO prodotto (nome, descrizione, costo, quantita, attivo, immagine, id_c
 ('Metal Bottle', 'Borraccia in metallo grezzo satinato con incisione laser.', 32.00, 30, true, 'images/Borracce/Metal/Nera.png', 9, NULL),
 ('Metal Bag', 'Borsa tracolla rinforzata con borchie e chiusure in metallo.', 59.90, 20, true, 'images/Marsupi/Metal/Nero.png', 9, NULL),
 
--- 10. DEVIL (id_collezione = 10)
+-- 10. DEVIL (ID 67 - 72)
 ('Hellfire MA-1 Flight Bomber', 'Giacca bomber MA-1 con fiamme sulle maniche e fodera interna rossa inferno.', 249.90, 15, true, 'images/Giacche/Devil/Nero-Fronte-Retro.png', 10, 'S, M, L, XL'),
 ('Infernal Flame Heavy Hoodie', 'Felpa con cappuccio pesante e illustrazioni dettagliate di demoni cornuti.', 95.00, 30, true, 'images/Felpe/Devil/Nero-Fronte.png', 10, 'M, L, XL'),
 ('Horned Demon Boxy Tee', 'T-shirt vestibilita boxy con simboli mistici e grafica infuocata.', 48.00, 45, true, 'images/Magliette/Devil/Nera-Fronte-Retro.png', 10, 'S, M, L, XL'),
@@ -248,7 +246,7 @@ INSERT INTO prodotto (nome, descrizione, costo, quantita, attivo, immagine, id_c
 ('Devil Bottle - Nera', 'Borraccia nera lucida con dettagli rossi ad alto contrasto.', 29.90, 30, true, 'images/Borracce/Devil/Nera.png', 10, NULL),
 ('Devil Bag', 'Marsupio tattico con moschettoni metallici e tirazip fiammeggianti.', 55.00, 25, true, 'images/Marsupi/Devil/Nero.png', 10, NULL),
 
--- 11. ELEVATE (id_collezione = 11)
+-- 11. ELEVATE (ID 73 - 78)
 ('Masterpiece Leather Jacket', 'Giacca in pelle di agnello di prima scelta con finiture sartoriali e dettagli di lusso.', 389.90, 10, true, 'images/Giacche/Elevate/Nero-Regular-Fronte.png', 11, 'M, L'),
 ('Crown Oversized Leather Bomber', 'Bomber in pelle oversize con ricami tridimensionali ad alta densita.', 349.90, 10, true, 'images/Giacche/Elevate/Nero-Bomber-Fronte.png', 11, 'S, M, L'),
 ('Quiet Luxury Heavy Hoodie', 'Felpa in cotone pettinato ad altissima grammatura (500gsm) total black magnetica.', 120.00, 20, true, 'images/Felpe/Elevate/Nero-Fronte.png', 11, 'S, M, L, XL'),
@@ -268,6 +266,7 @@ INSERT INTO utente (email, nome, cognome, isAdmin, password, telefono) VALUES
 
 -- ===================================================
 -- POPOLAMENTO TABELLA CATEGORIA
+-- Categorie: 1=Giacche, 2=Felpe, 3=T-Shirt, 4=Accessori, 5=Pelle
 -- ===================================================
 
 INSERT INTO categoria (nome, descrizione) VALUES 
@@ -279,7 +278,7 @@ INSERT INTO categoria (nome, descrizione) VALUES
 
 
 -- ===================================================
--- POPOLAMENTO TABELLA PRODOTTO_CATEGORIA
+-- POPOLAMENTO TABELLA PRODOTTO_CATEGORIA (CORRETTO)
 -- ===================================================
 
 INSERT INTO prodotto_categoria (id_prodotto, id_categoria) VALUES 
@@ -311,77 +310,75 @@ INSERT INTO prodotto_categoria (id_prodotto, id_categoria) VALUES
 (20, 4),
 (21, 4),
 
--- 4. REALITY (Prodotti 22 - 32)
+-- 4. REALITY (Prodotti 22 - 30)
 (22, 1), (22, 5),
 (23, 1), (23, 5),
-(24, 1), (24, 5),
-(25, 1), (25, 5),
-(26, 2),
-(27, 2),
-(28, 3),
-(29, 3),
+(24, 2),
+(25, 2),
+(26, 3),
+(27, 3),
+(28, 4),
+(29, 4),
 (30, 4),
-(31, 4),
-(32, 4),
 
--- 5. PEACE AND LOVE X FLOWLESS (Prodotti 33 - 38)
-(33, 1), (33, 5),
-(34, 2),
-(35, 3),
+-- 5. PEACE AND LOVE X FLOWLESS (Prodotti 31 - 36)
+(31, 1), (31, 5),
+(32, 2),
+(33, 3),
+(34, 4),
+(35, 4),
 (36, 4),
-(37, 4),
-(38, 4),
 
--- 6. SPEED (Prodotti 39 - 46)
+-- 6. SPEED (Prodotti 37 - 44)
+(37, 2),
+(38, 2),
 (39, 2),
-(40, 2),
-(41, 2),
-(42, 3),
-(43, 3),
+(40, 3),
+(41, 3),
+(42, 4),
+(43, 4),
 (44, 4),
-(45, 4),
-(46, 4),
 
--- 7. BUILT DIFFERENT (Prodotti 47 - 56)
+-- 7. BUILT DIFFERENT (Prodotti 45 - 54)
+(45, 2),
+(46, 2),
 (47, 2),
-(48, 2),
-(49, 2),
-(50, 3),
-(51, 3),
+(48, 3),
+(49, 3),
+(50, 4),
+(51, 4),
 (52, 4),
 (53, 4),
 (54, 4),
-(55, 4),
-(56, 4),
 
--- 8. BLOOM (Prodotti 57 - 62)
-(57, 1),
-(58, 2),
-(59, 3),
+-- 8. BLOOM (Prodotti 55 - 60)
+(55, 1),
+(56, 2),
+(57, 3),
+(58, 4),
+(59, 4),
 (60, 4),
-(61, 4),
-(62, 4),
 
--- 9. METAL (Prodotti 63 - 68)
-(63, 1),
-(64, 2),
-(65, 3),
+-- 9. METAL (Prodotti 61 - 66)
+(61, 1),
+(62, 2),
+(63, 3),
+(64, 4),
+(65, 4),
 (66, 4),
-(67, 4),
-(68, 4),
 
--- 10. DEVIL (Prodotti 69 - 74)
-(69, 1),
-(70, 2),
-(71, 3),
+-- 10. DEVIL (Prodotti 67 - 72)
+(67, 1),
+(68, 2),
+(69, 3),
+(70, 4),
+(71, 4),
 (72, 4),
-(73, 4),
-(74, 4),
 
--- 11. ELEVATE (Prodotti 75 - 80)
-(75, 1), (75, 5),
-(76, 1), (76, 5),
-(77, 2),
-(78, 4),
-(79, 4),
-(80, 4);
+-- 11. ELEVATE (Prodotti 73 - 78)
+(73, 1), (73, 5),
+(74, 1), (74, 5),
+(75, 2),
+(76, 4),
+(77, 4),
+(78, 4);
