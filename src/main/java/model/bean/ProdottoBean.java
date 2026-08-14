@@ -67,14 +67,4 @@ public class ProdottoBean implements Serializable {
     public int hashCode() {
         return Objects.hash(idProdotto, tagliaSelezionata);
     }
-
-    @Override
-    public String toString() {
-        return "Prodotto{idProdotto=" + idProdotto +
-                ", nome='" + nome + '\'' +
-                ", costo=" + costo +
-                ", taglie='" + taglie + '\'' +
-                ", tagliaSelezionata='" + tagliaSelezionata + '\'' +
-                '}';
-    }
 }

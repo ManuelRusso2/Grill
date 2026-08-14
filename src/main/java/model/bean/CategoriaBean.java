@@ -37,14 +37,4 @@ public class CategoriaBean implements Serializable {
     public void setDescrizione(String descrizione) { 
     	this.descrizione = descrizione; 
     }
-
-    
-    @Override
-    public String toString() {
-        return "Categoria{" +
-                "idCategoria=" + idCategoria +
-                ", nome='" + nome + '\'' +
-                ", descrizione='" + descrizione + '\'' +
-                '}';
-    }
 }

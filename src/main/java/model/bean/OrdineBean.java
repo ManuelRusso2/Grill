@@ -71,17 +71,4 @@ public class OrdineBean implements Serializable {
     public void setTaglia(String taglia) { 
         this.taglia = taglia; 
     }
-
-    @Override
-    public String toString() {
-        return "OrdineBean{" +
-                "idAcquisto=" + idAcquisto +
-                ", idProdotto=" + idProdotto +
-                ", prezzoUnitario=" + prezzoUnitario +
-                ", iva=" + iva +
-                ", quantitaAcquistata=" + quantitaAcquistata +
-                ", statoSpedizione='" + statoSpedizione + '\'' +
-                ", taglia='" + taglia + '\'' +
-                '}';
-    }
 }

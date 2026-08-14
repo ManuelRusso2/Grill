@@ -47,15 +47,4 @@ public class CollezioneBean implements Serializable {
     public void setDataCreazione(Timestamp dataCreazione) { 
     	this.dataCreazione = dataCreazione; 
     }
-
-    
-    @Override
-    public String toString() {
-        return "Collezione{" +
-                "idCollezione=" + idCollezione +
-                ", nomeCollezione='" + nomeCollezione + '\'' +
-                ", descrizione='" + descrizione + '\'' +
-                ", dataCreazione=" + dataCreazione +
-                '}';
-    }
 }

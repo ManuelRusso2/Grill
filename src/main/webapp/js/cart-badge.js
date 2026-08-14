@@ -1,28 +1,50 @@
-document.addEventListener('DOMContentLoaded', function () {
-    function setBadge(count) {
-        const cartCountSpan = document.getElementById('cart-count');
-        if (!cartCountSpan) return;
-        const text = (count && Number(count) > 0) ? `(${Number(count)})` : '';
-        cartCountSpan.textContent = text;
-    }
+/**
+ * Modulo per la gestione e l'aggiornamento dinamico del badge del carrello nell'interfaccia utente.
+ * Supporta chiamate sincrone/inline, eventi personalizzati e inizializzazione lato server.
+ */
 
-    // Listen for custom events dispatched by pages which modify the cart
+/**
+ * Aggiorna il testo del badge del carrello nel DOM con il conteggio corrente degli articoli.
+ * 
+ * @param {number|string} count - Il numero di articoli presenti nel carrello.
+ */
+function setBadge(count) {
+    // Recupera l'elemento SPAN preposto a mostrare il contatore nel DOM
+    const cartCountSpan = document.getElementById('cart-count');
+    
+    // Se l'elemento non è presente nella pagina corrente, interrompe l'esecuzione
+    if (!cartCountSpan) return;
+
+    // Converte il parametro in un valore numerico intero in base 10
+    const num = parseInt(count, 10);
+
+    // Mostra il numero tra parentesi se è un numero valido e maggiore di zero, altrimenti svuota il testo
+    cartCountSpan.textContent = (!isNaN(num) && num > 0) ? '(' + num + ')' : '';
+}
+
+/**
+ * Esposizione immediata della funzione nell'oggetto globale 'window'.
+ * Permette l'invocazione diretta (es. script inline all'interno di pagine JSP) 
+ * prima o indipendentemente dal caricamento completo del DOM.
+ */
+window.updateCartBadge = setBadge;
+
+/**
+ * Inizializzazione dei listener e dello stato iniziale al completamento del DOM.
+ */
+document.addEventListener('DOMContentLoaded', function () {
+    
+    // Ascolta l'evento personalizzato 'cartUpdated' lanciato da altri script (es. chiamate AJAX per aggiunta al carrello)
     window.addEventListener('cartUpdated', function (e) {
-        try {
-            const count = e && e.detail && (e.detail.count || e.detail.cartCount);
+        if (e && e.detail) {
+            // Estrae il conteggio gestendo sia la proprietà 'count' che 'cartCount' per retrocompatibilità
+            const count = (e.detail.count !== undefined) ? e.detail.count : e.detail.cartCount;
             setBadge(count);
-        } catch (err) {
-            console.error('cartUpdated event handling error', err);
         }
     });
 
-    // Optional: expose a global helper
-    window.updateCartBadge = function (count) {
-        setBadge(count);
-    };
-
-    // If server-side rendered value exists as a JS variable on window, use it
-    if (window.__initialCartCount !== undefined) {
+    // Inizializza il badge al caricamento della pagina se il server (JSP) ha definito una variabile globale iniziale
+    if (typeof window.__initialCartCount !== 'undefined') {
         setBadge(window.__initialCartCount);
     }
 });

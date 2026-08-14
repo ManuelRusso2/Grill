@@ -103,17 +103,4 @@ public class RecensioneBean implements Serializable {
     public void setNomeProdotto(String nomeProdotto) {
         this.nomeProdotto = nomeProdotto;
     }
-    
-    
-    @Override
-    public String toString() {
-        return "Recensione{" +
-                "idRecensione=" + idRecensione +
-                ", dataRecensione=" + dataRecensione +
-                ", descrizione='" + descrizione + '\'' +
-                ", valutazione=" + valutazione +
-                ", idProdotto=" + idProdotto +
-                ", idUtente='" + idUtente + '\'' +
-                '}';
-    }
 }

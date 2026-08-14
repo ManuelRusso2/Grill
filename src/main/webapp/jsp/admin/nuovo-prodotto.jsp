@@ -1,20 +1,30 @@
+<%-- 
+    Pagina di creazione/modifica prodotti del catalogo.
+    Gestisce in modo dinamico:
+    - Lo stato 'Edit' vs 'Nuovo' (popolamento campi e action del form).
+    - L'associazione N:M delle Categorie tramite chip di selezione.
+    - L'anteprima in tempo reale dell'immagine e dello stato di visibilità/stock tramite JS.
+--%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <%@ include file="/jsp/common/header.jspf" %>
 <%@ include file="/jsp/common/menu.jspf" %>
 
 <main class="container">
+    <%-- Flag booleano per distinguere tra modalità Modifica e Inserimento --%>
     <c:set var="isEdit" value="${not empty prodotto}" />
     
     <h1>${isEdit ? 'Modifica Prodotto' : 'Nuovo Prodotto'}</h1>
 
     <div class="admin-edit-grid">
         
-        <!-- COLONNA SINISTRA: Form di modifica -->
+        <%-- ── COLONNA SINISTRA: Form di modifica e configurazione ────────── --%>
         <div class="admin-form-card">
             <h2>${isEdit ? 'Dettagli Prodotto' : 'Inserisci Dati'}</h2>
 
             <form method="post" action="${pageContext.request.contextPath}/AdminProdottoServlet" class="form-container">
+                <%-- Switch della logica di salvataggio nel Servlet tramite hidden field --%>
                 <input type="hidden" name="action" value="${isEdit ? 'update' : 'save'}">
                 
                 <c:if test="${isEdit}">
@@ -24,7 +34,7 @@
                 <div class="form-group">
                     <label for="nome">Nome Prodotto:</label>
                     <input type="text" id="nome" name="nome" 
-                           value="${isEdit ? prodotto.nome : ''}" required>
+                           value="<c:out value='${isEdit ? prodotto.nome : ""}'/>" required>
                 </div>
 
                 <div class="form-row">
@@ -41,21 +51,22 @@
                     </div>
                 </div>
                 
-                <div class="form-group" style="margin-top: 15px;">
+                <div class="form-group form-group-spaced">
                     <label for="taglie">Taglie disponibili (opzionale):</label>
                     <input type="text" id="taglie" name="taglie" 
-                           value="${isEdit ? prodotto.taglie : ''}" placeholder="Es: S, M, L, XL, 42, 44">
+                           value="<c:out value='${isEdit ? prodotto.taglie : ""}'/>" placeholder="Es: S, M, L, XL, 42, 44">
                     <span class="field-hint">Inserisci le taglie separate da una virgola.</span>
                 </div>
 
-                <!-- GRIGLIA CATEGORIE A CHIP -->
+                <%-- GRIGLIA CATEGORIE A CHIP: Associazione dinamica --%>
                 <div class="form-group">
                     <label>Categorie associate:</label>
-                    <div style="display: flex; gap: 10px; align-items: flex-start;">
-                        <div style="flex-grow: 1;">
+                    <div class="categories-wrapper">
+                        <div class="categories-list">
                             <div class="categories-checkbox-grid">
                                 <c:if test="${not empty categorie}">
                                     <c:forEach var="cat" items="${categorie}">
+                                        <%-- Logica di controllo per selezionare la checkbox se la categoria è già associata --%>
                                         <c:set var="selezionata" value="false" />
                                         <c:if test="${isEdit}">
                                             <c:forEach var="catProd" items="${prodotto.categorie}">
@@ -74,7 +85,7 @@
                             </div>
                             <span class="field-hint">Seleziona una o più categorie cliccando sui badge.</span>
                         </div>
-                        <a href="${pageContext.request.contextPath}/AdminCategoriaServlet?action=new" class="btn btn-secondary btn-small" style="white-space: nowrap;">
+                        <a href="${pageContext.request.contextPath}/AdminCategoriaServlet?action=new" class="btn btn-secondary btn-small btn-nowrap">
                             ➕ Nuova
                         </a>
                     </div>
@@ -88,15 +99,14 @@
                 <div class="form-group">
                     <label for="immagine">Percorso Immagine:</label>
                     <input type="text" id="immagine" name="immagine"
-                           value="${isEdit ? prodotto.immagine : 'images/default.jpg'}">
+                           value="<c:out value='${isEdit ? prodotto.immagine : "images/default.jpg"}'/>">
                     <span class="field-hint">Es: images/prodotto.jpg. L'anteprima si aggiornerà in tempo reale.</span>
                 </div>
 
-                <div class="form-group" style="flex-direction: row; align-items: center; gap: 10px; margin-top: 25px; padding: 15px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-color); border-radius: 6px;">
-                    <input type="checkbox" id="attivo" name="attivo" 
-                           ${isEdit ? (prodotto.attivo ? 'checked' : '') : 'checked'} 
-                           style="width: 20px; height: 20px; accent-color: var(--primary-purple); cursor: pointer;">
-                    <label for="attivo" style="margin: 0; cursor: pointer; color: var(--text-light); font-size: 15px;">Prodotto Attivo (Visibile nel catalogo)</label>
+                <div class="form-group checkbox-card">
+                    <input type="checkbox" id="attivo" name="attivo" class="checkbox-large"
+                           ${(!isEdit || prodotto.attivo) ? 'checked' : ''}>
+                    <label for="attivo" class="checkbox-label">Prodotto Attivo (Visibile nel catalogo)</label>
                 </div>
 
                 <div class="form-actions">
@@ -110,7 +120,7 @@
             </form>
         </div>
 
-        <!-- COLONNA DESTRA: Anteprima Immagine e Info -->
+        <%-- ── COLONNA DESTRA: Anteprima Visiva e Riepilogo (Client-Side) ──── --%>
         <div class="admin-preview-card">
             <h2>Anteprima Visiva</h2>
             
@@ -126,7 +136,7 @@
                 <c:if test="${isEdit}">
                     <div class="detail-row">
                         <span class="detail-label">ID Prodotto</span>
-                        <span class="detail-value">#${prodotto.idProdotto}</span>
+                        <span class="detail-value">#<c:out value="${prodotto.idProdotto}" /></span>
                     </div>
                 </c:if>
                 
@@ -170,61 +180,73 @@
                 </div>
             </c:if>
         </div>
-
     </div>
 </main>
 
+<%-- ── SCRIPT JS PER INTERAZIONE DINAMICA E ANTEPRIME LIVE ────────────── --%>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
+
+    // ── 1. GESTIONE ANTEPRIMA IMMAGINE LIVE ──────────────────────────────────
     const inputImmagine = document.getElementById('immagine');
     const previewImg = document.getElementById('live-preview-img');
+    // Recupera dinamicamente il context path dell'applicazione web tramite EL (Expression Language)
     const basePath = '${pageContext.request.contextPath}/';
     
-    function updatePreview() {
-        if (!inputImmagine || !previewImg) return;
-
-        let path = inputImmagine.value.trim();
-        if (!path) {
-            previewImg.src = basePath + 'images/default.jpg';
-            return;
-        }
-
-        // Rimuove eventuali slash iniziali per evitare percorsi errati
-        while (path.startsWith('/')) {
-            path = path.substring(1);
-        }
-
-        if (path.startsWith('http://') || path.startsWith('https://')) {
-            previewImg.src = path;
-        } else {
-            previewImg.src = basePath + path;
-        }
-    }
-
     if (inputImmagine && previewImg) {
+        /**
+         * Funzione interna che calcola e aggiorna l'attributo `src` dell'immagine di anteprima
+         * normalizzando il percorso inserito dall'utente.
+         */
+        const updatePreview = () => {
+            // Pulisce gli spazi bianchi e rimuove eventuali slash iniziali superflui
+            let path = inputImmagine.value.trim().replace(/^\/+/, '');
+            
+            if (!path) {
+                // Se il campo è vuoto, imposta l'immagine di fallback predefinita
+                previewImg.src = basePath + 'images/default.jpg';
+            } else if (path.startsWith('http://') || path.startsWith('https://')) {
+                // Se è un URL assoluto esterno, lo usa direttamente
+                previewImg.src = path;
+            } else {
+                // Se è un percorso relativo locale, lo concatena correttamente al context path
+                previewImg.src = basePath + path;
+            }
+        };
+        
+        // Ascolta l'evento di digitazione (input) nel campo di testo del percorso immagine
         inputImmagine.addEventListener('input', updatePreview);
-        // Esegue subito la funzione all'avvio per caricare l'immagine salvata
+        
+        // Esegue la funzione immediatamente al caricamento della pagina (utile in modalità 'Edit')
         updatePreview();
     }
 
+    // ── 2. GESTIONE CAMBIO VISIBILITÀ (ATTIVO/INATTIVO) ─────────────────────
     const inputAttivo = document.getElementById('attivo');
     const badgeStatus = document.getElementById('live-status-badge');
+    
     if (inputAttivo && badgeStatus) {
-        inputAttivo.addEventListener('change', function() {
-            if (this.checked) {
-                badgeStatus.innerHTML = '<span class="badge-disponibile">Pubblicato</span>';
-            } else {
-                badgeStatus.innerHTML = '<span class="badge-esaurito">Nascosto</span>';
-            }
+        // Ascolta l'evento 'change' sulla checkbox dello stato di attivazione del prodotto
+        inputAttivo.addEventListener('change', (e) => {
+            // Modifica dinamicamente l'HTML del badge a seconda che la checkbox sia spuntata o meno
+            badgeStatus.innerHTML = e.target.checked 
+                ? '<span class="badge-disponibile">Pubblicato</span>' 
+                : '<span class="badge-esaurito">Nascosto</span>';
         });
     }
 
+    // ── 3. GESTIONE DINAMICA DEL BADGE STOCK (QUANTITÀ) ──────────────────────
     const inputQuantita = document.getElementById('quantita');
     const badgeStock = document.getElementById('live-stock-badge');
+    
     if (inputQuantita && badgeStock) {
-        inputQuantita.addEventListener('input', function() {
-            const qty = parseInt(this.value);
-            if (isNaN(qty) || qty === 0) {
+        // Ascolta l'evento di digitazione nel campo numerico della quantità in stock
+        inputQuantita.addEventListener('input', (e) => {
+            // Converte il valore inserito in un intero in base 10
+            const qty = parseInt(e.target.value, 10);
+            
+            // Valuta le soglie di stock per aggiornare visivamente il badge di avviso
+            if (isNaN(qty) || qty <= 0) {
                 badgeStock.innerHTML = '<span class="badge-esaurito">Esaurito</span>';
             } else if (qty > 0 && qty <= 5) {
                 badgeStock.innerHTML = '<span class="badge-scarso">In Esaurimento</span>';

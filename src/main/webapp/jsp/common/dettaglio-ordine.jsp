@@ -41,7 +41,7 @@
                         <thead>
                             <tr>
                                 <th>ID Prodotto</th>
-                                <th>Taglia</th> <!-- NUOVA COLONNA -->
+                                <th>Taglia</th>
                                 <th>Prezzo Unitario</th>
                                 <th>IVA</th>
                                 <th>Quantità</th>
@@ -59,7 +59,6 @@
                                                 </a>
                                             </td>
                                             
-                                            <!-- NUOVA CELLA PER LA TAGLIA CON STILE CSS -->
                                             <td>
                                                 <span class="order-size-badge">
                                                     <c:out value="${empty item.taglia ? 'Unica' : item.taglia}"/>
@@ -75,7 +74,6 @@
                                 </c:when>
                                 <c:otherwise>
                                     <tr>
-                                        <!-- AGGIORNATO COLSPAN DA 5 A 6 -->
                                         <td colspan="6" class="empty-table-msg">Nessun articolo trovato per questo ordine.</td>
                                     </tr>
                                 </c:otherwise>
@@ -83,15 +81,24 @@
                         </tbody>
                     </table>
 
-					<div class="order-actions-footer">
-					    <p class="success-tracking-text success-tracking-spacing">
-					        Puoi consultare tutti i tuoi acquisti nella sezione dedicata.
-					    </p>
-					    <div class="order-actions-group">
-					        <a href="${pageContext.request.contextPath}/FatturaServlet?id=${acquisto.idAcquisto}" target="_blank" class="btn btn-catalog">SCARICA FATTURA PDF</a>
-					        <a href="${pageContext.request.contextPath}/ProfiloServlet" class="btn btn-catalog">TORNA AL PROFILO</a>
-					    </div>
-					</div>
+                    <div class="order-actions-footer">
+                        <p class="success-tracking-text success-tracking-spacing">
+                            Puoi consultare tutti i tuoi acquisti nella sezione dedicata.
+                        </p>
+                        <div class="order-actions-group">
+                            <a href="${pageContext.request.contextPath}/FatturaServlet?id=${acquisto.idAcquisto}" target="_blank" class="btn btn-catalog">SCARICA FATTURA PDF</a>
+                            
+                            <%-- Pulsante dinamico in base al ruolo dell'utente --%>
+                            <c:choose>
+                                <c:when test="${sessionScope.utente.admin}">
+                                    <a href="${pageContext.request.contextPath}/AdminOrdiniServlet" class="btn btn-catalog">TORNA A GESTIONE ORDINI</a>
+                                </c:when>
+                                <c:otherwise>
+                                    <a href="${pageContext.request.contextPath}/ProfiloServlet" class="btn btn-catalog">TORNA AL PROFILO</a>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                    </div>
 
                 </c:when>
                 <c:otherwise>
@@ -99,7 +106,14 @@
                         <h2>Errore</h2>
                         <p class="error-message-text">Impossibile caricare i dettagli dell'ordine selezionato.</p>
                         <div class="error-actions">
-                            <a href="${pageContext.request.contextPath}/ProfiloServlet" class="btn btn-catalog">Torna al Profilo</a>
+                            <c:choose>
+                                <c:when test="${sessionScope.utente.admin}">
+                                    <a href="${pageContext.request.contextPath}/AdminOrdiniServlet" class="btn btn-catalog">Torna a Gestione Ordini</a>
+                                </c:when>
+                                <c:otherwise>
+                                    <a href="${pageContext.request.contextPath}/ProfiloServlet" class="btn btn-catalog">Torna al Profilo</a>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                     </div>
                 </c:otherwise>

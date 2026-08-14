@@ -107,19 +107,4 @@ public class UtenteBean implements Serializable {
         result = prime * result + idUtente;
         return result;
     }
-    
-    
-    @Override
-    public String toString() {
-        return "Utente{" +
-        		", idUtente" + idUtente + '\'' +
-        		", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", nome='" + nome + '\'' +
-                ", cognome='" + cognome + '\'' +
-                ", isAdmin=" + isAdmin +
-                ", telefono='" + telefono + '\'' +
-                ", dataRegistrazione=" + dataRegistrazione +
-                '}';
-    }
 }

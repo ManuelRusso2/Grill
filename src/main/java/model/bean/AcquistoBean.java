@@ -83,17 +83,4 @@ public class AcquistoBean implements Serializable {
     public void addProdottoAcquistato(OrdineBean item) { 
     	this.prodottiAcquistati.add(item); 
     }
-    
-    
-    @Override
-    public String toString() {
-        return "Acquisto{" +
-                "idAcquisto=" + idAcquisto +
-                ", prezzoTotale=" + prezzoTotale +
-                ", dataAcquisto=" + dataAcquisto +
-                ", indirizzoConsegna=" + indirizzoConsegna +
-                ", metodoPagamento='" + metodoPagamento + '\'' +
-                ", idUtente='" + idUtente + '\'' +
-                '}';
-    }
 }

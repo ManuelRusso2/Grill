@@ -70,14 +70,4 @@ public class CarrelloBean implements Serializable {
         }
         return totale;
     }
-    
-    
-    @Override
-    public String toString() {
-        return "CarrelloBean{" +
-                "idCarrello=" + idCarrello +
-                ", idUtente='" + idUtente + '\'' +
-                ", prodotti=" + prodotti +
-                '}';
-    }
 }
