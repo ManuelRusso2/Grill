@@ -1,5 +1,5 @@
 /* ==========================================================================
-   4. RECENSIONI
+   4. RECENSIONI & MODIFICA RECENSIONE
    ========================================================================== */
 .section-divider {
     margin: 50px 0;
@@ -21,7 +21,9 @@
     text-transform: uppercase;
 }
 
-.review-form-card {
+/* Card Form Inserimento & Modifica Recensione */
+.review-form-card,
+.review-edit-card {
     margin-bottom: 35px;
     padding: 25px;
     border: 1px solid var(--border-color);
@@ -30,7 +32,13 @@
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
 }
 
-.review-form-card h3 {
+.review-edit-card {
+    max-width: 650px;
+    margin: 20px auto 40px auto;
+}
+
+.review-form-card h3,
+.review-edit-card h3 {
     margin-top: 0;
     margin-bottom: 20px;
     color: var(--accent-yellow);
@@ -39,37 +47,126 @@
     text-transform: uppercase;
 }
 
-.review-form-card select.form-control,
-.review-form-card textarea.form-control {
+/* Campi Form (Input, Select, Textarea) */
+.review-form-card select,
+.review-form-card textarea,
+.review-form-card .form-control,
+.review-edit-card select,
+.review-edit-card textarea,
+.form-edit-review select,
+.form-edit-review textarea {
     width: 100%;
     padding: 12px;
     border: 1px solid var(--border-color);
     border-radius: 4px;
     background-color: var(--bg-input);
     color: var(--text-light);
-    font-family: var(--font-body);
+    font-family: inherit;
     font-size: 14px;
-    transition: border-color 0.3s ease;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-.review-form-card select.form-control:focus,
-.review-form-card textarea.form-control:focus {
+.review-form-card select:focus,
+.review-form-card textarea:focus,
+.review-form-card .form-control:focus,
+.review-edit-card select:focus,
+.review-edit-card textarea:focus,
+.form-edit-review select:focus,
+.form-edit-review textarea:focus {
     border-color: var(--primary-purple);
+    box-shadow: 0 0 8px rgba(138, 43, 226, 0.3);
     outline: none;
 }
 
-.review-form-card textarea.form-control {
-    min-height: 100px;
+.review-form-card textarea,
+.review-edit-card textarea,
+.form-edit-review textarea {
+    min-height: 120px;
     resize: vertical;
 }
 
-.btn-submit-review {
-    width: auto;
-    margin-top: 10px;
-    padding: 12px 24px;
-    border-radius: 4px;
+.form-edit-review .form-group {
+    margin-bottom: 20px;
 }
 
+.form-edit-review label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-light);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* Layout Azioni / Pulsanti Form */
+.form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 15px;
+    margin-top: 25px;
+}
+
+/* Pulsanti Invia e Salva (Stile Primario Viola) */
+.btn-submit-review,
+.btn-submit-edit,
+.form-edit-review .btn-submit,
+.form-edit-review button[type="submit"] {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    padding: 12px 24px;
+    border: 1px solid var(--primary-purple);
+    border-radius: 4px;
+    background-color: var(--primary-purple);
+    color: #ffffff;
+    font-family: var(--font-headings);
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-submit-review:hover,
+.btn-submit-edit:hover,
+.form-edit-review .btn-submit:hover,
+.form-edit-review button[type="submit"]:hover {
+    background-color: rgba(138, 43, 226, 0.85);
+    box-shadow: 0 0 12px rgba(138, 43, 226, 0.5);
+    transform: translateY(-1px);
+}
+
+/* Pulsante Annulla (Stile Secondario Bordato) */
+.btn-cancel-edit,
+.form-edit-review .btn-cancel,
+.form-edit-review a.btn-cancel {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: transparent;
+    color: var(--text-gray);
+    font-family: var(--font-headings);
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+}
+
+.btn-cancel-edit:hover,
+.form-edit-review .btn-cancel:hover,
+.form-edit-review a.btn-cancel:hover {
+    border-color: var(--text-light);
+    color: var(--text-light);
+    transform: translateY(-1px);
+}
+
+/* Lista Recensioni Pubblicate */
 .reviews-list {
     display: flex;
     flex-direction: column;
@@ -82,8 +179,14 @@
     border-radius: 6px;
     background-color: var(--bg-card);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: border-color 0.2s ease;
 }
 
+.review-item:hover {
+    border-color: rgba(155, 81, 224, 0.4);
+}
+
+/* Meta Dati della Recensione */
 .review-meta {
     display: flex;
     flex-wrap: wrap;
@@ -125,13 +228,28 @@
     opacity: 0.9;
 }
 
+/* Azioni sulla Recensione (Elimina / Modifica) */
+.review-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
 .btn-delete-review {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     width: auto;
-    padding: 5px 10px;
+    padding: 6px 12px;
     border: 1px solid #ff4a4a;
     border-radius: 4px;
     background-color: rgba(255, 74, 74, 0.15);
     color: #ff4a4a;
+    font-family: var(--font-headings);
     font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
@@ -142,10 +260,14 @@
 .btn-delete-review:hover {
     background-color: #ff4a4a;
     color: #ffffff;
+    box-shadow: 0 0 10px rgba(255, 74, 74, 0.4);
+    transform: translateY(-1px);
 }
 
+/* Messaggi Informativi */
 .review-login-prompt,
 .no-reviews-msg {
+    margin: 15px 0;
     color: var(--text-gray);
     font-size: 14px;
     font-style: italic;
@@ -154,6 +276,7 @@
 .review-login-prompt a {
     color: var(--accent-yellow);
     text-decoration: underline;
+    transition: color 0.2s ease;
 }
 
 .review-login-prompt a:hover {
