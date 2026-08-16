@@ -39,6 +39,7 @@
     color: var(--accent-yellow);
 }
 
+/* Form e Quantità */
 .cart-update-form {
     display: inline-flex;
     align-items: center;
@@ -54,6 +55,44 @@
     color: var(--text-light);
     font-size: 14px;
     text-align: center;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.cart-update-form .input-qty:focus {
+    border-color: var(--primary-purple);
+}
+
+/* Pulsante Aggiorna Quantità */
+.btn-update,
+.cart-table .cart-update-form button,
+.cart-update-form button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    border: 1px solid var(--primary-purple);
+    border-radius: 4px;
+    background-color: rgba(138, 43, 226, 0.2);
+    color: #ffffff !important;
+    font-family: var(--font-headings);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.btn-update:hover,
+.cart-table .cart-update-form button:hover,
+.cart-update-form button:hover {
+    background-color: var(--primary-purple) !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
+    transform: translateY(-1px);
 }
 
 .cart-summary {

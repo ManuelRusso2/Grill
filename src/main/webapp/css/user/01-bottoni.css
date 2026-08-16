@@ -57,7 +57,7 @@
     transform: translateY(-2px);
 }
 
-/* Bottone Secondario */
+/* Bottone Secondario Generico */
 .btn-secondary {
     display: inline-flex;
     align-items: center;
