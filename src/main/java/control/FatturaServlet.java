@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -37,46 +38,70 @@ import model.dao.impl.ProdottoDAOImpl;
 import model.dao.impl.UtenteDAOImpl;
 
 /**
- * Servlet per generare fatture in PDF dinamicamente.
- * Recupera i dati dal database e genera un PDF con iText basato sui dati reali dell'ordine.
+ *FatturaServlet
+ * Servlet responsabile della generazione dinamica delle fatture in formato PDF.
+ *
+ * Sfrutta la libreria iText 7 per costruire un documento PDF direttamente in memoria (stream)
+ * a partire dai dati reali memorizzati nel database per uno specifico ordine d'acquisto.
  */
 @WebServlet("/FatturaServlet")
 public class FatturaServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     
+    // Oggetti DAO utilizzati per l'interazione con il database
     private AcquistoDAO acquistoDAO;
     private OrdineDAO ordineDAO;
     private UtenteDAO utenteDAO;
     private ProdottoDAO prodottoDAO;
     
+    /**
+     * Metodo di inizializzazione della Servlet.
+     * Viene eseguito una sola volta all'avvio dell'applicazione o al primo caricamento della servlet
+     * per istanziare le implementazioni dei DAO necessari.
+     * 
+     * @throws ServletException Se si verifica un errore durante l'inizializzazione
+     */
     @Override
     public void init() throws ServletException {
-        // Inizializziamo tutti i DAO necessari
+        // Inizializzazione delle classi Data Access Object (DAO)
         this.acquistoDAO = new AcquistoDAOImpl();
         this.ordineDAO = new OrdineDAOImpl();
         this.utenteDAO = new UtenteDAOImpl();
         this.prodottoDAO = new ProdottoDAOImpl();
     }
     
+    /**
+     * Gestisce le richieste HTTP GET per il download/visualizzazione della fattura PDF.
+     * 
+     * @param request  L'oggetto {@link HttpServletRequest} contenente i parametri inviati dal client (es. id ordine)
+     * @param response L'oggetto {@link HttpServletResponse} utilizzato per restituire il flusso PDF al browser
+     * @throws ServletException Se si verifica un errore a livello di Servlet
+     * @throws IOException      Se si verifica un errore durante le operazioni di I/O o scrittura stream
+     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        // 1. Verifiche di autenticazione: l'utente deve essere loggato
+        // =========================================================================
+        // 1. AUTENTICAZIONE UTENTE
+        // Verifica se l'utente ha una sessione attiva prima di consentire il download
+        // =========================================================================
         HttpSession session = request.getSession(false);
         UtenteBean utenteLoggato = session != null ? (UtenteBean) session.getAttribute("utente") : null;
         
         if (utenteLoggato == null) {
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            // Risponde con un codice HTTP 401 (Non autorizzato)
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Utente non autenticato. Effettuare il login.");
             return;
         }
         
-        // 2. Recupero del parametro ID dell'ordine (Acquisto) dalla richiesta
+        // =========================================================================
+        // 2. VALIDAZIONE PARAMETRO DI INPUT
+        // Estrazione e controllo della presenza e correttezza dell'ID d'acquisto
+        // =========================================================================
         String idParam = request.getParameter("id");
-        
-        // Validazione del parametro ID
         if (idParam == null || idParam.trim().isEmpty()) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID ordine mancante");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Parametro ID ordine mancante nella richiesta.");
             return;
         }
         
@@ -84,122 +109,150 @@ public class FatturaServlet extends HttpServlet {
         try {
             idAcquisto = Integer.parseInt(idParam);
         } catch (NumberFormatException e) {
-            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID ordine non valido");
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, "ID ordine non valido (deve essere un valore numerico).");
             return;
         }
         
         try {
-            // 3. Recupero dell'acquisto dal database
+            // =========================================================================
+            // 3. RECUPERO ACQUISTO DAL DATABASE
+            // =========================================================================
             AcquistoBean acquisto = acquistoDAO.doRetrieveById(idAcquisto);
-            
             if (acquisto == null) {
-                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Ordine non trovato");
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "L'ordine specificato non è stato trovato nel database.");
                 return;
             }
             
-            // 4. Controllo di sicurezza: l'utente può vedere solo i propri ordini (a meno che non sia admin)
+            // =========================================================================
+            // 4. AUTORIZZAZIONE (CONTROLLO ACCESSO RISORSA)
+            // L'utente standard può scaricare solo le PROPRIE fatture. L'admin può scaricarle tutte.
+            // =========================================================================
             if (!utenteLoggato.isAdmin() && acquisto.getIdUtente() != utenteLoggato.getIdUtente()) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Non autorizzato a visualizzare questo ordine");
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Non si disporre dei permessi per visualizzare questa fattura.");
                 return;
             }
             
-            // 5. Recupero dei dati del cliente associato all'ordine
+            // =========================================================================
+            // 5. RECUPERO DATI CLIENTE E DETTAGLI ORDINE
+            // =========================================================================
             UtenteBean cliente = utenteDAO.doRetrieveById(acquisto.getIdUtente());
-            
             if (cliente == null) {
-                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Dati cliente non trovati");
+                response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Impossibile recuperare i dati del cliente dall'ordine.");
                 return;
             }
             
-            // 6. Recupero dei dettagli dell'ordine (singoli prodotti con quantità e prezzi)
+            // Recupero della lista dei singoli articoli che compongono l'acquisto
             List<OrdineBean> dettagliOrdine = ordineDAO.doRetrieveByAcquisto(idAcquisto);
             
-            // 7. Generazione della risposta PDF in memoria
+            // =========================================================================
+            // 6. GENERAZIONE DOCUMENTO PDF IN MEMORIA (iText 7)
+            // Usiamo ByteArrayOutputStream per creare il PDF in memoria prima di inviarlo
+            // =========================================================================
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             PdfWriter writer = new PdfWriter(baos);
             PdfDocument pdfDocument = new PdfDocument(writer);
             Document document = new Document(pdfDocument, PageSize.A4);
+            
+            // Definizione dei margini della pagina (espressi in punti: 36pt = 0.5 pollici)
             document.setMargins(36, 36, 36, 36);
             
-            // Aggiungiamo il contenuto della fattura
-            generaFatturaHTML(document, acquisto, cliente, dettagliOrdine);
+            // Costruzione effettiva del layout del PDF
+            generaFatturaPDF(document, acquisto, cliente, dettagliOrdine);
             
+            // Chiusura del documento per completare lo stream e flussare la memoria
             document.close();
             
-            // Invio il PDF al browser
+            // =========================================================================
+            // 7. INVIO RISPOSTA HTTP CON FLUSSO PDF
+            // Configurazione degli Header HTTP per istruire il browser sul tipo di file
+            // =========================================================================
             response.setContentType("application/pdf");
+            
+            // "inline" indica al browser di aprire il PDF nella scheda anziché forzare subito il download
             response.setHeader("Content-Disposition", "inline; filename=\"Fattura_" + idAcquisto + ".pdf\"");
             response.setContentLength(baos.size());
             
+            // Scrittura del flusso di byte generato sullo stream di output della risposta
             response.getOutputStream().write(baos.toByteArray());
             response.getOutputStream().flush();
             
         } catch (SQLException e) {
+            // Log dell'eccezione sul server in caso di errori database
             e.printStackTrace();
-            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore nel recupero dei dati");
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Errore durante il recupero dei dati dell'ordine dal database.");
         }
     }
     
     /**
-     * Genera il contenuto della fattura in formato PDF.
+     * Popola e assembla graficamente il documento PDF iText con le sezioni della fattura:
+     * Intestazione, Dati Azienda/Cliente, Tabella Prodotti, Calcoli Fiscali e Pie' di pagina.
      * 
-     * @param document Il Document di iText dove scrivere
-     * @param acquisto L'oggetto AcquistoBean con i dati dell'ordine
-     * @param cliente L'oggetto UtenteBean con i dati del cliente
-     * @param dettagliOrdine La lista di OrdineBean con i prodotti acquistati
+     * @param document       Il documento iText a cui aggiungere gli elementi grafici
+     * @param acquisto       Bean contenente le informazioni generali dell'acquisto
+     * @param cliente        Bean contenente i dati dell'utente intestatario della fattura
+     * @param dettagliOrdine Lista contenente i singoli articoli acquistati nell'ordine
+     * @throws SQLException Se si verifica un errore nel recupero del nome dei prodotti tramite DAO
      */
-    private void generaFatturaHTML(Document document, AcquistoBean acquisto, UtenteBean cliente, 
-                                     List<OrdineBean> dettagliOrdine) throws SQLException {
+    private void generaFatturaPDF(Document document, AcquistoBean acquisto, UtenteBean cliente, 
+                                  List<OrdineBean> dettagliOrdine) throws SQLException {
         
-        // Scritta Grill in alto al centro
+        // -------------------------------------------------------------------------
+        // A. BRANDING E TITOLO
+        // -------------------------------------------------------------------------
         document.add(new Paragraph("GRILL")
                 .setBold()
                 .setFontSize(24)
                 .setTextAlignment(TextAlignment.CENTER));
         
-        // Intestazione della fattura
         document.add(new Paragraph("FATTURA N. " + acquisto.getIdAcquisto())
                 .setBold()
                 .setFontSize(18));
         
-        // Formattazione della data
+        // Formattazione della data nel formato italiano standard (GG/MM/AAAA HH:mm:ss)
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         String dataFormattata = (acquisto.getDataAcquisto() != null) ? sdf.format(acquisto.getDataAcquisto()) : "N/D";
         document.add(new Paragraph("Data: " + dataFormattata));
         
-        // Dati del Venditore
-        document.add(new Paragraph("\nVenditore:")
-                .setBold());
+        // -------------------------------------------------------------------------
+        // B. DATI MITTENTE (ESERCIZIO/AZIENDA)
+        // -------------------------------------------------------------------------
+        document.add(new Paragraph("\nVenditore:").setBold());
         document.add(new Paragraph("Grill Store\nVia Roma 10, Salerno\nP.IVA: 01234567890"));
         
-        // Dati del cliente (Intestatario della fattura)
-        document.add(new Paragraph("\nCliente:")
-                .setBold());
+        // -------------------------------------------------------------------------
+        // C. DATI DESTINATARIO (CLIENTE)
+        // -------------------------------------------------------------------------
+        document.add(new Paragraph("\nCliente:").setBold());
         document.add(new Paragraph(cliente.getNome() + " " + cliente.getCognome()));
         document.add(new Paragraph("Email: " + cliente.getEmail()));
-        document.add(new Paragraph("Telefono: " + (cliente.getTelefono() != null ? cliente.getTelefono() : "N/A")));
+        document.add(new Paragraph("Telefono: " + (cliente.getTelefono() != null ? cliente.getTelefono() : "N/D")));
         document.add(new Paragraph("Indirizzo Consegna: " + acquisto.getIndirizzoConsegna()));
-        document.add(new Paragraph("Metodo di Pagamento: " + acquisto.getMetodoPagamento()));
+        document.add(new Paragraph("Metodo di Pagamento: " + (acquisto.getMetodoPagamento() != null ? acquisto.getMetodoPagamento() : "Carta di Credito")));
         
-        document.add(new Paragraph("\nProdotti acquistati:")
-                .setBold());
+        document.add(new Paragraph("\nProdotti acquistati:").setBold());
         
-        // Tabella dei prodotti
-        Table table = new Table(UnitValue.createPercentArray(new float[]{4, 2, 2, 2, 2}));
-        table.setWidth(UnitValue.createPercentValue(100));
+        // -------------------------------------------------------------------------
+        // D. TABELLA ARTICOLI
+        // Definizione di una tabella a 5 colonne distribuite con larghezze relative (%)
+        // Colonna 1: Prodotto (40%) | Col 2: Qtà (15%) | Col 3: Prezzo (20%) | Col 4: IVA (15%) | Col 5: Totale (20%)
+        // -------------------------------------------------------------------------
+        Table table = new Table(UnitValue.createPercentArray(new float[]{4, 1.5f, 2, 1.5f, 2}));
+        table.setWidth(UnitValue.createPercentValue(100)); // Estensione a tutta larghezza
         
-        // Header della tabella
+        // Intestazioni (Header) della tabella
         table.addHeaderCell(new Cell().add(new Paragraph("Prodotto").setBold()));
         table.addHeaderCell(new Cell().add(new Paragraph("Quantità").setBold()));
         table.addHeaderCell(new Cell().add(new Paragraph("Prezzo Unit.").setBold()));
         table.addHeaderCell(new Cell().add(new Paragraph("IVA %").setBold()));
         table.addHeaderCell(new Cell().add(new Paragraph("Totale (IVA incl.)").setBold()));
         
-        // Variabili per i calcoli
+        // Accumulatori per i calcoli del riepilogo fiscale
         double subtotaleNetto = 0.0;
         double totalIva = 0.0;
         
-        // Iteriamo su ogni prodotto dell'ordine e aggiungiamo le righe alla tabella
+        // -------------------------------------------------------------------------
+        // E. POPOLAMENTO RIGHE TABELLA E CALCOLI FISCALI
+        // -------------------------------------------------------------------------
         if (dettagliOrdine != null && !dettagliOrdine.isEmpty()) {
             for (OrdineBean ordine : dettagliOrdine) {
                 int idProdotto = ordine.getIdProdotto();
@@ -207,52 +260,73 @@ public class FatturaServlet extends HttpServlet {
                 double aliquotaIva = ordine.getIva();
                 int quantita = ordine.getQuantitaAcquistata();
                 
-                // Recuperiamo il nome del prodotto dal DAO
+                // Recupero del nome del prodotto tramite il DAO dedicato
                 ProdottoBean prodotto = prodottoDAO.doRetrieveByKey(idProdotto);
                 String nomeProdotto = (prodotto != null) ? prodotto.getNome() : "Prodotto #" + idProdotto;
                 
+                // Integrazione eventuale della taglia nel nome del prodotto
+                if (ordine.getTaglia() != null && !ordine.getTaglia().trim().isEmpty()) {
+                    nomeProdotto += " (Taglia: " + ordine.getTaglia() + ")";
+                }
+                
+                // Calcolo totale riga lordo
                 double totaleRigaIvaInclusa = prezzoIvaInclusa * quantita;
                 
-                // Scomputo IVA: Imponibile = Totale / (1 + IVA/100)
+                // Formula di scomputo IVA ( Scorporo ):
+                // Imponibile = Totale / (1 + (Aliquota / 100))
                 double imponibileRiga = totaleRigaIvaInclusa / (1.0 + (aliquotaIva / 100.0));
                 double ivaRiga = totaleRigaIvaInclusa - imponibileRiga;
                 
-                // Aggiungiamo i totali
+                // Aggiornamento degli accumulatori per il totale
                 subtotaleNetto += imponibileRiga;
                 totalIva += ivaRiga;
                 
-                // Aggiungiamo i dati della riga alla tabella
+                // Inserimento celle formattate (con indicatore di valuta Euro e simbolo %)
                 table.addCell(new Cell().add(new Paragraph(nomeProdotto)));
                 table.addCell(new Cell().add(new Paragraph(String.valueOf(quantita))));
-                table.addCell(new Cell().add(new Paragraph(String.format("€ %.2f", prezzoIvaInclusa))));
-                table.addCell(new Cell().add(new Paragraph(String.format("%.0f%%", aliquotaIva))));
-                table.addCell(new Cell().add(new Paragraph(String.format("€ %.2f", totaleRigaIvaInclusa))));
+                table.addCell(new Cell().add(new Paragraph(String.format(Locale.ITALY, "€ %.2f", prezzoIvaInclusa))));
+                table.addCell(new Cell().add(new Paragraph(String.format(Locale.ITALY, "%.0f%%", aliquotaIva))));
+                table.addCell(new Cell().add(new Paragraph(String.format(Locale.ITALY, "€ %.2f", totaleRigaIvaInclusa))));
             }
         }
         
+        // Aggiunta della tabella compilata al documento
         document.add(table);
         
-        // Riepilogo economico
-        document.add(new Paragraph("\nImponibile (excl. IVA): € " + String.format("%.2f", subtotaleNetto)));
-        document.add(new Paragraph("IVA Totale: € " + String.format("%.2f", totalIva)));
+        // -------------------------------------------------------------------------
+        // F. RIEPILOGO FISCALE E TOTALE COMPLESSIVO
+        // -------------------------------------------------------------------------
+        document.add(new Paragraph("\nImponibile (escl. IVA): " + String.format(Locale.ITALY, "€ %.2f", subtotaleNetto)));
+        document.add(new Paragraph("IVA Totale: " + String.format(Locale.ITALY, "€ %.2f", totalIva)));
         
-        // Totale finale (dal database, per garantire l'integrità)
-        document.add(new Paragraph("Totale Complessivo: € " + String.format("%.2f", acquisto.getPrezzoTotale()))
+        // Evidenziazione del totale finale da pagare
+        document.add(new Paragraph("Totale Complessivo: " + String.format(Locale.ITALY, "€ %.2f", acquisto.getPrezzoTotale()))
                 .setBold()
                 .setFontSize(14));
         
         document.add(new Paragraph("\n\n"));
         
-        // Footer
-        document.add(new Paragraph("Grazie per il vostro acquisto!"));
+        // -------------------------------------------------------------------------
+        // G. PIÈ DI PAGINA (FOOTER)
+        // -------------------------------------------------------------------------
+        document.add(new Paragraph("Grazie per il vostro acquisto!").setTextAlignment(TextAlignment.CENTER));
         document.add(new Paragraph("Grill - Progetto Java EE")
-                .setFontSize(9));
+                .setFontSize(9)
+                .setTextAlignment(TextAlignment.CENTER));
     }
     
+    /**
+     * Gestisce le richieste HTTP POST inoltrandole al metodo {@link #doGet}.
+     * Permette alla servlet di essere richiamata indistintamente via GET o POST.
+     * 
+     * @param request  L'oggetto {@link HttpServletRequest}
+     * @param response L'oggetto {@link HttpServletResponse}
+     * @throws ServletException Se si verifica un errore a livello di Servlet
+     * @throws IOException      Se si verifica un errore di I/O
+     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Le richieste POST vengono redirette su doGet
         doGet(request, response);
     }
 }

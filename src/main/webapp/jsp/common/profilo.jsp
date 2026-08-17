@@ -154,10 +154,9 @@
                                     <button type="submit" class="btn-action">Modifica</button>
                                 </form>
 
-                                <%-- Form con conferma JavaScript per l'eliminazione della recensione --%>
-                                <form action="${pageContext.request.contextPath}/EliminaRecensioneUtenteServlet" method="post" onsubmit="return confirm('Sei sicuro di voler eliminare questa recensione?');">
+                                <%-- Form con conferma JavaScript per l'eliminazione della recensione (Servet unificata) --%>
+                                <form action="${pageContext.request.contextPath}/EliminaRecensioneServlet" method="post" onsubmit="return confirm('Sei sicuro di voler eliminare questa recensione?');">
                                     <input type="hidden" name="idRecensione" value="${rec.idRecensione}" />
-                                    <input type="hidden" name="idProdotto" value="${rec.idProdotto}" />
                                     <button type="submit" class="btn-action btn-delete">Elimina</button>
                                 </form>
 

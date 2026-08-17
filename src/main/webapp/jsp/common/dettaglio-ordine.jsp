@@ -33,10 +33,12 @@
                     
                     <%-- ── RIEPILOGO METADATI ORDINE ───────────────────────────── --%>
                     <div class="order-meta-grid">
-                        <%-- Data di effettuazione dell'ordine --%>
+                        <%-- Data di effettuazione dell'ordine formattata --%>
                         <div class="order-meta-item">
                             <span class="order-meta-label">Data Ordine</span>
-                            <span class="order-meta-value"><c:out value="${acquisto.dataAcquisto}"/></span>
+                            <span class="order-meta-value">
+                                <fmt:formatDate value="${acquisto.dataAcquisto}" pattern="dd/MM/yyyy HH:mm" />
+                            </span>
                         </div>
                         
                         <%-- Prezzo totale complessivo formattato in Euro (€) --%>
@@ -60,7 +62,7 @@
                     <table class="cart-table">
                         <thead>
                             <tr>
-                                <th>ID Prodotto</th>
+                                <th>Prodotto</th>
                                 <th>Taglia</th>
                                 <th>Prezzo Unitario</th>
                                 <th>IVA</th>
@@ -74,10 +76,17 @@
                                 <c:when test="${not empty dettagliOrdine}">
                                     <c:forEach var="item" items="${dettagliOrdine}">
                                         <tr>
-                                            <%-- Link al dettaglio prodotto con ID dinamico --%>
+                                            <%-- Link al dettaglio prodotto con nome o ID dinamico --%>
                                             <td>
                                                 <a href="${pageContext.request.contextPath}/DettaglioProdottoServlet?id=${item.idProdotto}" class="cart-product-title">
-                                                    Prodotto #<c:out value="${item.idProdotto}"/>
+                                                    <c:choose>
+                                                        <c:when test="${not empty item.nomeProdotto}">
+                                                            <c:out value="${item.nomeProdotto}"/>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            Prodotto #<c:out value="${item.idProdotto}"/>
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                 </a>
                                             </td>
                                             

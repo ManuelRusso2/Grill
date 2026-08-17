@@ -83,8 +83,8 @@
                                 <form method="post" action="${pageContext.request.contextPath}/CarrelloServlet" class="cart-update-form">
                                     <input type="hidden" name="action" value="update">
                                     <input type="hidden" name="idProdotto" value="${prodotto.idProdotto}">
-                                    <input type="hidden" name="taglia" value="<c:out value='${prodotto.tagliaSelezionata}' />">
-                                    <input type="number" name="quantita" value="${quantita}" min="1" max="${prodotto.quantita}" class="input-qty">
+                                    <input type="hidden" name="taglia" value="${prodotto.tagliaSelezionata}">
+                                    <input type="number" name="quantita" value="${quantita}" min="1" max="${prodotto.quantita}" class="input-qty" aria-label="Quantità">
                                     <button type="submit" class="btn-update">Aggiorna</button>
                                 </form>
                             </td>
@@ -99,7 +99,7 @@
                                 <form method="post" action="${pageContext.request.contextPath}/CarrelloServlet" class="cart-remove-form">
                                     <input type="hidden" name="action" value="remove">
                                     <input type="hidden" name="idProdotto" value="${prodotto.idProdotto}">
-                                    <input type="hidden" name="taglia" value="<c:out value='${prodotto.tagliaSelezionata}' />">
+                                    <input type="hidden" name="taglia" value="${prodotto.tagliaSelezionata}">
                                     <button type="submit" class="btn-delete" onclick="return confirm('Rimuovere questo prodotto dal carrello?');">
                                         Rimuovi
                                     </button>

@@ -1,20 +1,21 @@
-<%-- Impostazione del tipo di contenuto della pagina e della codifica dei caratteri (UTF-8) --%>
+<%-- 
+    Pagina per la modifica di una recensione esistente.
+    Consente all'utente di aggiornare il punteggio (stelle) e il testo descrittivo.
+--%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%-- Inclusione delle librerie di tag JSTL per la logica di controllo e la formattazione di numeri/date --%>
+<%-- Inclusione delle librerie di tag JSTL per la logica di controllo e la formattazione --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%-- Inclusione dei frammenti di codice statici per l'intestazione (header) e la barra di navigazione (menu) --%>
+<%-- Inclusione dei frammenti statici per l'intestazione e il menu --%>
 <%@ include file="/jsp/common/header.jspf" %>
 <%@ include file="/jsp/common/menu.jspf" %>
 
-<%-- Contenitore principale della pagina per la modifica della recensione --%>
 <main class="container">
     <h1>Modifica Recensione</h1>
 
     <%-- ── MESSAGGI DI ERRORE / FEEDBACK ──────────────────────────────────── --%>
-    <%-- Mostra un alert di errore se presente un messaggio impostato dalla Servlet nel Request Scope --%>
     <c:if test="${not empty errorMessage}">
         <div class="alert alert-danger">
             <c:out value="${errorMessage}" />
@@ -22,28 +23,31 @@
     </c:if>
 
     <%-- ── STRUTTURA CONDIZIONALE PRINCIPALE ────────────────────────────────── --%>
-    <%-- Verifica se l'oggetto 'recensione' da modificare è presente ed è valido nel contesto --%>
     <c:choose>
         <%-- Ramo 1: L'oggetto recensione esiste, viene mostrato il modulo di modifica --%>
         <c:when test="${not empty recensione}">
             <div class="review-edit-card">
                 
-                <%-- Form inviato via POST al servlet ModificaRecensioneServlet per elaborare l'aggiornamento --%>
+                <%-- Visualizzazione del nome del prodotto se presente nel Bean --%>
+                <c:if test="${not empty recensione.nomeProdotto}">
+                    <p class="review-product-info">
+                        Stai modificando la recensione per: <strong><c:out value="${recensione.nomeProdotto}" /></strong>
+                    </p>
+                </c:if>
+
+                <%-- Form inviato via POST a ModificaRecensioneServlet --%>
                 <form action="${pageContext.request.contextPath}/ModificaRecensioneServlet" method="post" class="form-edit-review">
                     
-                    <%-- Campo nascosto per trasmettere l'ID univoco della recensione da aggiornare nel database --%>
-                    <input type="hidden" name="idRecensione" value="<c:out value='${recensione.idRecensione}'/>" />
+                    <%-- Campo nascosto per trasmettere l'ID della recensione --%>
+                    <input type="hidden" name="idRecensione" value="${recensione.idRecensione}" />
 
                     <%-- Sezione per la selezione della valutazione in stelle (da 1 a 5) --%>
                     <div class="form-group">
-                        <label for="valutazione">Valutazione</label>
-                        <select name="valutazione" id="valutazione">
-                            <%-- Ciclo JSTL per generare dinamicamente le opzioni da 1 a 5 stelle --%>
+                        <label for="valutazione">Valutazione:</label>
+                        <select name="valutazione" id="valutazione" required class="form-control">
                             <c:forEach begin="1" end="5" var="i">
-                                <%-- Imposta l'attributo 'selected' se il valore corrisponde alla valutazione attuale --%>
                                 <option value="${i}" ${i == recensione.valutazione ? 'selected' : ''}>
                                     ${i} ★ 
-                                    <%-- Etichetta descrittiva associata al punteggio numerico --%>
                                     <c:choose>
                                         <c:when test="${i == 1}">(Pessimo)</c:when>
                                         <c:when test="${i == 2}">(Scarso)</c:when>
@@ -56,17 +60,15 @@
                         </select>
                     </div>
 
-                    <%-- Sezione per la modifica del testo descrittivo della recensione --%>
+                    <%-- Sezione per la modifica del testo descrittivo --%>
                     <div class="form-group">
-                        <label for="descrizione">Descrizione della recensione</label>
-                        <%-- Pre-popolazione dell'area di testo con la descrizione corrente usando c:out per prevenire attacchi XSS --%>
-                        <textarea name="descrizione" id="descrizione" rows="6" placeholder="Scrivi qui la tua recensione..." required><c:out value="${recensione.descrizione}" /></textarea>
+                        <label for="descrizione">Descrizione della recensione:</label>
+                        <textarea name="descrizione" id="descrizione" rows="6" placeholder="Scrivi qui la tua recensione..." required class="form-control"><c:out value="${recensione.descrizione}" /></textarea>
                     </div>
 
-                    <%-- Pulsanti di azione per il submit o l'annullamento dell'operazione --%>
+                    <%-- Pulsanti di azione --%>
                     <div class="form-actions">
                         <button type="submit" class="btn btn-primary">Salva modifiche</button>
-                        <%-- Link per annullare le modifiche e ritornare alla pagina del profilo utente --%>
                         <a href="${pageContext.request.contextPath}/ProfiloServlet" class="btn btn-secondary">Annulla</a>
                     </div>
                 </form>
@@ -83,5 +85,5 @@
     </c:choose>
 </main>
 
-<%-- Inclusione del piè di pagina (footer) statico --%>
+<%-- Inclusione del piè di pagina --%>
 <%@ include file="/jsp/common/footer.jspf" %>

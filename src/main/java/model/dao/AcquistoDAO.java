@@ -3,7 +3,9 @@ package model.dao;
 import java.sql.Date;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import model.bean.AcquistoBean;
+import model.bean.ProdottoBean;
 
 public interface AcquistoDAO {
 
@@ -56,4 +58,25 @@ public interface AcquistoDAO {
      * @param allaData Data di fine intervallo
      */
     List<AcquistoBean> doRetrieveByDateInterval(Date dallaData, Date allaData) throws SQLException;
+    
+    /**
+     * Esegue la transazione atomica completa di checkout:
+     * 1. Inserisce la testata dell'acquisto
+     * 2. Inserisce le righe dell'ordine (dettaglio prodotti)
+     * 3. Decrementa lo stock nei prodotti e rileva i prodotti esauriti
+     * 4. Svuota il carrello dell'utente
+     *
+     * @param idCarrello ID del carrello da svuotare
+     * @param idUtente ID dell'utente dell'acquisto
+     * @param metodoPagamento Stringa del metodo di pagamento
+     * @param indirizzoConsegna Indirizzo di spedizione
+     * @param prodottiInCarrello Mappa contenente i prodotti e le rispettive quantità
+     * @param totale Importo totale dell'acquisto
+     * @param adminAlerts Lista in cui verranno aggiunti eventuali messaggi per stock esaurito
+     * @return ID dell'acquisto appena creato
+     * @throws SQLException In caso di errore durante la transazione SQL (rollback automatico)
+     */
+    int completaAcquisto(int idCarrello, int idUtente, String metodoPagamento,
+                         String indirizzoConsegna, Map<ProdottoBean, Integer> prodottiInCarrello,
+                         double totale, List<String> adminAlerts) throws SQLException;
 }

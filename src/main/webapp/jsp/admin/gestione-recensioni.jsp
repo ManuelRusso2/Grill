@@ -52,7 +52,7 @@
 
         <%-- ── TABELLA ELENCO RECENSIONI ────────────────────────────────────── --%>
         <c:choose>
-            <c:when test="${not empty tuteRecensioni}">
+            <c:when test="${not empty tutteRecensioni}">
                 <div class="admin-table-wrapper">
                     <table class="admin-table admin-reviews-table">
                         <thead>
@@ -68,7 +68,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <c:forEach var="rec" items="${tuteRecensioni}">
+                            <c:forEach var="rec" items="${tutteRecensioni}">
                                 <tr>
                                     <td><strong>#<c:out value="${rec.idRecensione}" /></strong></td>
                                     <td><c:out value="${rec.nomeUtente} ${rec.cognomeUtente}" default="N/D" /></td>
@@ -91,7 +91,7 @@
                                         <c:out value="${rec.descrizione}" />
                                     </td>
                                     
-                                    <%-- Form per eliminazione singola recensione --%>
+                                    <%-- Form per eliminazione singola recensione gestito da AdminRecensioniServlet --%>
                                     <td class="text-right">
                                         <form action="${pageContext.request.contextPath}/AdminRecensioniServlet" method="post" class="action-form" onsubmit="return confirm('Sei sicuro di voler eliminare questa recensione?');">
                                             <input type="hidden" name="action" value="delete" />

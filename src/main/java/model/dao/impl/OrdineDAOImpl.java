@@ -28,7 +28,8 @@ public class OrdineDAOImpl implements OrdineDAO {
 
     // Selezione di tutte le righe d'ordine associate ad uno specifico acquisto
     private static final String SELECT_BY_ACQUISTO =
-        "SELECT id_acquisto, id_prodotto, prezzo_unitario, iva, quantita_acquistata, stato_spedizione FROM ordine WHERE id_acquisto = ?";
+            "SELECT o.id_acquisto, o.id_prodotto, o.prezzo_unitario, o.iva, o.quantita_acquistata, o.stato_spedizione, o.taglia, p.nome AS nome_prodotto " +
+            "FROM ordine o JOIN prodotto p ON o.id_prodotto = p.id_prodotto WHERE o.id_acquisto = ?";
 
     // Aggiornamento dello stato di spedizione per uno specifico prodotto all'interno di un acquisto (chiave composta)
     private static final String UPDATE_STATO_SPEDIZIONE =
@@ -123,6 +124,17 @@ public class OrdineDAOImpl implements OrdineDAO {
         ordine.setIva(rs.getDouble("iva"));
         ordine.setQuantitaAcquistata(rs.getInt("quantita_acquistata"));
         ordine.setStatoSpedizione(rs.getString("stato_spedizione"));
+        
+        // Gestione sicura della taglia (se presente nella tabella)
+        try {
+            ordine.setTaglia(rs.getString("taglia"));
+        } catch (SQLException e) {
+            // Ignora se la colonna non è presente
+        }
+        
+        // Mappatura del nome prodotto recuperato dalla JOIN
+        ordine.setNomeProdotto(rs.getString("nome_prodotto"));
+        
         return ordine;
     }
 }
