@@ -1,294 +1,348 @@
 /* ==========================================================================
    6. PROFILO & STORICO ORDINI
+   ==========================================================================
+   Stili dedicati all'area personale dell'utente: informazioni del profilo,
+   gestione delle recensioni pubblicate, elenco dello storico ordini e vista
+   dettagliata del singolo ordine con esportazione PDF.
    ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   6.1 SCHEDA PROFILO UTENTE & DETTAGLI
+   -------------------------------------------------------------------------- */
+/* Card contenitore dei dati personali dell'utente */
 .profile-card {
-    max-width: 600px;
-    margin-bottom: 50px;
-    padding: 30px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    background-color: var(--bg-card);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    max-width: 600px;                          /* Delimita la larghezza massima per contenere il form/dati */
+    margin-bottom: 50px;                       /* Distacco inferiore marcato dalle sezioni successive */
+    padding: 30px;                             /* Spaziatura interna della scheda */
+    border: 1px solid var(--border-color);     /* Bordo perimetrale coerente con il tema */
+    border-radius: 8px;                        /* Angoli arrotondati */
+    background-color: var(--bg-card);          /* Sfondo scuro della scheda */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);/* Ombreggiatura profonda per stacco visivo */
 }
 
+/* Titolo della scheda profilo */
 .profile-card h2 {
-    margin-bottom: 25px;
-    color: var(--text-light);
-    font-size: 20px;
-    font-weight: 700;
+    margin-bottom: 25px;                       /* Distanza dall'elenco dei dettagli */
+    color: var(--text-light);                  /* Testo chiaro ad alta visibilità */
+    font-size: 20px;                           /* Dimensione del titolo */
+    font-weight: 700;                          /* Grassetto marcato */
 }
 
+/* Contenitore verticale per le righe informativo del profilo */
 .profile-details {
-    display: flex;
-    flex-direction: column;
-    gap: 18px;
+    display: flex;                             /* Disposizione flessibile */
+    flex-direction: column;                    /* Incolonna le varie righe di dettaglio */
+    gap: 18px;                                 /* Spaziatura verticale costante tra le righe */
 }
 
+/* Singola riga di dettaglio (Label - Valore) */
 .detail-row {
-    display: flex;
-    justify-content: space-between;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--border-color);
+    display: flex;                             /* Layout in linea flessibile */
+    justify-content: space-between;            /* Spinge label a sinistra e valore a destra */
+    padding-bottom: 12px;                      /* Spaziatura interna inferiore */
+    border-bottom: 1px solid var(--border-color); /* Separatore orizzontale sottile */
 }
 
+/* Rimuove il bordo separatore dall'ultima riga */
 .detail-row:last-child {
-    border-bottom: none;
+    border-bottom: none;                       /* Azzera il bordo inferiore finale */
 }
 
+/* Etichetta del dato personale (es. NOME, EMAIL, TELEFONO) */
 .detail-label {
-    min-width: 140px;
-    color: var(--text-gray);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
+    min-width: 140px;                          /* Garanzia di larghezza minima per allineamento */
+    color: var(--text-gray);                   /* Testo grigio di supporto */
+    font-size: 12px;                           /* Dimensione contenuta */
+    font-weight: 700;                          /* Grassetto */
+    letter-spacing: 0.5px;                     /* Spaziatura dei caratteri per leggibilità */
+    text-transform: uppercase;                 /* Maiuscolo */
 }
 
+/* Valore del dato personale corrispondente */
 .detail-value {
-    flex: 1;
-    color: var(--text-light);
-    text-align: right;
+    flex: 1;                                   /* Occupa tutto lo spazio rimanente sulla riga */
+    color: var(--text-light);                  /* Testo chiaro ad alto contrasto */
+    text-align: right;                         /* Allineamento a destra del valore */
 }
 
+/* --------------------------------------------------------------------------
+   6.2 RECENSIONI UTENTE (AREA PERSONALE)
+   -------------------------------------------------------------------------- */
+/* Card per la gestione delle recensioni scritte dall'utente nel proprio profilo */
 .user-review {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 20px;
-    padding: 24px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    background-color: var(--bg-card);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    display: flex;                             /* Disposizione flessibile */
+    flex-direction: column;                    /* Sviluppo verticale dei contenuti della recensione */
+    gap: 12px;                                 /* Spaziatura interna tra gli elementi */
+    margin-bottom: 20px;                       /* Distanza dalla recensione successiva */
+    padding: 24px;                             /* Spaziatura interna della scheda */
+    border: 1px solid var(--border-color);     /* Bordo perimetrale */
+    border-radius: 8px;                        /* Angoli arrotondati */
+    background-color: var(--bg-card);          /* Sfondo scuro della scheda */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);  /* Ombreggiatura leggera */
 }
 
+/* Intestazione della singola recensione dell'utente */
 .user-review .review-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--border-color);
+    display: flex;                             /* Layout flessibile in linea */
+    align-items: center;                       /* Centratura verticale */
+    justify-content: space-between;            /* Distribuisce il titolo del prodotto e i dati d'intestazione */
+    padding-bottom: 10px;                      /* Spazio inferiore dal separatore */
+    border-bottom: 1px solid var(--border-color); /* Linea divisoria orizzontale */
 }
 
+/* Nome del prodotto recensito */
 .user-review .review-header strong {
-    color: var(--text-light);
-    font-size: 16px;
-    font-weight: 700;
+    color: var(--text-light);                  /* Testo chiaro */
+    font-size: 16px;                           /* Dimensione titolo prodotto */
+    font-weight: 700;                          /* Grassetto */
 }
 
+/* Corpo della recensione utente */
 .user-review .review-body {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+    display: flex;                             /* Disposizione verticale */
+    flex-direction: column;                    /* Incolonna voto a stelle e testo */
+    gap: 8px;                                  /* Distanza tra stelle e testo */
 }
 
+/* Votazione a stelle della recensione */
 .user-review .review-rating {
-    color: var(--accent-yellow);
-    font-size: 16px;
-    letter-spacing: 2px;
+    color: var(--accent-yellow);               /* Colore giallo fluo d'accento per le stelle */
+    font-size: 16px;                           /* Dimensione delle icone/caratteri stella */
+    letter-spacing: 2px;                       /* Spaziatura tra i simboli stella */
 }
 
+/* Barra delle azioni sulla recensione dell'utente (Modifica/Elimina) */
 .user-review .review-actions {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 8px;
-    padding-top: 12px;
-    border-top: 1px solid var(--border-color);
+    display: flex;                             /* Disposizione flessibile affiancata */
+    align-items: center;                       /* Centratura verticale */
+    gap: 10px;                                 /* Spazio tra i pulsanti di azione */
+    margin-top: 8px;                           /* Distacco dal testo della recensione */
+    padding-top: 12px;                         /* Spaziatura interna superiore */
+    border-top: 1px solid var(--border-color); /* Linea divisoria orizzontale */
 }
 
+/* Pulsante d'azione generico per la recensione dell'utente (es. Modifica) */
 .user-review .btn-action {
-    display: inline-block;
-    width: auto;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    background-color: var(--accent-yellow);
-    color: #000000;
-    font-family: var(--font-headings);
-    font-size: 12px;
-    font-weight: 800;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    display: inline-block;                     /* Blocco in linea */
+    width: auto;                               /* Larghezza adattata al contenuto */
+    padding: 8px 16px;                         /* Spaziatura interna */
+    border: none;                              /* Rimuove i bordi predefiniti */
+    border-radius: 4px;                        /* Angoli leggermente arrotondati */
+    background-color: var(--accent-yellow);    /* Sfondo giallo d'accento primario */
+    color: #000000;                            /* Testo nero per massimo contrasto sul giallo */
+    font-family: var(--font-headings);         /* Font dei titoli/pulsanti */
+    font-size: 12px;                           /* Dimensione del testo */
+    font-weight: 800;                          /* Extra bold */
+    text-transform: uppercase;                 /* Maiuscolo */
+    cursor: pointer;                           /* Puntatore a manina */
+    transition: all 0.2s ease;                /* Transizione fluida */
 }
 
+/* Hover sul pulsante d'azione generico */
 .user-review .btn-action:hover {
-    background-color: #e0ff4d;
-    transform: translateY(-2px);
+    background-color: #e0ff4d;                 /* Schiarimento del giallo fluo */
+    transform: translateY(-2px);               /* Effetto di elevazione verso l'alto */
 }
 
+/* Variante per il pulsante Elimina Recensione (Stile d'allarme) */
 .user-review .btn-action.btn-delete {
-    border: 1px solid #ff4a4a;
-    background-color: rgba(255, 74, 74, 0.15);
-    color: #ff4a4a;
+    border: 1px solid #ff4a4a;                 /* Bordo rosso avviso */
+    background-color: rgba(255, 74, 74, 0.15); /* Sfondo rosso traslucido */
+    color: #ff4a4a;                            /* Testo rosso */
 }
 
+/* Hover sul pulsante elimina recensione */
 .user-review .btn-action.btn-delete:hover {
-    background-color: #ff4a4a;
-    color: #ffffff;
+    background-color: #ff4a4a;                 /* Sfondo passa al rosso pieno */
+    color: #ffffff;                            /* Testo passa al bianco ad alto contrasto */
 }
 
-/* Storico Ordini */
+/* --------------------------------------------------------------------------
+   6.3 SEZIONE STORICO ORDINI
+   -------------------------------------------------------------------------- */
+/* Contenitore principale della sezione storico ordini */
 .orders-section {
-    margin-top: 40px;
+    margin-top: 40px;                          /* Spazio superiore dal blocco precedente */
 }
 
+/* Titolo principale della sezione ordini */
 .section-title {
-    margin-bottom: 6px;
-    color: var(--text-light);
-    font-size: 22px;
-    font-style: normal;
-    font-weight: 700;
-    text-align: left;
-    text-transform: none;
+    margin-bottom: 6px;                        /* Distanza minima dal sottotitolo */
+    color: var(--text-light);                  /* Testo ad alto contrasto */
+    font-size: 22px;                           /* Dimensione carattere */
+    font-style: normal;                        /* Testo lineare non inclinato */
+    font-weight: 700;                          /* Grassetto marcato */
+    text-align: left;                          /* Allineamento a sinistra */
+    text-transform: none;                      /* Mantiene il casing originale */
 }
 
+/* Sottotitolo o descrizione esplicativa della sezione ordini */
 .section-subtitle {
-    margin-bottom: 20px;
-    color: var(--text-gray);
-    font-size: 14px;
+    margin-bottom: 20px;                       /* Distanza dalla tabella ordini sottostante */
+    color: var(--text-gray);                   /* Testo grigio di supporto */
+    font-size: 14px;                           /* Dimensione base */
 }
 
+/* Prezzo/Totale dell'ordine all'interno della tabella dello storico */
 .order-price {
-    color: var(--primary-purple);
-    font-weight: 700;
+    color: var(--primary-purple);              /* Prezzo evidenziato col viola di brand */
+    font-weight: 700;                          /* Grassetto */
 }
 
+/* Link di dettaglio dell'ordine nella tabella */
 .order-link {
-    color: var(--accent-yellow);
-    font-size: 13px;
-    font-weight: 600;
-    text-transform: uppercase;
-    transition: color 0.2s ease;
+    color: var(--accent-yellow);               /* Colore giallo d'accento */
+    font-size: 13px;                           /* Dimensione contenuta */
+    font-weight: 600;                          /* Testo semi-grassetto */
+    text-transform: uppercase;                 /* Maiuscolo */
+    transition: color 0.2s ease;               /* Transizione colore al sorvolo */
 }
 
+/* Hover sul link dettaglio ordine */
 .order-link:hover {
-    color: var(--text-light);
-    text-decoration: underline;
+    color: var(--text-light);                  /* Cambia in chiaro */
+    text-decoration: underline;               /* Aggiunge la sottolineatura */
 }
 
+/* Messaggio mostrato quando lo storico ordini è vuoto */
 .empty-table-msg {
-    padding: 30px 20px;
-    color: var(--text-gray);
-    font-style: italic;
-    text-align: center;
+    padding: 30px 20px;                        /* Spaziatura interna generosa */
+    color: var(--text-gray);                   /* Colore del testo secondario */
+    font-style: italic;                        /* Corsivo */
+    text-align: center;                        /* Testo centrato nella tabella/scheda */
 }
 
-/* Dettaglio Ordine */
+/* --------------------------------------------------------------------------
+   6.4 PAGINA DETTAGLIO ORDINE UTENTE
+   -------------------------------------------------------------------------- */
+/* Contenitore esterno della vista di dettaglio del singolo ordine */
 .order-detail-container {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 0 20px;
+    max-width: 900px;                          /* Larghezza massima centrata */
+    margin: 40px auto;                         /* Centratura orizzontale e margine verticale */
+    padding: 0 20px;                           /* Spaziatura di sicurezza sui margini laterali */
 }
 
+/* Scheda principale contenente le informazioni dell'ordine */
 .order-detail-card {
-    padding: 40px;
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    background-color: var(--bg-card);
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    padding: 40px;                             /* Spaziatura interna generosa */
+    border: 1px solid var(--border-color);     /* Bordo perimetrale */
+    border-radius: 12px;                       /* Angoli arrotondati accentuati */
+    background-color: var(--bg-card);          /* Sfondo della scheda */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);/* Ombreggiatura profonda per stacco visivo */
 }
 
+/* Intestazione della scheda dettaglio ordine */
 .order-detail-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 30px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid var(--border-color);
+    display: flex;                             /* Layout flessibile in linea */
+    align-items: center;                       /* Centratura verticale */
+    justify-content: space-between;            /* Separa il titolo dell'ordine dai metadati/totale */
+    margin-bottom: 30px;                       /* Distanza dalla griglia di metadati */
+    padding-bottom: 20px;                      /* Spaziatura interna inferiore */
+    border-bottom: 1px solid var(--border-color); /* Linea divisoria orizzontale */
 }
 
+/* Titolo con ID o Numero dell'ordine */
 .order-detail-header h1 {
-    margin: 0;
-    color: var(--text-light);
-    font-size: 26px;
-    font-weight: 800;
-    text-transform: uppercase;
+    margin: 0;                                 /* Azzera i margini predefiniti */
+    color: var(--text-light);                  /* Testo chiaro */
+    font-size: 26px;                           /* Dimensione estesa */
+    font-weight: 800;                          /* Extra bold */
+    text-transform: uppercase;                 /* Maiuscolo */
 }
 
+/* Badge del valore / Stato dell'ordine nell'intestazione */
 .order-detail-header .order-meta-value {
-    padding: 6px 14px;
-    border: 1px solid rgba(204, 255, 0, 0.3);
-    border-radius: 6px;
-    background: rgba(204, 255, 0, 0.1);
-    color: var(--accent-yellow);
-    font-size: 20px;
-    font-weight: 800;
+    padding: 6px 14px;                         /* Spaziatura interna del badge */
+    border: 1px solid rgba(204, 255, 0, 0.3);  /* Bordo trasparente giallo d'accento */
+    border-radius: 6px;                        /* Angoli arrotondati */
+    background: rgba(204, 255, 0, 0.1);        /* Velatura di sfondo gialla */
+    color: var(--accent-yellow);               /* Testo giallo d'accento */
+    font-size: 20px;                           /* Dimensione in rilievo */
+    font-weight: 800;                          /* Extra bold */
 }
 
+/* Griglia ad adattamento automatico per le informazioni generali dell'ordine */
 .order-meta-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 20px;
-    margin-bottom: 35px;
-    padding: 24px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    background-color: rgba(0, 0, 0, 0.25);
+    display: grid;                             /* Layout a griglia */
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Colonne responsive da min 220px */
+    gap: 20px;                                 /* Spaziatura tra le celle della griglia */
+    margin-bottom: 35px;                       /* Distanza dai titoli delle sezioni successive */
+    padding: 24px;                             /* Spaziatura interna della griglia */
+    border: 1px solid var(--border-color);     /* Bordo perimetrale */
+    border-radius: 8px;                        /* Angoli arrotondati */
+    background-color: rgba(0, 0, 0, 0.25);    /* Sfondo leggermente oscurato per stacco interno */
 }
 
+/* Singolo blocco di informazione nei metadati dell'ordine */
 .order-meta-item {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+    display: flex;                             /* Layout verticale flex */
+    flex-direction: column;                    /* Incolonna etichetta e valore */
+    gap: 6px;                                  /* Distanza tra label e valore */
 }
 
+/* Etichetta del dato dell'ordine (es. DATA, STATO, METODO DI PAGAMENTO) */
 .order-meta-label {
-    color: var(--text-gray);
-    font-size: 12px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
+    color: var(--text-gray);                   /* Testo grigio secondario */
+    font-size: 12px;                           /* Dimensione compatta */
+    font-weight: 700;                          /* Grassetto */
+    letter-spacing: 0.5px;                     /* Spaziatura dei caratteri */
+    text-transform: uppercase;                 /* Maiuscolo */
 }
 
+/* Valore normale del dato dell'ordine */
 .order-meta-value {
-    color: var(--text-light);
-    font-size: 16px;
-    font-weight: 600;
+    color: var(--text-light);                  /* Testo chiaro */
+    font-size: 16px;                           /* Dimensione del valore */
+    font-weight: 600;                          /* Testo semi-grassetto */
 }
 
+/* Variante del valore in forte evidenza per il prezzo totale dell'ordine */
 .order-meta-value.highlight-price {
-    color: var(--primary-purple);
-    font-size: 22px;
-    font-weight: 800;
+    color: var(--primary-purple);              /* Colore viola principale di brand */
+    font-size: 22px;                           /* Dimensione maggiorata */
+    font-weight: 800;                          /* Extra bold */
 }
 
+/* Titolo di sotto-sezione all'interno del dettaglio ordine (es. PRODOTTI ACQUISTATI) */
 .order-section-title {
-    margin-top: 35px;
-    margin-bottom: 20px;
-    color: var(--text-light);
-    font-size: 20px;
-    font-weight: 800;
-    text-transform: uppercase;
+    margin-top: 35px;                          /* Distacco dagli elementi superiori */
+    margin-bottom: 20px;                       /* Distanza dal contenuto o tabelle sottostanti */
+    color: var(--text-light);                  /* Testo chiaro */
+    font-size: 20px;                           /* Dimensione del titolo */
+    font-weight: 800;                          /* Extra bold */
+    text-transform: uppercase;                 /* Maiuscolo */
 }
 
+/* Piè di pagina con le azioni disponibili sull'ordine (es. Torna agli ordini / Scarica PDF) */
 .order-actions-footer {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    margin-top: 35px;
-    padding-top: 25px;
-    border-top: 1px solid var(--border-color);
+    display: flex;                             /* Layout in linea flessibile */
+    flex-wrap: wrap;                           /* Consente il riavvolgimento su schermi piccoli */
+    align-items: center;                       /* Centratura verticale */
+    justify-content: space-between;            /* Distribuisce i gruppi di pulsanti a sinistra e a destra */
+    gap: 15px;                                 /* Spazio tra i pulsanti/link */
+    margin-top: 35px;                          /* Spazio superiore dai prodotti */
+    padding-top: 25px;                         /* Spaziatura interna superiore */
+    border-top: 1px solid var(--border-color); /* Linea divisoria orizzontale */
 }
 
+/* Gruppo contenitore dei pulsanti d'azione nel footer ordine */
 .order-actions-group {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 15px;
+    display: flex;                             /* Layout flex affiancato */
+    flex-wrap: wrap;                           /* Consente l'incolonnamento responsive */
+    align-items: center;                       /* Centratura verticale */
+    gap: 15px;                                 /* Spaziatura tra i pulsanti del gruppo */
 }
 
+/* Link di download della fattura / ricevuta in formato PDF */
 .pdf-download-link {
-    color: var(--text-light);
-    font-size: 14px;
-    font-weight: 600;
-    text-decoration: underline;
-    transition: color 0.2s ease;
+    color: var(--text-light);                  /* Testo chiaro ad alto contrasto */
+    font-size: 14px;                           /* Dimensione del testo */
+    font-weight: 600;                          /* Testo semi-grassetto */
+    text-decoration: underline;               /* Sottolineato per evidenziare la funzione di link */
+    transition: color 0.2s ease;               /* Transizione del colore all'hover */
 }
 
+/* Hover sul link di download PDF */
 .pdf-download-link:hover {
-    color: var(--accent-yellow);
+    color: var(--accent-yellow);               /* Evidenziazione in giallo d'accento al sorvolo */
 }

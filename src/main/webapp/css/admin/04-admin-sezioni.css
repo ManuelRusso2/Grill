@@ -1,149 +1,187 @@
 /* ==========================================================================
    6. SEZIONE: ORDINI, UTENTI E RECENSIONI
+   =========================================================================
+   Stili dedicati ai moduli gestionali di secondo livello del pannello admin:
+   pagine di riepilogo recensioni, storico ordini e filtri di ricerca avanzati.
    ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   6.1 CONTENITORI PRINCIPALI DI SEZIONE
+   Centratura e spaziatura generale dei moduli gestionali.
+   -------------------------------------------------------------------------- */
 .admin-reviews-section,
 .admin-orders-section {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+    max-width: 1200px;                          /* Larghezza massima per il layout centrato */
+    margin: 0 auto;                            /* Centratura orizzontale nella pagina */
+    padding: 20px;                             /* Spaziatura interna per evitare il contatto con i bordi della viewport */
 }
 
+/* Titoli principali e secondari delle sezioni gestionali */
 .admin-reviews-section h1,
 .admin-reviews-section h2,
 .admin-orders-section h1,
 .admin-orders-section h2 {
-    margin-bottom: 8px;
-    color: var(--text-light);
-    font-weight: 700;
-    text-align: center;
+    margin-bottom: 8px;                         /* Spazio ridotto verso il sottotitolo */
+    color: var(--text-light);                  /* Testo ad alto contrasto */
+    font-weight: 700;                          /* Grassetto marcato */
+    text-align: center;                        /* Allineamento centrato del titolo */
 }
 
+/* Sottotitolo descrittivo/esplicativo delle sezioni */
 .admin-reviews-section .section-subtitle {
-    margin-bottom: 25px;
-    color: var(--text-gray);
-    font-size: 14px;
-    text-align: center;
+    margin-bottom: 25px;                       /* Distanziamento dal blocco filtri sottostante */
+    color: var(--text-gray);                   /* Testo grigio secondario */
+    font-size: 14px;                           /* Dimensione carattere */
+    text-align: center;                        /* Centratura del sottotitolo */
 }
 
+/* --------------------------------------------------------------------------
+   6.2 BARRE DI FILTRAGGIO E RICERCA
+   Contenitori flessibili per filtri di stato, date e categorie.
+   -------------------------------------------------------------------------- */
+/* Contenitore di allineamento per i filtri delle recensioni */
 .admin-reviews-section .filter-container {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 25px;
+    display: flex;                             /* Disposizione flessibile */
+    justify-content: center;                   /* Centra il modulo dei filtri orizzontalmente */
+    margin-bottom: 25px;                       /* Distacco dalla tabella sottostante */
 }
 
+/* Moduli di filtraggio (Recensioni & Ordini) */
 .filter-form,
 .admin-orders-filter {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 18px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    background: var(--bg-card);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;                             /* Layout inline flessibile */
+    flex-wrap: wrap;                           /* Va a capo se lo spazio non basta su dispositivi mobili */
+    align-items: center;                       /* Centratura verticale degli elementi interni */
+    gap: 12px;                                 /* Spaziatura costante tra label, select e pulsanti */
+    padding: 12px 18px;                        /* Spaziatura interna del box filtri */
+    border: 1px solid var(--border-color);     /* Bordo perimetrale basato sul tema */
+    border-radius: 8px;                        /* Angoli arrotondati del riquadro */
+    background: var(--bg-card);                /* Sfondo della scheda filtri */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);  /* Ombreggiatura leggera per stacco visivo */
 }
 
+/* Allineamento specifico per il filtro degli ordini (allineato a destra) */
 .admin-orders-filter {
-    justify-content: flex-end;
-    margin-bottom: 25px;
+    justify-content: flex-end;                 /* Posiziona i controlli sul lato destro della toolbar */
+    margin-bottom: 25px;                       /* Distanza dalla tabella ordini */
 }
 
+/* Etichette dei campi di filtraggio */
 .filter-form label,
 .admin-orders-filter label {
-    color: var(--text-gray);
-    font-size: 13px;
-    font-weight: 600;
+    color: var(--text-gray);                   /* Colore testo secondario */
+    font-size: 13px;                           /* Dimensione carattere */
+    font-weight: 600;                          /* Testo semi-grassetto per leggibilità */
 }
 
+/* --------------------------------------------------------------------------
+   6.3 CONTROLLI INPUT DEI FILTRI (SELECT & DATE)
+   -------------------------------------------------------------------------- */
 .filter-form select,
 .admin-orders-filter select,
 .admin-orders-filter input[type="date"] {
-    padding: 6px 12px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    background: #121214;
-    color: var(--text-light);
-    font-size: 13px;
-    outline: none;
-    cursor: pointer;
+    padding: 6px 12px;                         /* Spaziatura interna compatta */
+    border: 1px solid var(--border-color);     /* Bordo coerente con il tema */
+    border-radius: 4px;                        /* Lieve arrotondamento degli angoli */
+    background: #121214;                        /* Sfondo scuro profondo per i campi input */
+    color: var(--text-light);                  /* Testo selezionato ad alto contrasto */
+    font-size: 13px;                           /* Dimensione del carattere */
+    outline: none;                             /* Rimuove l'outline predefinito del browser */
+    cursor: pointer;                           /* Puntatore a manina per indicare l'interattività */
 }
 
+/* Evidenziazione al focus per select e selettore data */
 .filter-form select:focus,
 .admin-orders-filter select:focus,
 .admin-orders-filter input[type="date"]:focus {
-    border-color: var(--accent-yellow);
+    border-color: var(--accent-yellow);        /* Il bordo passa al giallo d'accento */
 }
 
+/* --------------------------------------------------------------------------
+   6.4 BOTTONI AZIONE FILTRI (APPLICA & RESET)
+   -------------------------------------------------------------------------- */
+/* Pulsante di invio/applicazione filtri */
 .admin-orders-filter button[type="submit"],
 .admin-orders-filter input[type="submit"],
 .admin-orders-filter .btn-filter {
-    padding: 7px 16px;
-    border: none;
-    border-radius: 4px;
-    background-color: var(--accent-yellow);
-    color: #000000;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: opacity 0.2s ease;
+    padding: 7px 16px;                         /* Spaziatura interna del pulsante */
+    border: none;                              /* Rimuove il bordo nativo */
+    border-radius: 4px;                        /* Angoli arrotondati */
+    background-color: var(--accent-yellow);    /* Sfondo di accento giallo */
+    color: #000000;                            /* Testo nero per massimo contrasto */
+    font-size: 13px;                           /* Dimensione testo */
+    font-weight: 700;                          /* Grassetto marcato */
+    cursor: pointer;                           /* Puntatore a manina */
+    transition: opacity 0.2s ease;             /* Transizione fluida per lo stato hover */
 }
 
 .admin-orders-filter button[type="submit"]:hover {
-    opacity: 0.9;
+    opacity: 0.9;                              /* Lieve trasparenza al passaggio del mouse */
 }
 
+/* Link/Pulsante di azzeramento filtri applicati */
 .btn-reset-filter {
-    margin-left: 5px;
-    color: var(--accent-yellow);
-    font-size: 12px;
-    text-decoration: underline;
-    transition: opacity 0.2s ease;
+    margin-left: 5px;                          /* Distanza dal pulsante principale */
+    color: var(--accent-yellow);               /* Testo in tinta d'accento */
+    font-size: 12px;                           /* Dimensione ridotta */
+    text-decoration: underline;               /* Sottolineatura stilistica per indicare l'azione reset */
+    transition: opacity 0.2s ease;             /* Transizione per lo stato hover */
 }
 
 .btn-reset-filter:hover {
-    opacity: 0.8;
+    opacity: 0.8;                              /* Riduzione opacità al passaggio del mouse */
 }
 
+/* --------------------------------------------------------------------------
+   6.5 TABELLE SPECIFICHE ED ELEMENTI INTERNI
+   -------------------------------------------------------------------------- */
+/* Tabelle riepilogo recensioni e ordini */
 .admin-reviews-table,
 .admin-orders-table {
-    margin-bottom: 30px;
-    overflow: hidden;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    background-color: var(--bg-card);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    margin-bottom: 30px;                       /* Distanza dal margine inferiore */
+    overflow: hidden;                          /* Mantiene i bordi arrotondati tagliando il contenuto in eccesso */
+    border: 1px solid var(--border-color);     /* Bordo perimetrale */
+    border-radius: 8px;                        /* Angoli arrotondati della scheda tabella */
+    background-color: var(--bg-card);          /* Sfondo della scheda */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);/* Ombreggiatura profonda */
 }
 
+/* Valutazione a stelle nelle recensioni */
 .admin-reviews-table .stars {
-    color: var(--accent-yellow);
-    font-size: 16px;
-    letter-spacing: 1px;
+    color: var(--accent-yellow);               /* Colore giallo per le stelle attive */
+    font-size: 16px;                           /* Dimensione dell'icona/carattere stella */
+    letter-spacing: 1px;                       /* Spaziatura tra una stella e l'altra */
 }
 
+/* Contenuto del testo della recensione */
 .admin-reviews-table .review-description {
-    max-width: 250px;
-    color: var(--text-light);
-    font-size: 13px;
-    opacity: 0.9;
-    white-space: normal;
-    word-break: break-word;
+    max-width: 250px;                          /* Limite di larghezza per evitare celle troppo estese */
+    color: var(--text-light);                  /* Colore del testo chiaro */
+    font-size: 13px;                           /* Dimensione testo */
+    opacity: 0.9;                              /* Lieve trasparenza per un'estetica morbida */
+    white-space: normal;                       /* Consente l'andata a capo del testo lungo */
+    word-break: break-word;                    /* Spezza parole o URL fuori misura per evitare overflow */
 }
 
+/* Testo disattivato/secondario (es. date o utenti anonimi) */
 .admin-reviews-table .text-muted {
-    color: var(--text-gray);
-    font-size: 12px;
-    font-style: italic;
+    color: var(--text-gray);                   /* Testo grigio di supporto */
+    font-size: 12px;                           /* Dimensione ridotta */
+    font-style: italic;                        /* Corsivo */
 }
 
+/* --------------------------------------------------------------------------
+   6.6 MESSAGGIO RISULTATI VUOTI (EMPTY STATE)
+   Visualizzato quando non sono presenti recensioni od ordini per i criteri scelti.
+   -------------------------------------------------------------------------- */
 .no-reviews-msg {
-    margin-top: 10px;
-    padding: 40px 20px;
-    border: 1px dashed var(--border-color);
-    border-radius: 8px;
-    background-color: var(--bg-card);
-    color: var(--text-gray);
-    font-style: italic;
-    text-align: center;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;                          /* Distanza dal blocco superiore */
+    padding: 40px 20px;                        /* Spaziatura interna generosa per dare respiro */
+    border: 1px dashed var(--border-color);    /* Bordo tratteggiato discreto per evidenziare lo stato vuoto */
+    border-radius: 8px;                        /* Angoli arrotondati */
+    background-color: var(--bg-card);          /* Sfondo coordinato con le schede */
+    color: var(--text-gray);                   /* Colore del testo neutro */
+    font-style: italic;                        /* Stile corsivo */
+    text-align: center;                        /* Messaggio centrato */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);/* Leggera ombreggiatura */
 }

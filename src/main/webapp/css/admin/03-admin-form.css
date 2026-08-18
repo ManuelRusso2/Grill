@@ -1,60 +1,80 @@
 /* ==========================================================================
    4. FORM ADMIN & ANTEPRIMA
+   ==========================================================================
+   Stili dedicati alla creazione, modifica e anteprima in tempo reale
+   dei prodotti nel pannello di amministrazione.
    ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   4.1 LAYOUT A GRIGLIA (FORM + ANTEPRIMA)
+   Disposizione affiancata del modulo di input e della scheda di anteprima.
+   -------------------------------------------------------------------------- */
 .admin-edit-grid {
-    display: grid;
-    grid-template-columns: 1.4fr 1fr;
-    gap: 30px;
-    align-items: start;
-    margin-top: 20px;
+    display: grid;                             /* Layout a griglia bidimensionale */
+    grid-template-columns: 1.4fr 1fr;          /* Proporzione colonne: 1.4 parti al form, 1 parte all'anteprima */
+    gap: 30px;                                 /* Spaziatura orizzontale e verticale tra le colonne */
+    align-items: start;                        /* Allinea gli elementi in alto per evitare allungamenti indesiderati */
+    margin-top: 20px;                          /* Distacco dal blocco superiore */
 }
 
+/* --------------------------------------------------------------------------
+   4.2 SCHEDE E CONTENITORI FORM
+   Stili base dei riquadri contenitori per i campi di input dell'admin.
+   -------------------------------------------------------------------------- */
 .admin-form-card,
 .admin-form {
-    background-color: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    padding: 30px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    background-color: var(--bg-card);          /* Colore di sfondo della scheda */
+    border: 1px solid var(--border-color);     /* Bordo perimetrale basato sul tema */
+    border-radius: 8px;                        /* Angoli arrotondati della scheda */
+    padding: 30px;                             /* Spaziatura interna generosa */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);/* Ombreggiatura profonda per stacco visivo */
 }
 
+/* Varianti per il form standalone centrato */
 .admin-form {
-    max-width: 600px;
-    margin: 30px auto;
+    max-width: 600px;                          /* Larghezza massima per garantire leggibilità */
+    margin: 30px auto;                         /* Centratura orizzontale della scheda nella pagina */
 }
 
+/* Titoli interni alle schede form e anteprima */
 .admin-form-card h2,
 .admin-preview-card h2 {
-    margin-bottom: 20px;
-    color: var(--text-light);
-    font-size: 20px;
-    font-weight: 700;
-    text-transform: uppercase;
+    margin-bottom: 20px;                       /* Distanza dai campi di input sottostanti */
+    color: var(--text-light);                  /* Testo ad alto contrasto */
+    font-size: 20px;                           /* Dimensione del titolo */
+    font-weight: 700;                          /* Grassetto marcato */
+    text-transform: uppercase;                 /* Testo in lettere maiuscole */
 }
 
 .admin-preview-card h2 {
-    text-align: center;
+    text-align: center;                        /* Centratura del titolo nella scheda di anteprima */
 }
 
+/* Reset del tag form nativo contenuto nella scheda */
 .admin-form-card form {
-    max-width: 100%;
-    margin: 0;
-    padding: 0;
-    background-color: transparent;
-    box-shadow: none;
+    max-width: 100%;                           /* Utilizza tutto lo spazio della scheda contenitore */
+    margin: 0;                                 /* Azzera i margini esterni */
+    padding: 0;                                /* Azzera i margini interni */
+    background-color: transparent;             /* Sfondo trasparente */
+    box-shadow: none;                          /* Rimuove ombreggiature duplicate */
 }
 
+/* --------------------------------------------------------------------------
+   4.3 ETICHETTE E CAMPI DI INPUT
+   -------------------------------------------------------------------------- */
+/* Etichette dei campi di input (LABEL) */
 .admin-form-card label,
 .admin-form label {
-    display: block;
-    margin-bottom: 6px;
-    color: var(--text-gray);
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
+    display: block;                            /* Dispone l'etichetta su una riga dedicata sopra l'input */
+    margin-bottom: 6px;                        /* Spazio tra l'etichetta e il campo di input */
+    color: var(--text-gray);                   /* Colore del testo secondario */
+    font-size: 12px;                           /* Dimensione compatta */
+    font-weight: 600;                          /* Testo semi-grassetto */
+    letter-spacing: 0.5px;                     /* Spaziatura tra le lettere */
+    text-transform: uppercase;                 /* Forzo il testo in lettere maiuscole */
 }
 
+/* Stili uniformi per tutti gli elementi di input, select e textarea */
 .admin-form-card input[type="text"],
 .admin-form-card input[type="number"],
 .admin-form-card textarea,
@@ -63,51 +83,57 @@
 .admin-form input[type="number"],
 .admin-form textarea,
 .admin-form select {
-    width: 100%;
-    margin-bottom: 16px;
-    padding: 10px 14px;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    background-color: var(--bg-input);
-    color: var(--text-light);
-    font-size: 14px;
-    outline: none;
-    transition: border-color 0.2s ease;
+    width: 100%;                               /* Occupazione a tutta larghezza del contenitore */
+    margin-bottom: 16px;                       /* Distanziamento dal campo successivo */
+    padding: 10px 14px;                        /* Spaziatura interna per una digitazione confortevole */
+    border: 1px solid var(--border-color);     /* Bordo basato sulle variabili di tema */
+    border-radius: 6px;                        /* Angoli arrotondati del campo */
+    background-color: var(--bg-input);          /* Sfondo scuro dedicato agli input */
+    color: var(--text-light);                  /* Testo digitato ad alta visibilità */
+    font-size: 14px;                           /* Dimensione del carattere */
+    outline: none;                             /* Rimuove il bordo blu di default del browser */
+    transition: border-color 0.2s ease;        /* Transizione fluida per lo stato di focus */
 }
 
+/* Evidenziazione al focus del campo (quando l'utente sta digitando) */
 .admin-form-card input:focus,
 .admin-form-card textarea:focus,
 .admin-form-card select:focus,
 .admin-form input:focus,
 .admin-form textarea:focus,
 .admin-form select:focus {
-    border-color: var(--accent-yellow);
+    border-color: var(--accent-yellow);        /* Il bordo assume il colore d'accento giallo */
 }
 
+/* Formattazione specifica per l'area di testo multilinea (TEXTAREA) */
 .admin-form-card textarea,
 .admin-form textarea {
-    min-height: 95px;
-    resize: vertical;
+    min-height: 95px;                          /* Altezza minima garantita per le descrizioni */
+    resize: vertical;                          /* Permette il ridimensionamento solo in altezza */
 }
 
+/* --------------------------------------------------------------------------
+   4.4 BOTTONI D'AZIONE DEL FORM (SALVA & ANNULLA)
+   -------------------------------------------------------------------------- */
+/* Pulsante primario di salvataggio / invio form */
 .admin-form-card button[type="submit"],
 .admin-form-card input[type="submit"],
 .admin-form-card .btn-save,
 .admin-form button[type="submit"],
 .admin-form input[type="submit"],
 .admin-form .btn-save {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 6px;
-    background-color: var(--accent-yellow);
-    color: #000000;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    display: inline-flex;                      /* Flexbox per un perfetto allineamento del contenuto */
+    align-items: center;                       /* Centratura verticale di testo e icone */
+    justify-content: center;                   /* Centratura orizzontale */
+    padding: 10px 20px;                        /* Spaziatura interna */
+    border: none;                              /* Rimuove i bordi nativi del bottone */
+    border-radius: 6px;                        /* Angoli arrotondati */
+    background-color: var(--accent-yellow);    /* Sfondo di accento giallo */
+    color: #000000;                            /* Testo nero per massimo contrasto */
+    font-size: 13px;                           /* Dimensione carattere */
+    font-weight: 700;                          /* Grassetto */
+    cursor: pointer;                           /* Puntatore a manina */
+    transition: opacity 0.2s ease, transform 0.2s ease; /* Transizione morbida all'hover */
 }
 
 .admin-form-card button[type="submit"]:hover,
@@ -116,115 +142,134 @@
 .admin-form button[type="submit"]:hover,
 .admin-form input[type="submit"]:hover,
 .admin-form .btn-save:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
+    opacity: 0.9;                              /* Lieve trasparenza al passaggio del mouse */
+    transform: translateY(-1px);               /* Effetto di sollevamento leggero di 1px */
 }
 
+/* Pulsante secondario / Link Annulla */
 .admin-form-card a.btn-cancel,
 .admin-form-card .btn-cancel,
 .admin-form a.btn-cancel,
 .admin-form .btn-cancel {
-    display: inline-block;
-    padding: 10px 16px;
-    color: var(--text-gray);
-    font-size: 13px;
-    font-weight: 600;
-    text-decoration: none;
-    transition: color 0.2s ease;
+    display: inline-block;                     /* Disposizione in linea */
+    padding: 10px 16px;                        /* Spaziatura interna */
+    color: var(--text-gray);                   /* Colore testo secondario */
+    font-size: 13px;                           /* Dimensione carattere */
+    font-weight: 600;                          /* Testo semi-grassetto */
+    text-decoration: none;                     /* Rimuove la sottolineatura dal link */
+    transition: color 0.2s ease;               /* Transizione del colore al passaggio del mouse */
 }
 
 .admin-form-card a.btn-cancel:hover,
 .admin-form-card .btn-cancel:hover,
 .admin-form a.btn-cancel:hover,
 .admin-form .btn-cancel:hover {
-    color: var(--text-light);
+    color: var(--text-light);                  /* Il testo diventa chiaro al passaggio del mouse */
 }
 
+/* --------------------------------------------------------------------------
+   4.5 SCHEDA DI ANTEPRIMA PRODOTTO (PREVIEW CARD)
+   Riquadro fisso durante lo scroll (sticky) per la visualizzazione dinamica.
+   -------------------------------------------------------------------------- */
 .admin-preview-card {
-    position: sticky;
-    top: 90px;
-    padding: 30px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    background-color: var(--bg-card);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    position: sticky;                          /* Mantiene l'anteprima visibile durante lo scorrimento */
+    top: 90px;                                 /* Distanza dalla sommità della finestra durante lo scroll */
+    padding: 30px;                             /* Spaziatura interna della scheda */
+    border: 1px solid var(--border-color);     /* Bordo della scheda */
+    border-radius: 8px;                        /* Angoli arrotondati */
+    background-color: var(--bg-card);          /* Sfondo della scheda */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);/* Ombreggiatura */
 }
 
+/* Box di contenimento per l'immagine d'anteprima */
 .preview-image-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 220px;
-    margin-bottom: 20px;
-    overflow: hidden;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    background-color: var(--bg-input);
+    display: flex;                             /* Flexbox per centrare l'immagine */
+    align-items: center;                       /* Centratura verticale dell'immagine */
+    justify-content: center;                   /* Centratura orizzontale */
+    width: 100%;                               /* Occupazione a tutta larghezza */
+    height: 220px;                             /* Altezza fissa della cornice */
+    margin-bottom: 20px;                       /* Distanza dai dettagli sottostanti */
+    overflow: hidden;                          /* Taglia eventuali parti dell'immagine fuori dal riquadro */
+    border: 1px solid var(--border-color);     /* Bordo di cornice */
+    border-radius: 6px;                        /* Angoli arrotondati della cornice */
+    background-color: var(--bg-input);          /* Sfondo scuro neutro dietro l'immagine */
 }
 
+/* Immagine vera e propria dell'anteprima */
 .preview-image {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
+    width: 100%;                               /* Adatta la larghezza al contenitore */
+    height: 100%;                              /* Adatta l'altezza al contenitore */
+    object-fit: contain;                       /* Ridimensiona l'immagine per mostrarla interamente senza ritagli */
 }
 
+/* Blocco dettagli dell'anteprima (Titolo, Prezzo, Categorie) */
 .preview-details {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 20px;
+    display: flex;                             /* Disposizione flessibile verticale */
+    flex-direction: column;                    /* Incolonna i dettagli */
+    gap: 12px;                                 /* Distanza costante tra le righe di dettaglio */
+    margin-bottom: 20px;                       /* Distanza dalla sezione azioni */
 }
 
+/* Area pulsanti / azioni dell'anteprima */
 .preview-actions {
-    text-align: center;
+    text-align: center;                        /* Centra eventuali bottoni d'azione o note dell'anteprima */
 }
 
 /* ==========================================================================
    5. CHECKBOX CATEGORIE (CHIPS)
+   ==========================================================================
+   Interfaccia ad etichette (chips) interattive che sostituisce i checkbox
+   nativi per la selezione delle categorie dei prodotti.
    ========================================================================== */
+
+/* Griglia contenitore dei chip delle categorie */
 .categories-checkbox-grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 8px;
+    display: flex;                             /* Disposizione flessibile */
+    flex-wrap: wrap;                           /* Va a capo automaticamente se lo spazio non basta */
+    gap: 10px;                                 /* Spaziatura orizzontale e verticale tra i chip */
+    margin-top: 8px;                           /* Distanza dall'etichetta del campo */
 }
 
+/* Singolo elemento chip di categoria */
 .category-chip {
-    display: inline-flex;
-    align-items: center;
-    margin-bottom: 0;
-    cursor: pointer;
-    user-select: none;
+    display: inline-flex;                      /* Allinea l'etichetta in linea */
+    align-items: center;                       /* Centratura verticale */
+    margin-bottom: 0;                          /* Azzera i margini inferiori di default */
+    cursor: pointer;                           /* Puntatore a manina */
+    user-select: none;                         /* Previene la selezione del testo durante il click */
 }
 
+/* Nasconde visivamente l'input checkbox nativo mantenendolo accessibile per il form */
 .category-chip input[type="checkbox"] {
-    position: absolute;
-    width: 0;
-    height: 0;
-    opacity: 0;
+    position: absolute;                        /* Rimuove l'input dal flusso del documento */
+    width: 0;                                  /* Larghezza azzerata */
+    height: 0;                                 /* Altezza azzerata */
+    opacity: 0;                                /* Completamente trasparente */
 }
 
+/* Pillola visiva stilizzata del chip (stato di default / non selezionato) */
 .category-chip span {
-    padding: 8px 16px;
-    border: 1px solid var(--border-color);
-    border-radius: 20px;
-    background-color: var(--bg-input);
-    color: var(--text-gray);
-    font-size: 13px;
-    font-weight: 600;
-    transition: all 0.25s ease;
+    padding: 8px 16px;                         /* Spaziatura interna del chip */
+    border: 1px solid var(--border-color);     /* Bordo neutro di default */
+    border-radius: 20px;                       /* Forma a pillola completa */
+    background-color: var(--bg-input);          /* Sfondo del chip */
+    color: var(--text-gray);                   /* Testo grigio disattivato */
+    font-size: 13px;                           /* Dimensione testo */
+    font-weight: 600;                          /* Testo semi-grassetto */
+    transition: all 0.25s ease;                /* Transizione fluida per hover e cambio stato */
 }
 
+/* Feedback visivo al passaggio del mouse (hover) */
 .category-chip:hover span {
-    border-color: var(--primary-purple);
-    color: var(--text-light);
+    border-color: var(--primary-purple);       /* Il bordo assume il colore viola principale */
+    color: var(--text-light);                  /* Il testo diventa chiaro */
 }
 
+/* Stato SELEZIONATO del chip (quando il checkbox nascosto è :checked) */
 .category-chip input[type="checkbox"]:checked + span {
-    border-color: var(--accent-yellow);
-    background-color: rgba(204, 255, 0, 0.12);
-    color: var(--accent-yellow);
-    font-weight: 700;
-    box-shadow: 0 0 10px rgba(204, 255, 0, 0.15);
+    border-color: var(--accent-yellow);        /* Bordo giallo d'accento */
+    background-color: rgba(204, 255, 0, 0.12); /* Sfondo giallo semitrasparente */
+    color: var(--accent-yellow);               /* Testo giallo d'accento */
+    font-weight: 700;                          /* Grassetto marcato per evidenziare la selezione */
+    box-shadow: 0 0 10px rgba(204, 255, 0, 0.15); /* Bagliore luminoso dorato attorno al chip */
 }

@@ -1,385 +1,465 @@
 /* ==========================================================================
    1. VARIABILI GLOBALI E RESET BASE
+   ==========================================================================
+   Definizione del tema grafico principale (Design System) tramite CSS Custom
+   Properties e configurazione del reset base per garantire uniformità di
+   rendering tra i vari browser.
    ========================================================================== */
+
+/* Definizione dei token di design e variabili globali */
 :root {
-    --bg-body: #0b0a12;
-    --bg-card: #171422;
-    --bg-input: #11101a;
-    --border-color: rgba(255, 255, 255, 0.12);
-    --primary-purple: #9b51e0;
-    --accent-yellow: #ccff00;
-    --text-light: #f6f7fb;
-    --text-gray: #a7a9b8;
-    --font-body: "Segoe UI", Arial, sans-serif;
-    --font-headings: "Segoe UI", Arial, sans-serif;
+    --bg-body: #0b0a12;                        /* Colore di sfondo principale della pagina (Dark Theme) */
+    --bg-card: #171422;                        /* Sfondo per schede, moduli e menu a comparsa */
+    --bg-input: #11101a;                       /* Sfondo scuro per i campi di input */
+    --border-color: rgba(255, 255, 255, 0.12); /* Colore semi-trasparente per i bordi e separatori */
+    --primary-purple: #9b51e0;                 /* Colore primario per brand, focus ed elementi chiave */
+    --accent-yellow: #ccff00;                  /* Colore d'accento ad alto contrasto per call-to-action e badge */
+    --text-light: #f6f7fb;                     /* Colore principale del testo per massima leggibilità */
+    --text-gray: #a7a9b8;                      /* Colore secondario per testi di supporto e descrizioni */
+    --font-body: "Segoe UI", Arial, sans-serif; /* Font per il corpo del testo e interfaccia */
+    --font-headings: "Segoe UI", Arial, sans-serif; /* Font destinato ai titoli */
 }
 
+/* Reset universale per la gestione del box-sizing */
 * {
-    box-sizing: border-box;
+    box-sizing: border-box;                    /* Include padding e bordo nel calcolo della larghezza totale */
 }
 
+/* Azzeramento dei margini e padding predefiniti del browser */
 html,
 body {
-    margin: 0;
-    padding: 0;
+    margin: 0;                                 /* Rimuove i margini esterni predefiniti */
+    padding: 0;                                /* Rimuove la spaziatura interna predefinita */
 }
 
+/* Configurazione base dello sfondo e della tipografia */
 body {
-    background: var(--bg-body);
-    color: var(--text-light);
-    font-family: var(--font-body);
+    background: var(--bg-body);                /* Applica lo sfondo scuro globale */
+    color: var(--text-light);                  /* Imposta il colore base del testo */
+    font-family: var(--font-body);             /* Applica la famiglia di font predefinita */
 }
 
+/* Stile base dei collegamenti ipertestuali */
 a {
-    color: inherit;
-    text-decoration: none;
+    color: inherit;                            /* Eredita il colore dal contenitore padre */
+    text-decoration: none;                     /* Rimuove la sottolineatura predefinita */
 }
 
+/* Regola di fluidità per le immagini */
 img {
-    max-width: 100%;
-    display: block;
+    max-width: 100%;                           /* Impedisce alle immagini di strabordare dai contenitori */
+    display: block;                            /* Rimuove lo spazio bianco vuoto inferiore di linea */
 }
 
-/* Layout Contenitori */
+/* --------------------------------------------------------------------------
+   LAYOUT CONTENITORI (LAYOUT SYSTEM)
+   -------------------------------------------------------------------------- */
+/* Contenitore standard a larghezza limitata */
 .container {
-    width: min(1100px, calc(100% - 40px));
-    margin: 0 auto;
+    width: min(1100px, calc(100% - 40px));     /* Larghezza massima 1100px con margini laterali fluidi di 20px */
+    margin: 0 auto;                            /* Centratura orizzontale del blocco */
 }
 
+/* Contenitore esteso per sezioni ad ampia visibilità */
 .container-wide {
-    width: min(1300px, calc(100% - 20px));
-    margin: 0 auto;
+    width: min(1300px, calc(100% - 20px));     /* Larghezza massima 1300px con margini laterali fluidi di 10px */
+    margin: 0 auto;                            /* Centratura orizzontale del blocco */
 }
 
 /* ==========================================================================
    2. LAYOUT: HEADER E NAVBAR
+   ==========================================================================
+   Intestazione principale fissa (sticky) della pagina, contenente il logo,
+   la barra di ricerca principale e i collegamenti di navigazione.
    ========================================================================== */
+
+/* Barra superiore fissata in alto durante lo scorrimento */
 .site-header {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    padding: 14px 0;
-    background: rgba(10, 8, 18, 0.96);
-    border-bottom: 1px solid var(--border-color);
-    backdrop-filter: blur(10px);
+    position: sticky;                          /* Mantiene l'header visibile in cima allo scorrimento */
+    top: 0;                                    /* Ancoraggio al margine superiore del viewport */
+    z-index: 100;                              /* Livello di sovrapposizione elevato rispetto ai contenuti */
+    padding: 14px 0;                           /* Spaziatura interna verticale */
+    background: rgba(10, 8, 18, 0.96);         /* Sfondo scuro quasi opaco */
+    border-bottom: 1px solid var(--border-color); /* Separatore orizzontale inferiore */
+    backdrop-filter: blur(10px);               /* Effetto sfocatura per i contenuti sottostanti */
 }
 
+/* Struttura della barra di navigazione principale */
 .navbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    min-height: 48px;
-    gap: 25px;
+    display: flex;                             /* Layout flessibile per allineare gli elementi in linea */
+    align-items: center;                       /* Centratura verticale di tutti i componenti */
+    justify-content: space-between;            /* Distribuzione dello spazio tra logo, ricerca e link */
+    width: 100%;                               /* Occupazione a tutta larghezza */
+    min-height: 48px;                          /* Altezza minima garantita per l'interfaccia */
+    gap: 25px;                                 /* Spaziatura minima orizzontale tra i blocchi interni */
 }
 
+/* Stile del brand / logo aziendale */
 .brand {
-    flex: 0 0 auto;
-    font-family: var(--font-headings);
-    font-size: 28px;
-    font-weight: 900;
-    font-style: italic;
-    letter-spacing: -1px;
-    color: var(--primary-purple);
-    transition: color 0.2s ease;
-    margin-left: 20px;
+    flex: 0 0 auto;                            /* Mantiene dimensioni fisse senza ridimensionarsi */
+    font-family: var(--font-headings);        /* Font dedicato per il logo */
+    font-size: 28px;                           /* Dimensione del testo in evidenza */
+    font-weight: 900;                          /* Peso del font extra-bold */
+    font-style: italic;                        /* Stile in corsivo d'impatto visivo */
+    letter-spacing: -1px;                      /* Trattamento della spaziatura per un effetto compatto */
+    color: var(--primary-purple);              /* Colore viola identificativo */
+    transition: color 0.2s ease;               /* Transizione fluida durante l'hover */
+    margin-left: 20px;                         /* Spaziatura dal margine sinistro */
 }
 
+/* Effetto hover sul brand */
 .brand:hover {
-    color: var(--text-light);
+    color: var(--text-light);                  /* Cambia in colore chiaro al passaggio del mouse */
 }
 
 /* ==========================================================================
    3. BARRA DI RICERCA ED AUTOCOMPLETE
+   ==========================================================================
+   Campo di input per la ricerca di prodotti con dropdown dinamico dei
+   suggerimenti (Autocomplete).
    ========================================================================== */
+
+/* Contenitore relativo per il posizionamento del menu dei suggerimenti */
 .search-wrapper {
-    position: relative;
-    flex: 1 1 auto;
-    max-width: 500px;
-    margin: 0 25px;
+    position: relative;                        /* Punto di ancoraggio per il menu dei suggerimenti */
+    flex: 1 1 auto;                            /* Il campo si espande per occupare lo spazio disponibile */
+    max-width: 500px;                          /* Limita la larghezza massima della barra di ricerca */
+    margin: 0 25px;                            /* Margini laterali di distacco dagli altri elementi */
 }
 
+/* Input di testo della barra di ricerca */
 .search-input {
-    width: 100%;
-    padding: 11px 22px;
-    border: 1px solid var(--border-color);
-    border-radius: 999px;
-    background: var(--bg-input);
-    color: var(--text-light);
-    font-family: var(--font-body);
-    font-size: 14px;
-    outline: none;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;                               /* Occupazione a tutta larghezza */
+    padding: 11px 22px;                        /* Spaziatura interna per una facile interazione */
+    border: 1px solid var(--border-color);     /* Bordo discreto di base */
+    border-radius: 999px;                      /* Angoli completamente arrotondati (Stile pillola) */
+    background: var(--bg-input);               /* Sfondo scuro dell'input */
+    color: var(--text-light);                  /* Colore del testo digitato */
+    font-family: var(--font-body);             /* Font standard di lettura */
+    font-size: 14px;                           /* Dimensione testo */
+    outline: none;                             /* Rimuove l'outline predefinito del browser */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease; /* Transizione per lo stato di focus */
 }
 
+/* Stato di focus sul campo di ricerca */
 .search-input:focus {
-    border-color: var(--primary-purple);
-    box-shadow: 0 0 0 3px rgba(155, 81, 224, 0.2);
+    border-color: var(--primary-purple);      /* Il bordo diventa viola al focus */
+    box-shadow: 0 0 0 3px rgba(155, 81, 224, 0.2); /* Anello luminoso esterno d'evidenziazione */
 }
 
+/* Dropdown dei suggerimenti di ricerca (Autocomplete) */
 .search-suggestions {
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 0;
-    width: 100%;
-    overflow: hidden;
-    border: 1px solid var(--border-color);
-    border-radius: 10px;
-    background: var(--bg-card);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
-    z-index: 200;
+    position: absolute;                        /* Posizionamento assoluto rispetto al .search-wrapper */
+    top: calc(100% + 8px);                     /* Posizionato subito sotto l'input con un margine di 8px */
+    left: 0;                                   /* Allineato al margine sinistro del contenitore */
+    width: 100%;                               /* Stessa larghezza del campo di ricerca */
+    overflow: hidden;                          /* Taglia eventuali contenuti che fuoriescono dai bordi */
+    border: 1px solid var(--border-color);     /* Bordo perimetrale */
+    border-radius: 10px;                       /* Angoli arrotondati del menu */
+    background: var(--bg-card);                /* Sfondo scuro per il contrasto */
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);/* Ombreggiatura profonda per stacco visivo */
+    z-index: 200;                              /* Sovrapposizione superiore all'header */
 }
 
+/* Singolo elemento della lista suggerimenti */
 .suggestion-item {
-    padding: 10px 14px;
-    cursor: pointer;
-    border-bottom: 1px solid var(--border-color);
-    color: var(--text-light);
-    transition: background-color 0.2s ease, color 0.2s ease;
+    padding: 10px 14px;                        /* Spaziatura interna della voce */
+    cursor: pointer;                           /* Cambia il cursore a puntatore */
+    border-bottom: 1px solid var(--border-color); /* Bordo separatore tra gli elementi */
+    color: var(--text-light);                  /* Colore del testo */
+    transition: background-color 0.2s ease, color 0.2s ease; /* Transizioni per lo stato hover */
 }
 
+/* Rimuove il bordo separatore dall'ultimo suggerimento */
 .suggestion-item:last-child {
-    border-bottom: none;
+    border-bottom: none;                       /* Azzera il bordo inferiore */
 }
 
+/* Effetto hover sul singolo suggerimento */
 .suggestion-item:hover {
-    background: rgba(155, 81, 224, 0.14);
-    color: var(--accent-yellow);
+    background: rgba(155, 81, 224, 0.14);      /* Evidenziazione con velatura viola */
+    color: var(--accent-yellow);               /* Cambia il colore del testo in giallo d'accento */
 }
 
 /* ==========================================================================
    4. MENU DROPDOWN E CARRELLO NAVIGAZIONE
+   ==========================================================================
+   Collegamenti di navigazione principali, menu a tendina utente/amministratore
+   e icona del carrello con contatore dinamico.
    ========================================================================== */
+
+/* Contenitore dei collegamenti della navbar */
 .nav-links {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    flex: 0 0 auto;
-    font-size: 13px;
-    font-weight: 700;
-    text-transform: uppercase;
-    white-space: nowrap;
-    margin-right: 20px;
+    display: flex;                             /* Disposizione in riga flessibile */
+    align-items: center;                       /* Centratura verticale dei link */
+    gap: 20px;                                 /* Spaziatura costante tra le voci */
+    flex: 0 0 auto;                            /* Dimensione basata sul contenuto */
+    font-size: 13px;                           /* Dimensione testo della navigazione */
+    font-weight: 700;                          /* Testo in grassetto */
+    text-transform: uppercase;                 /* Trasforma il testo in maiuscolo */
+    white-space: nowrap;                       /* Impedisce al testo di andare a capo */
+    margin-right: 20px;                        /* Spaziatura dal margine destro */
 }
 
+/* Stile base per link di navigazione e toggle del menu */
 .nav-link,
 .nav-admin,
 .nav-dropdown-toggle {
-    color: var(--text-light);
-    transition: color 0.2s ease, opacity 0.2s ease;
+    color: var(--text-light);                  /* Colore chiaro di base */
+    transition: color 0.2s ease, opacity 0.2s ease; /* Transizione sfumata del colore */
 }
 
+/* Stato hover per tutti i link della navigazione */
 .nav-link:hover,
 .nav-admin:hover,
 .nav-dropdown-toggle:hover {
-    color: var(--accent-yellow);
+    color: var(--accent-yellow);               /* Cambia il testo in giallo al passaggio del mouse */
 }
 
+/* Contenitore del menu a tendina */
 .nav-dropdown {
-    position: relative;
-    display: flex;
-    align-items: center;
+    position: relative;                        /* Ancoraggio per il menu .nav-dropdown-menu */
+    display: flex;                             /* Layout flessibile */
+    align-items: center;                       /* Centratura verticale */
 }
 
+/* Pulsante d'attivazione del menu a tendina */
 .nav-dropdown-toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    cursor: pointer;
+    display: inline-flex;                      /* Disposizione interna flessibile */
+    align-items: center;                       /* Centratura verticale del testo e icone */
+    gap: 6px;                                  /* Spazio tra testo ed eventuale freccetta */
+    cursor: pointer;                           /* Cursore a forma di mano */
 }
 
+/* Menu a comparsa (Dropdown) */
 .nav-dropdown-menu {
-    position: absolute;
-    top: calc(100% + 12px);
-    left: 0;
-    min-width: 200px;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid rgba(155, 81, 224, 0.45);
-    border-radius: 10px;
-    background: var(--bg-card);
-    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.45);
-    opacity: 0;
-    pointer-events: none;
-    transform: translateY(-6px);
-    transition: opacity 0.2s ease, transform 0.2s ease;
-    z-index: 20;
+    position: absolute;                        /* Posizionamento assoluto */
+    top: calc(100% + 12px);                     /* Posizionato sotto al toggle con spaziatura di 12px */
+    left: 0;                                   /* Allineato al margine sinistro */
+    min-width: 200px;                          /* Larghezza minima garantita per il menu */
+    display: flex;                             /* Layout interno a colonna */
+    flex-direction: column;                    /* Incolonna i vari link */
+    border: 1px solid rgba(155, 81, 224, 0.45); /* Bordo viola semi-trasparente */
+    border-radius: 10px;                       /* Angoli arrotondati */
+    background: var(--bg-card);                /* Sfondo per la leggibilità */
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.45);/* Ombreggiatura profonda */
+    opacity: 0;                                /* Invisibile di base */
+    pointer-events: none;                      /* Disabilita i clic quando è nascosto */
+    transform: translateY(-6px);               /* Traslazione verso l'alto per l'effetto comparsa */
+    transition: opacity 0.2s ease, transform 0.2s ease; /* Animazione di apertura */
+    z-index: 20;                               /* Sovrapposizione sopra gli altri elementi */
 }
 
+/* Stato aperto del menu a tendina (attivato via JS o classe) */
 .nav-dropdown-menu.open {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateY(0);
+    opacity: 1;                                /* Diventa completamente visibile */
+    pointer-events: auto;                      /* Riabilita la cliccabilità sui link */
+    transform: translateY(0);                  /* Raggiunge la posizione finale */
 }
 
+/* Link all'interno del menu a comparsa */
 .nav-dropdown-menu a {
-    padding: 12px 16px;
-    border-bottom: 1px solid var(--border-color);
-    font-size: 13px;
-    text-transform: none;
+    padding: 12px 16px;                        /* Spaziatura per facilitare il clic */
+    border-bottom: 1px solid var(--border-color); /* Bordo divisorio tra le voci */
+    font-size: 13px;                           /* Dimensione del testo */
+    text-transform: none;                      /* Mantiene il testo con maiuscole/minuscole originali */
 }
 
+/* Rimuove il bordo divisorio dall'ultimo elemento */
 .nav-dropdown-menu a:last-child {
-    border-bottom: none;
+    border-bottom: none;                       /* Nessun bordo inferiore */
 }
 
+/* Hover sui link interni al dropdown */
 .nav-dropdown-menu a:hover {
-    background: rgba(155, 81, 224, 0.14);
-    color: var(--accent-yellow);
+    background: rgba(155, 81, 224, 0.14);      /* Sfondo di evidenziazione viola */
+    color: var(--accent-yellow);               /* Colore del testo in giallo */
 }
 
+/* Contenitore e icona del carrello */
 .nav-cart-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    margin-left: auto;
-    padding-left: 10px;
+    display: inline-flex;                      /* Disposizione flessibile per icona e badge */
+    align-items: center;                       /* Centratura verticale */
+    gap: 8px;                                  /* Spazio tra l'icona del carrello e il contatore */
+    margin-left: auto;                         /* Spinge il carrello sul margine destro */
+    padding-left: 10px;                        /* Distacco sinistro */
 }
 
+/* Icona grafica del carrello */
 .nav-cart-icon {
-    width: 26px;
-    height: 26px;
-    object-fit: contain;
-    transition: transform 0.2s ease, filter 0.2s ease;
+    width: 26px;                               /* Larghezza fissa */
+    height: 26px;                              /* Altezza fissa */
+    object-fit: contain;                       /* Mantiene le proporzioni dell'icona originale */
+    transition: transform 0.2s ease, filter 0.2s ease; /* Effetto dinamico al passaggio del mouse */
 }
 
+/* Animazione all'hover sull'icona del carrello */
 .nav-cart-link:hover .nav-cart-icon {
-    transform: scale(1.08);
-    filter: drop-shadow(0 0 5px rgba(204, 255, 0, 0.45));
+    transform: scale(1.08);                    /* Leggero ingrandimento dell'icona */
+    filter: drop-shadow(0 0 5px rgba(204, 255, 0, 0.45)); /* Bagliore giallo d'accento */
 }
 
+/* Badge indicatore di conteggio elementi (es. articoli nel carrello) */
 .badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 22px;
-    min-height: 22px;
-    padding: 0 7px;
-    border-radius: 999px;
-    background: var(--accent-yellow);
-    color: #000000;
-    font-size: 12px;
-    font-weight: 900;
-    line-height: 1;
+    display: inline-flex;                      /* Allineamento flessibile */
+    align-items: center;                       /* Centratura verticale del numero */
+    justify-content: center;                   /* Centratura orizzontale del numero */
+    min-width: 22px;                           /* Larghezza minima per contenere numeri a 2 cifre */
+    min-height: 22px;                          /* Altezza minima circolare */
+    padding: 0 7px;                            /* Padding orizzontale dinamico per numeri grandi */
+    border-radius: 999px;                      /* Forma completamente circolare/pillola */
+    background: var(--accent-yellow);          /* Colore giallo vivace ad alta visibilità */
+    color: #000000;                            /* Testo nero contrastante per la leggibilità */
+    font-size: 12px;                           /* Dimensione del testo del contatore */
+    font-weight: 900;                          /* Grassetto marcato */
+    line-height: 1;                            /* Azzera l'interlinea per centrare il numero */
 }
 
+/* Nasconde il badge se vuoto */
 #cart-count:empty {
-    display: none;
+    display: none;                             /* Rimuove l'elemento dal flusso se privo di valori */
 }
 
 /* ==========================================================================
    5. COMPONENTI GENERICI & UTILITY (Pulsanti, Form Base, Alert)
+   ==========================================================================
+   Componenti di interfaccia riutilizzabili nell'applicazione come pulsanti
+   secondari, controlli dei moduli e messaggi di avviso.
    ========================================================================== */
+
+/* Pulsante secondario/compatto */
 .btn-small {
-    background-color: var(--accent-yellow);
-    color: #000000 !important;
-    padding: 8px 16px;
-    border-radius: 6px;
-    font-weight: bold;
-    font-size: 13px;
-    display: inline-block;
-    transition: transform 0.2s ease, background-color 0.2s ease;
+    background-color: var(--accent-yellow);    /* Colore di sfondo giallo d'accento */
+    color: #000000 !important;                 /* Forza il testo nero per leggibilità */
+    padding: 8px 16px;                         /* Dimensionamento compatto */
+    border-radius: 6px;                        /* Angoli leggermente arrotondati */
+    font-weight: bold;                         /* Testo in grassetto */
+    font-size: 13px;                           /* Dimensione del font */
+    display: inline-block;                     /* Comportamento in linea con supporto a dimensioni */
+    transition: transform 0.2s ease, background-color 0.2s ease; /* Transizioni smooth */
 }
 
+/* Hover per il pulsante compatto */
 .btn-small:hover {
-    background-color: #e0ff4d;
-    transform: translateY(-2px);
+    background-color: #e0ff4d;                 /* Schiarisce il giallo al passaggio del mouse */
+    transform: translateY(-2px);               /* Micro-elevazione verso l'alto */
 }
 
-/* Generici per i Form */
+/* --------------------------------------------------------------------------
+   STILI DI BASE PER I MODULI (FORMS)
+   -------------------------------------------------------------------------- */
+/* Gruppo contenitore per campo e relativa etichetta */
 .form-group {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 18px;
-    color: var(--text-light);
-    font-size: 14px;
-    font-weight: 600;
+    display: flex;                             /* Layout a colonna per input e label */
+    flex-direction: column;                    /* Incolonna label sopra l'input */
+    margin-bottom: 18px;                       /* Distanza tra un gruppo di campi e il successivo */
+    color: var(--text-light);                  /* Colore del testo */
+    font-size: 14px;                           /* Dimensione font generale */
+    font-weight: 600;                          /* Peso del testo per le etichette */
 }
 
+/* Etichetta di campo (Label) */
 .form-group label {
-    margin-bottom: 6px;
+    margin-bottom: 6px;                        /* Spazio tra l'etichetta e il relativo input */
 }
 
+/* Campi di testo standard dei moduli */
 .form-group input {
-    width: 100%;
-    padding: 11px 14px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    background: var(--bg-input);
-    color: var(--text-light);
-    font-size: 14px;
-    outline: none;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    width: 100%;                               /* Occupazione completa del contenitore */
+    padding: 11px 14px;                        /* Spaziatura interna per digitazione comoda */
+    border: 1px solid var(--border-color);     /* Bordo grigio discreto */
+    border-radius: 8px;                        /* Angoli arrotondati */
+    background: var(--bg-input);               /* Sfondo scuro per l'input */
+    color: var(--text-light);                  /* Colore del testo digitato dall'utente */
+    font-size: 14px;                           /* Dimensione del testo */
+    outline: none;                             /* Rimuove l'outline standard del browser */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease; /* Transizioni al focus */
 }
 
+/* Stato di focus sugli input di testo */
 .form-group input:focus {
-    border-color: var(--primary-purple);
-    box-shadow: 0 0 0 3px rgba(155, 81, 224, 0.2);
+    border-color: var(--primary-purple);      /* Evidenzia il bordo in viola */
+    box-shadow: 0 0 0 3px rgba(155, 81, 224, 0.2); /* Crea un anello luminoso di focus */
 }
 
+/* Stato d'errore applicato all'input */
 .input-error {
-    border-color: #ff4d4d !important;
+    border-color: #ff4d4d !important;          /* Forza il bordo in rosso avviso */
 }
 
+/* Messaggio di errore sottostante ai campi */
 .field-error {
-    color: #ff4d4d;
-    font-size: 12px;
-    margin-top: 4px;
-    font-weight: normal;
+    color: #ff4d4d;                            /* Testo in rosso avviso */
+    font-size: 12px;                           /* Dimensione testo ridotta */
+    margin-top: 4px;                           /* Spazio dall'input */
+    font-weight: normal;                       /* Rimuove il grassetto */
 }
 
+/* Note di supporto o indicazione di opzionalità dei campi */
 .field-hint, 
 .optional {
-    color: var(--text-gray);
-    font-size: 12px;
-    font-weight: normal;
+    color: var(--text-gray);                   /* Colore del testo grigio di supporto */
+    font-size: 12px;                           /* Testo in formato ridotto */
+    font-weight: normal;                       /* Peso del testo normale */
 }
 
-/* Alert generici */
+/* --------------------------------------------------------------------------
+   MESSAGGI DI NOTIFICA (ALERTS)
+   -------------------------------------------------------------------------- */
+/* Stile base per la scatola dei messaggi di avviso */
 .alert {
-    padding: 12px 16px;
-    border-radius: 8px;
-    font-size: 14px;
-    text-align: center;
+    padding: 12px 16px;                        /* Spaziatura interna */
+    border-radius: 8px;                        /* Arrotondamento angoli */
+    font-size: 14px;                           /* Dimensione testo del messaggio */
+    text-align: center;                        /* Testo centrato */
 }
 
+/* Notifica di successo (Success Alert) */
 .alert-success {
-    background: rgba(204, 255, 0, 0.15);
-    border: 1px solid var(--accent-yellow);
-    color: var(--accent-yellow);
+    background: rgba(204, 255, 0, 0.15);       /* Sfondo giallo/verde semi-trasparente */
+    border: 1px solid var(--accent-yellow);    /* Bordo verde/giallo d'accento */
+    color: var(--accent-yellow);               /* Colore del testo d'avviso */
 }
 
+/* Notifica di errore (Danger Alert) */
 .alert-danger {
-    background: rgba(255, 77, 77, 0.15);
-    border: 1px solid #ff4d4d;
-    color: #ff4d4d;
+    background: rgba(255, 77, 77, 0.15);       /* Sfondo rosso trasparente d'allarme */
+    border: 1px solid #ff4d4d;                 /* Bordo rosso chiaro */
+    color: #ff4d4d;                            /* Testo in rosso chiaro leggibile */
 }
 
 /* ==========================================================================
    6. LAYOUT: FOOTER GLOBALE
+   ==========================================================================
+   Piè di pagina dell'applicazione contenente crediti, copyright e link utente.
    ========================================================================== */
+
+/* Contenitore principale del piè di pagina */
 .site-footer {
-    width: 100%;
-    margin-top: 80px;
-    padding: 30px 0;
-    border-top: 1px solid var(--border-color);
-    background-color: var(--bg-body);
-    text-align: center;
+    width: 100%;                               /* Stacco a tutta larghezza */
+    margin-top: 80px;                          /* Distacco consistente dai contenuti superiori */
+    padding: 30px 0;                           /* Spaziatura interna verticale */
+    border-top: 1px solid var(--border-color); /* Linea divisoria orizzontale in cima */
+    background-color: var(--bg-body);          /* Sfondo uniforme con il corpo pagina */
+    text-align: center;                        /* Allineamento del testo centrato */
 }
 
+/* Testo del copyright e informazioni legali nel footer */
 .site-footer p {
-    margin: 0;
-    color: var(--text-gray);
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 0.5px;
+    margin: 0;                                 /* Rimuove i margini del paragrafo */
+    color: var(--text-gray);                   /* Colore del testo secondario */
+    font-size: 13px;                           /* Dimensione contenuta */
+    font-weight: 500;                          /* Peso medio del font */
+    letter-spacing: 0.5px;                     /* Spaziatura sottile tra i caratteri */
 }
 
+/* Stile dei collegamenti nel piè di pagina */
 .site-footer a {
-    color: var(--text-light);
-    transition: color 0.2s ease;
+    color: var(--text-light);                  /* Colore testo chiaro di base */
+    transition: color 0.2s ease;               /* Transizione al passaggio del mouse */
 }
 
+/* Effetto hover per i link del footer */
 .site-footer a:hover {
-    color: var(--accent-yellow);
+    color: var(--accent-yellow);               /* Cambia il testo in giallo al passaggio del mouse */
 }

@@ -141,10 +141,9 @@ public class DettaglioProdottoServlet extends HttpServlet {
 
     /**
      * Estrae la radice del nome di un prodotto rimuovendo il suffisso della variante.
-     * <p>
+     * 
      * Se il nome contiene la sequenza " - " (es. "Scarpe Nike - 42"), restituisce solo
      * la porzione precedente ("Scarpe Nike"). Altrimenti restituisce l'intero nome.
-     * </p>
      * 
      * @param nome Il nome completo del prodotto
      * @return La stringa contenente il nome base del prodotto

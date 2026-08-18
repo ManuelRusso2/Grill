@@ -1,223 +1,267 @@
 /* ==========================================================================
    7. HOME PAGE: CAROUSEL HERO & SCROLL PRODOTTI
+   ==========================================================================
+   Stili dedicati ai componenti dinamici della Home Page: lo slider/carousel hero
+   principale in cima alla pagina e la sezione di scorrimento orizzontale dei
+   prodotti in evidenza.
    ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   7.1 SEZIONE CAROUSEL HERO (LAYOUT & TRACCIATO)
+   -------------------------------------------------------------------------- */
+/* Contenitore principale della sezione Carousel Hero */
 .carousel-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    padding: 40px 0;
-    font-size: 28px;
+    display: flex;                             /* Disposizione flessibile */
+    flex-direction: column;                    /* Sviluppo verticale per posizionare gli indicatori sotto */
+    align-items: center;                       /* Centratura orizzontale dei contenuti */
+    width: 100%;                               /* Occupazione piena della larghezza */
+    padding: 40px 0;                           /* Spaziatura interna verticale superiore ed inferiore */
+    font-size: 28px;                           /* Dimensione testo base di riferimento per la sezione */
 }
 
+/* Struttura interna che affianca i pulsanti e il carosello */
 .carousel-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    width: 100%;
-    max-width: 1000px;
-    margin: 0 auto;
+    position: relative;                        /* Posizionamento relativo per eventuali elementi assoluti */
+    display: flex;                             /* Layout flessibile in linea */
+    align-items: center;                       /* Centratura verticale di pulsanti e diapositive */
+    gap: 20px;                                 /* Spaziatura tra i pulsanti di navigazione e lo slider */
+    width: 100%;                               /* Occupazione a tutta larghezza */
+    max-width: 1000px;                         /* Delimita la larghezza massima del carosello hero */
+    margin: 0 auto;                            /* Centratura orizzontale nella pagina */
 }
 
+/* Maschera di ritaglio (viewport) per le diapositive del carosello */
 .carousel-wrapper {
-    flex-grow: 1;
-    overflow: hidden;
-    border: none;
-    background: transparent;
-    box-shadow: none;
+    flex-grow: 1;                              /* Si espande per occupare tutto lo spazio tra i pulsanti */
+    overflow: hidden;                          /* Nasconde le diapositive adiacenti non visibili */
+    border: none;                              /* Azzera eventuali bordi predefiniti */
+    background: transparent;                   /* Sfondo trasparente */
+    box-shadow: none;                          /* Rimuove ombre esterne dal contenitore maschera */
 }
 
+/* Binario scorrevole che contiene le diapositive affiancate */
 .carousel-track {
-    display: flex;
-    width: 100%;
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;                             /* Dispone le diapositive orizzontalmente in sequenza */
+    width: 100%;                               /* Occupazione a tutta larghezza */
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); /* Transizione di scorrimento fluida ed euristica */
 }
 
+/* Singola diapositiva del carosello */
 .carousel-slide {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 100%;
-    background: transparent;
+    display: flex;                             /* Layout flessibile */
+    align-items: center;                       /* Centratura verticale del contenuto */
+    justify-content: center;                   /* Centratura orizzontale del contenuto */
+    min-width: 100%;                           /* Ogni diapositiva occupa il 100% della larghezza del wrapper */
+    background: transparent;                   /* Sfondo trasparente */
 }
 
+/* Immagine contenuta nella diapositiva Hero */
 .carousel-slide img {
-    width: auto;
-    max-width: 100%;
-    height: auto;
-    max-height: 520px;
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
-    object-fit: contain;
-    transition: transform 0.3s ease;
+    width: auto;                               /* Larghezza automatica in base alle proporzioni originali */
+    max-width: 100%;                           /* Impedisce la fuoriuscita dal contenitore */
+    height: auto;                              /* Altezza automatica */
+    max-height: 520px;                         /* Limita l'altezza massima per un'ottima resa visiva */
+    border: 1px solid var(--border-color);     /* Bordo perimetrale basato sul tema */
+    border-radius: 12px;                       /* Angoli arrotondati accentuati */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);/* Ombreggiatura profonda e marcata */
+    object-fit: contain;                       /* Mantiene le proporzioni dell'immagine senza tagliarla */
+    transition: transform 0.3s ease;           /* Transizione fluida per l'effetto di hover */
 }
 
+/* Feedback al sorvolo dell'immagine nel carosello */
 .carousel-slide img:hover {
-    transform: scale(1.02);
+    transform: scale(1.02);                    /* Lieve ingrandimento per effetto di interattività */
 }
 
+/* --------------------------------------------------------------------------
+   7.2 PULSANTI DI NAVIGAZIONE & INDICATORI (PAGINAZIONE)
+   -------------------------------------------------------------------------- */
+/* Pulsanti circolari di scorrimento (utilizzati sia nel carosello che nello scroll prodotti) */
 .carousel-btn,
 .scroll-btn {
-    display: flex;
-    flex-shrink: 0;
-    align-items: center;
-    justify-content: center;
-    width: 45px;
-    height: 45px;
-    border: none;
-    border-radius: 50%;
-    background-color: var(--accent-yellow);
-    color: #000000;
-    font-size: 24px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    display: flex;                             /* Layout flessibile */
+    flex-shrink: 0;                            /* Impedisce la riduzione del pulsante nel flexbox */
+    align-items: center;                       /* Centratura verticale dell'icona/freccia */
+    justify-content: center;                   /* Centratura orizzontale dell'icona/freccia */
+    width: 45px;                               /* Dimensione fissa in larghezza */
+    height: 45px;                              /* Dimensione fissa in altezza per forma circolare */
+    border: none;                              /* Azzera il bordo predefinito */
+    border-radius: 50%;                        /* Forma perfettamente circolare */
+    background-color: var(--accent-yellow);    /* Sfondo giallo fluo d'accento */
+    color: #000000;                            /* Simbolo/Freccia in nero per alto contrasto */
+    font-size: 24px;                           /* Dimensione del simbolo della freccia */
+    font-weight: bold;                         /* Simbolo in grassetto marcato */
+    cursor: pointer;                           /* Puntatore a manina */
+    transition: all 0.3s ease;                /* Transizione fluida delle proprietà al passaggio mouse */
 }
 
+/* Feedback al sorvolo dei pulsanti di scorrimento */
 .carousel-btn:hover,
 .scroll-btn:hover {
-    background-color: #e0ff4d;
-    transform: scale(1.1);
+    background-color: #e0ff4d;                 /* Schiarimento del giallo fluo */
+    transform: scale(1.1);                     /* Ingrandimento del pulsante per effetto d'azione */
 }
 
+/* Stato disabilitato dei pulsanti di scorrimento (es. ad inizio o fine tracciato) */
 .carousel-btn:disabled,
 .scroll-btn:disabled {
-    background-color: var(--text-gray);
-    opacity: 0.5;
-    cursor: not-allowed;
-    transform: none;
+    background-color: var(--text-gray);        /* Colore di sfondo grigio opaco */
+    opacity: 0.5;                              /* Trasparenza per indicare inattività */
+    cursor: not-allowed;                       /* Puntatore di divieto/non consentito */
+    transform: none;                           /* Rimuove trasformazioni di scala */
 }
 
+/* Contenitore degli indicatori di paginazione (pallini del carosello) */
 .carousel-indicators {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    margin-top: 20px;
+    display: flex;                             /* Disposizione in linea flessibile */
+    align-items: center;                       /* Centratura verticale */
+    justify-content: center;                   /* Centratura orizzontale nella sezione */
+    gap: 8px;                                  /* Distanza tra i singoli pallini */
+    width: 100%;                               /* Occupazione a tutta larghezza */
+    margin-top: 20px;                          /* Spazio superiore dal carosello */
 }
 
+/* Singolo indicatore di paginazione (pallino disattivo) */
 .indicator {
-    width: 10px;
-    height: 10px;
-    border: 2px solid var(--accent-yellow);
-    border-radius: 50%;
-    background: transparent;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    width: 10px;                               /* Larghezza del pallino */
+    height: 10px;                              /* Altezza del pallino per forma circolare */
+    border: 2px solid var(--accent-yellow);     /* Bordo giallo d'accento */
+    border-radius: 50%;                        /* Forma circolare */
+    background: transparent;                   /* Sfondo trasparente per lo stato inattivo */
+    cursor: pointer;                           /* Puntatore a manina */
+    transition: all 0.3s ease;                /* Transizione fluida degli stati */
 }
 
+/* Indicatore della diapositiva CORRENTE / ATTIVA */
 .indicator.active {
-    background: var(--accent-yellow);
-    transform: scale(1.2);
+    background: var(--accent-yellow);          /* Riempimento in giallo d'accento pieno */
+    transform: scale(1.2);                     /* Leggero ingrandimento per evidenziarlo */
 }
 
-/* Sezione Prodotti Scorrevoli */
+/* --------------------------------------------------------------------------
+   7.3 SEZIONE PRODOTTI SCORREVOLI
+   -------------------------------------------------------------------------- */
+/* Sezione principale contenente lo scroll orizzontale dei prodotti */
 .products-scroll-section {
-    width: 100%;
-    max-width: 1200px;
-    margin: 60px auto;
-    padding: 0 20px;
+    width: 100%;                               /* Occupazione piena della larghezza */
+    max-width: 1200px;                         /* Delimita la larghezza massima del blocco */
+    margin: 60px auto;                         /* Spaziatura verticale esterna e centratura orizzontale */
+    padding: 0 20px;                           /* Spaziatura di sicurezza sui bordi laterali */
 }
 
+/* Titolo della sezione prodotti scorrevoli */
 .products-scroll-section h2 {
-    margin-bottom: 40px;
-    color: var(--text-light);
-    font-size: 36px;
-    font-weight: 900;
-    letter-spacing: -1px;
-    text-align: center;
-    text-transform: uppercase;
+    margin-bottom: 40px;                       /* Distanza dallo slider dei prodotti */
+    color: var(--text-light);                  /* Testo chiaro ad alto contrasto */
+    font-size: 36px;                           /* Dimensione estesa d'impatto */
+    font-weight: 900;                          /* Extra bold / Ultra marcato */
+    letter-spacing: -1px;                      /* Spaziatura ristretta per effetto tipografico moderno */
+    text-align: center;                        /* Centratura del titolo */
+    text-transform: uppercase;                 /* Testo tutto in maiuscolo */
 }
 
+/* Contenitore interno che organizza lo slider dei prodotti con i relativi pulsanti */
 .products-scroll-container {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 20px;
+    position: relative;                        /* Posizionamento relativo per il contesto di impaginazione */
+    display: flex;                             /* Layout flessibile in linea */
+    align-items: center;                       /* Centratura verticale di prodotti e frecce */
+    gap: 20px;                                 /* Spazio tra i pulsanti e la lista prodotti */
 }
 
+/* Selettore condizionale: Nasconde i pulsanti di scorrimento se lo stato è vuoto */
 .products-scroll-container:has(.empty-state) .scroll-btn {
-    display: none;
+    display: none;                             /* Rimuove i pulsanti se non vi sono prodotti da scorrere */
 }
 
+/* Maschera di ritaglio (viewport) per la lista prodotti scorrevole */
 .products-scroll-wrapper {
-    flex-grow: 1;
-    overflow: hidden;
-    border-radius: 8px;
+    flex-grow: 1;                              /* Occupa lo spazio disponibile tra le frecce */
+    overflow: hidden;                          /* Nasconde le schede prodotto esterne alla vista */
+    border-radius: 8px;                        /* Angoli arrotondati della maschera visiva */
 }
 
+/* Binario flessibile che sposta le schede dei prodotti */
 .products-scroll-track {
-    display: flex;
-    gap: 20px;
-    width: 100%;
-    padding: 0;
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;                             /* Allinea le schede prodotto in riga orizzontale */
+    gap: 20px;                                 /* Spaziatura costante tra una scheda prodotto e l'altra */
+    width: 100%;                               /* Occupazione iniziale a tutta larghezza */
+    padding: 0;                                /* Azzera i padding predefiniti */
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1); /* Animazione di scorrimento orizzontale fluida */
 }
 
+/* --------------------------------------------------------------------------
+   7.4 SCHEDA PRODOTTO SCORREVOLE (CARD)
+   -------------------------------------------------------------------------- */
+/* Singola scheda prodotto all'interno del binario scorrevole */
 .product-card-scroll {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    min-width: calc(25% - 15px);
-    overflow: hidden;
-    border-radius: 8px;
-    background-color: var(--bg-card);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
+    display: flex;                             /* Layout flessibile interno */
+    flex-direction: column;                    /* Incolonna immagine e informazioni del prodotto */
+    height: 100%;                              /* Occupazione a tutta altezza */
+    min-width: calc(25% - 15px);               /* Calcola la larghezza per mostrare esattamente 4 schede per riga */
+    overflow: hidden;                          /* Mantiene i contenuti entro gli angoli arrotondati */
+    border-radius: 8px;                        /* Angoli arrotondati */
+    background-color: var(--bg-card);          /* Sfondo scuro della scheda */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);/* Ombreggiatura profonda */
+    transition: all 0.3s ease;                /* Transizione fluida di tutte le proprietà visive */
 }
 
+/* Feedback al passaggio del mouse sulla scheda prodotto */
 .product-card-scroll:hover {
-    box-shadow: 0 15px 35px rgba(155, 81, 224, 0.2);
-    transform: translateY(-8px);
+    box-shadow: 0 15px 35px rgba(155, 81, 224, 0.2); /* Bagliore violaceo attorno alla scheda */
+    transform: translateY(-8px);               /* Elevazione verso l'alto per l'effetto di selezione */
 }
 
+/* Contenitore dell'immagine prodotto nella scheda scorrevole */
 .product-image-scroll {
-    width: 100%;
-    height: 200px;
-    overflow: hidden;
-    background-color: rgba(0, 0, 0, 0.2);
+    width: 100%;                               /* Larghezza piena della scheda */
+    height: 200px;                             /* Altezza fissa per uniformità visiva */
+    overflow: hidden;                          /* Contiene l'effetto zoom dell'immagine */
+    background-color: rgba(0, 0, 0, 0.2);    /* Sfondo scuro di supporto per il caricamento */
 }
 
+/* Immagine del prodotto */
 .product-image-scroll img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.3s ease;
+    width: 100%;                               /* Occupa tutta la larghezza del contenitore */
+    height: 100%;                              /* Occupa tutta l'altezza del contenitore */
+    object-fit: cover;                         /* Adatta l'immagine coprendo lo spazio senza distorcerla */
+    transition: transform 0.3s ease;           /* Transizione per lo zoom all'hover */
 }
 
+/* Effetto zoom sull'immagine al sorvolo della scheda */
 .product-card-scroll:hover .product-image-scroll img {
-    transform: scale(1.08);
+    transform: scale(1.08);                    /* Ingrandimento progressivo dell'immagine */
 }
 
+/* Contenitore delle informazioni del prodotto (Titolo, Prezzo, Bottone) */
 .product-info-scroll {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 20px;
+    display: flex;                             /* Disposizione flessibile */
+    flex: 1;                                   /* Si espande per occupare l'altezza rimanente */
+    flex-direction: column;                    /* Incolonna i dettagli verticalmente */
+    justify-content: space-between;            /* Separa i titoli in alto dal pulsante in basso */
+    padding: 20px;                             /* Spaziatura interna della scheda */
 }
 
+/* Titolo/Nome del prodotto */
 .product-info-scroll h3 {
-    min-height: 40px;
-    margin-bottom: 10px;
-    color: var(--text-light);
-    font-size: 16px;
-    font-weight: 700;
-    line-height: 1.3;
+    min-height: 40px;                          /* Garantisce altezza minima per titoli su 2 righe */
+    margin-bottom: 10px;                       /* Distanza dal prezzo */
+    color: var(--text-light);                  /* Testo chiaro */
+    font-size: 16px;                           /* Dimensione del titolo */
+    font-weight: 700;                          /* Grassetto */
+    line-height: 1.3;                          /* Interlinea compatta per leggibilità */
 }
 
+/* Prezzo del prodotto scorrevole */
 .product-info-scroll .price {
-    margin-bottom: 15px;
-    color: var(--accent-yellow);
-    font-size: 20px;
-    font-weight: 800;
+    margin-bottom: 15px;                       /* Distanza dal pulsante d'azione */
+    color: var(--accent-yellow);               /* Prezzo in evidenza con il giallo d'accento */
+    font-size: 20px;                           /* Dimensionemaggiorata del prezzo */
+    font-weight: 800;                          /* Extra bold */
 }
 
+/* Pulsante d'acquisto/azione all'interno della scheda prodotto */
 .product-info-scroll .btn {
-    width: 100%;
-    padding: 10px 15px;
-    font-size: 13px;
+    width: 100%;                               /* Pulsante a tutta larghezza */
+    padding: 10px 15px;                        /* Spaziatura interna compatta */
+    font-size: 13px;                           /* Dimensione del testo del pulsante */
 }

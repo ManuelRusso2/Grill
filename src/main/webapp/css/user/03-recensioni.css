@@ -1,53 +1,71 @@
 /* ==========================================================================
    4. RECENSIONI & MODIFICA RECENSIONE
+   ==========================================================================
+   Stili dedicati alla sezione feedback prodotti: form di inserimento e
+   modifica recensione, elenco commenti, votazione a stelle e pulsanti azione.
    ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   4.1 SEPARATORE E STRUTTURA GENERALE
+   -------------------------------------------------------------------------- */
+/* Divisore di sezione tra i dettagli del prodotto e il blocco recensioni */
 .section-divider {
-    margin: 50px 0;
-    border: 0;
-    border-top: 1px solid var(--border-color);
+    margin: 50px 0;                            /* Distacco orizzontale marcato */
+    border: 0;                                 /* Reset del bordo nativo */
+    border-top: 1px solid var(--border-color); /* Linea di separazione orizzontale basata sul tema */
 }
 
+/* Contenitore della sezione recensioni */
 .reviews-section {
-    margin-top: 40px;
+    margin-top: 40px;                          /* Distanza dal separatore superiore */
 }
 
+/* Titolo principale della sezione recensioni */
 .reviews-section h2 {
-    margin-bottom: 25px;
-    color: var(--text-light);
-    font-family: var(--font-headings);
-    font-size: 24px;
-    font-style: italic;
-    font-weight: 900;
-    text-transform: uppercase;
+    margin-bottom: 25px;                       /* Distanza dal modulo form o lista sottostante */
+    color: var(--text-light);                  /* Testo ad alto contrasto */
+    font-family: var(--font-headings);         /* Font dedicato ai titoli */
+    font-size: 24px;                           /* Dimensione estesa per evidenziare la sezione */
+    font-style: italic;                        /* Stile corsivo stilizzato */
+    font-weight: 900;                          /* Grassetto Black / Extra Bold */
+    text-transform: uppercase;                 /* Testo in lettere maiuscole */
 }
 
-/* Card Form Inserimento & Modifica Recensione */
+/* --------------------------------------------------------------------------
+   4.2 SCHEDE FORM (INSERIMENTO & MODIFICA)
+   -------------------------------------------------------------------------- */
+/* Card contenitore dei form di recensione */
 .review-form-card,
 .review-edit-card {
-    margin-bottom: 35px;
-    padding: 25px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    background-color: var(--bg-card);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+    margin-bottom: 35px;                       /* Distanza dal blocco successivo */
+    padding: 25px;                             /* Spaziatura interna della scheda */
+    border: 1px solid var(--border-color);     /* Bordo perimetrale basato sulle variabili di tema */
+    border-radius: 8px;                        /* Angoli arrotondati */
+    background-color: var(--bg-card);          /* Sfondo scuro della scheda */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);/* Ombreggiatura profonda per stacco visivo */
 }
 
+/* Variante specifica per il form di modifica recensione (centrato e delimitato) */
 .review-edit-card {
-    max-width: 650px;
-    margin: 20px auto 40px auto;
+    max-width: 650px;                          /* Larghezza massima per non allargare eccessivamente il modulo */
+    margin: 20px auto 40px auto;               /* Centratura orizzontale con margini verticali */
 }
 
+/* Titoli delle schede form */
 .review-form-card h3,
 .review-edit-card h3 {
-    margin-top: 0;
-    margin-bottom: 20px;
-    color: var(--accent-yellow);
-    font-size: 18px;
-    font-weight: 700;
-    text-transform: uppercase;
+    margin-top: 0;                             /* Azzera il margine superiore */
+    margin-bottom: 20px;                       /* Spazio inferiore dai campi di input */
+    color: var(--accent-yellow);               /* Titolo evidenziato in giallo d'accento */
+    font-size: 18px;                           /* Dimensione del titolo */
+    font-weight: 700;                          /* Grassetto marcato */
+    text-transform: uppercase;                 /* Maiuscolo */
 }
 
-/* Campi Form (Input, Select, Textarea) */
+/* --------------------------------------------------------------------------
+   4.3 CAMPI DI INPUT (SELECT, TEXTAREA, INPUTS)
+   -------------------------------------------------------------------------- */
+/* Formattazione uniforme dei controlli nei form recensione */
 .review-form-card select,
 .review-form-card textarea,
 .review-form-card .form-control,
@@ -55,17 +73,18 @@
 .review-edit-card textarea,
 .form-edit-review select,
 .form-edit-review textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    background-color: var(--bg-input);
-    color: var(--text-light);
-    font-family: inherit;
-    font-size: 14px;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    width: 100%;                               /* Larghezza piena al 100% rispetto al contenitore */
+    padding: 12px;                             /* Spaziatura interna confortevole per la digitazione */
+    border: 1px solid var(--border-color);     /* Bordo neutro di default */
+    border-radius: 4px;                        /* Angoli arrotondati */
+    background-color: var(--bg-input);          /* Sfondo scuro per i campi di input */
+    color: var(--text-light);                  /* Testo digitato chiaro */
+    font-family: inherit;                      /* Eredita la tipografia della pagina */
+    font-size: 14px;                           /* Dimensione del testo */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Transizione fluida sullo stato di focus */
 }
 
+/* Evidenziazione visiva al focus sui campi form */
 .review-form-card select:focus,
 .review-form-card textarea:focus,
 .review-form-card .form-control:focus,
@@ -73,212 +92,236 @@
 .review-edit-card textarea:focus,
 .form-edit-review select:focus,
 .form-edit-review textarea:focus {
-    border-color: var(--primary-purple);
-    box-shadow: 0 0 8px rgba(138, 43, 226, 0.3);
-    outline: none;
+    border-color: var(--primary-purple);       /* Bordo passa al colore viola primario */
+    box-shadow: 0 0 8px rgba(138, 43, 226, 0.3);/* Bagliore violaceo attorno al campo attivo */
+    outline: none;                             /* Rimuove l'outline predefinito del browser */
 }
 
+/* Area testo multilinea per il commento */
 .review-form-card textarea,
 .review-edit-card textarea,
 .form-edit-review textarea {
-    min-height: 120px;
-    resize: vertical;
+    min-height: 120px;                         /* Altezza minima garantita */
+    resize: vertical;                          /* Consente il ridimensionamento solo verticale */
 }
 
+/* Gruppo form campo-etichetta */
 .form-edit-review .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 20px;                       /* Distanza tra i gruppi di campi */
 }
 
+/* Etichetta del campo */
 .form-edit-review label {
-    display: block;
-    margin-bottom: 8px;
-    color: var(--text-light);
-    font-size: 14px;
-    font-weight: 600;
+    display: block;                            /* Dispone l'etichetta su una propria riga */
+    margin-bottom: 8px;                        /* Spazio inferiore verso il campo */
+    color: var(--text-light);                  /* Testo chiaro */
+    font-size: 14px;                           /* Dimensione del font */
+    font-weight: 600;                          /* Testo semi-grassetto */
 }
 
-/* Layout Azioni / Pulsanti Form */
+/* --------------------------------------------------------------------------
+   4.4 BOTTONI D'AZIONE DEL FORM
+   -------------------------------------------------------------------------- */
+/* Layout contenitore per i pulsanti del form */
 .form-actions {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 15px;
-    margin-top: 25px;
+    display: flex;                             /* Disposizione flessibile in linea */
+    align-items: center;                       /* Centratura verticale */
+    justify-content: flex-start;               /* Allineamento a sinistra */
+    gap: 15px;                                 /* Distanza orizzontale tra invia e annulla */
+    margin-top: 25px;                          /* Spazio superiore dai campi del form */
 }
 
-/* Pulsanti Invia e Salva (Stile Primario Viola) */
+/* Pulsanti principali (Invia / Salva Recensione) */
 .btn-submit-review,
 .btn-submit-edit,
 .form-edit-review .btn-submit,
 .form-edit-review button[type="submit"] {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: auto;
-    padding: 12px 24px;
-    border: 1px solid var(--primary-purple);
-    border-radius: 4px;
-    background-color: var(--primary-purple);
-    color: #ffffff;
-    font-family: var(--font-headings);
-    font-size: 13px;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    display: inline-flex;                      /* Flexbox in linea */
+    align-items: center;                       /* Centratura verticale */
+    justify-content: center;                   /* Centratura orizzontale */
+    width: auto;                               /* Larghezza adattata al contenuto */
+    padding: 12px 24px;                        /* Spaziatura interna */
+    border: 1px solid var(--primary-purple);   /* Bordo viola */
+    border-radius: 4px;                        /* Angoli arrotondati */
+    background-color: var(--primary-purple);  /* Sfondo viola principale */
+    color: #ffffff;                            /* Testo bianco ad alto contrasto */
+    font-family: var(--font-headings);         /* Font dei titoli */
+    font-size: 13px;                           /* Dimensione carattere */
+    font-weight: 700;                          /* Grassetto */
+    text-transform: uppercase;                 /* Maiuscolo */
+    letter-spacing: 0.5px;                     /* Spaziatura tra i caratteri */
+    cursor: pointer;                           /* Puntatore a manina */
+    transition: all 0.2s ease;                /* Transizione per stato hover */
 }
 
+/* Hover del pulsante primario */
 .btn-submit-review:hover,
 .btn-submit-edit:hover,
 .form-edit-review .btn-submit:hover,
 .form-edit-review button[type="submit"]:hover {
-    background-color: rgba(138, 43, 226, 0.85);
-    box-shadow: 0 0 12px rgba(138, 43, 226, 0.5);
-    transform: translateY(-1px);
+    background-color: rgba(138, 43, 226, 0.85); /* Lieve schiarimento del viola */
+    box-shadow: 0 0 12px rgba(138, 43, 226, 0.5);/* Bagliore violaceo attorno al pulsante */
+    transform: translateY(-1px);               /* Effetto di sollevamento leggero */
 }
 
-/* Pulsante Annulla (Stile Secondario Bordato) */
+/* Pulsanti secondari (Annulla Modifica) */
 .btn-cancel-edit,
 .form-edit-review .btn-cancel,
 .form-edit-review a.btn-cancel {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 12px 24px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    background-color: transparent;
-    color: var(--text-gray);
-    font-family: var(--font-headings);
-    font-size: 13px;
-    font-weight: 700;
-    text-decoration: none;
-    text-transform: uppercase;
-    transition: all 0.2s ease;
+    display: inline-flex;                      /* Flexbox in linea */
+    align-items: center;                       /* Centratura verticale */
+    justify-content: center;                   /* Centratura orizzontale */
+    padding: 12px 24px;                        /* Spaziatura interna */
+    border: 1px solid var(--border-color);     /* Bordo neutro */
+    border-radius: 4px;                        /* Angoli arrotondati */
+    background-color: transparent;             /* Sfondo trasparente */
+    color: var(--text-gray);                   /* Testo grigio */
+    font-family: var(--font-headings);         /* Font dei titoli */
+    font-size: 13px;                           /* Dimensione carattere */
+    font-weight: 700;                          /* Grassetto */
+    text-decoration: none;                     /* Rimuove la sottolineatura dal link */
+    text-transform: uppercase;                 /* Maiuscolo */
+    transition: all 0.2s ease;                /* Transizione fluida */
 }
 
+/* Hover del pulsante di annullamento */
 .btn-cancel-edit:hover,
 .form-edit-review .btn-cancel:hover,
 .form-edit-review a.btn-cancel:hover {
-    border-color: var(--text-light);
-    color: var(--text-light);
-    transform: translateY(-1px);
+    border-color: var(--text-light);          /* Il bordo diventa chiaro */
+    color: var(--text-light);                  /* Il testo passa al chiaro */
+    transform: translateY(-1px);               /* Effetto di sollevamento */
 }
 
-/* Lista Recensioni Pubblicate */
+/* --------------------------------------------------------------------------
+   4.5 LISTA RECENSIONI & METADATI
+   -------------------------------------------------------------------------- */
+/* Contenitore elenco recensioni pubblicate */
 .reviews-list {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
+    display: flex;                             /* Layout verticale flex */
+    flex-direction: column;                    /* Incolonna i singoli commenti */
+    gap: 15px;                                 /* Spazio tra un commento e l'altro */
 }
 
+/* Card del singolo commento / recensione */
 .review-item {
-    padding: 20px;
-    border: 1px solid var(--border-color);
-    border-radius: 6px;
-    background-color: var(--bg-card);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    transition: border-color 0.2s ease;
+    padding: 20px;                             /* Spaziatura interna */
+    border: 1px solid var(--border-color);     /* Bordo della scheda */
+    border-radius: 6px;                        /* Angoli arrotondati */
+    background-color: var(--bg-card);          /* Sfondo della scheda */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);  /* Ombreggiatura leggera */
+    transition: border-color 0.2s ease;        /* Transizione bordo all'hover */
 }
 
+/* Feedback al passaggio del mouse sulla singola recensione */
 .review-item:hover {
-    border-color: rgba(155, 81, 224, 0.4);
+    border-color: rgba(155, 81, 224, 0.4);     /* Evidenzia il bordo con una sfumatura viola */
 }
 
-/* Meta Dati della Recensione */
+/* Intestazione metadati recensione (Autore, Stelle, Data) */
 .review-meta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
+    display: flex;                             /* Disposizione in linea flessibile */
+    flex-wrap: wrap;                           /* Consente il riavvolgimento su schermi piccoli */
+    align-items: center;                       /* Centratura verticale degli elementi */
+    gap: 12px;                                 /* Spaziatura tra i metadati */
+    margin-bottom: 12px;                       /* Distanza dal testo del commento */
 }
 
+/* Nome dell'autore della recensione */
 .review-author {
-    color: var(--text-light);
-    font-size: 14px;
-    font-weight: 700;
+    color: var(--text-light);                  /* Testo chiaro */
+    font-size: 14px;                           /* Dimensione testo */
+    font-weight: 700;                          /* Grassetto */
 }
 
+/* Email dell'autore (se visibile) */
 .review-email {
-    margin-left: 4px;
-    color: var(--text-gray);
-    font-size: 13px;
-    font-weight: 400;
+    margin-left: 4px;                          /* Piccolo distacco dal nome */
+    color: var(--text-gray);                   /* Colore grigio secondario */
+    font-size: 13px;                           /* Dimensione ridotta */
+    font-weight: 400;                          /* Peso normale */
 }
 
+/* Valutazione a stelle */
 .review-stars {
-    color: var(--accent-yellow);
-    font-size: 16px;
-    letter-spacing: 2px;
+    color: var(--accent-yellow);               /* Stelle di colore giallo fluo d'accento */
+    font-size: 16px;                           /* Dimensione delle icone/caratteri stella */
+    letter-spacing: 2px;                       /* Spaziatura tra le stelle */
 }
 
+/* Data di pubblicazione */
 .review-date {
-    margin-left: auto;
-    color: var(--text-gray);
-    font-size: 12px;
+    margin-left: auto;                         /* Spinge la data sull'estrema destra */
+    color: var(--text-gray);                   /* Testo grigio di supporto */
+    font-size: 12px;                           /* Dimensione ridotta */
 }
 
+/* Testo della recensione */
 .review-text {
-    margin: 0;
-    color: var(--text-light);
-    font-size: 14px;
-    line-height: 1.6;
-    opacity: 0.9;
+    margin: 0;                                 /* Azzera i margini predefiniti del paragrafo */
+    color: var(--text-light);                  /* Testo chiaro ad alta visibilità */
+    font-size: 14px;                           /* Dimensione lettura */
+    line-height: 1.6;                          /* Interlinea confortevole */
+    opacity: 0.9;                              /* Lieve trasparenza stilistica */
 }
 
-/* Azioni sulla Recensione (Elimina / Modifica) */
+/* --------------------------------------------------------------------------
+   4.6 AZIONI UTENTE SULLA RECENSIONE & PROMPT
+   -------------------------------------------------------------------------- */
+/* Barra azioni per il proprietario della recensione (es. Elimina/Modifica) */
 .review-actions {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 15px;
-    padding-top: 10px;
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;                             /* Layout flessibile */
+    align-items: center;                       /* Centratura verticale */
+    justify-content: flex-end;                 /* Allineamento a destra */
+    gap: 10px;                                 /* Spazio tra i bottoni di azione */
+    margin-top: 15px;                          /* Spazio dal testo della recensione */
+    padding-top: 10px;                         /* Spaziatura interna superiore */
+    border-top: 1px solid rgba(255, 255, 255, 0.05); /* Separatore sottile dal testo */
 }
 
+/* Pulsante Elimina Recensione (Stile Distruttivo/Rosso) */
 .btn-delete-review {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: auto;
-    padding: 6px 12px;
-    border: 1px solid #ff4a4a;
-    border-radius: 4px;
-    background-color: rgba(255, 74, 74, 0.15);
-    color: #ff4a4a;
-    font-family: var(--font-headings);
-    font-size: 12px;
-    font-weight: 700;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    display: inline-flex;                      /* Flexbox in linea */
+    align-items: center;                       /* Centratura verticale */
+    justify-content: center;                   /* Centratura orizzontale */
+    width: auto;                               /* Larghezza automatica */
+    padding: 6px 12px;                         /* Spaziatura interna compatta */
+    border: 1px solid #ff4a4a;                 /* Bordo rosso d'allarme */
+    border-radius: 4px;                        /* Angoli arrotondati */
+    background-color: rgba(255, 74, 74, 0.15); /* Sfondo rosso trasparente */
+    color: #ff4a4a;                            /* Testo rosso */
+    font-family: var(--font-headings);         /* Font dei titoli */
+    font-size: 12px;                           /* Dimensione compatta */
+    font-weight: 700;                          /* Grassetto */
+    text-transform: uppercase;                 /* Maiuscolo */
+    cursor: pointer;                           /* Puntatore a manina */
+    transition: all 0.2s ease;                /* Transizione fluida */
 }
 
+/* Hover del pulsante elimina */
 .btn-delete-review:hover {
-    background-color: #ff4a4a;
-    color: #ffffff;
-    box-shadow: 0 0 10px rgba(255, 74, 74, 0.4);
-    transform: translateY(-1px);
+    background-color: #ff4a4a;                 /* Sfondo rosso pieno */
+    color: #ffffff;                            /* Testo bianco */
+    box-shadow: 0 0 10px rgba(255, 74, 74, 0.4);/* Bagliore rosso attorno al pulsante */
+    transform: translateY(-1px);               /* Effetto di sollevamento */
 }
 
-/* Messaggi Informativi */
+/* Messaggi di stato o inviti all'azione (es. Login per recensire) */
 .review-login-prompt,
 .no-reviews-msg {
-    margin: 15px 0;
-    color: var(--text-gray);
-    font-size: 14px;
-    font-style: italic;
+    margin: 15px 0;                            /* Margini verticali */
+    color: var(--text-gray);                   /* Testo grigio */
+    font-size: 14px;                           /* Dimensione */
+    font-style: italic;                        /* Corsivo */
 }
 
+/* Link contenuto nell'invito al login */
 .review-login-prompt a {
-    color: var(--accent-yellow);
-    text-decoration: underline;
-    transition: color 0.2s ease;
+    color: var(--accent-yellow);               /* Link in giallo d'accento */
+    text-decoration: underline;               /* Sottolineato */
+    transition: color 0.2s ease;               /* Transizione colore all'hover */
 }
 
 .review-login-prompt a:hover {
-    color: var(--text-light);
+    color: var(--text-light);                  /* Passa al chiaro durante il sorvolo */
 }

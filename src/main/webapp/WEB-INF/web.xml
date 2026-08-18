@@ -5,28 +5,79 @@
          http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
          
+    <!-- =================================================================== -->
+    <!-- INFORMATE SULL'APPLICAZIONE                                         -->
+    <!-- Nome identificativo della Web Application nel Servlet Container     -->
+    <!-- =================================================================== -->
     <display-name>Grill</display-name>
     
+    <!-- =================================================================== -->
+    <!-- PAGINE DI BENVENUTO (WELCOME FILES)                                 -->
+    <!-- Definisce le risorsa di default servite quando viene richiesto     -->
+    <!-- un percorso relativo alla radice del contesto (es. '/')             -->
+    <!-- =================================================================== -->
     <welcome-file-list>
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
     
+    <!-- =================================================================== -->
+    <!-- CONFIGURAZIONE ENCODING GLOBALE                                     -->
+    <!-- Forza la codifica UTF-8 per le richieste in ingresso e le risposte  -->
+    <!-- in uscita a livello di contesto Web                -->
+    <!-- =================================================================== -->
+    <request-character-encoding>UTF-8</request-character-encoding>
+    <response-character-encoding>UTF-8</response-character-encoding>
+    
+    <!-- =================================================================== -->
+    <!-- CONFIGURAZIONE GESTIONE SESSIONI E SICUREZZA COOKIE                 -->
+    <!-- - session-timeout: Inattività massima espressa in minuti (30 min)  -->
+    <!-- - http-only: Previene l'accesso ai cookie di sessione (JSESSIONID) -->
+    <!--   tramite script client-side (es. JavaScript / attacchi XSS)       -->
+    <!-- =================================================================== -->
+    <session-config>
+        <session-timeout>30</session-timeout>
+        <cookie-config>
+            <http-only>true</http-only>
+        </cookie-config>
+    </session-config>
+    
+    <!-- =================================================================== -->
+    <!-- MAPPA DELLE PAGINE DI ERRORE PERSONALIZZATE                         -->
+    <!-- Intercetta i codici di stato HTTP e le eccezioni non gestite        -->
+    <!-- reindirizzando l'utente su viste JSP dedicate                      -->
+    <!-- =================================================================== -->
+    
+    <!-- Errore HTTP 403: Forbidden / Accesso Negato -->
     <error-page>
         <error-code>403</error-code>
         <location>/jsp/common/error403.jsp</location>
     </error-page>
 
+    <!-- Errore HTTP 404: Not Found / Risorsa Non Trovata -->
     <error-page>
         <error-code>404</error-code>
         <location>/jsp/common/error404.jsp</location>
     </error-page>
 
+    <!-- Errore HTTP 500: Internal Server Error / Errore Generico del Server -->
     <error-page>
         <error-code>500</error-code>
         <location>/jsp/common/error500.jsp</location>
     </error-page>
 
+    <!-- Gestione Eccezioni Generiche (Throwable) lato Server -->
+    <error-page>
+        <exception-type>java.lang.Throwable</exception-type>
+        <location>/jsp/common/error500.jsp</location>
+    </error-page>
+
+    <!-- =================================================================== -->
+    <!-- RIFERIMENTO ALLA RISORSA JNDI DATASOURCE                            -->
+    <!-- Mappa il nome JNDI logico utilizzato nel codice con la risorsa     -->
+    <!-- DataSource configurata nel Servlet Container (es. Tomcat context.xml) -->
+    <!-- =================================================================== -->
     <resource-ref>
+        <description>Connessione al database relazionale dell'applicazione Grill</description>
         <res-ref-name>jdbc/grillDB</res-ref-name>
         <res-type>javax.sql.DataSource</res-type>
         <res-auth>Container</res-auth>

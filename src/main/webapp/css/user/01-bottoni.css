@@ -1,8 +1,15 @@
 /* ==========================================================================
    1. UNIFICAZIONE BOTTONI E RESET FORM INTERNI
+   ==========================================================================
+   Normalizzazione dei form inseriti all'interno delle schede e definizione
+   degli stili globali coerenti per i pulsanti di azione primari e secondari.
    ========================================================================== */
 
-/* Reset Form Generici usati dentro le Card */
+/* --------------------------------------------------------------------------
+   1.1 RESET FORM GENERICI NELLE CARD E NEI MODULI
+   Annulla lo stile predefinito dei form inseriti in contesti specifici
+   (carrello, recensioni, checkout) evitando margini, ombre o sfondi indesiderati.
+   -------------------------------------------------------------------------- */
 .add-to-cart-form,
 .review-form-card form,
 .checkout-form-card form,
@@ -11,14 +18,18 @@
 .cart-remove-form,
 .delete-review-form,
 .user-review .review-actions form {
-    max-width: 100%;
-    margin: 0;
-    padding: 0;
-    background: transparent;
-    box-shadow: none;
+    max-width: 100%;                           /* Utilizza fino al 100% dello spazio fornito dal contenitore */
+    margin: 0;                                 /* Azzera i margini esterni */
+    padding: 0;                                /* Azzera il padding interno */
+    background: transparent;                   /* Sfondo trasparente per integrarsi nel contesto */
+    box-shadow: none;                          /* Rimuove eventuali ombreggiature applicate ai form generali */
 }
 
-/* Pulsanti Principali Fluo (Giallo Accent) */
+/* --------------------------------------------------------------------------
+   1.2 PULSANTI PRINICIPALI FLUO (GIALLO ACCENT)
+   Stile primario ad alto impatto visivo per le azioni principali dell'utente
+   (aggiunta al carrello, invio recensione, avvio del checkout).
+   -------------------------------------------------------------------------- */
 .btn-catalog,
 .btn-checkout,
 .btn-submit,
@@ -26,25 +37,26 @@
 .btn-submit-review,
 .product-actions-wrapper button,
 .product-actions-wrapper input[type="submit"] {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 14px 28px;
-    border: none;
-    border-radius: 6px;
-    background-color: var(--accent-yellow);
-    color: #000000;
-    font-family: var(--font-headings);
-    font-size: 14px;
-    font-weight: 800;
-    text-decoration: none;
-    text-transform: uppercase;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(204, 255, 0, 0.2);
-    transition: all 0.3s ease;
+    display: inline-flex;                      /* Flexbox per l'allineamento perfetto di icone e testo */
+    align-items: center;                       /* Centratura verticale degli elementi interni */
+    justify-content: center;                   /* Centratura orizzontale */
+    gap: 8px;                                  /* Distanza fissa tra eventuale icona e testo */
+    padding: 14px 28px;                        /* Spaziatura interna confortevole per la cliccabilità */
+    border: none;                              /* Rimuove il bordo predefinito dei bottoni */
+    border-radius: 6px;                        /* Angoli leggermente arrotondati */
+    background-color: var(--accent-yellow);    /* Colore di sfondo giallo fluo d'accento */
+    color: #000000;                            /* Testo nero per garantire il massimo contrasto */
+    font-family: var(--font-headings);         /* Famiglia di font dedicata ai titoli/call-to-action */
+    font-size: 14px;                           /* Dimensione del testo */
+    font-weight: 800;                          /* Grassetto molto marcato (Extra Bold) */
+    text-decoration: none;                     /* Rimuove la sottolineatura in caso di elemento <a> */
+    text-transform: uppercase;                 /* Testo in lettere maiuscole */
+    cursor: pointer;                           /* Puntatore a manina per indicare l'interattività */
+    box-shadow: 0 4px 15px rgba(204, 255, 0, 0.2); /* Bagliore/Ombra iniziale coordinata col colore di accento */
+    transition: all 0.3s ease;                /* Transizione fluida per tutte le modifiche di stato (hover/active) */
 }
 
+/* Feedback visivo al passaggio del mouse (hover) per i bottoni primari */
 .btn-catalog:hover,
 .btn-checkout:hover,
 .btn-submit:hover,
@@ -52,33 +64,38 @@
 .btn-submit-review:hover,
 .product-actions-wrapper button:hover,
 .product-actions-wrapper input[type="submit"]:hover {
-    background-color: #e0ff4d;
-    box-shadow: 0 8px 22px rgba(204, 255, 0, 0.35);
-    transform: translateY(-2px);
+    background-color: #e0ff4d;                 /* Viraggio ad un giallo fluo leggermente più luminoso */
+    box-shadow: 0 8px 22px rgba(204, 255, 0, 0.35); /* Intensificazione e ampliamento dell'effetto bagliore */
+    transform: translateY(-2px);               /* Effetto di sollevamento leggero verso l'alto */
 }
 
-/* Bottone Secondario Generico */
+/* --------------------------------------------------------------------------
+   1.3 BOTTONE SECONDARIO GENERICO
+   Stile discreto/trasparente destinato ad azioni di supporto o secondarie
+   (es. "Annulla", "Torna indietro", "Continua lo shopping").
+   -------------------------------------------------------------------------- */
 .btn-secondary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 14px 20px;
-    border: 1px solid transparent;
-    border-radius: 6px;
-    background-color: transparent;
-    color: var(--text-light);
-    font-family: var(--font-body);
-    font-size: 14px;
-    font-weight: 600;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
+    display: inline-flex;                      /* Flexbox in linea */
+    align-items: center;                       /* Centratura verticale */
+    justify-content: center;                   /* Centratura orizzontale */
+    gap: 8px;                                  /* Distanza tra icona e testo */
+    padding: 14px 20px;                        /* Spaziatura interna */
+    border: 1px solid transparent;             /* Bordo di base trasparente per evitare scatti nell'hover */
+    border-radius: 6px;                        /* Angoli arrotondati */
+    background-color: transparent;             /* Sfondo trasparente di default */
+    color: var(--text-light);                  /* Testo chiaro leggibile su sfondi scuri */
+    font-family: var(--font-body);             /* Font standard per il corpo del testo */
+    font-size: 14px;                           /* Dimensione carattere */
+    font-weight: 600;                          /* Testo semi-grassetto */
+    text-decoration: none;                     /* Rimuove la sottolineatura per elementi link */
+    cursor: pointer;                           /* Puntatore a manina */
+    transition: all 0.3s ease;                /* Transizione morbida per lo stato hover */
 }
 
+/* Feedback visivo al passaggio del mouse (hover) per i bottoni secondari */
 .btn-secondary:hover {
-    border-color: var(--border-color);
-    background-color: rgba(255, 255, 255, 0.08);
-    color: #ffffff;
-    transform: translateY(-2px);
+    border-color: var(--border-color);         /* Rivela un bordo discreto basato sulle variabili di tema */
+    background-color: rgba(255, 255, 255, 0.08); /* Sottile velatura bianca trasparente per evidenziare lo sfondo */
+    color: #ffffff;                            /* Testo bianco brillante */
+    transform: translateY(-2px);               /* Effetto di sollevamento di 2px */
 }

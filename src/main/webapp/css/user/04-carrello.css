@@ -1,297 +1,349 @@
 /* ==========================================================================
    5. CARRELLO & CHECKOUT
+   ==========================================================================
+   Stili dedicati alla gestione dei prodotti inseriti nel carrello, aggiornamento
+   delle quantità, calcolo del totale e flusso di completamento dell'ordine (checkout).
    ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   5.1 TABELLA CARRELLO & PRODOTTI
+   -------------------------------------------------------------------------- */
+/* Tabella principale contenente i prodotti inseriti nel carrello */
 .cart-table {
-    width: 100%;
-    margin-bottom: 30px;
-    overflow: hidden;
-    border-collapse: collapse;
-    border-radius: 8px;
-    background-color: var(--bg-card);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    width: 100%;                               /* Occupazione completa della larghezza disponibile */
+    margin-bottom: 30px;                       /* Distacco dal blocco riepilogo sottostante */
+    overflow: hidden;                          /* Previene la fuoriuscita di contenuti e mantiene il border-radius */
+    border-collapse: collapse;                 /* Unifica i bordi delle celle della tabella */
+    border-radius: 8px;                        /* Angoli arrotondati della struttura tabella */
+    background-color: var(--bg-card);          /* Sfondo scuro della scheda cart */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);/* Ombreggiatura profonda per stacco visivo */
 }
 
+/* Stili comuni per intestazioni e celle della tabella */
 .cart-table th, 
 .cart-table td {
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--border-color);
-    text-align: left;
+    padding: 16px 20px;                        /* Spaziatura interna per un'ottima leggibilità */
+    border-bottom: 1px solid var(--border-color); /* Separatore orizzontale tra le righe */
+    text-align: left;                          /* Allineamento a sinistra del testo di default */
 }
 
+/* Intestazione della tabella carrello */
 .cart-table th {
-    background-color: rgba(0, 0, 0, 0.2);
-    color: var(--text-gray);
-    font-size: 13px;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
+    background-color: rgba(0, 0, 0, 0.2);      /* Sfondo leggermente inscurito per la barra di intestazione */
+    color: var(--text-gray);                   /* Colore del testo secondario */
+    font-size: 13px;                           /* Dimensione carattere contenuta */
+    letter-spacing: 0.5px;                     /* Spaziatura caratteri per leggibilità */
+    text-transform: uppercase;                 /* Testo in lettere maiuscole */
 }
 
+/* Rimuove il bordo inferiore dall'ultima riga per un effetto pulito */
 .cart-table tr:last-child td {
-    border-bottom: none;
+    border-bottom: none;                       /* Azzera il bordo di chiusura della tabella */
 }
 
+/* Titolo/Nome del prodotto presente in tabella */
 .cart-product-title {
-    color: var(--text-light);
-    font-weight: 600;
+    color: var(--text-light);                  /* Testo ad alto contrasto */
+    font-weight: 600;                          /* Testo semi-grassetto */
 }
 
+/* Hover sul titolo prodotto (se formattato come link) */
 .cart-product-title:hover {
-    color: var(--accent-yellow);
+    color: var(--accent-yellow);               /* Cambia il colore in giallo d'accento al sorvolo */
 }
 
-/* Form e Quantità */
+/* --------------------------------------------------------------------------
+   5.2 AGGIORNAMENTO QUANTITÀ CARRELLO
+   -------------------------------------------------------------------------- */
+/* Form per la modifica rapida delle quantità nel carrello */
 .cart-update-form {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
+    display: inline-flex;                      /* Flexbox in linea per affiancare input e bottone */
+    align-items: center;                       /* Centratura verticale */
+    gap: 8px;                                  /* Spazio tra il campo numerico e il bottone aggiorna */
 }
 
+/* Campo input numerico quantità */
 .cart-update-form .input-qty {
-    width: 60px;
-    padding: 6px 8px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    background-color: var(--bg-input);
-    color: var(--text-light);
-    font-size: 14px;
-    text-align: center;
-    outline: none;
-    transition: border-color 0.2s ease;
+    width: 60px;                               /* Larghezza compatta adatta a poche cifre */
+    padding: 6px 8px;                          /* Spaziatura interna ridotta */
+    border: 1px solid var(--border-color);     /* Bordo neutro di default */
+    border-radius: 4px;                        /* Angoli arrotondati */
+    background-color: var(--bg-input);          /* Sfondo scuro per il campo di digitazione */
+    color: var(--text-light);                  /* Testo numerico chiaro */
+    font-size: 14px;                           /* Dimensione del testo */
+    text-align: center;                        /* Numero centrato nel campo */
+    outline: none;                             /* Rimuove l'outline predefinito */
+    transition: border-color 0.2s ease;        /* Transizione fluida sullo stato di focus */
 }
 
+/* Evidenziazione al focus del campo quantità */
 .cart-update-form .input-qty:focus {
-    border-color: var(--primary-purple);
+    border-color: var(--primary-purple);       /* Il bordo passa al viola principale di tema */
 }
 
-/* Pulsante Aggiorna Quantità (Garantisce testo bianco senza !important) */
+/* Pulsante Aggiorna Quantità (Selettore ad alta specificità senza !important) */
 main .cart-update-form button,
 main .cart-update-form .btn-update,
 main .cart-table .cart-update-form button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 6px 12px;
-    border: 1px solid var(--primary-purple);
-    border-radius: 4px;
-    background-color: rgba(138, 43, 226, 0.2);
-    color: #ffffff;
-    font-family: var(--font-headings);
-    font-size: 12px;
-    font-weight: 700;
-    line-height: 1;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all 0.2s ease;
+    display: inline-flex;                      /* Layout flex in linea */
+    align-items: center;                       /* Centratura verticale dell'icona/testo */
+    justify-content: center;                   /* Centratura orizzontale */
+    padding: 6px 12px;                         /* Spaziatura interna compatta */
+    border: 1px solid var(--primary-purple);   /* Bordo viola ben definito */
+    border-radius: 4px;                        /* Angoli arrotondati */
+    background-color: rgba(138, 43, 226, 0.2); /* Sfondo viola traslucido */
+    color: #ffffff;                            /* Garantisce il testo bianco senza forzature */
+    font-family: var(--font-headings);         /* Font dei titoli/pulsanti */
+    font-size: 12px;                           /* Dimensione testo contenuta */
+    font-weight: 700;                          /* Grassetto marcato */
+    line-height: 1;                            /* Line-height unitario per un'altezza precisa */
+    text-transform: uppercase;                 /* Maiuscolo */
+    letter-spacing: 0.5px;                     /* Spaziatura dei caratteri */
+    cursor: pointer;                           /* Puntatore a manina */
+    white-space: nowrap;                       /* Impedisce il riavvolgimento del testo del pulsante */
+    transition: all 0.2s ease;                /* Transizione fluida degli stati */
 }
 
+/* Feedback al passaggio del mouse sul pulsante aggiorna */
 main .cart-update-form button:hover,
 main .cart-update-form .btn-update:hover,
 main .cart-table .cart-update-form button:hover {
-    background-color: var(--primary-purple);
-    color: #ffffff;
-    box-shadow: 0 0 10px rgba(138, 43, 226, 0.5);
-    transform: translateY(-1px);
+    background-color: var(--primary-purple);  /* Sfondo passa al viola pieno */
+    color: #ffffff;                            /* Mantiene il testo bianco ad alto contrasto */
+    box-shadow: 0 0 10px rgba(138, 43, 226, 0.5); /* Bagliore violaceo attorno al pulsante */
+    transform: translateY(-1px);               /* Effetto di leggero sollevamento */
 }
 
+/* --------------------------------------------------------------------------
+   5.3 RIEPILOGO CARRELLO & AZIONI GLOBALI
+   -------------------------------------------------------------------------- */
+/* Contenitore della scheda riepilogo carrello e totale */
 .cart-summary {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 20px;
-    max-width: 100%;
-    margin-top: 30px;
-    padding: 30px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    background-color: var(--bg-card);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    display: flex;                             /* Disposizione flessibile */
+    flex-direction: column;                    /* Incolonna i contenuti in verticale */
+    align-items: flex-end;                     /* Allinea tutto il contenuto sul margine destro */
+    gap: 20px;                                 /* Spaziatura costante tra titolo, totale e bottoni */
+    max-width: 100%;                           /* Adattamento responsive alla larghezza totale */
+    margin-top: 30px;                          /* Distacco dalla tabella dei prodotti */
+    padding: 30px;                             /* Spaziatura interna della scheda */
+    border: 1px solid var(--border-color);     /* Bordo perimetrale basato sul tema */
+    border-radius: 8px;                        /* Angoli arrotondati */
+    background-color: var(--bg-card);          /* Sfondo della scheda riepilogo */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);/* Ombreggiatura profonda */
 }
 
+/* Titolo ed etichetta del totale */
 .cart-summary h2 {
-    margin: 0;
-    color: var(--text-light);
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 800;
-    text-align: right;
-    text-transform: none;
+    margin: 0;                                 /* Azzera i margini predefiniti */
+    color: var(--text-light);                  /* Testo ad alta visibilità */
+    font-size: 24px;                           /* Dimensione estesa */
+    font-style: normal;                        /* Testo non inclinato */
+    font-weight: 800;                          /* Extra bold */
+    text-align: right;                         /* Allineamento a destra */
+    text-transform: none;                      /* Mantiene il casing originale del testo */
 }
 
+/* Importo effettivo in evidenza all'interno del titolo */
 .cart-summary h2 span {
-    margin-left: 10px;
-    color: var(--primary-purple);
-    font-size: 30px;
+    margin-left: 10px;                         /* Spazio dalla label al prezzo */
+    color: var(--primary-purple);              /* Importo evidenziato con il viola di brand */
+    font-size: 30px;                           /* Dimensione notevolmente aumentata per grande impatto */
 }
 
+/* Gruppo contenitore delle azioni globali sul carrello (Svuota / Procedi) */
 .cart-actions-group {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 15px;
-    width: 100%;
+    display: flex;                             /* Layout in linea flessibile */
+    flex-wrap: wrap;                           /* Consente l'incolonnamento su dispositivi stretti */
+    align-items: center;                       /* Centratura verticale degli elementi */
+    justify-content: flex-end;                 /* Allineamento sulla destra */
+    gap: 15px;                                 /* Spaziatura tra i pulsanti di azione */
+    width: 100%;                               /* Occupazione piena della larghezza */
 }
 
+/* Pulsante Svuota Carrello (Stile d'allarme/distruttivo) */
 .cart-summary .btn-empty-cart {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: auto;
-    padding: 14px 20px;
-    border: 1px solid #ff4a4a;
-    border-radius: 4px;
-    background-color: rgba(255, 74, 74, 0.15);
-    color: #ff4a4a;
-    font-family: var(--font-headings);
-    font-size: 13px;
-    font-weight: 800;
-    line-height: 1;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.2s ease;
+    display: inline-flex;                      /* Flexbox in linea */
+    align-items: center;                       /* Centratura verticale */
+    justify-content: center;                   /* Centratura orizzontale */
+    width: auto;                               /* Adatta la larghezza al testo interno */
+    padding: 14px 20px;                        /* Spaziatura interna */
+    border: 1px solid #ff4a4a;                 /* Bordo rosso avviso */
+    border-radius: 4px;                        /* Angoli arrotondati */
+    background-color: rgba(255, 74, 74, 0.15); /* Sfondo rosso trasparente */
+    color: #ff4a4a;                            /* Testo rosso */
+    font-family: var(--font-headings);         /* Font dei titoli */
+    font-size: 13px;                           /* Dimensione del font */
+    font-weight: 800;                          /* Extra bold */
+    line-height: 1;                            /* Line-height unitario */
+    text-transform: uppercase;                 /* Maiuscolo */
+    cursor: pointer;                           /* Puntatore a manina */
+    transition: all 0.2s ease;                /* Transizione fluida */
 }
 
+/* Hover sul pulsante svuota carrello */
 .cart-summary .btn-empty-cart:hover {
-    background-color: #ff4a4a;
-    color: #ffffff;
-    transform: translateY(-2px);
+    background-color: #ff4a4a;                 /* Sfondo passa al rosso pieno */
+    color: #ffffff;                            /* Testo diventa bianco */
+    transform: translateY(-2px);               /* Effetto di elevazione */
 }
 
-/* Checkout Layout */
+/* --------------------------------------------------------------------------
+   5.4 LAYOUT PAGINA CHECKOUT & SCHEDE
+   -------------------------------------------------------------------------- */
+/* Griglia principale a due colonne per la pagina checkout */
 .checkout-grid {
-    display: grid;
-    grid-template-columns: 1fr 1.2fr;
-    gap: 30px;
-    align-items: start;
+    display: grid;                             /* Layout a griglia */
+    grid-template-columns: 1fr 1.2fr;          /* Colonna riepilogo e colonna form con proporzioni 1 a 1.2 */
+    gap: 30px;                                 /* Spaziatura tra le due sezioni */
+    align-items: start;                        /* Allinea i contenitori alla parte superiore della griglia */
 }
 
+/* Schede riepilogo e form nel checkout */
 .checkout-summary-card,
 .checkout-form-card {
-    padding: 30px;
-    border: 1px solid var(--border-color);
-    border-radius: 8px;
-    background-color: var(--bg-card);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    padding: 30px;                             /* Spaziatura interna generosa */
+    border: 1px solid var(--border-color);     /* Bordo perimetrale basato sul tema */
+    border-radius: 8px;                        /* Angoli arrotondati */
+    background-color: var(--bg-card);          /* Sfondo della scheda */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);/* Ombreggiatura profonda */
 }
 
+/* Titoli delle schede di checkout */
 .checkout-summary-card h2,
 .checkout-form-card h2 {
-    margin-bottom: 20px;
-    color: var(--text-light);
-    font-size: 20px;
-    font-weight: 700;
+    margin-bottom: 20px;                       /* Distanza dal contenuto o dai campi */
+    color: var(--text-light);                  /* Testo chiaro */
+    font-size: 20px;                           /* Dimensione titolo */
+    font-weight: 700;                          /* Grassetto marcato */
 }
 
+/* Tabella semplificata del riepilogo prodotti nel checkout */
 .checkout-table {
-    margin-bottom: 20px;
+    margin-bottom: 20px;                       /* Spazio inferiore verso il totale */
 }
 
+/* Blocco del totale ordine nel checkout */
 .checkout-total {
-    padding-top: 15px;
-    border-top: 1px solid var(--border-color);
-    text-align: right;
+    padding-top: 15px;                         /* Spazio interno superiore */
+    border-top: 1px solid var(--border-color); /* Linea divisoria orizzontale */
+    text-align: right;                         /* Allineamento a destra del valore */
 }
 
+/* Etichetta del totale checkout */
 .checkout-total p {
-    color: var(--text-light);
-    font-size: 18px;
-    font-weight: 700;
+    color: var(--text-light);                  /* Testo chiaro */
+    font-size: 18px;                           /* Dimensione leggibile */
+    font-weight: 700;                          /* Grassetto */
 }
 
+/* Valore numerico del totale checkout */
 .checkout-total span {
-    color: var(--primary-purple);
-    font-size: 22px;
-    font-weight: 800;
+    color: var(--primary-purple);              /* Colore viola principale di brand */
+    font-size: 22px;                           /* Dimensione maggiorata */
+    font-weight: 800;                          /* Extra bold */
 }
 
+/* Menu a tendina per select generici nel checkout */
 .checkout-form-card select {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
-    background-color: var(--bg-input);
-    color: var(--text-light);
-    font-family: inherit;
-    font-size: 14px;
-    transition: border-color 0.3s;
+    width: 100%;                               /* Larghezza piena al 100% */
+    padding: 12px;                             /* Spaziatura interna */
+    border: 1px solid var(--border-color);     /* Bordo neutro */
+    border-radius: 4px;                        /* Angoli arrotondati */
+    background-color: var(--bg-input);          /* Sfondo scuro dei campi */
+    color: var(--text-light);                  /* Testo chiaro */
+    font-family: inherit;                      /* Eredita il font della pagina */
+    font-size: 14px;                           /* Dimensione carattere */
+    transition: border-color 0.3s;            /* Transizione del bordo */
 }
 
-/* Selettore Metodo di Pagamento */
+/* --------------------------------------------------------------------------
+   5.5 METODI DI PAGAMENTO & SELEZIONE
+   -------------------------------------------------------------------------- */
+/* Contenitore delle opzioni per la scelta del metodo di pagamento */
 .payment-method-selector {
-    display: flex;
-    gap: 15px;
-    margin-top: 10px;
-    margin-bottom: 25px;
+    display: flex;                             /* Disposizione flessibile affiancata */
+    gap: 15px;                                 /* Distanza tra le opzioni di pagamento */
+    margin-top: 10px;                          /* Distanza dall'elemento superiore */
+    margin-bottom: 25px;                       /* Distanza dalla sezione dati successiva */
 }
 
+/* Responsiveness per schermi piccoli (mobile) */
 @media (max-width: 600px) {
     .payment-method-selector {
-        flex-direction: column;
+        flex-direction: column;                /* Incolonna i pulsanti di pagamento su mobile */
     }
 }
 
+/* Singola opzione/scheda di pagamento */
 .payment-option {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-    padding: 20px;
-    border: 2px solid var(--border-color);
-    border-radius: 8px;
-    background: var(--bg-input);
-    color: var(--text-gray);
-    font-weight: 700;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    user-select: none;
+    display: flex;                             /* Layout flessibile */
+    flex: 1;                                   /* Distribuisce equamente lo spazio tra le schede */
+    flex-direction: column;                    /* Incolonna l'icona e la label */
+    align-items: center;                       /* Centratura orizzontale del contenuto */
+    gap: 10px;                                 /* Distanza tra icona e testo */
+    padding: 20px;                             /* Spaziatura interna */
+    border: 2px solid var(--border-color);     /* Bordo marcato di default */
+    border-radius: 8px;                        /* Angoli arrotondati */
+    background: var(--bg-input);              /* Sfondo della scheda opzione */
+    color: var(--text-gray);                   /* Testo secondario in stato inattivo */
+    font-weight: 700;                          /* Grassetto */
+    text-align: center;                        /* Testo centrato */
+    cursor: pointer;                           /* Interattività a manina */
+    transition: all 0.3s ease;                /* Transizione fluida di tutti gli stati visivi */
+    user-select: none;                         /* Disabilita la selezione del testo al click */
 }
 
+/* Icona grafica rappresentativa del metodo di pagamento */
 .payment-option .icon {
-    font-size: 24px;
+    font-size: 24px;                           /* Dimensione dell'icona/emoji o carattere speciale */
 }
 
+/* Feedback al sorvolo della scheda pagamento */
 .payment-option:hover {
-    border-color: rgba(155, 81, 224, 0.5);
+    border-color: rgba(155, 81, 224, 0.5);     /* Il bordo sfuma verso il viola */
 }
 
+/* Stato dell'opzione di pagamento SELEZIONATA / ATTIVA */
 .payment-option.active {
-    border-color: var(--primary-purple);
-    background: rgba(155, 81, 224, 0.1);
-    color: var(--text-light);
-    box-shadow: 0 0 15px rgba(155, 81, 224, 0.2);
+    border-color: var(--primary-purple);       /* Bordo passa al colore viola principale */
+    background: rgba(155, 81, 224, 0.1);      /* Sfondo con velatura viola traslucida */
+    color: var(--text-light);                  /* Testo evidenziato in chiaro */
+    box-shadow: 0 0 15px rgba(155, 81, 224, 0.2); /* Bagliore violaceo attorno alla scheda selezionata */
 }
 
+/* Sezione con i campi specifici del metodo di pagamento selezionato */
 .payment-method-section {
-    margin-top: 25px;
-    padding-top: 20px;
-    border-top: 1px solid var(--border-color);
+    margin-top: 25px;                          /* Distanza dalla selezione metodi */
+    padding-top: 20px;                         /* Spazio interno superiore */
+    border-top: 1px solid var(--border-color); /* Linea divisoria orizzontale */
 }
 
+/* Classe di utilità per nascondere le sezioni di pagamento non attive */
 .payment-method-section.is-hidden {
-    display: none;
+    display: none;                             /* Nasconde completamente il blocco dal DOM/Layout */
 }
 
+/* Titolo interno della sezione del metodo di pagamento */
 .payment-method-section h3 {
-    margin-bottom: 20px;
-    color: var(--accent-yellow);
-    font-size: 16px;
-    text-transform: uppercase;
+    margin-bottom: 20px;                       /* Distanza dai campi form sottostanti */
+    color: var(--accent-yellow);               /* Titolo in giallo d'accento */
+    font-size: 16px;                           /* Dimensione del titolo */
+    text-transform: uppercase;                 /* Maiuscolo */
 }
 
+/* Riga multi-campo per form (es. Scadenza e CVV) */
 .form-row {
-    display: flex;
-    gap: 15px;
+    display: flex;                             /* Disposizione affiancata dei campi */
+    gap: 15px;                                 /* Spaziatura tra i campi nella riga */
 }
 
+/* Espansione equa per ciascun gruppo all'interno della riga */
 .form-row .form-group {
-    flex: 1;
+    flex: 1;                                   /* Ogni campo occupa una porzione uguale di spazio */
 }
 
+/* Pulsante finale per confermare l'ordine nel checkout */
 .btn-checkout-submit {
-    width: 100%;
-    margin-top: 25px;
+    width: 100%;                               /* Occupazione a tutta larghezza per massima evidenza */
+    margin-top: 25px;                          /* Spazio superiore dai form di carta/dati */
 }

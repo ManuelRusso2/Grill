@@ -1,164 +1,198 @@
 /* ==========================================================================
    RESPONSIVE MEDIA QUERIES
+   ==========================================================================
+   Gestione dell'adattabilità dell'interfaccia (Responsive Web Design) tramite
+   media queries breakpoint-based per Tablet e Dispositivi Mobili.
    ========================================================================== */
 
 /* ==========================================================================
    1. TABLET & LAYOUT A COLONNA SINGOLA (max-width: 900px)
+   ==========================================================================
+   Breakpoint intermedio per schermi di dimensioni medie/tablet in posizione
+   verticale dove le griglie a più colonne risultano troppo compresse.
    ========================================================================== */
 @media (max-width: 900px) {
-    /* Griglie Admin e Checkout a colonna singola */
+    /* Passaggio a layout a colonna singola per le griglie di amministrazione e checkout */
     .admin-edit-grid,
     .admin-grid-2col,
     .checkout-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr;             /* Imposta una sola colonna a tutta larghezza disponibile */
     }
 
-    /* Adattamento anteprima prodotto sticky in Admin */
+    /* Adattamento dell'anteprima prodotto sticky nel pannello Admin */
     .admin-preview-card {
-        position: static;
-        margin-top: 20px;
+        position: static;                      /* Rimuove il posizionamento fisso/sticky per fluire nel documento */
+        margin-top: 20px;                      /* Crea distacco verticale dal modulo precedente */
     }
 }
 
 /* ==========================================================================
    2. TABLET PICCOLI E MOBILE (max-width: 768px)
+   ==========================================================================
+   Breakpoint per smartphone in orizzontale e tablet compatti. Riorganizza
+   l'header, i caroselli, i banner principali e i filtri di ricerca.
    ========================================================================== */
 @media (max-width: 768px) {
     /* --- Header & Navbar --- */
+    /* Riorganizzazione della barra di navigazione */
     .navbar {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 15px;
+        flex-wrap: wrap;                       /* Permette l'incolonnamento su più righe dei componenti */
+        justify-content: center;               /* Centra orizzontalmente gli elementi */
+        gap: 15px;                             /* Riduce la spaziatura tra i blocchi interni */
     }
 
+    /* Riorganizzazione del campo di ricerca per mobile */
     .search-wrapper {
-        order: 3; /* Sposta la ricerca sotto il logo e i link */
-        flex: 1 1 100%;
-        max-width: 100%;
-        margin: 10px 0 0 0;
+        order: 3;                              /* Sposta la barra di ricerca sotto il logo e la navigazione */
+        flex: 1 1 100%;                        /* Espande la barra a occupare l'intera riga inferiore */
+        max-width: 100%;                       /* Rimuove la limitazione di larghezza massima */
+        margin: 10px 0 0 0;                    /* Imposta un margine visivo solo verso l'alto */
     }
 
+    /* Ottimizzazione dei link di navigazione */
     .nav-links {
-        gap: 12px;
-        font-size: 12px;
+        gap: 12px;                             /* Riduce lo spazio orizzontale tra i collegamenti */
+        font-size: 12px;                       /* Riduce leggermente la dimensione del testo */
     }
 
     /* --- Home Page: Carousel --- */
+    /* Regolazione dei contenitori e sezioni del carosello */
     .carousel-container {
-        gap: 10px;
-        padding: 0 10px;
+        gap: 10px;                             /* Riduce la spaziatura interna tra elementi del carosello */
+        padding: 0 10px;                       /* Margine di sicurezza ai bordi dello schermo */
     }
 
     .carousel-section {
-        padding: 40px 0;
+        padding: 40px 0;                       /* Riduce l'imbottitura verticale della sezione */
     }
 
+    /* Ridimensionamento pulsanti di scorrimento del carosello */
     .carousel-btn,
     .scroll-btn {
-        width: 35px;
-        height: 35px;
-        font-size: 18px;
+        width: 35px;                           /* Larghezza ridotta per schermi touch */
+        height: 35px;                          /* Altezza ridotta */
+        font-size: 18px;                       /* Dimensione ridotta dell'icona freccia */
     }
 
     /* --- Home Page: Hero Banner --- */
+    /* Adattamento della sezione Hero/Banner promozionale */
     .hero-cart-section {
-        padding: 40px 20px;
-        margin: 30px 20px;
+        padding: 40px 20px;                    /* Riduce lo spazio interno del banner */
+        margin: 30px 20px;                     /* Riduce il margine esterno */
     }
 
+    /* Layout interno del banner Hero */
     .hero-cart-content {
-        flex-direction: column;
-        text-align: center;
-        gap: 30px;
+        flex-direction: column;                /* Incolonna testo ed elementi grafici verticalmente */
+        text-align: center;                    /* Centra il testo promozionale */
+        gap: 30px;                             /* Spaziatura verticale tra testo e immagini/azioni */
     }
 
+    /* Titolo principale del banner Hero */
     .hero-cart-text h2 {
-        font-size: 36px;
+        font-size: 36px;                       /* Scalatura del titolo per una corretta gerarchia visiva */
     }
 
     /* --- Home Page: Prodotti in Evidenza --- */
+    /* Sezione di scorrimento orizzontale dei prodotti */
     .products-scroll-section {
-        padding: 0 20px;
+        padding: 0 20px;                       /* Margine interno di protezione ai lati dello schermo */
     }
 
+    /* Titolo della sezione prodotti in evidenza */
     .products-scroll-section h2 {
-        margin-bottom: 30px;
-        font-size: 28px;
+        margin-bottom: 30px;                   /* Riduce il margine inferiore */
+        font-size: 28px;                       /* Riduce la dimensione del titolo */
     }
 
+    /* Schede prodotto nello scorrimento orizzontale */
     .product-card-scroll {
-        min-width: calc(50% - 10px);
+        min-width: calc(50% - 10px);           /* Mostra 2 schede affiancate contemporaneamente */
     }
 
     /* --- Filtri Admin in Mobile --- */
+    /* Incolonnamento dei moduli di filtraggio nella Dashboard Amministratore */
     .filter-form,
     .admin-orders-filter {
-        flex-direction: column;
-        align-items: stretch;
+        flex-direction: column;                /* Dispone i campi del form in una singola colonna */
+        align-items: stretch;                  /* Espande tutti i campi a occupare la larghezza completa */
     }
 }
 
 /* ==========================================================================
    3. MOBILE STRETTO (max-width: 480px)
+   ==========================================================================
+   Breakpoint per smartphone in verticale a risoluzione ridotta (es. iPhone SE,
+   vecchi dispositivi Android) per evitare problemi di overflow orizzontale.
    ========================================================================== */
 @media (max-width: 480px) {
     /* --- Componenti Generici & Auth --- */
+    /* Riduzione imbottitura per le schede di autenticazione */
     .auth-card {
-        padding: 20px 16px;
+        padding: 20px 16px;                    /* Massimizza lo spazio per i campi di input nei moduli */
     }
 
     /* --- Carousel & Indicatori --- */
+    /* Ulteriore riduzione per la sezione carosello */
     .carousel-section {
-        padding: 20px 0;
+        padding: 20px 0;                       /* Spaziatura verticale minimale */
     }
 
     .carousel-container {
-        gap: 5px;
-        padding: 0 5px;
+        gap: 5px;                              /* Spaziatura minima tra gli elementi */
+        padding: 0 5px;                        /* Padding ai bordi azzerato per guadagnare spazio */
     }
 
+    /* Pulsanti di navigazione del carosello compatti */
     .carousel-btn,
     .scroll-btn {
-        width: 30px;
+        width: 30px;                           /* Dimensioni ultra-compatte dei pulsanti */
         height: 30px;
-        font-size: 16px;
+        font-size: 16px;                       /* Icona freccia ridotta */
     }
 
+    /* Distanziamento degli indicatori a pallino (Dots) */
     .carousel-indicators {
-        gap: 6px;
+        gap: 6px;                              /* Spaziatura sottile tra gli indicatori */
     }
 
-    /* Correzione bug dimensioni indicatori */
+    /* Indicatore carosello standard (Stato inattivo) */
     .indicator {
-        width: 8px;
-        height: 8px;
+        width: 8px;                            /* Diametro ridotto */
+        height: 8px;                           /* Diametro ridotto */
     }
 
+    /* Indicatore carosello attivo */
     .indicator.active {
-        width: 12px;
-        height: 12px;
+        width: 12px;                           /* Dimensione leggermente maggiorata per lo stato attivo */
+        height: 12px;                          /* Dimensione leggermente maggiorata per lo stato attivo */
     }
 
     /* --- Hero Banner & Prodotti --- */
+    /* Riduzione massima dei margini del banner promozionale */
     .hero-cart-section {
-        padding: 30px 15px;
-        margin: 20px 15px;
+        padding: 30px 15px;                    /* Imbottitura ridotta */
+        margin: 20px 15px;                     /* Margine esterno ridotto */
     }
 
+    /* Titolo del banner Hero */
     .hero-cart-text h2 {
-        font-size: 28px;
+        font-size: 28px;                       /* Riduzione del font per evitare a capo impropri */
     }
 
+    /* Descrizione del banner Hero */
     .hero-cart-text p {
-        font-size: 16px;
+        font-size: 16px;                       /* Dimensione di lettura adeguata al mobile */
     }
 
+    /* Sezione a scorrimento dei prodotti */
     .products-scroll-section {
-        margin: 40px auto;
-        padding: 0 15px;
+        margin: 40px auto;                     /* Riduzione del margine verticale */
+        padding: 0 15px;                       /* Imbottitura laterale di protezione */
     }
 
+    /* Scheda prodotto a colonna singola */
     .product-card-scroll {
-        min-width: 100%;
+        min-width: 100%;                       /* Mostra 1 sola scheda prodotto a schermo intero */
     }
 }
