@@ -21,14 +21,6 @@
     </welcome-file-list>
     
     <!-- =================================================================== -->
-    <!-- CONFIGURAZIONE ENCODING GLOBALE                                     -->
-    <!-- Forza la codifica UTF-8 per le richieste in ingresso e le risposte  -->
-    <!-- in uscita a livello di contesto Web                -->
-    <!-- =================================================================== -->
-    <request-character-encoding>UTF-8</request-character-encoding>
-    <response-character-encoding>UTF-8</response-character-encoding>
-    
-    <!-- =================================================================== -->
     <!-- CONFIGURAZIONE GESTIONE SESSIONI E SICUREZZA COOKIE                 -->
     <!-- - session-timeout: Inattività massima espressa in minuti (30 min)  -->
     <!-- - http-only: Previene l'accesso ai cookie di sessione (JSESSIONID) -->
