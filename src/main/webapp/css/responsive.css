@@ -196,3 +196,166 @@
         min-width: 100%;                       /* Mostra 1 sola scheda prodotto a schermo intero */
     }
 }
+
+/* ==========================================================================
+   GESTIONE VISIBILITÀ FATTURA (SCHERMO VS STAMPA)
+   ==========================================================================
+   Regole per la gestione dei blocchi visibili esclusivamente a schermo
+   oppure destinati solo alla resa cartacea/PDF.
+   ========================================================================== */
+
+/* Nasconde gli elementi dedicati alla stampa durante la visualizzazione standard a schermo */
+html body .print-only {
+    display: none;                             /* Rimuove l'elemento dal flusso della pagina a schermo */
+}
+
+/* ==========================================================================
+   4. STAMPA FATTURA (MEDIA PRINT)
+   ==========================================================================
+   Stili applicati esclusivamente in fase di stampa (o esportazione PDF).
+   Ottimizzano il layout per il formato A4, riducono il consumo di inchiostro
+   e nascondono l'interfaccia utente web non necessaria.
+   ========================================================================== */
+@media print {
+    /* ----------------------------------------------------------------------
+       1. RIMOZIONE ELEMENTI INTERFACCIA WEB (ALTA SPECIFICITÀ)
+       ---------------------------------------------------------------------- */
+    /* Nasconde header, footer, navigazione, ricerca e pulsanti d'azione */
+    html body header.site-header, 
+    html body footer, 
+    html body nav.nav-links, 
+    html body div.search-wrapper,
+    html body div.order-actions-footer, 
+    html body div.order-actions-group, 
+    html body button.btn,
+    html body a.btn,
+    html body .web-only {
+        display: none;                         /* Esclude tutti i componenti di navigazione e azionamento dalla stampa */
+    }
+
+    /* ----------------------------------------------------------------------
+       2. MOSTRA STRUTTURA DEDICATA ALLA FATTURA
+       ---------------------------------------------------------------------- */
+    /* Attiva la visualizzazione degli elementi riservati al documento cartaceo */
+    html body .print-only {
+        display: block;                        /* Rende visibile il blocco stampabile */
+    }
+
+    /* ----------------------------------------------------------------------
+       3. FORZATURA SFONDO BIANCO E TESTO NERO (OTTIMIZZAZIONE A4)
+       ---------------------------------------------------------------------- */
+    /* Reset dello stile dei contenitori principali per il formato foglio */
+    html body, 
+    html body main.container, 
+    html body div.order-detail-container, 
+    html body div.order-detail-card {
+        background: #ffffff;                    /* Sfondo bianco puro per risparmio inchiostro */
+        color: #000000;                        /* Testo nero nitido ad alto contrasto per la stampa */
+        box-shadow: none;                      /* Rimuove qualsiasi ombreggiatura */
+        border: none;                          /* Rimuove i bordi dei contenitori schede */
+        padding: 0;                            /* Azzera gli spazi interni per sfruttare i margini del foglio */
+        margin: 0;                             /* Azzera i margini esterni */
+        width: 100%;                           /* Occupazione a tutta larghezza del foglio */
+        max-width: 100%;                       /* Annulla i vincoli di larghezza massima definiti a schermo */
+    }
+
+    /* ----------------------------------------------------------------------
+       4. INTESTAZIONE FATTURA
+       ---------------------------------------------------------------------- */
+    /* Titolo principale della fattura (es. "FATTURA N° 1234") */
+    html body h1.invoice-title-print {
+        text-align: center;                    /* Centratura orizzontale del titolo del documento */
+        font-size: 28px;                       /* Dimensione marcata per la titolazione */
+        font-weight: bold;                     /* Grassetto */
+        margin-bottom: 5px;                    /* Distacco minimo dal sottotitolo */
+        color: #000000;                        /* Colore nero nitido */
+    }
+
+    /* Sottotitolo informativo della fattura */
+    html body p.invoice-sub-print {
+        font-size: 14px;                       /* Dimensione ridotta di supporto */
+        margin-bottom: 20px;                   /* Spaziatura inferiore dal blocco dati */
+        color: #000000;                        /* Colore nero nitido */
+    }
+
+    /* Griglia per i dati intestatario / emittente fattura */
+    html body div.invoice-grid-print {
+        display: flex;                         /* Disposizione in riga flessibile */
+        justify-content: space-between;        /* Spinge i blocchi aziendali/cliente agli estremi opposti */
+        margin-bottom: 15px;                   /* Spazio inferiore dalla linea divisoria */
+        font-size: 13px;                       /* Dimensione testo compatto per la griglia */
+        line-height: 1.4;                      /* Interlinea leggibile per indirizzi e dati fiscali */
+        color: #000000;                        /* Colore nero nitido */
+    }
+
+    /* Linea di separazione orizzontale per stampa */
+    html body hr.invoice-hr-print {
+        border: none;                          /* Annulla il bordo predefinito dell'elemento hr */
+        border-top: 1px solid #000000;         /* Crea una linea nera netta di 1px */
+        margin: 15px 0;                        /* Spaziatura verticale uniforme */
+    }
+
+    /* ----------------------------------------------------------------------
+       5. TABELLA PRODOTTI IN FORMATO STAMPA
+       ---------------------------------------------------------------------- */
+    /* Struttura della tabella prodotti */
+    html body table.cart-table {
+        width: 100%;                           /* Occupazione a tutta larghezza del foglio */
+        border-collapse: collapse;             /* Unifica i bordi di celle adiacenti evitando spazi vuoti */
+        margin: 15px 0;                        /* Spaziatura verticale attorno alla tabella */
+    }
+
+    /* Intestazioni e celle di tabella */
+    html body table.cart-table th, 
+    html body table.cart-table td {
+        border: 1px solid #000000;             /* Bordo nero definito attorno a ogni singola cella */
+        padding: 8px;                          /* Spaziatura interna per una chiara griglia dati */
+        color: #000000;                        /* Testo nero per leggibilità */
+        background: transparent;              /* Annulla eventuali sfondi alternati o scuri */
+        text-align: left;                      /* Allineamento del testo a sinistra */
+    }
+
+    /* ----------------------------------------------------------------------
+       6. TOTALI E PIÈ DI PAGINA FATTURA
+       ---------------------------------------------------------------------- */
+    /* Sezione riepilogo totali in basso a destra */
+    html body div.invoice-footer-print {
+        margin-top: 25px;                      /* Distacco dalla tabella prodotti */
+        text-align: right;                     /* Allinea importi e totale sul margine destro */
+        color: #000000;                        /* Testo nero nitido */
+    }
+
+    /* Riga evidenziata del totale complessivo */
+    html body p.invoice-total-line {
+        font-size: 16px;                       /* Dimensione leggermente maggiorata per evidenziare il totale */
+        font-weight: bold;                     /* Grassetto per risalto visivo */
+        margin-bottom: 15px;                   /* Spaziatura inferiore dai ringraziamenti */
+    }
+
+    /* Messaggio finale di ringraziamento o note legali in calce */
+    html body p.invoice-thanks-print {
+        text-align: center;                    /* Centratura orizzontale del testo di cortesia */
+        margin-top: 40px;                      /* Distacco importante dal blocco totale */
+        font-size: 13px;                       /* Dimensione testo discreta */
+    }
+    
+    /* ----------------------------------------------------------------------
+       7. PULIZIA TESTO, LINK E OMBRE NELLA TABELLA
+       ---------------------------------------------------------------------- */
+    /* Rimuove lo stile dei link nella tabella prodotti per l'output cartaceo */
+    html body table.cart-table a,
+    html body table.cart-table .cart-product-title {
+        color: #000000;                        /* Trasforma i collegamenti blu/viola in testo nero */
+        text-decoration: none;                 /* Rimuove la sottolineatura tipica dei link */
+    }
+
+    /* Azzera stili complessi, sfondi, ombreggiature e badge colorati */
+    html body table.cart-table,
+    html body table.cart-table tr,
+    html body table.cart-table td,
+    html body .order-size-badge {
+        box-shadow: none;                      /* Elimina le ombreggiature CSS */
+        background: transparent;              /* Trasparenza totale per evitare macchie d'inchiostro */
+        color: #000000;                        /* Forza il colore nero del testo */
+    }
+}

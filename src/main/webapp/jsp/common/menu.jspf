@@ -1,70 +1,95 @@
+<%-- Direttive di pagina: definizione del tipo di contenuto e della codifica dei caratteri --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
+<%-- Inclusione delle librerie di tag JSTL Core (gestione flusso) e Functions (manipolazione stringhe) --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
+<%-- Estrazione dell'URI corrente della richiesta per determinare la pagina attiva --%>
 <c:set var="currentPath" value="${pageContext.request.requestURI}" />
+
+<%-- Flag booleano: verifica se l'utente si trova in una pagina di autenticazione (Login o Registrazione) --%>
 <c:set var="isAuthPage" value="${fn:endsWith(currentPath, '/login.jsp') or fn:endsWith(currentPath, '/registrazione.jsp')}" />
 
+<%-- ── SCENARIO A: NAVIGAZIONE SULLE PAGINE DI AUTENTICAZIONE ─────────────────────── --%>
 <c:if test="${isAuthPage}">
     <c:choose>
+        <%-- Se la pagina attuale è Login, mostra il pulsante per andare alla Registrazione --%>
         <c:when test="${fn:endsWith(currentPath, '/login.jsp')}">
             <a href="${pageContext.request.contextPath}/jsp/user/registrazione.jsp">Registrazione</a>
         </c:when>
+        <%-- Se la pagina attuale è Registrazione, mostra il pulsante per andare al Login --%>
         <c:otherwise>
             <a href="${pageContext.request.contextPath}/jsp/common/login.jsp">Login</a>
         </c:otherwise>
     </c:choose>
 </c:if>
 
+<%-- ── SCENARIO B: NAVIGAZIONE STANDARD DEL SITO ────────────────────────────────── --%>
 <c:if test="${not isAuthPage}">
 
-<a href="${pageContext.request.contextPath}/CatalogoServlet" class="nav-link">Catalogo</a>
+    <%-- Link diretto al catalogo completo --%>
+    <a href="${pageContext.request.contextPath}/CatalogoServlet" class="nav-link">Catalogo</a>
 
-<div class="nav-dropdown">
-    <a href="#" class="nav-dropdown-toggle nav-link">Categorie &#9660;</a>
-    <div class="nav-dropdown-menu">
-        <a href="${pageContext.request.contextPath}/CollezioniServlet" style="font-weight: 700; color: var(--accent-yellow); border-bottom: 1px solid var(--border-color); margin-bottom: 6px; padding-bottom: 8px;">
-            ✨ Tutte le Collezioni
-        </a>
-        <c:forEach var="cat" items="${categorie}">
-            <a href="${pageContext.request.contextPath}/CatalogoServlet?categoria=${cat.idCategoria}">
-                <c:out value="${cat.nome}" />
+    <%-- Menu a tendina (Dropdown) per la selezione delle Categorie di prodotti --%>
+    <div class="nav-dropdown">
+        <a href="#" class="nav-dropdown-toggle nav-link">Categorie &#9660;</a>
+        <div class="nav-dropdown-menu">
+            <%-- Collegamento in evidenza per visualizzare tutte le collezioni --%>
+            <a href="${pageContext.request.contextPath}/CollezioniServlet" style="font-weight: 700; color: var(--accent-yellow); border-bottom: 1px solid var(--border-color); margin-bottom: 6px; padding-bottom: 8px;">
+                ✨ Tutte le Collezioni
             </a>
-        </c:forEach>
+            
+            <%-- Iterazione dinamica sulle categorie recuperate dal database --%>
+            <c:forEach var="cat" items="${categorie}">
+                <a href="${pageContext.request.contextPath}/CatalogoServlet?categoria=${cat.idCategoria}">
+                    <c:out value="${cat.nome}" />
+                </a>
+            </c:forEach>
+        </div>
     </div>
-</div>
 
-<c:choose>
-    <c:when test="${not empty sessionScope.utente}">
-        <a href="${pageContext.request.contextPath}/ProfiloServlet" class="nav-link">Profilo</a>
+    <%-- Controllo della sessione dell'utente --%>
+    <c:choose>
+        <%-- SCENARIO B1: Utente autenticato (Logged In) --%>
+        <c:when test="${not empty sessionScope.utente}">
+            <%-- Link alla pagina di gestione del profilo personale --%>
+            <a href="${pageContext.request.contextPath}/ProfiloServlet" class="nav-link">Profilo</a>
 
-        <c:if test="${sessionScope.utente.admin}">
-            <a href="${pageContext.request.contextPath}/AdminProdottoServlet" class="nav-admin">Gestione Prodotti</a>
-            <a href="${pageContext.request.contextPath}/AdminCategoriaServlet" class="nav-admin">Gestione Categorie</a>
-            <a href="${pageContext.request.contextPath}/AdminRecensioniServlet" class="nav-admin">Gestione Recensioni</a>
-            <a href="${pageContext.request.contextPath}/AdminOrdiniServlet" class="nav-admin">Gestione Ordini</a>
-        </c:if>
+            <%-- Sezione con opzioni di gestione riservate agli amministratori --%>
+            <c:if test="${sessionScope.utente.admin}">
+                <a href="${pageContext.request.contextPath}/AdminProdottoServlet" class="nav-admin">Gestione Prodotti</a>
+                <a href="${pageContext.request.contextPath}/AdminCategoriaServlet" class="nav-admin">Gestione Categorie</a>
+                <a href="${pageContext.request.contextPath}/AdminRecensioniServlet" class="nav-admin">Gestione Recensioni</a>
+                <a href="${pageContext.request.contextPath}/AdminOrdiniServlet" class="nav-admin">Gestione Ordini</a>
+            </c:if>
 
-        <a href="${pageContext.request.contextPath}/LogoutServlet" class="nav-link">Logout</a>
+            <%-- Pulsante di disconnessione (Logout) --%>
+            <a href="${pageContext.request.contextPath}/LogoutServlet" class="nav-link">Logout</a>
 
-        <c:if test="${not sessionScope.utente.admin}">
-            <span class="nav-spacer" aria-hidden="true"></span>
-            <a href="${pageContext.request.contextPath}/CarrelloServlet" id="nav-cart-link" class="nav-cart-link">
-                <img src="${pageContext.request.contextPath}/images/carrello.png" alt="Carrello" class="nav-cart-icon">
-                <span id="cart-count" class="badge"><c:if test="${not empty cartCount}"><c:out value="${cartCount}"/></c:if></span>
-            </a>
-        </c:if>
-    </c:when>
-    <c:otherwise>
-        <a href="${pageContext.request.contextPath}/jsp/common/login.jsp" class="nav-link">Login</a>
-        <a href="${pageContext.request.contextPath}/jsp/user/registrazione.jsp" class="nav-link">Registrazione</a>
-    </c:otherwise>
-</c:choose>
+            <%-- Icona e badge carrello riservati solo agli utenti clienti (non admin) --%>
+            <c:if test="${not sessionScope.utente.admin}">
+                <span class="nav-spacer" aria-hidden="true"></span>
+                <a href="${pageContext.request.contextPath}/CarrelloServlet" id="nav-cart-link" class="nav-cart-link">
+                    <img src="${pageContext.request.contextPath}/images/carrello.png" alt="Carrello" class="nav-cart-icon">
+                    <%-- Contatore dinamico dei prodotti presenti nel carrello --%>
+                    <span id="cart-count" class="badge"><c:if test="${not empty cartCount}"><c:out value="${cartCount}"/></c:if></span>
+                </a>
+            </c:if>
+        </c:when>
+
+        <%-- SCENARIO B2: Utente non autenticato (Ospite) --%>
+        <c:otherwise>
+            <a href="${pageContext.request.contextPath}/jsp/common/login.jsp" class="nav-link">Login</a>
+            <a href="${pageContext.request.contextPath}/jsp/user/registrazione.jsp" class="nav-link">Registrazione</a>
+        </c:otherwise>
+    </c:choose>
 
 </c:if>
 
 </nav>
 
+<%-- Script JavaScript per la gestione dell'apertura/chiusura del menu a tendina Categorie --%>
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     const dropdown = document.querySelector(".nav-dropdown");
@@ -72,11 +97,13 @@ document.addEventListener("DOMContentLoaded", function () {
     const toggle = dropdown.querySelector(".nav-dropdown-toggle");
     const menu = dropdown.querySelector(".nav-dropdown-menu");
 
+    // Commuta la classe 'open' al click sul pulsante 'Categorie'
     toggle.addEventListener("click", function (e) {
         e.preventDefault();
         menu.classList.toggle("open");
     });
 
+    // Chiude il menu a tendina se si clicca in qualsiasi punto esterno
     document.addEventListener("click", function (e) {
         if (!dropdown.contains(e.target)) menu.classList.remove("open");
     });
