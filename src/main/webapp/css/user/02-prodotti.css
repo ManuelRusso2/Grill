@@ -41,6 +41,18 @@
     font-size: 18px;                           /* Dimensione del titolo */
 }
 
+/* Stili per il link all'interno del titolo della card */
+.card h3 a {
+    color: var(--text-light);                  /* Eredita il colore chiaro di base */
+    text-decoration: none;                     /* Rimuove la sottolineatura di default */
+    transition: color 0.2s ease;               /* Transizione fluida per l'hover */
+}
+
+/* Effetto hover sul link del titolo */
+.card h3 a:hover {
+    color: var(--primary-purple);              /* Cambia colore in viola al passaggio del mouse */
+}
+
 /* Blocco del prezzo nella scheda prodotto */
 .card .price {
     margin-bottom: 20px;                       /* Distanza dal pulsante d'azione sottostante */
@@ -63,6 +75,44 @@
 .input-qty {
     width: 60px;                               /* Larghezza ridotta per contenere poche cifre */
     text-align: center;                        /* Centratura del testo numerico */
+}
+
+/* --------------------------------------------------------------------------
+   STILI DEI BADGE DI DISPONIBILITÀ (OVERRIDE DEDICATO ALLA CARD)
+   -------------------------------------------------------------------------- */
+/* Reset della forma circolare del carrello definita in global.css */
+.card .badge {
+    display: inline-block;                     /* Disposizione in linea */
+    min-width: unset;                          /* Reset larghezza minima da global.css */
+    min-height: unset;                         /* Reset altezza minima da global.css */
+    padding: 6px 12px;                         /* Spaziatura interna proporzionata */
+    border-radius: 20px;                       /* Angoli arrotondati a pillola */
+    font-size: 13px;                           /* Dimensione testo ridotta */
+    font-weight: 700;                          /* Grassetto per leggibilità */
+    line-height: normal;                       /* Interlinea standard */
+    margin-top: 10px;                          /* Distacco dal prezzo */
+    text-transform: uppercase;                 /* Testo in maiuscolo */
+}
+
+/* Stato disponibile: toni del verde */
+.card .badge-disponibile {
+    background-color: rgba(40, 167, 69, 0.15); 
+    color: #28a745;                            
+    border: 1px solid rgba(40, 167, 69, 0.3);  
+}
+
+/* Stato scarso: toni del giallo */
+.card .badge-scarso {
+    background-color: rgba(255, 193, 7, 0.15); 
+    color: #ffc107;                            
+    border: 1px solid rgba(255, 193, 7, 0.3);  
+}
+
+/* Stato esaurito: toni del rosso */
+.card .badge-esaurito {
+    background-color: rgba(220, 53, 69, 0.15); 
+    color: #dc3545;                            
+    border: 1px solid rgba(220, 53, 69, 0.3);  
 }
 
 /* --------------------------------------------------------------------------

@@ -15,7 +15,6 @@ public interface ContenutoDAO {
      */
     void doAddProduct(int idCarrello, int idProdotto, int quantita, String taglia) throws SQLException;
 
-    
     /**
      * Aggiorna la quantità esatta di un singolo prodotto già presente nel carrello.
      * Utile quando l'utente modifica il numero di articoli direttamente dalla pagina del carrello.
@@ -23,7 +22,6 @@ public interface ContenutoDAO {
      */
     void doUpdateQuantity(int idCarrello, int idProdotto, int quantita, String taglia) throws SQLException;
 
-    
     /**
      * Rimuove completamente un singolo prodotto dal carrello.
      * Corrisponde al click sulla "X" o sul pulsante "Rimuovi" nella pagina carrello.
@@ -31,10 +29,18 @@ public interface ContenutoDAO {
      */
     void doRemoveProduct(int idCarrello, int idProdotto, String taglia) throws SQLException;
 
-    
     /**
      * Recupera tutti i prodotti presenti nel carrello con le rispettive quantità.
      * Restituisce una Mappa (Prodotto -> Quantità nel carrello) per popolare il CarrelloBean.
      */
     Map<ProdottoBean, Integer> doRetrieveProdottiInCarrello(int idCarrello) throws SQLException;
+
+    /**
+     * Calcola la quantità totale presente nel carrello per un determinato prodotto,
+     * sommando le quantità di TUTTE le taglie inserite.
+     * @param idCarrello ID del carrello dell'utente
+     * @param idProdotto ID del prodotto da verificare
+     * @return Il numero totale di pezzi di quel prodotto già presenti nel carrello
+     */
+    int getQuantitaTotaleProdottoInCarrello(int idCarrello, int idProdotto) throws SQLException;
 }

@@ -39,10 +39,10 @@
                         <%-- Creazione URL dinamico per la pagina di dettaglio --%>
                         <c:set var="detailUrl" value="${pageContext.request.contextPath}/DettaglioProdottoServlet?id=${p.idProdotto}" />
                         
-                        <%-- Normalizzazione del percorso immagine (gestisce URL assoluti 'http' e percorsi relativi) --%>
-                        <c:set var="imgSrc" value="${p.immagine.startsWith('http') ? p.immagine : pageContext.request.contextPath.concat('/').concat(p.immagine.startsWith('/') ? p.immagine.substring(1) : p.immagine)}" />
-
-                        <div class="card product-card">
+                        <%-- Aggiunge il context path dell'applicazione (percorso completo) al percorso dell'immagine --%>
+                        <c:set var="imgSrc" value="${pageContext.request.contextPath}/${p.immagine}" />
+                        
+                        <div class="card">
                             <%-- Anteprima Immagine del prodotto con fallback gestito da 'onerror' --%>
                             <a href="${detailUrl}">
                                 <img class="product-thumb" 

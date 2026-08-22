@@ -28,26 +28,12 @@
                 
                 <!-- COLONNA SINISTRA: Gestione dell'immagine del prodotto -->
                 <div class="product-image-wrapper">
-                    <%-- Calcolo dinamico del percorso sorgente (URL assoluto vs relativo vs fallback) --%>
-                    <c:choose>
-                        <%-- Se il campo immagine è vuoto o nullo, imposta l'immagine placeholder predefinita --%>
-                        <c:when test="${empty prodotto.immagine}">
-                            <c:set var="imgSrc" value="${pageContext.request.contextPath}/images/default.jpg" />
-                        </c:when>
-                        <%-- Se l'immagine contiene un URL web completo (es. HTTP/HTTPS) --%>
-                        <c:when test="${prodotto.immagine.startsWith('http')}">
-                            <c:set var="imgSrc" value="${prodotto.immagine}" />
-                        </c:when>
-                        <%-- Se il percorso è relativo al server web --%>
-                        <c:otherwise>
-                            <c:set var="imgPath" value="${prodotto.immagine.startsWith('/') ? prodotto.immagine.substring(1) : prodotto.immagine}" />
-                            <c:set var="imgSrc" value="${pageContext.request.contextPath}/${imgPath}" />
-                        </c:otherwise>
-                    </c:choose>
+                    <%-- Imposta l'immagine del prodotto o il fallback se vuota --%>
+                    <c:set var="imgSrc" value="${not empty prodotto.immagine ? prodotto.immagine : 'images/default.jpg'}" />
 
                     <%-- Tag Immagine con gestore d'errore Client (onerror) per evitare broken images --%>
                     <img class="product-image" 
-                         src="${imgSrc}" 
+                         src="${pageContext.request.contextPath}/${imgSrc}" 
                          alt="<c:out value='${prodotto.nome}' />"
                          onerror="this.onerror=null; this.src='${pageContext.request.contextPath}/images/default.jpg';" />
                 </div>
@@ -73,13 +59,10 @@
                             <p class="varianti-label">Colore:</p>
                             <div class="varianti-list">
                                 <c:forEach var="v" items="${varianti}">
-                                    <%-- Estrazione del colore rimuovendo il prefisso del nome base dal nome completo della variante --%>
-                                    <c:set var="colore" value="${fn:contains(v.nome, ' - ') ? fn:substringAfter(v.nome, ' - ') : v.nome}" />
-                                    
-                                    <%-- Bottone selettore variante con gestione stilistica (selezionato/esaurito) --%>
+                                    <%-- Bottone selettore variante con colore estratto direttamente --%>
                                     <a href="${pageContext.request.contextPath}/DettaglioProdottoServlet?id=${v.idProdotto}"
                                        class="variante-btn ${v.idProdotto == prodotto.idProdotto ? 'active' : ''} ${v.quantita <= 0 ? 'esaurito' : ''}">
-                                        <c:out value="${colore}" />
+                                        <c:out value="${fn:substringAfter(v.nome, ' - ')}" />
                                     </a>
                                 </c:forEach>
                             </div>
@@ -107,9 +90,8 @@
 
                             <%-- CASO 1.2: Il prodotto è in stock e acquistabile --%>
                             <c:when test="${prodotto.quantita > 0}">
-                                <form method="post" action="${pageContext.request.contextPath}/CarrelloServlet" id="add-to-cart-form" class="add-to-cart-form">
-                                    <input type="hidden" name="action" value="add">
-                                    <input type="hidden" name="idProdotto" value="${prodotto.idProdotto}">
+                                <%-- Parametri inviati direttamente nell'URL della form (senza hidden) --%>
+                                <form method="post" action="${pageContext.request.contextPath}/CarrelloServlet?action=add&idProdotto=${prodotto.idProdotto}" id="add-to-cart-form" class="add-to-cart-form">
                                     
                                     <%-- Menu a tendina per la selezione della taglia (se il prodotto le supporta) --%>
                                     <c:if test="${not empty prodotto.taglie}">
@@ -160,8 +142,7 @@
                     <c:when test="${not empty sessionScope.utente && !isAdmin}">
                         <div class="review-form-card">
                             <h3>Lascia una recensione</h3>
-                            <form action="${pageContext.request.contextPath}/AggiungiRecensioneServlet" method="post">
-                                <input type="hidden" name="idProdotto" value="${prodotto.idProdotto}">
+                            <form action="${pageContext.request.contextPath}/AggiungiRecensioneServlet?idProdotto=${prodotto.idProdotto}" method="post">
                                 
                                 <%-- Selezione Valutazione in Stelle --%>
                                 <div class="form-group">
@@ -219,9 +200,7 @@
 
                                         <%-- Pulsante di eliminazione (mostrato solo se Admin o se l'utente è l'autore della recensione) --%>
                                         <c:if test="${isAdmin || (not empty sessionScope.utente && sessionScope.utente.idUtente == rec.idUtente)}">
-                                            <form action="${pageContext.request.contextPath}/EliminaRecensioneServlet" method="post" class="delete-review-form" onsubmit="return confirm('Sei sicuro di voler eliminare questa recensione?');">
-                                                <input type="hidden" name="idRecensione" value="${rec.idRecensione}">
-                                                <input type="hidden" name="idProdotto" value="${prodotto.idProdotto}">
+                                            <form action="${pageContext.request.contextPath}/EliminaRecensioneServlet?idRecensione=${rec.idRecensione}&idProdotto=${prodotto.idProdotto}" method="post" class="delete-review-form" onsubmit="return confirm('Sei sicuro di voler eliminare questa recensione?');">
                                                 <button type="submit" class="btn-delete-review">🗑️ Elimina</button>
                                             </form>
                                         </c:if>
@@ -256,115 +235,104 @@
 
 <%-- ── SCRIPT CLIENT: Gestione asincrona (AJAX / Fetch API) dell'aggiunta al carrello ──────────────── --%>
 <script>
-/**
- * Attende che il DOM sia completamente caricato e analizzato prima di
- * agganciare gli event listener agli elementi della pagina.
- */
+// Attende che il DOM sia completamente caricato prima di eseguire lo script
 document.addEventListener("DOMContentLoaded", function () {
 
-    // 1. SELEZIONE DEGLI ELEMENTI DOM
-    // Form di aggiunta al carrello
-    const form = document.getElementById("add-to-cart-form");
-    // Elemento contenitore per le notifiche popup temporanee (Toast)
-    const toast = document.getElementById("cart-toast");
+    // 1. SELEZIONE DEGLI ELEMENTI DEL DOM
+    const form = document.getElementById("add-to-cart-form"); // Form di aggiunta al carrello
+    const toast = document.getElementById("cart-toast");       // Elemento HTML per i messaggi popup (toast)
 
     /**
-     * Helper per la gestione delle notifiche visive Toast temporanee.
-     * Mostra un messaggio di successo o di errore e lo nasconde automaticamente.
+     * Mostra una notifica popup temporanea (Toast) a schermo.
      * 
-     * @param {string} message - Il testo da visualizzare all'interno del toast
-     * @param {boolean} isSuccess - Flag booleano: true per stile successo (verde), false per errore (rosso)
+     * @param {string} message - Il testo del messaggio da visualizzare
+     * @param {boolean} isSuccess - true per notifica di successo (verde), false per errore (rosso)
      */
     function showToast(message, isSuccess) {
-        // Se l'elemento toast non è presente nel DOM, interrompe l'esecuzione per evitare errori
-        if (!toast) return;
+        if (!toast) return; // Se l'elemento toast non esiste nel DOM, esce subito
 
-        // Imposta il contenuto testuale del toast
+        // Inserisce il testo del messaggio nel contenitore
         toast.textContent = message;
 
-        // Assegna la classe CSS base e quella specifica per lo stato (successo/errore)
+        // Imposta le classi CSS per lo stile dinamico (successo o errore)
         toast.className = "toast " + (isSuccess ? "toast-success" : "toast-error");
 
-        // Aggiunge la classe che rende visibile il toast a schermo (es. animazione fade-in / slide-in)
+        // Rende visibile il toast aggiungendo la classe .show (avvia animazione CSS)
         toast.classList.add("show");
 
-        // Imposta un timer di 2.5 secondi (2500 ms) per rimuovere la classe visibile e nascondere il toast
+        // Programma la scomparsa del toast dopo 2,5 secondi (2500 millisecondi)
         setTimeout(() => {
             toast.classList.remove("show");
         }, 2500);
     }
 
-    // 2. GESTIONE EVENTO SUBMIT DEL FORM
-    // Esegue il codice solo se il form d'acquisto è effettivamente presente nella pagina
+    // 2. GESTIONE DELL'EVENTO DI INVIO DEL FORM (SUBMIT)
     if (form) {
         form.addEventListener("submit", function (e) {
-            // Blocco del comportamento predefinito del form (evita il ricaricamento completo della pagina)
+            // Impedisce l'invio standard della form che ricaricherebbe l'intera pagina
             e.preventDefault();
 
-            // Validazione client-side HTML5 (es. controlla se è stata selezionata una taglia o se la quantità è valida)
+            // Esegue la validazione client-side HTML5 (es. campo taglia obbligatorio)
             if (!form.checkValidity()) {
-                // Se la form non è valida, mostra i messaggi d'errore nativi del browser e interrompe l'invio
-                form.reportValidity();
-                return;
+                form.reportValidity(); // Mostra i fumetti d'errore nativi del browser
+                return;                // Interrompe l'invio
             }
 
-            // Estrazione e formattazione dei dati del form nel formato URL-encoded (key=value&key2=value2)
+            // Converte i campi inseriti nella form nel formato URL-encoded (chiave=valore&chiave2=valore2)
             const params = new URLSearchParams(new FormData(form));
 
-            // 3. ESECUZIONE DELLA RICHIESTA ASINCRONA (AJAX) VIA FETCH API
+            // 3. INVIO ASINCRONO DEI DATI AL SERVER VIA FETCH API (AJAX)
             fetch(form.getAttribute("action"), {
-                method: "POST", // Metodo HTTP utilizzato per l'invio
+                method: "POST",
                 headers: {
-                    // Specifica al server il tipo di contenuto inviato nel corpo della richiesta
+                    // Specifica la codifica dei dati inviati
                     "Content-Type": "application/x-www-form-urlencoded",
-                    // Header personalizzato per informare lato Servlet che si tratta di una chiamata AJAX
+                    // Segnala lato server (alla Servlet) che si tratta di una richiesta AJAX
                     "X-Requested-With": "XMLHttpRequest"
                 },
-                // Inserimento dei dati formattati nel corpo (body) della richiesta HTTP
-                body: params.toString()
+                body: params.toString() // Inserisce i parametri nel corpo della richiesta HTTP
             })
             .then(async response => {
-                // Estrazione del testo grezzo dalla risposta HTTP
+                // Legge il testo grezzo restituito dalla Servlet
                 const text = await response.text();
                 let data;
 
-                // Tentativo di parsing del testo ricevuto in formato JSON
+                // Tenta di convertire la stringa ricevuta in un oggetto JSON valido
                 try { 
                     data = JSON.parse(text); 
                 } catch (err) { 
-                    // Se la risposta non è un JSON valido (es. pagina d'errore HTML del server)
+                    // Mostra errore se la risposta dal server non è in formato JSON
                     showToast("Errore di risposta dal server.", false); 
                     return; 
                 }
 
-                // GESTIONE STATO HTTP 401 (UNAUTHORIZED)
-                // Se l'utente non è autenticato o la sessione è scaduta
+                // GESTIONE UTENTE NON LOGGATO (Codice HTTP 401 Unauthorized)
                 if (response.status === 401) { 
-                    // Effettua il reindirizzamento alla pagina di login specificata dal server o a quella predefinita
+                    // Reindirizza l'utente alla pagina di login
                     window.location.href = data.redirect || "${pageContext.request.contextPath}/jsp/common/login.jsp"; 
                     return; 
                 }
 
-                // GESTIONE RISPOSTA DI SUCCESSO (STATO HTTP 200-299)
+                // GESTIONE ESITO POSITIVO (Codice HTTP 200 OK e success = true)
                 if (response.ok && data.success) {
-                    // Mostra la notifica di conferma operazione
+                    // Mostra notifica di successo
                     showToast(data.message || "Prodotto aggiunto al carrello!", true);
 
-                    // Aggiornamento dinamico dei contatori/badge del carrello presenti nell'header
+                    // Cerca tutti i badge del carrello presenti nell'header/menu
                     const badges = document.querySelectorAll("#cart-count, .cart-badge, .badge-cart");
                     badges.forEach(badge => {
-                        // Converte il numero di articoli ricevuti in intero
+                        // Converte il numero inviato dal server in intero
                         const count = parseInt(data.cartCount, 10) || 0;
-                        // Aggiorna il testo del badge (lo svuota se il contatore è 0)
+                        // Aggiorna la cifra nel badge dell'header (o la svuota se il conteggio è 0)
                         badge.textContent = count > 0 ? count : "";
                     });
                 } else {
-                    // Mostra la notifica di errore restituita dal server (es. quantità insufficiente a magazzino)
+                    // Mostra il messaggio d'errore inviato dalla Servlet (es. quantità esaurita)
                     showToast(data.message || "Impossibile aggiungere il prodotto.", false);
                 }
             })
             .catch(() => {
-                // Gestione degli errori di rete o mancata risposta del server (es. offline, timeout)
+                // Gestisce eventuali cadute di connessione o problemi di rete
                 showToast("Errore di connessione.", false);
             });
         });

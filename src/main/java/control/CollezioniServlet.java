@@ -53,7 +53,7 @@ public class CollezioniServlet extends HttpServlet {
         try {
             // Recupera dal DB tutte le collezioni e i prodotti raggruppati per il catalogo clienti
             List<CollezioneBean> collezioni = collezioneDAO.doRetrieveAll();
-            List<ProdottoBean> prodotti = prodottoDAO.doRetrieveAllClientiRaggruppati();
+            List<ProdottoBean> prodotti = prodottoDAO.doRetrieveAllProdottiRaggruppati();
 
             // 1. Raggruppa preventivamente i prodotti attivi per ID Collezione.
             //    Utilizza una HashMap per ridurre la complessità computazionale a O(M) [M = num prodotti],

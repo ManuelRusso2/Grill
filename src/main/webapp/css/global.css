@@ -76,7 +76,7 @@ img {
 /* Barra superiore fissata in alto durante lo scorrimento */
 .site-header {
     position: sticky;                          /* Mantiene l'header visibile in cima allo scorrimento */
-    top: 0;                                    /* Ancoraggio al margine superiore del viewport */
+    top: 0;                                    /* Ancoraggio al margine superior del viewport */
     z-index: 100;                              /* Livello di sovrapposizione elevato rispetto ai contenuti */
     padding: 14px 0;                           /* Spaziatura interna verticale */
     background: rgba(10, 8, 18, 0.96);         /* Sfondo scuro quasi opaco */
@@ -321,10 +321,10 @@ img {
 }
 
 /* ==========================================================================
-   5. COMPONENTI GENERICI & UTILITY (Pulsanti, Form Base, Alert)
+   5. COMPONENTI GENERICI & UTILITY (Pulsanti, Form Base, Alert, Toast)
    ==========================================================================
    Componenti di interfaccia riutilizzabili nell'applicazione come pulsanti
-   secondari, controlli dei moduli e messaggi di avviso.
+   secondari, controlli dei moduli, messaggi di avviso e notifiche popup.
    ========================================================================== */
 
 /* Pulsante secondario/compatto */
@@ -426,6 +426,48 @@ img {
     background: rgba(255, 77, 77, 0.15);       /* Sfondo rosso trasparente d'allarme */
     border: 1px solid #ff4d4d;                 /* Bordo rosso chiaro */
     color: #ff4d4d;                            /* Testo in rosso chiaro leggibile */
+}
+
+/* --------------------------------------------------------------------------
+   NOTIFICHE FLOATING (TOASTS)
+   -------------------------------------------------------------------------- */
+/* Contenitore base del popup Toast visibile in basso a destra */
+.toast {
+    visibility: hidden;                        /* Nascosto di default */
+    min-width: 250px;                          /* Larghezza minima garantita */
+    position: fixed;                           /* Posizionamento fisso rispetto alla finestra */
+    bottom: 30px;                              /* Distanza dal bordo inferiore */
+    right: 30px;                               /* Distanza dal bordo destro */
+    z-index: 9999;                             /* Sovrapposizione massima sopra ogni elemento */
+    padding: 14px 20px;                        /* Spaziatura interna */
+    border-radius: 8px;                        /* Angoli arrotondati in linea con la UI */
+    font-size: 14px;                           /* Dimensione testo */
+    font-weight: 600;                          /* Peso font in grassetto */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);/* Ombreggiatura profonda per stacco visivo */
+    opacity: 0;                                /* Trasparenti di base per animazione fade-in */
+    transform: translateY(10px);               /* Piccola traslazione verso il basso di partenza */
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease; /* Transizione fluida */
+}
+
+/* Stato attivo del Toast (attivato via JS aggiungendo la classe .show) */
+.toast.show {
+    visibility: visible;                       /* Rende visibile il blocco */
+    opacity: 1;                                /* Completa opacità */
+    transform: translateY(0);                  /* Ritorna alla posizione originale */
+}
+
+/* Variante di successo (Stile Verde / Giallo Accento) */
+.toast-success {
+    background: #172412;                       /* Sfondo scuro verdastro */
+    border: 1px solid var(--accent-yellow);    /* Bordo ad alto contrasto */
+    color: var(--accent-yellow);               /* Testo in colore d'accento */
+}
+
+/* Variante di errore (Stile Rosso Allarme) */
+.toast-error {
+    background: #2a1215;                       /* Sfondo scuro rossastro */
+    border: 1px solid #ff4d4d;                 /* Bordo rosso chiaro */
+    color: #ff4d4d;                            /* Testo in rosso leggibile */
 }
 
 /* ==========================================================================

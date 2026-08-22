@@ -245,6 +245,7 @@ public class CarrelloServlet extends HttpServlet {
 
     /**
      * Gestisce l'aggiunta di un prodotto e della relativa quantità/taglia al carrello.
+     * Utilizza il calcolo totale via DB per considerare tutte le taglie ed evitare il superamento dello stock.
      */
     private void aggiungiProdotto(HttpServletRequest request, HttpSession session, CarrelloBean carrello) throws SQLException {
         int idProdotto = estraiIdProdotto(request);
@@ -273,22 +274,12 @@ public class CarrelloServlet extends HttpServlet {
 
         // Controlla che il prodotto esista, sia attivo e disponibile in magazzino
         if (prodotto != null && prodotto.isAttivo() && prodotto.getQuantita() > 0) {
-            Map<ProdottoBean, Integer> prodottiInCarrello = contenutoDAO.doRetrieveProdottiInCarrello(carrello.getIdCarrello());
+            
+            // Calcola il totale complessivo dei pezzi di questo idProdotto già a carrello (somma di TUTTE le taglie)
+            int quantitaGiaInCarrello = contenutoDAO.getQuantitaTotaleProdottoInCarrello(carrello.getIdCarrello(), idProdotto);
 
-            // Calcola la quantità dello stesso articolo/taglia già presente nel carrello
-            int quantitaAttuale = 0;
-            if (prodottiInCarrello != null) {
-                for (Map.Entry<ProdottoBean, Integer> entry : prodottiInCarrello.entrySet()) {
-                    ProdottoBean p = entry.getKey();
-                    if (p.getIdProdotto() == idProdotto && taglia.equals(p.getTagliaSelezionata())) {
-                        quantitaAttuale = entry.getValue();
-                        break;
-                    }
-                }
-            }
-
-            // Verifica che la quantità totale richiesta non superi le giacenze di magazzino
-            if (quantitaAttuale + quantitaDaAggiungere <= prodotto.getQuantita()) {
+            // Verifica che la somma (totale presente + nuova quantità) non superi lo stock disponibile a magazzino
+            if (quantitaGiaInCarrello + quantitaDaAggiungere <= prodotto.getQuantita()) {
                 contenutoDAO.doAddProduct(carrello.getIdCarrello(), prodotto.getIdProdotto(), quantitaDaAggiungere, taglia);
                 session.setAttribute("successMessage", "Prodotto aggiunto al carrello!");
             } else {

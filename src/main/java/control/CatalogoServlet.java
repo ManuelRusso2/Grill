@@ -39,7 +39,7 @@ public class CatalogoServlet extends HttpServlet {
     private ContenutoDAO contenutoDAO;
 
     /**
-     * Inizializza le implementazioni dei DAO al momento dell'avvio della Servlet.
+     * Inizializza le implementazioni dei DAO al momento dell'avvio della Servlet perchè saranno utilizzati per recuperare dati da database.
      */
     @Override
     public void init() throws ServletException {
@@ -82,11 +82,11 @@ public class CatalogoServlet extends HttpServlet {
                     request.setAttribute("categoriaAttiva", categoriaAttiva);
                 } catch (NumberFormatException e) {
                     // Fallback: se l'ID non è un numero valido, carica l'intero catalogo
-                    prodotti = prodottoDAO.doRetrieveAllClientiRaggruppati();
+                    prodotti = prodottoDAO.doRetrieveAllProdottiRaggruppati();
                 }
             } else {
                 // Nessun filtro specificato: carica il catalogo prodotti completo
-                prodotti = prodottoDAO.doRetrieveAllClientiRaggruppati();
+                prodotti = prodottoDAO.doRetrieveAllProdottiRaggruppati();
             }
             
             // Passa la lista dei prodotti alla vista JSP

@@ -43,11 +43,11 @@ public class ProdottoDAOImpl implements ProdottoDAO {
         "SELECT id_prodotto, nome, descrizione, costo, quantita, attivo, immagine, id_collezione, taglie FROM prodotto WHERE id_prodotto = ?";
 
     // Selezione di tutti i prodotti visibili ai clienti (attivo = true)
-    private static final String SELECT_ALL_CLIENTI =
+    private static final String SELECT_ALL_PRODOTTI =
         "SELECT id_prodotto, nome, descrizione, costo, quantita, attivo, immagine, id_collezione, taglie FROM prodotto WHERE attivo = true";
 
     // Query per la vetrina: raggruppa le varianti dello stesso prodotto in un unico elemento dimostrativo
-    private static final String SELECT_ALL_CLIENTI_RAGGRUPPATI =
+    private static final String SELECT_ALL_PRODOTTI_RAGGRUPPATI =
         "SELECT MIN(id_prodotto) as id_prodotto, " +
         "SUBSTRING_INDEX(nome, ' - ', 1) as nome, " +
         "MIN(descrizione) as descrizione, MIN(costo) as costo, " +
@@ -210,10 +210,10 @@ public class ProdottoDAOImpl implements ProdottoDAO {
      * Recupera l'elenco di tutti i prodotti attivi
      */
     @Override
-    public List<ProdottoBean> doRetrieveAllClienti() throws SQLException {
+    public List<ProdottoBean> doRetrieveAllProdotti() throws SQLException {
         List<ProdottoBean> prodotti = new ArrayList<>();
         try (Connection con = ConnessioneDB.getConnection();
-             PreparedStatement ps = con.prepareStatement(SELECT_ALL_CLIENTI);
+             PreparedStatement ps = con.prepareStatement(SELECT_ALL_PRODOTTI);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) prodotti.add(mapRow(rs));
         }
@@ -258,10 +258,10 @@ public class ProdottoDAOImpl implements ProdottoDAO {
      * Somma la quantità totale disponibile per tutte le varianti correlate.
      */
     @Override
-    public List<ProdottoBean> doRetrieveAllClientiRaggruppati() throws SQLException {
+    public List<ProdottoBean> doRetrieveAllProdottiRaggruppati() throws SQLException {
         List<ProdottoBean> prodotti = new ArrayList<>();
         try (Connection con = ConnessioneDB.getConnection();
-             PreparedStatement ps = con.prepareStatement(SELECT_ALL_CLIENTI_RAGGRUPPATI);
+             PreparedStatement ps = con.prepareStatement(SELECT_ALL_PRODOTTI_RAGGRUPPATI);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 ProdottoBean p = new ProdottoBean();

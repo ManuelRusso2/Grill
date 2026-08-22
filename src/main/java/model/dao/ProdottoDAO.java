@@ -14,7 +14,7 @@ public interface ProdottoDAO {
 
     ProdottoBean doRetrieveByKey(int idProdotto) throws SQLException;
 
-    List<ProdottoBean> doRetrieveAllClienti() throws SQLException;
+    List<ProdottoBean> doRetrieveAllProdotti() throws SQLException;
 
     List<ProdottoBean> doRetrieveAllAdmin() throws SQLException;
 
@@ -22,7 +22,7 @@ public interface ProdottoDAO {
 
     List<ProdottoBean> doRetrieveBySearch(String query) throws SQLException;
 
-    List<ProdottoBean> doRetrieveAllClientiRaggruppati() throws SQLException;
+    List<ProdottoBean> doRetrieveAllProdottiRaggruppati() throws SQLException;
 
     List<ProdottoBean> doRetrieveVarianti(String nomeBase) throws SQLException;
 }

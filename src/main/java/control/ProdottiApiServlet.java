@@ -65,7 +65,7 @@ public class ProdottiApiServlet extends HttpServlet {
             // =========================================================================
             // 2. RECUPERO E ELABORAZIONE DATI DAL DAO
             // =========================================================================
-            List<ProdottoBean> prodotti = prodottoDAO.doRetrieveAllClientiRaggruppati();
+            List<ProdottoBean> prodotti = prodottoDAO.doRetrieveAllProdottiRaggruppati();
             
             // Gestione di sicurezza in caso di lista nulla dal DB
             if (prodotti == null) {

@@ -149,9 +149,19 @@ public class DettaglioProdottoServlet extends HttpServlet {
      * @return La stringa contenente il nome base del prodotto
      */
     private String estraiNomeBase(String nome) {
-        if (nome == null) return "";
-        int index = nome.lastIndexOf(" - ");
-        return (index != -1) ? nome.substring(0, index) : nome;
+        // 1. Se il nome è nullo, restituisco una stringa vuota per evitare errori
+        if (nome == null) {
+            return "";
+        }
+
+        // 2. Se nel nome c'è il separatore " - ", tagliamo la stringa
+        if (nome.contains(" - ")) {
+            int posizioneTrattino = nome.indexOf(" - ");
+            return nome.substring(0, posizioneTrattino); // Prende tutto quello che c'è prima del trattino
+        }
+
+        // 3. Se non c'è alcun trattino, restituisco il nome così com'è
+        return nome;
     }
 
     /**
