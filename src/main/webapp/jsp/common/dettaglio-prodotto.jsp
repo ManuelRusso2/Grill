@@ -318,14 +318,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Mostra notifica di successo
                     showToast(data.message || "Prodotto aggiunto al carrello!", true);
 
-                    // Cerca tutti i badge del carrello presenti nell'header/menu
-                    const badges = document.querySelectorAll("#cart-count, .cart-badge, .badge-cart");
-                    badges.forEach(badge => {
-                        // Converte il numero inviato dal server in intero
+                    // Aggiorna l'elemento badge del carrello presente nell'header
+                    const badge = document.getElementById("cart-count");
+                    if (badge) {
                         const count = parseInt(data.cartCount, 10) || 0;
-                        // Aggiorna la cifra nel badge dell'header (o la svuota se il conteggio è 0)
                         badge.textContent = count > 0 ? count : "";
-                    });
+                    }
                 } else {
                     // Mostra il messaggio d'errore inviato dalla Servlet (es. quantità esaurita)
                     showToast(data.message || "Impossibile aggiungere il prodotto.", false);

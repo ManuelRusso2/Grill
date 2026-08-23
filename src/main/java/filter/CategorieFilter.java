@@ -123,14 +123,9 @@ public class CategorieFilter implements Filter {
      * @return {@code true} se il percorso identifica un file statico, {@code false} altrimenti
      */
     private boolean isStaticResource(String path) {
-        return path.startsWith("/images/") 
-            || path.startsWith("/css/") 
-            || path.startsWith("/js/")
-            || path.endsWith(".css")  || path.endsWith(".js")
-            || path.endsWith(".png")  || path.endsWith(".jpg")
-            || path.endsWith(".jpeg") || path.endsWith(".gif")
-            || path.endsWith(".svg")  || path.endsWith(".ico")
-            || path.endsWith(".woff") || path.endsWith(".woff2")
-            || path.endsWith(".ttf");
+        return path.startsWith("/css/") 
+            || path.startsWith("/js/") 
+            || path.startsWith("/images/")
+            || path.endsWith(".ico"); // Per il favicon nella root
     }
 }

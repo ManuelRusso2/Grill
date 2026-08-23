@@ -3,7 +3,6 @@ package filter;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Map;
-import java.util.Objects;
 import javax.servlet.DispatcherType;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -26,11 +25,12 @@ import model.dao.impl.ContenutoDAOImpl;
 /**
  * CartFilter
  * Filtro globale applicato a tutte le rotte per il calcolo in tempo reale del conteggio degli elementi nel carrello.
+ * 
  * Il filtro si occupa di:
- *   Escludere le chiamate a risorse statiche (CSS, JS, immagini, font) per ottimizzare le prestazioni.</li>
- *   Distinguere tra utente registrato (il cui carrello risiede su DB) e utente non autenticato (il cui carrello è memorizzato in sessione).
- *   Calcolare il totale complessivo della quantità degli articoli presenti.
- *   Impostare l'attributo di richiesta {@code cartCount} per consentire all'interfaccia utente (es. Navbar/Badge) di mostrare il contatore aggiornato.
+ *   - Escludere le chiamate a risorse statiche (CSS, JS, immagini, favicon) per ottimizzare le prestazioni.
+ *   - Calcolare il carrello da Database esclusivamente per gli utenti autenticati che non sono amministratori.
+ *   - Sommare la quantità totale di tutti i prodotti presenti a carrello.
+ *   - Impostare l'attributo di richiesta {@code cartCount} per consentire all'interfaccia utente (es. Navbar/Badge) di mostrare il contatore aggiornato.
  */
 @WebFilter(urlPatterns = "/*", dispatcherTypes = {DispatcherType.REQUEST, DispatcherType.FORWARD})
 public class CartFilter implements Filter {
@@ -40,11 +40,11 @@ public class CartFilter implements Filter {
     private ContenutoDAO contenutoDAO;
 
     /**
-     * Inizializza il filtro e crea le istanze concrete delle classi DAO necessarie.
-     * Metodo eseguito dal Servlet Container durante la fase di startup del filtro.
+     * Inizializza il filtro instanziando le implementazioni concrete dei DAO per l'accesso ai dati.
+     * Invocato dal Servlet Container durante la fase di avvio del filtro.
      * 
-     * @param filterConfig La configurazione fornita dal contenitore di Servlet
-     * @throws ServletException Se si verifica un errore durante la fase di inizializzazione
+     * @param filterConfig La configurazione del filtro fornita dal Servlet Container
+     * @throws ServletException Se si verifica un errore durante l'inizializzazione
      */
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -53,43 +53,43 @@ public class CartFilter implements Filter {
     }
 
     /**
-     * Intercetta la richiesta HTTP e calcola il conteggio totale dei prodotti nel carrello.
+     * Intercetta la richiesta HTTP in ingresso e calcola il conteggio totale dei prodotti nel carrello.
      * 
      * @param request  La richiesta {@link ServletRequest} in ingresso
      * @param response La risposta {@link ServletResponse} in uscita
-     * @param chain    La catena di filtri {@link FilterChain}
+     * @param chain    La catena di filtri {@link FilterChain} per proseguire l'esecuzione
      * @throws IOException      Se si verifica un errore di I/O durante l'elaborazione
-     * @throws ServletException Se si verifica un errore di Servlet
+     * @throws ServletException Se si verifica un errore a livello di Servlet
      */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-        String requestURI = httpRequest.getRequestURI().toLowerCase();
+        String requestURI = httpRequest.getRequestURI().substring(httpRequest.getContextPath().length()).toLowerCase();
 
         // =========================================================================
         // 1. ESCLUSIONE DELLE RISORSE STATICHE
-        // Se la richiesta riguarda asset statici (CSS, JS, immagini, font), 
-        // bypassa il calcolo del carrello per evitare query o operazioni inutili.
+        // Se la richiesta riguarda asset statici (CSS, JS, immagini, favicon), 
+        // bypassa il calcolo del carrello per evitare query SQL non necessarie.
         // =========================================================================
         if (isStaticResource(requestURI)) {
             chain.doFilter(request, response);
             return;
         }
 
-        // Recupero la sessione senza crearne una nuova (false)
+        // Recupero della sessione senza crearne una nuova se non esiste
         HttpSession session = httpRequest.getSession(false);
         int cartCount = 0;
 
+        // =========================================================================
+        // 2. UTENTE REGISTRATO (E NON AMMINISTRATORE)
+        // Se l'utente è autenticato ed è un cliente, recupera il carrello dal DB
+        // e calcola la somma totale delle quantità di tutti i prodotti presenti.
+        // =========================================================================
         if (session != null) {
             UtenteBean utente = (UtenteBean) session.getAttribute("utente");
 
-            // =========================================================================
-            // 2. UTENTE REGISTRATO (E NON AMMINISTRATORE)
-            // Estrae il carrello e i relativi elementi direttamente dal Database tramite DAO.
-            // Somma la quantità totale (valori della mappa Mappa<Prodotto, Quantità>).
-            // =========================================================================
             if (utente != null && !utente.isAdmin()) {
                 try {
                     CarrelloBean carrello = carrelloDAO.doRetrieveByUtente(utente.getIdUtente());
@@ -98,34 +98,22 @@ public class CartFilter implements Filter {
                                 contenutoDAO.doRetrieveProdottiInCarrello(carrello.getIdCarrello());
                         
                         if (prodottiInCarrello != null) {
-                            cartCount = prodottiInCarrello.values().stream()
-                                    .filter(Objects::nonNull)
-                                    .mapToInt(Integer::intValue)
-                                    .sum();
+                            for (Integer qta : prodottiInCarrello.values()) {
+                                if (qta != null) {
+                                    cartCount += qta;
+                                }
+                            }
                         }
                     }
                 } catch (SQLException e) {
-                    // In caso di errore SQL, si traccia l'eccezione mantenendo il contatore a 0
+                    // In caso di errore SQL, traccia l'eccezione mantenendo il contatore a 0
                     e.printStackTrace();
-                }
-            } 
-            // =========================================================================
-            // 3. UTENTE OSPITE (GUEST / NON AUTENTICATO)
-            // Calcola il conteggio leggendo l'oggetto CarrelloBean memorizzato in sessione.
-            // =========================================================================
-            else if (utente == null) {
-                CarrelloBean carrelloSessione = (CarrelloBean) session.getAttribute("carrello");
-                if (carrelloSessione != null && carrelloSessione.getProdotti() != null) {
-                    cartCount = carrelloSessione.getProdotti().values().stream()
-                            .filter(Objects::nonNull)
-                            .mapToInt(Integer::intValue)
-                            .sum();
                 }
             }
         }
 
         // =========================================================================
-        // 4. VALORIZZAZIONE DELL'ATTRIBUTO DI RICHIESTA E PROSEGUIMENTO
+        // 3. VALORIZZAZIONE DELL'ATTRIBUTO DI RICHIESTA E PROSEGUIMENTO
         // Rende il numero totale di elementi accessibile nelle pagine JSP (es. ${cartCount})
         // =========================================================================
         httpRequest.setAttribute("cartCount", cartCount);
@@ -141,17 +129,16 @@ public class CartFilter implements Filter {
     }
 
     /**
-     * Metodo di supporto privato per determinare se un URI di richiesta punti a una risorsa statica.
+     * Metodo ausiliario di controllo per verificare se il percorso richiesto appartiene
+     * ad una risorsa statica o ad una cartella di asset pubblici.
      * 
-     * @param uri L'URI della richiesta convertito in minuscolo
-     * @return {@code true} se l'estensione corrisponde a un file statico, {@code false} altrimenti
+     * @param path Il percorso relativo della richiesta HTTP in minuscolo
+     * @return {@code true} se il percorso identifica un file statico, {@code false} altrimenti
      */
-    private boolean isStaticResource(String uri) {
-        return uri.endsWith(".css") || uri.endsWith(".js") 
-            || uri.endsWith(".png") || uri.endsWith(".jpg") 
-            || uri.endsWith(".jpeg") || uri.endsWith(".gif") 
-            || uri.endsWith(".svg") || uri.endsWith(".ico") 
-            || uri.endsWith(".woff") || uri.endsWith(".woff2") 
-            || uri.endsWith(".ttf");
+    private boolean isStaticResource(String path) {
+        return path.startsWith("/css/") 
+            || path.startsWith("/js/") 
+            || path.startsWith("/images/")
+            || path.endsWith(".ico");
     }
 }

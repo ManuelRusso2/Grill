@@ -61,7 +61,11 @@ public class CarrelloServlet extends HttpServlet {
         // Recupera la sessione corrente senza crearne una nuova se non esiste
         HttpSession session = request.getSession(false);
         // Estrae l'utente autenticato dalla sessione
-        UtenteBean utente = (session != null) ? (UtenteBean) session.getAttribute("utente") : null;
+        UtenteBean utente = null;
+
+        if (session != null) {
+            utente = (UtenteBean) session.getAttribute("utente");
+        }
 
         // Controllo autenticazione: se l'utente non è loggato viene reindirizzato al login
         if (utente == null) {
@@ -114,7 +118,11 @@ public class CarrelloServlet extends HttpServlet {
         // Recupera la sessione senza crearne una nuova se non presente
         HttpSession session = request.getSession(false);
         // Estrae l'utente autenticato
-        UtenteBean utente = (session != null) ? (UtenteBean) session.getAttribute("utente") : null;
+        UtenteBean utente = null;
+
+        if (session != null) {
+            utente = (UtenteBean) session.getAttribute("utente");
+        }
         
         // Determina se la richiesta proviene da una chiamata asincrona JavaScript (AJAX)
         boolean isAjax = "XMLHttpRequest".equalsIgnoreCase(request.getHeader("X-Requested-With"));

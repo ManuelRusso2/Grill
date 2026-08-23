@@ -76,7 +76,7 @@ img {
 /* Barra superiore fissata in alto durante lo scorrimento */
 .site-header {
     position: sticky;                          /* Mantiene l'header visibile in cima allo scorrimento */
-    top: 0;                                    /* Ancoraggio al margine superior del viewport */
+    top: 0;                                    /* Ancoraggio al margine superiore del viewport */
     z-index: 100;                              /* Livello di sovrapposizione elevato rispetto ai contenuti */
     padding: 14px 0;                           /* Spaziatura interna verticale */
     background: rgba(10, 8, 18, 0.96);         /* Sfondo scuro quasi opaco */
@@ -299,7 +299,7 @@ img {
     filter: drop-shadow(0 0 5px rgba(204, 255, 0, 0.45)); /* Bagliore giallo d'accento */
 }
 
-/* Badge indicatore di conteggio elementi (es. articoli nel carrello) */
+/* Badge indicatore di conteggio elementi nel carrello */
 .badge {
     display: inline-flex;                      /* Allineamento flessibile */
     align-items: center;                       /* Centratura verticale del numero */

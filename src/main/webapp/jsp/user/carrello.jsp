@@ -78,16 +78,13 @@
                             </td>
 
                             <%-- Colonna Modifica Quantità --%>
-                            <td>
-                                <%-- Form per l'invio dell'aggiornamento della quantità alla CarrelloServlet --%>
-                                <form method="post" action="${pageContext.request.contextPath}/CarrelloServlet" class="cart-update-form">
-                                    <input type="hidden" name="action" value="update">
-                                    <input type="hidden" name="idProdotto" value="${prodotto.idProdotto}">
-                                    <input type="hidden" name="taglia" value="${prodotto.tagliaSelezionata}">
-                                    <input type="number" name="quantita" value="${quantita}" min="1" max="${prodotto.quantita}" class="input-qty" aria-label="Quantità">
-                                    <button type="submit" class="btn-update">Aggiorna</button>
-                                </form>
-                            </td>
+							<td>
+							    <%-- Form per l'invio dell'aggiornamento della quantità alla CarrelloServlet --%>
+							    <form method="post" action="${pageContext.request.contextPath}/CarrelloServlet?action=update&idProdotto=${prodotto.idProdotto}&taglia=${prodotto.tagliaSelezionata}" class="cart-update-form">
+							        <input type="number" name="quantita" value="${quantita}" min="1" max="${prodotto.quantita}" class="input-qty" aria-label="Quantità">
+							        <button type="submit" class="btn-update">Aggiorna</button>
+							    </form>
+							</td>
 
                             <%-- Colonna Subtotale di riga formattato in Euro (€) --%>
                             <td>
@@ -95,16 +92,13 @@
                             </td>
 
                             <%-- Colonna Azioni (Rimozione del singolo articolo) --%>
-                            <td>
-                                <form method="post" action="${pageContext.request.contextPath}/CarrelloServlet" class="cart-remove-form">
-                                    <input type="hidden" name="action" value="remove">
-                                    <input type="hidden" name="idProdotto" value="${prodotto.idProdotto}">
-                                    <input type="hidden" name="taglia" value="${prodotto.tagliaSelezionata}">
-                                    <button type="submit" class="btn-delete" onclick="return confirm('Rimuovere questo prodotto dal carrello?');">
-                                        Rimuovi
-                                    </button>
-                                </form>
-                            </td>
+							<td>
+							    <form method="post" action="${pageContext.request.contextPath}/CarrelloServlet?action=remove&idProdotto=${prodotto.idProdotto}&taglia=${prodotto.tagliaSelezionata}" class="cart-remove-form">
+							        <button type="submit" class="btn-delete" onclick="return confirm('Rimuovere questo prodotto dal carrello?');">
+							            Rimuovi
+							        </button>
+							    </form>
+							</td>
                         </tr>
                     </c:forEach>
                 </tbody>
@@ -121,12 +115,11 @@
                     </a>
 
                     <%-- Form per svuotare interamente il carrello con conferma JavaScript --%>
-                    <form method="post" action="${pageContext.request.contextPath}/CarrelloServlet">
-                        <input type="hidden" name="action" value="empty" />
-                        <button type="submit" class="btn-empty-cart" onclick="return confirm('Sei sicuro di voler svuotare completamente il carrello?');">
-                            Svuota Carrello
-                        </button>
-                    </form>
+					<form method="post" action="${pageContext.request.contextPath}/CarrelloServlet?action=empty">
+					    <button type="submit" class="btn-empty-cart" onclick="return confirm('Sei sicuro di voler svuotare completamente il carrello?');">
+					        Svuota Carrello
+					    </button>
+					</form>
                 </div>
             </div>
         </c:when>
