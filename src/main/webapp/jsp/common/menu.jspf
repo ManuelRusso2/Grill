@@ -16,11 +16,11 @@
     <c:choose>
         <%-- Se la pagina attuale è Login, mostra il pulsante per andare alla Registrazione --%>
         <c:when test="${fn:endsWith(currentPath, '/login.jsp')}">
-            <a href="${pageContext.request.contextPath}/jsp/user/registrazione.jsp">Registrazione</a>
+            <a href="${pageContext.request.contextPath}/jsp/user/registrazione.jsp" class="nav-link">Registrazione</a>
         </c:when>
         <%-- Se la pagina attuale è Registrazione, mostra il pulsante per andare al Login --%>
         <c:otherwise>
-            <a href="${pageContext.request.contextPath}/jsp/common/login.jsp">Login</a>
+            <a href="${pageContext.request.contextPath}/jsp/common/login.jsp" class="nav-link">Login</a>
         </c:otherwise>
     </c:choose>
 </c:if>
@@ -36,7 +36,7 @@
         <a href="#" class="nav-dropdown-toggle nav-link">Categorie &#9660;</a>
         <div class="nav-dropdown-menu">
             <%-- Collegamento in evidenza per visualizzare tutte le collezioni --%>
-            <a href="${pageContext.request.contextPath}/CollezioniServlet" style="font-weight: 700; color: var(--accent-yellow); border-bottom: 1px solid var(--border-color); margin-bottom: 6px; padding-bottom: 8px;">
+            <a href="${pageContext.request.contextPath}/CollezioniServlet" class="nav-dropdown-featured">
                 ✨ Tutte le Collezioni
             </a>
             
@@ -73,7 +73,7 @@
                 <a href="${pageContext.request.contextPath}/CarrelloServlet" id="nav-cart-link" class="nav-cart-link">
                     <img src="${pageContext.request.contextPath}/images/carrello.png" alt="Carrello" class="nav-cart-icon">
                     <%-- Contatore dinamico dei prodotti presenti nel carrello --%>
-                    <span id="cart-count" class="badge"><c:if test="${not empty cartCount}"><c:out value="${cartCount}"/></c:if></span>
+                    <span id="cart-count" class="badge"><c:if test="${not empty cartCount && cartCount > 0}"><c:out value="${cartCount}"/></c:if></span>
                 </a>
             </c:if>
         </c:when>
@@ -91,21 +91,33 @@
 
 <%-- Script JavaScript per la gestione dell'apertura/chiusura del menu a tendina Categorie --%>
 <script>
+/**
+ * Gestione interattiva del menu a tendina (Dropdown) delle Categorie.
+ * Esegue lo script solo dopo che il DOM è stato completamente caricato.
+ */
 document.addEventListener("DOMContentLoaded", function () {
+    // 1. SELEZIONE DEGLI ELEMENTI DEL DOM
     const dropdown = document.querySelector(".nav-dropdown");
+    
+    // Controllo di guardia: interrompe l'esecuzione se la pagina non contiene il menu
     if (!dropdown) return;
+
+    // Selezione del pulsante di attivazione e della tendina contenente i link
     const toggle = dropdown.querySelector(".nav-dropdown-toggle");
     const menu = dropdown.querySelector(".nav-dropdown-menu");
 
-    // Commuta la classe 'open' al click sul pulsante 'Categorie'
+    // 2. GESTIONE CLICK SUL PULSANTE "CATEGORIE"
     toggle.addEventListener("click", function (e) {
-        e.preventDefault();
-        menu.classList.toggle("open");
+        e.preventDefault();            // Blocca il comportamento di default del link (#)
+        menu.classList.toggle("open"); // Alterna lo stato di apertura aggiungendo/rimuovendo la classe '.open'
     });
 
-    // Chiude il menu a tendina se si clicca in qualsiasi punto esterno
+    // 3. GESTIONE CHIUSURA ALL'ESTERNO (Click-Outside)
     document.addEventListener("click", function (e) {
-        if (!dropdown.contains(e.target)) menu.classList.remove("open");
+        // Se l'elemento cliccato dall'utente NON è dentro il contenitore del dropdown
+        if (!dropdown.contains(e.target)) {
+            menu.classList.remove("open"); // Forza la chiusura della tendina
+        }
     });
 });
 </script>

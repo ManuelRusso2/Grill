@@ -57,7 +57,10 @@ public class ModificaRecensioneServlet extends HttpServlet {
         // ---------------------------------------------------------------------
         // Recupera la sessione corrente senza crearne una nuova se non esiste
         HttpSession session = request.getSession(false);
-        UtenteBean utente = (session != null) ? (UtenteBean) session.getAttribute("utente") : null;
+        UtenteBean utente = null;
+        if (session != null) {
+            utente = (UtenteBean) session.getAttribute("utente");
+        }
 
         // Se l'utente non è autenticato, reindirizza alla pagina di login
         if (utente == null) {

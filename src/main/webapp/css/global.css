@@ -149,6 +149,7 @@ img {
 
 /* Dropdown dei suggerimenti di ricerca (Autocomplete) */
 .search-suggestions {
+    display: none;                             /* Nascosto di default (gestito via JS) */
     position: absolute;                        /* Posizionamento assoluto rispetto al .search-wrapper */
     top: calc(100% + 8px);                     /* Posizionato subito sotto l'input con un margine di 8px */
     left: 0;                                   /* Allineato al margine sinistro del contenitore */
@@ -263,6 +264,15 @@ img {
     border-bottom: 1px solid var(--border-color); /* Bordo divisorio tra le voci */
     font-size: 13px;                           /* Dimensione del testo */
     text-transform: none;                      /* Mantiene il testo con maiuscole/minuscole originali */
+}
+
+/* Link in evidenza "Tutte le Collezioni" */
+.nav-dropdown-featured {
+    font-weight: 700;                          /* Grassetto marcato */
+    color: var(--accent-yellow) !important;    /* Colore giallo d'accento */
+    border-bottom: 1px solid var(--border-color); /* Bordo divisorio inferiore */
+    margin-bottom: 6px;                        /* Spaziatura inferiore */
+    padding-bottom: 8px;                       /* Distacco interno */
 }
 
 /* Rimuove il bordo divisorio dall'ultimo elemento */
@@ -393,6 +403,20 @@ img {
     font-size: 12px;                           /* Dimensione testo ridotta */
     margin-top: 4px;                           /* Spazio dall'input */
     font-weight: normal;                       /* Rimuove il grassetto */
+}
+
+/* Messaggio di errore dinamico generato via JS (Checkout/Auth) */
+.field-error-span {
+    display: block;                            /* Occupazione a blocco sotto il campo di input */
+    color: #ff4d4d;                            /* Rosso avviso leggibile */
+    font-size: 12px;                           /* Dimensione ridotta */
+    font-weight: 600;                          /* Semi-grassetto per evidenziare l'errore */
+    margin-top: 4px;                           /* Spazio dal bordo dell'input */
+}
+
+/* Nasconde lo span se privo di testo per non occupare spazio nel layout */
+.field-error-span:empty {
+    display: none;                             /* Rimuove l'elemento dal flusso finché non c'è un errore */
 }
 
 /* Note di supporto o indicazione di opzionalità dei campi */

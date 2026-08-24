@@ -42,7 +42,7 @@
                 <input type="text" id="searchInput" class="search-input" placeholder="Cerca prodotti..." autocomplete="off"
                        data-context-path="${pageContext.request.contextPath}">
                 <%-- Contenitore per i suggerimenti di ricerca dinamici popolati via JavaScript --%>
-                <div id="searchSuggestions" class="search-suggestions" style="display:none;"></div>
+                <div id="searchSuggestions" class="search-suggestions"></div>
             </div>
         </c:if>
 

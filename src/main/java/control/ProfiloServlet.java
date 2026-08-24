@@ -73,7 +73,10 @@ public class ProfiloServlet extends HttpServlet {
         // Se l'utente non è autenticato, viene reindirizzato alla pagina di login.
         // =========================================================================
         HttpSession session = request.getSession(false);
-        UtenteBean utente = (session != null) ? (UtenteBean) session.getAttribute("utente") : null;
+        UtenteBean utente = null;
+        if (session != null) {
+            utente = (UtenteBean) session.getAttribute("utente");
+        }
         
         if (utente == null) {
             response.sendRedirect(request.getContextPath() + "/jsp/common/login.jsp");

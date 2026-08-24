@@ -51,6 +51,19 @@
     margin: 20px auto 40px auto;               /* Centratura orizzontale con margini verticali */
 }
 
+/* Informazioni sul prodotto in fase di modifica */
+.review-product-info {
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-gray);
+    font-size: 15px;
+}
+
+.review-product-info strong {
+    color: var(--text-light);
+}
+
 /* Titoli delle schede form */
 .review-form-card h3,
 .review-edit-card h3 {

@@ -13,7 +13,7 @@
 <main class="container">
     <h1>Profilo Utente</h1>
     
-    <%-- ── SEZIONE 1: DETTAGLI PROFILO UTENTE ─────────────────────────────── --%>
+	<%-- ── SEZIONE 1: DETTAGLI PROFILO UTENTE ─────────────────────────────── --%>
     <%-- Mostra la scheda informativa solo se l'utente è autenticato in sessione --%>
     <c:if test="${not empty sessionScope.utente}">
         <div class="profile-card">
@@ -43,16 +43,6 @@
                     <div class="detail-row">
                         <span class="detail-label">Telefono:</span>
                         <span class="detail-value"><c:out value="${sessionScope.utente.telefono}" /></span>
-                    </div>
-                </c:if>
-
-                <%-- Data e ora di registrazione all'applicazione formattata --%>
-                <c:if test="${not empty sessionScope.utente.dataRegistrazione}">
-                    <div class="detail-row">
-                        <span class="detail-label">Registrato dal:</span>
-                        <span class="detail-value">
-                            <fmt:formatDate value="${sessionScope.utente.dataRegistrazione}" pattern="dd/MM/yyyy HH:mm" />
-                        </span>
                     </div>
                 </c:if>
 
@@ -145,24 +135,22 @@
                         </div>
 
                         <%-- Pulsanti di azione riservati all'autore della recensione o all'Amministratore --%>
-                        <div class="review-actions">
-                            <c:if test="${not empty sessionScope.utente && (sessionScope.utente.idUtente == rec.idUtente || sessionScope.utente.admin)}">
-                                
-                                <%-- Form per la modifica della recensione --%>
-                                <form action="${pageContext.request.contextPath}/ModificaRecensioneServlet" method="get">
-                                    <input type="hidden" name="idRecensione" value="${rec.idRecensione}" />
-                                    <button type="submit" class="btn-action">Modifica</button>
-                                </form>
-
-                                <%-- Form con conferma JavaScript per l'eliminazione della recensione (Servet unificata) --%>
-                                <form action="${pageContext.request.contextPath}/EliminaRecensioneServlet" method="post" onsubmit="return confirm('Sei sicuro di voler eliminare questa recensione?');">
-                                    <input type="hidden" name="idRecensione" value="${rec.idRecensione}" />
-                                    <button type="submit" class="btn-action btn-delete">Elimina</button>
-                                </form>
-
-                            </c:if>
-                        </div>
-
+						<div class="review-actions">
+						    <c:if test="${not empty sessionScope.utente && (sessionScope.utente.idUtente == rec.idUtente || sessionScope.utente.admin)}">
+						        
+						        <%-- Link diretto per la modifica --%>
+						        <a href="${pageContext.request.contextPath}/ModificaRecensioneServlet?idRecensione=${rec.idRecensione}" class="btn-action">
+						            Modifica
+						        </a>
+						
+						        <%-- Form POST per l'eliminazione con parametro nell'action --%>
+						        <form action="${pageContext.request.contextPath}/EliminaRecensioneServlet?idRecensione=${rec.idRecensione}" method="post" onsubmit="return confirm('Sei sicuro di voler eliminare questa recensione?');">
+						            <button type="submit" class="btn-action btn-delete">Elimina</button>
+						        </form>
+						
+						    </c:if>
+						</div>
+						
                     </div>
                 </c:forEach>
             </c:when>

@@ -1,8 +1,8 @@
 /* ==========================================================================
-   5. CARRELLO & CHECKOUT
+   5. CARRELLO, CHECKOUT & CONFERMA ORDINE
    ==========================================================================
    Stili dedicati alla gestione dei prodotti inseriti nel carrello, aggiornamento
-   delle quantità, calcolo del totale e flusso di completamento dell'ordine (checkout).
+   delle quantità, calcolo del totale, checkout e pagina di successo dell'ordine.
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -52,6 +52,15 @@
     color: var(--accent-yellow);               /* Cambia il colore in giallo d'accento al sorvolo */
 }
 
+/* Taglia del prodotto selezionata */
+.cart-product-size {
+    display: block;                            /* Disposizione a blocco sotto il titolo */
+    color: var(--primary-purple);              /* Evidenziata con il viola di brand */
+    font-size: 12px;                           /* Dimensione contenuta */
+    font-weight: 600;                          /* Semi-grassetto per chiarezza */
+    margin-top: 4px;                           /* Distacco verticale dal titolo */
+}
+
 /* --------------------------------------------------------------------------
    5.2 AGGIORNAMENTO QUANTITÀ CARRELLO
    -------------------------------------------------------------------------- */
@@ -81,7 +90,7 @@
     border-color: var(--primary-purple);       /* Il bordo passa al viola principale di tema */
 }
 
-/* Pulsante Aggiorna Quantità (Selettore ad alta specificità senza !important) */
+/* Pulsante Aggiorna Quantità */
 main .cart-update-form button,
 main .cart-update-form .btn-update,
 main .cart-table .cart-update-form button {
@@ -160,7 +169,7 @@ main .cart-table .cart-update-form button:hover {
     width: 100%;                               /* Occupazione piena della larghezza */
 }
 
-/* Pulsante Svuota Carrello (Stile d'allarme/distruttivo) */
+/* Pulsante Svuota Carrello */
 .cart-summary .btn-empty-cart {
     display: inline-flex;                      /* Flexbox in linea */
     align-items: center;                       /* Centratura verticale */
@@ -346,4 +355,165 @@ main .cart-table .cart-update-form button:hover {
 .btn-checkout-submit {
     width: 100%;                               /* Occupazione a tutta larghezza per massima evidenza */
     margin-top: 25px;                          /* Spazio superiore dai form di carta/dati */
+}
+
+/* Messaggio di errore dinamico generato via JS (Checkout/Auth) */
+.field-error-span {
+    display: block;                            /* Occupazione a blocco sotto il campo di input */
+    color: #ff4d4d;                            /* Rosso avviso leggibile */
+    font-size: 12px;                           /* Dimensione ridotta */
+    font-weight: 600;                          /* Semi-grassetto per evidenziare l'errore */
+    margin-top: 4px;                           /* Spazio dal bordo dell'input */
+}
+
+/* Nasconde lo span se privo di testo per non occupare spazio nel layout */
+.field-error-span:empty {
+    display: none;                             /* Rimuove l'elemento dal flusso finché non c'è un errore */
+}
+
+/* --------------------------------------------------------------------------
+   5.6 CONFERMA ORDINE & SUCCESS PAGE
+   -------------------------------------------------------------------------- */
+/* Contenitore di layout per la schermata di successo dell'ordine */
+.success-page-container {
+    display: flex;                             /* Disposizione flessibile */
+    align-items: center;                       /* Centratura verticale */
+    justify-content: center;                   /* Centratura orizzontale */
+    min-height: 70vh;                          /* Occupazione del 70% della viewport per centraggio visivo */
+    padding: 40px 0;                           /* Spaziatura interna verticale */
+}
+
+/* Card principale di conferma dell'ordine */
+.success-card {
+    display: flex;                             /* Layout flessibile */
+    flex-direction: column;                    /* Incolonna i dettagli della conferma */
+    align-items: center;                       /* Centratura orizzontale dei contenuti */
+    width: 100%;                               /* Occupazione a tutta larghezza */
+    max-width: 600px;                          /* Larghezza massima della scheda */
+    padding: 40px;                             /* Spaziatura interna generosa */
+    border: 1px solid var(--border-color);     /* Bordo perimetrale */
+    border-radius: 12px;                       /* Angoli arrotondati accentuati */
+    background-color: var(--bg-card);          /* Sfondo della scheda */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);/* Ombreggiatura profonda */
+    text-align: center;                        /* Allineamento centrato del testo */
+}
+
+/* Cerchio identificativo dell'icona di successo */
+.success-icon-wrapper {
+    display: flex;                             /* Disposizione flessibile */
+    align-items: center;                       /* Centratura verticale dell'icona */
+    justify-content: center;                   /* Centratura orizzontale dell'icona */
+    width: 76px;                               /* Larghezza fissa del cerchio */
+    height: 76px;                              /* Altezza fissa del cerchio */
+    margin-bottom: 20px;                       /* Distanza dal titolo di conferma */
+    border: 1px solid rgba(39, 174, 96, 0.4);  /* Bordo verde trasparente */
+    border-radius: 50%;                        /* Forma perfettamente circolare */
+    background: rgba(39, 174, 96, 0.15);        /* Sfondo con velatura verde di successo */
+}
+
+/* Simbolo di spunta (Checkmark) verde */
+.success-checkmark {
+    color: #27ae60;                            /* Verde vivido indicante successo */
+    font-size: 38px;                           /* Dimensione marcata della spunta */
+    font-weight: bold;                         /* Grassetto */
+    line-height: 1;                            /* Interlinea azzerata per centratura precisa */
+}
+
+/* Titolo principale della conferma ordine */
+.success-card h1 {
+    margin-bottom: 8px;                        /* Spazio inferiore dal sottotitolo */
+    color: var(--text-light);                  /* Testo chiaro */
+    font-size: 26px;                           /* Dimensione del titolo */
+    font-weight: 800;                          /* Extra bold */
+    text-transform: uppercase;                 /* Testo in maiuscolo */
+}
+
+/* Sottotitolo o messaggio di ringraziamento */
+.success-subtitle {
+    margin-bottom: 30px;                       /* Distanza dal riepilogo dell'ordine */
+    color: var(--text-gray);                   /* Testo grigio secondario */
+    font-size: 15px;                           /* Dimensione standard */
+}
+
+/* Box contenitore del riepilogo dati dell'ordine appena effettuato */
+.order-summary-box {
+    width: 100%;                               /* Occupazione a tutta larghezza */
+    margin-bottom: 25px;                       /* Distanza dalle note di tracciamento sottostanti */
+    padding: 24px;                             /* Spaziatura interna */
+    border: 1px solid var(--border-color);     /* Bordo perimetrale */
+    border-radius: 8px;                        /* Angoli arrotondati */
+    background-color: rgba(0, 0, 0, 0.25);    /* Sfondo oscurato per stacco interno */
+    text-align: left;                          /* Allineamento a sinistra dei dati del riepilogo */
+}
+
+/* Titolo del box di riepilogo ordine */
+.order-summary-box h2 {
+    margin-bottom: 16px;                       /* Distanza dalle righe di dettaglio */
+    padding-bottom: 10px;                      /* Spazio inferiore dal bordo separatore */
+    border-bottom: 1px solid var(--border-color); /* Linea divisoria orizzontale */
+    color: var(--accent-yellow);               /* Titolo in evidenza con il giallo d'accento */
+    font-size: 16px;                           /* Dimensione titolo sezione */
+    text-transform: uppercase;                 /* Maiuscolo */
+}
+
+/* Singola riga del riepilogo ordine (Label - Valore) */
+.order-detail-row {
+    display: flex;                             /* Layout flessibile in linea */
+    align-items: center;                       /* Centratura verticale */
+    justify-content: space-between;            /* Spinge label a sinistra e valore a destra */
+    padding: 8px 0;                            /* Spaziatura verticale tra le righe */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03); /* Separatore quasi impercettibile */
+    font-size: 14px;                           /* Dimensione del testo */
+}
+
+/* Rimuove il bordo separatore dall'ultima riga di dettaglio */
+.order-detail-row:last-child {
+    border-bottom: none;                       /* Azzera il bordo finale */
+}
+
+/* Etichetta della riga di riepilogo (es. Numero Ordine, Totale) */
+.order-label {
+    color: var(--text-gray);                   /* Colore del testo secondario */
+    font-weight: 600;                          /* Testo semi-grassetto */
+}
+
+/* Valore corrispondente nella riga di riepilogo */
+.order-value {
+    color: var(--text-light);                  /* Testo chiaro ad alto contrasto */
+    font-weight: 600;                          /* Testo semi-grassetto */
+}
+
+/* Importo totale evidenziato */
+.order-value.order-price {
+    color: var(--primary-purple);              /* Importo evidenziato con il viola di brand */
+    font-size: 16px;                           /* Dimensione leggermente maggiorata */
+    font-weight: 800;                          /* Extra bold */
+}
+
+/* Testo informativo sul tracciamento della spedizione */
+.success-tracking-text {
+    margin-bottom: 25px;                       /* Spazio inferiore dai pulsanti di azione */
+    color: var(--text-gray);                   /* Colore testo di supporto */
+    font-size: 14px;                           /* Dimensione contenuta */
+}
+
+/* Collegamento ipertestuale dentro il testo di tracciamento */
+.order-link {
+    color: var(--accent-yellow);               /* Colore giallo d'accento */
+    font-weight: 700;                          /* Grassetto */
+    text-decoration: underline;                /* Sottolineatura visibile per distinguere il link */
+}
+
+.order-link:hover {
+    color: var(--text-light);                  /* Cambia in colore chiaro al passaggio del mouse */
+}
+
+/* Footer d'azioni nella pagina di successo */
+.success-actions {
+    display: flex;                             /* Layout flessibile */
+    flex-wrap: wrap;                           /* Consente incolonnamento su schermi ridotti */
+    align-items: center;                       /* Centratura verticale */
+    justify-content: center;                   /* Centratura orizzontale dei pulsanti */
+    gap: 15px;                                 /* Spaziatura tra i pulsanti d'azione */
+    width: 100%;                               /* Occupazione piena della larghezza */
 }

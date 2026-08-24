@@ -13,8 +13,8 @@
 <main class="container">
     <h1>Checkout</h1>
 
-    <%-- ── MESSAGGI DI ERRORE / FEEDBACK ──────────────────────────────────── --%>
-    <%-- Mostra un messaggio di alert nel caso in cui si verifichi un errore durante l'elaborazione dell'ordine --%>
+    <%-- ── MESSAGGI DI ERRORE / FEEDBACK LATO SERVER ────────────────────────── --%>
+    <%-- Mostra un messaggio d'avviso se la Servlet ha riscontrato un errore durante l'elaborazione --%>
     <c:if test="${not empty errorMessage}">
         <div class="alert alert-danger">
             <c:out value="${errorMessage}" />
@@ -28,7 +28,7 @@
         <div class="checkout-summary-card">
             <h2>Riepilogo Ordine</h2>
             
-            <%-- Tabella contenente l'elenco dei prodotti presenti nel carrello pronti per l'acquisto --%>
+            <%-- Tabella contenente l'elenco dei prodotti presenti a carrello --%>
             <table class="cart-table checkout-table">
                 <thead>
                     <tr>
@@ -39,7 +39,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <%-- Iterazione sugli elementi della mappa dei prodotti nel carrello --%>
+                    <%-- Iterazione sulla mappa dei prodotti recuperata dalla Servlet --%>
                     <c:forEach var="entry" items="${prodottiCarrello}">
                         <c:set var="prodotto" value="${entry.key}" />
                         <c:set var="quantita" value="${entry.value}" />
@@ -52,22 +52,22 @@
                             </td>
                             <%-- Indicazione della taglia selezionata o valore 'Unica' di default --%>
                             <td>
-                                <strong style="color: var(--primary-purple);">
+                                <strong class="cart-product-size">
                                     <c:out value="${empty prodotto.tagliaSelezionata ? 'Unica' : prodotto.tagliaSelezionata}"/>
                                 </strong>
                             </td>
-                            <%-- Costo unitario del prodotto formattato in Euro (€) --%>
+                            <%-- Prezzo unitario formattato in Euro (€) --%>
                             <td>
                                 <fmt:formatNumber value="${prodotto.costo}" type="currency" currencySymbol="€"/>
                             </td>
-                            <%-- Quantità ordinata del singolo prodotto --%>
+                            <%-- Quantità ordinata --%>
                             <td><c:out value="${quantita}"/></td>
                         </tr>
                     </c:forEach>
                 </tbody>
             </table>
 
-            <%-- Riquadro con l'importo totale dell'ordine --%>
+            <%-- Riquadro con l'importo totale calcolato dell'ordine --%>
             <div class="checkout-total">
                 <p>Totale Ordine: <span><fmt:formatNumber value="${not empty totaleCarrello ? totaleCarrello : 0.0}" type="currency" currencySymbol="€"/></span></p>
             </div>
@@ -77,16 +77,16 @@
         <div class="checkout-form-card">
             <h2>Dati Spedizione e Pagamento</h2>
 
-            <%-- Form per l'invio delle informazioni alla CheckoutServlet via POST --%>
+            <%-- Form di invio dati ordine: l'azione/URL viene aggiornata dinamicamente da JS per includere il metodo di pagamento --%>
             <form method="post" action="${pageContext.request.contextPath}/CheckoutServlet" id="checkout-form">
                 
-                <%-- Inserimento dell'indirizzo di spedizione --%>
+                <%-- Campo per l'indirizzo di consegna --%>
                 <div class="form-group">
                     <label for="indirizzoConsegna">Indirizzo di consegna:</label>
                     <input type="text" id="indirizzoConsegna" name="indirizzoConsegna" required placeholder="Via Roma 123, Milano">
                 </div>
 
-                <%-- Selettore interattivo del metodo di pagamento --%>
+                <%-- Selettore visivo del metodo di pagamento --%>
                 <div class="form-group">
                     <label>Scegli il Metodo di pagamento:</label>
                     
@@ -102,23 +102,18 @@
                             <span>Conto Bancario (IBAN)</span>
                         </div>
                     </div>
-                    
-                    <%-- Campo nascosto trasmesso al Servlet con la modalità scelta --%>
-                    <input type="hidden" name="metodoPagamento" id="metodoPagamentoInput" value="Carta">
                 </div>
 
-                <%-- Campi specifici per pagamento con Carta di Credito/Debito --%>
+                <%-- Campi specifici per pagamento con Carta di Credito --%>
                 <div id="cardDetails" class="payment-method-section">
                     <h3>Dettagli Carta</h3>
 
-                    <%-- Numero di Carta --%>
                     <div class="form-group">
                         <label for="cartaNumero">Numero carta:</label>
                         <input type="text" id="cartaNumero" name="cartaNumero" inputmode="numeric" maxlength="19" placeholder="4242 4242 4242 4242">
                         <span id="cartaNumeroError" class="field-error-span"></span>
                     </div>
 
-                    <%-- Nome e Cognome dell'intestatario della carta --%>
                     <div class="form-row">
                         <div class="form-group">
                             <label for="cartaNome">Nome intestatario:</label>
@@ -133,7 +128,6 @@
                         </div>
                     </div>
 
-                    <%-- Scadenza e Codice di Sicurezza CVV --%>
                     <div class="form-row">
                         <div class="form-group">
                             <label for="cartaScadenza">Scadenza (MM/AA):</label>
@@ -153,7 +147,6 @@
                 <div id="bankDetails" class="payment-method-section is-hidden">
                     <h3>Dettagli Conto Bancario</h3>
 
-                    <%-- Nome e Cognome dell'intestatario del conto --%>
                     <div class="form-row">
                         <div class="form-group">
                             <label for="contoNome">Nome intestatario:</label>
@@ -168,7 +161,6 @@
                         </div>
                     </div>
 
-                    <%-- Codice IBAN del conto --%>
                     <div class="form-group">
                         <label for="contoIBAN">IBAN:</label>
                         <input type="text" id="contoIBAN" name="contoIBAN" maxlength="34" placeholder="IT60 X054 2811 1010 0000 0123 456">
@@ -176,53 +168,70 @@
                     </div>
                 </div>
 
-                <%-- Pulsante finale di sottomissione dell'ordine --%>
+                <%-- Pulsante di sottomissione dell'ordine --%>
                 <button type="submit" class="btn btn-checkout-submit">Conferma Ordine</button>
             </form>
         </div>
     </div>
 
-    <%-- ── SCRIPT JS: GESTIONE DINAMICA E VALIDAZIONE CLIENT-SIDE ─────────────────── --%>
+    <%-- ── SCRIPT JS: COMMUTAZIONE DINAMICA E VALIDAZIONE CLIENT-SIDE ──────────────── --%>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Selezione degli elementi DOM rilevanti
+            // Selezione degli elementi del DOM principali
             const options = document.querySelectorAll('.payment-option');
-            const hiddenInput = document.getElementById('metodoPagamentoInput');
             const cardDetails = document.getElementById('cardDetails');
             const bankDetails = document.getElementById('bankDetails');
             const form = document.getElementById('checkout-form');
+            const baseUrl = '${pageContext.request.contextPath}/CheckoutServlet';
+            
+            // Variabile di stato per memorizzare il metodo selezionato
+            let selectedMethod = 'Carta';
 
             /**
-             * Gestisce la commutazione visiva e funzionale tra i metodi di pagamento.
-             * Disabilita gli input del pannello non visibile per evitare di inviare dati non pertinenti.
+             * Cambia il metodo di pagamento attivo:
+             * 1. Aggiorna l'URL dell'action della form aggiungendo 'metodoPagamento' come parametro GET.
+             * 2. Mostra/nasconde le sezioni relative.
+             * 3. Disabilita gli input della sezione nascosta per evitare di inviare parametri vuoti/inutili.
              */
             function togglePaymentMethod(method) {
-                hiddenInput.value = method;
+                selectedMethod = method;
+                form.action = baseUrl + '?metodoPagamento=' + method;
                 const isCard = method === 'Carta';
 
-                // Mostra/Nasconde i relativi sezioni
-                cardDetails.classList.toggle('is-hidden', !isCard);
-                bankDetails.classList.toggle('is-hidden', isCard);
+                if (isCard) {
+                    // Mostra Carta e nasconde IBAN
+                    cardDetails.classList.remove('is-hidden');
+                    bankDetails.classList.add('is-hidden');
 
-                // Disabilita i campi non selezionati per ignorarli durante il submit del form
-                cardDetails.querySelectorAll('input').forEach(i => i.disabled = !isCard);
-                bankDetails.querySelectorAll('input').forEach(i => i.disabled = isCard);
+                    // Abilita i campi Carta, disabilita i campi IBAN
+                    cardDetails.querySelectorAll('input').forEach(function(input) { input.disabled = false; });
+                    bankDetails.querySelectorAll('input').forEach(function(input) { input.disabled = true; });
+                } else {
+                    // Nasconde Carta e mostra IBAN
+                    cardDetails.classList.add('is-hidden');
+                    bankDetails.classList.remove('is-hidden');
+
+                    // Disabilita i campi Carta, abilita i campi IBAN
+                    cardDetails.querySelectorAll('input').forEach(function(input) { input.disabled = true; });
+                    bankDetails.querySelectorAll('input').forEach(function(input) { input.disabled = false; });
+                }
             }
 
-            // Registrazione dell'evento di click per la selezione del metodo di pagamento
-            options.forEach(option => {
-                option.addEventListener('click', function() {
-                    options.forEach(opt => opt.classList.remove('active'));
-                    this.classList.add('active');
-                    togglePaymentMethod(this.dataset.method);
-                });
-            });
+            // Registra l'evento di click su ciascuna opzione di pagamento visiva
+			document.querySelector('.payment-method-selector').addEventListener('click', function(e) {
+			    const option = e.target.closest('.payment-option');
+			    if (!option) return;
+			
+			    document.querySelector('.payment-option.active')?.classList.remove('active');
+			    option.classList.add('active');
+			    togglePaymentMethod(option.dataset.method);
+			});
 
-            // Imposta lo stato iniziale sulla carta di credito
+            // Imposta lo stato iniziale del metodo di pagamento su "Carta"
             togglePaymentMethod('Carta');
 
             /**
-             * Algoritmo di Luhn per la validazione formale del numero della carta di credito.
+             * Algoritmo di Luhn per verificare la validità formale della carta di credito.
              */
             function luhnCheck(num) {
                 const s = num.replace(/\D/g, '');
@@ -238,33 +247,31 @@
             }
 
             /**
-             * Validazione mediante Regex della sintassi standard di un codice IBAN.
+             * Validazione tramite Regex per la struttura standard dell'IBAN.
              */
             function validateIBAN(iban) {
                 return /^[A-Z]{2}[0-9A-Z]{13,32}$/.test(iban.replace(/\s+/g, '').toUpperCase());
             }
 
             /**
-             * Utility per impostare e visualizzare o nascondere i messaggi di errore sui singoli campi.
+             * Helper per impostare il testo d'errore negli span dedicati.
              */
             function setError(id, text) {
                 const el = document.getElementById(id);
                 if (el) {
                     el.textContent = text;
-                    el.style.display = text ? 'block' : 'none';
                 }
             }
 
-            // Validazione client-side prima del submit del modulo
+            // Validazione client-side all'invio del modulo
             form.addEventListener('submit', function(e) {
-                // Reset di tutti gli errori precedenti
-                form.querySelectorAll('.field-error-span').forEach(s => { s.textContent = ''; s.style.display = 'none'; });
+                // Reset dei messaggi di errore precedenti
+                form.querySelectorAll('.field-error-span').forEach(s => { s.textContent = ''; });
 
-                const metodo = hiddenInput.value;
                 let ok = true;
 
-                // Controlli specifici per Carta di Credito
-                if (metodo === 'Carta') {
+                // Controlli per metodo "Carta di Credito"
+                if (selectedMethod === 'Carta') {
                     const num = document.getElementById('cartaNumero').value.trim();
                     const nome = document.getElementById('cartaNome').value.trim();
                     const cognome = document.getElementById('cartaCognome').value.trim();
@@ -277,7 +284,7 @@
                     if (!/^(0[1-9]|1[0-2])\/(\d{2})$/.test(scad)) { setError('cartaScadenzaError', 'Formato MM/AA non valido'); ok = false; }
                     if (!/^[0-9]{3,4}$/.test(cvv)) { setError('cartaCVVError', 'CVV non valido'); ok = false; }
                 } 
-                // Controlli specifici per Conto Bancario
+                // Controlli per metodo "Conto Bancario"
                 else {
                     const nome = document.getElementById('contoNome').value.trim();
                     const cognome = document.getElementById('contoCognome').value.trim();
@@ -288,7 +295,7 @@
                     if (!validateIBAN(iban)) { setError('contoIBANError', 'IBAN non valido'); ok = false; }
                 }
 
-                // In caso di errori, blocca l'invio e riposiziona la schermata al form
+                // Se ci sono errori, impedisce l'invio e riporta lo scroll al form
                 if (!ok) {
                     e.preventDefault();
                     window.scrollTo({ top: form.offsetTop - 100, behavior: 'smooth' });

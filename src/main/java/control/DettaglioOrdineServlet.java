@@ -139,7 +139,10 @@ public class DettaglioOrdineServlet extends HttpServlet {
      */
     private UtenteBean getLoggedUser(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        return (session != null) ? (UtenteBean) session.getAttribute("utente") : null;
+        if (session != null) {
+            return (UtenteBean) session.getAttribute("utente");
+        }
+        return null;
     }
 
     /**
@@ -152,6 +155,9 @@ public class DettaglioOrdineServlet extends HttpServlet {
      */
     private String getTrimmedParam(HttpServletRequest request, String name) {
         String value = request.getParameter(name);
-        return (value != null && !value.trim().isEmpty()) ? value.trim() : null;
+        if (value != null && !value.trim().isEmpty()) {
+            return value.trim();
+        }
+        return null;
     }
 }

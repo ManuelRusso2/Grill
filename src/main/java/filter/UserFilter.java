@@ -80,7 +80,10 @@ public class UserFilter implements Filter {
         // getSession(false) evita la creazione accidentale di una nuova sessione
         // =========================================================================
         HttpSession session = httpRequest.getSession(false);
-        UtenteBean utente = (session != null) ? (UtenteBean) session.getAttribute("utente") : null;
+        UtenteBean utente = null;
+        if (session != null) {
+            utente = (UtenteBean) session.getAttribute("utente");
+        }
         
         // =========================================================================
         // 3. GESTIONE DELL'UTENTE NON AUTENTICATO (UTENTE OSPITE / GUEST)

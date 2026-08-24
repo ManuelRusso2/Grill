@@ -36,42 +36,39 @@
                 </c:if>
 
                 <%-- Form inviato via POST a ModificaRecensioneServlet --%>
-                <form action="${pageContext.request.contextPath}/ModificaRecensioneServlet" method="post" class="form-edit-review">
-                    
-                    <%-- Campo nascosto per trasmettere l'ID della recensione --%>
-                    <input type="hidden" name="idRecensione" value="${recensione.idRecensione}" />
-
-                    <%-- Sezione per la selezione della valutazione in stelle (da 1 a 5) --%>
-                    <div class="form-group">
-                        <label for="valutazione">Valutazione:</label>
-                        <select name="valutazione" id="valutazione" required class="form-control">
-                            <c:forEach begin="1" end="5" var="i">
-                                <option value="${i}" ${i == recensione.valutazione ? 'selected' : ''}>
-                                    ${i} ★ 
-                                    <c:choose>
-                                        <c:when test="${i == 1}">(Pessimo)</c:when>
-                                        <c:when test="${i == 2}">(Scarso)</c:when>
-                                        <c:when test="${i == 3}">(Sufficiente)</c:when>
-                                        <c:when test="${i == 4}">(Buono)</c:when>
-                                        <c:when test="${i == 5}">(Eccellente)</c:when>
-                                    </c:choose>
-                                </option>
-                            </c:forEach>
-                        </select>
-                    </div>
-
-                    <%-- Sezione per la modifica del testo descrittivo --%>
-                    <div class="form-group">
-                        <label for="descrizione">Descrizione della recensione:</label>
-                        <textarea name="descrizione" id="descrizione" rows="6" placeholder="Scrivi qui la tua recensione..." required class="form-control"><c:out value="${recensione.descrizione}" /></textarea>
-                    </div>
-
-                    <%-- Pulsanti di azione --%>
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">Salva modifiche</button>
-                        <a href="${pageContext.request.contextPath}/ProfiloServlet" class="btn btn-secondary">Annulla</a>
-                    </div>
-                </form>
+				<form action="${pageContext.request.contextPath}/ModificaRecensioneServlet?idRecensione=${recensione.idRecensione}" method="post" class="form-edit-review">
+				
+				    <%-- Sezione per la selezione della valutazione in stelle (da 1 a 5) --%>
+				    <div class="form-group">
+				        <label for="valutazione">Valutazione:</label>
+				        <select name="valutazione" id="valutazione" required class="form-control">
+				            <c:forEach begin="1" end="5" var="i">
+				                <option value="${i}" ${i == recensione.valutazione ? 'selected' : ''}>
+				                    ${i} ★ 
+				                    <c:choose>
+				                        <c:when test="${i == 1}">(Pessimo)</c:when>
+				                        <c:when test="${i == 2}">(Scarso)</c:when>
+				                        <c:when test="${i == 3}">(Sufficiente)</c:when>
+				                        <c:when test="${i == 4}">(Buono)</c:when>
+				                        <c:when test="${i == 5}">(Eccellente)</c:when>
+				                    </c:choose>
+				                </option>
+				            </c:forEach>
+				        </select>
+				    </div>
+				
+				    <%-- Sezione per la modifica del testo descrittivo --%>
+				    <div class="form-group">
+				        <label for="descrizione">Descrizione della recensione:</label>
+				        <textarea name="descrizione" id="descrizione" rows="6" placeholder="Scrivi qui la tua recensione..." required class="form-control"><c:out value="${recensione.descrizione}" /></textarea>
+				    </div>
+				
+				    <%-- Pulsanti di azione --%>
+				    <div class="form-actions">
+				        <button type="submit" class="btn btn-submit">Salva modifiche</button>
+				        <a href="${pageContext.request.contextPath}/ProfiloServlet" class="btn btn-cancel">Annulla</a>
+				    </div>
+				</form>
             </div>
         </c:when>
 
