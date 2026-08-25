@@ -56,7 +56,7 @@ public class AdminProdottoServlet extends HttpServlet {
             moveSessionAttributeToRequest(session, request, "errorMessage");
         }
 
-        // Recupera l'azione richiesta dall'URL (es. ?action=new o ?action=edit)
+        // Recupera l'azione richiesta dall'URL
         String action = request.getParameter("action");
         if (action == null) action = "";
 
@@ -183,21 +183,25 @@ public class AdminProdottoServlet extends HttpServlet {
     }
 
     /**
-     * Estrae in modo thread-safe gli alert di sistema memorizzati nel ServletContext (es. notifiche di stock in esaurimento),
-     * li sposta nella Request per essere visualizzati nella JSP e svuota la lista originale nel contesto.
+     * Recupera i messaggi di avviso per l'amministratore (es. prodotti in esaurimento),
+     * li invia alla pagina JSP per mostrarli a schermo e li cancella dalla memoria globale 
+     * per evitare di mostrarli di nuovo al ricaricamento.
      */
     private void processAdminAlerts(HttpServletRequest request) {
+        // Sincronizza l'accesso alla memoria condivisa per evitare errori se più admin usano il sito insieme
         synchronized (getServletContext()) {
-            Object rawAlerts = getServletContext().getAttribute("adminAlerts");
-            if (rawAlerts instanceof List<?>) {
-                @SuppressWarnings("unchecked")
-                List<String> adminAlerts = (List<String>) rawAlerts;
+            
+            // Recupera la lista degli avvisi dal ServletContext
+            @SuppressWarnings("unchecked")
+            List<String> alerts = (List<String>) getServletContext().getAttribute("adminAlerts");
 
-                if (!adminAlerts.isEmpty()) {
-                    // Crea una copia separata della lista per la request e svuota il buffer di alert nel contesto
-                    request.setAttribute("adminAlerts", new ArrayList<>(adminAlerts));
-                    adminAlerts.clear();
-                }
+            // Se la lista esiste e contiene almeno un avviso
+            if (alerts != null && !alerts.isEmpty()) {
+                // Salva una copia degli avvisi nella request (così la JSP può leggerli)
+                request.setAttribute("adminAlerts", new ArrayList<>(alerts));
+                
+                // Svuota la lista globale dopo aver preso gli avvisi
+                alerts.clear();
             }
         }
     }

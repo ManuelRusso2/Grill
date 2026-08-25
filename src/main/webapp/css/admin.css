@@ -1,4 +1,4 @@
-@import url('admin/01-admin-bottoni.css');
-@import url('admin/02-admin-tabelle.css');
-@import url('admin/03-admin-form.css');
-@import url('admin/04-admin-sezioni.css');
+@import url('bottoni.css');
+@import url('admin/01-admin-tabelle.css');
+@import url('admin/02-admin-form.css');
+@import url('admin/03-admin-sezioni.css');

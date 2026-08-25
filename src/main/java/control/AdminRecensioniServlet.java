@@ -67,20 +67,20 @@ public class AdminRecensioniServlet extends HttpServlet {
 
             // 2. Recupera l'eventuale parametro di filtraggio dell'utente
             String idUtenteParam = getTrimmedParam(request, "idUtente");
-            List<RecensioneBean> tuteRecensioni;
+            List<RecensioneBean> tutteRecensioni;
 
             // Se è stato specificato un ID utente, filtra le recensioni rilasciate solo da quello specifico cliente
             if (idUtenteParam != null) {
                 int idUtente = Integer.parseInt(idUtenteParam);
-                tuteRecensioni = recensioneDAO.doRetrieveByUtente(idUtente);
+                tutteRecensioni = recensioneDAO.doRetrieveByUtente(idUtente);
                 request.setAttribute("utenteSelezionato", idUtente); // Mantiene il valore selezionato nel form della JSP
             } else {
                 // Altrimenti carica la lista completa delle recensioni presenti nel sistema
-                tuteRecensioni = recensioneDAO.doRetrieveAll();
+                tutteRecensioni = recensioneDAO.doRetrieveAll();
             }
 
             // Inoltra l'elenco delle recensioni e reindirizza alla pagina di gestione
-            request.setAttribute("tuteRecensioni", tuteRecensioni);
+            request.setAttribute("tutteRecensioni", tutteRecensioni);
             request.getRequestDispatcher("/jsp/admin/gestione-recensioni.jsp").forward(request, response);
 
         } catch (NumberFormatException e) {
@@ -106,7 +106,7 @@ public class AdminRecensioniServlet extends HttpServlet {
             return;
         }
 
-        // Estrae l'azione da eseguire e l'eventuale ID dell'utente per mantenere il filtro attivo dopo la reindirizzamento
+        // Estrae l'azione da eseguire e l'eventuale ID dell'utente per mantenere il filtro attivo dopo il reindirizzamento
         String action = getTrimmedParam(request, "action");
         String idUtenteParam = getTrimmedParam(request, "idUtente");
         String redirectUrl = request.getContextPath() + "/AdminRecensioniServlet";

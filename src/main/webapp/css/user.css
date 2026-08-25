@@ -1,7 +1,7 @@
-@import 'user/01-bottoni.css';
-@import 'user/02-prodotti.css';
-@import 'user/03-recensioni.css';
-@import 'user/04-carrello.css';
-@import 'user/05-profilo.css';
-@import 'user/06-carosello.css';
-@import 'user/07-auth-errori.css';
+@import 'bottoni.css';
+@import 'user/01-prodotti.css';
+@import 'user/02-recensioni.css';
+@import 'user/03-carrello.css';
+@import 'user/04-profilo.css';
+@import 'user/05-carosello.css';
+@import 'user/06-auth-errori.css';

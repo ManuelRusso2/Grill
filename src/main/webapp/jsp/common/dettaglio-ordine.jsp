@@ -4,13 +4,17 @@
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%-- Tag Library JSTL per il controllo di flusso e la formattazione dei dati --%>
+<%-- Importazione della libreria JSTL Core per il controllo di flusso, cicli e condizioni --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<%-- Importazione della libreria JSTL Formatting per la formattazione di date, numeri e valute --%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%-- Inclusione dei frammenti statici di Header e Barra di Navigazione --%>
+<%-- Inclusione del frammento statico per l'intestazione HTML e le risorse della pagina (head, CSS, JS) --%>
 <%@ include file="/jsp/common/header.jspf" %>
-<%@ include file="/jsp/common/menu.jspf" %>
+
+<%-- Inclusione del frammento statico per la barra di navigazione principale (menu / navbar) --%>
+<%@ include file="/jsp/common/menu.jspf" %>>
 
 <main class="container">
     <div class="order-detail-container">
@@ -152,15 +156,15 @@
                             Puoi consultare tutti i tuoi acquisti nella sezione dedicata.
                         </p>
                         <div class="order-actions-group">
-                            <button type="button" onclick="window.print()" class="btn btn-catalog">STAMPA FATTURA</button>
-                            <a href="${pageContext.request.contextPath}/FatturaServlet?id=${acquisto.idAcquisto}" target="_blank" class="btn btn-catalog">SCARICA PDF</a>
+                            <button type="button" onclick="window.print()" class="btn btn-md btn-primary">STAMPA FATTURA</button>
+                            <a href="${pageContext.request.contextPath}/FatturaServlet?id=${acquisto.idAcquisto}" target="_blank" class="btn btn-md btn-primary">SCARICA PDF</a>
                             
                             <c:choose>
                                 <c:when test="${not empty sessionScope.utente && sessionScope.utente.admin}">
-                                    <a href="${pageContext.request.contextPath}/AdminOrdiniServlet" class="btn btn-catalog">TORNA A GESTIONE ORDINI</a>
+                                    <a href="${pageContext.request.contextPath}/AdminOrdiniServlet" class="btn btn-md btn-primary">TORNA A GESTIONE ORDINI</a>
                                 </c:when>
                                 <c:otherwise>
-                                    <a href="${pageContext.request.contextPath}/ProfiloServlet" class="btn btn-catalog">TORNA AL PROFILO</a>
+                                    <a href="${pageContext.request.contextPath}/ProfiloServlet" class="btn btn-md btn-primary">TORNA AL PROFILO</a>
                                 </c:otherwise>
                             </c:choose>
                         </div>
@@ -176,10 +180,10 @@
                         <div class="error-actions">
                             <c:choose>
                                 <c:when test="${not empty sessionScope.utente && sessionScope.utente.admin}">
-                                    <a href="${pageContext.request.contextPath}/AdminOrdiniServlet" class="btn btn-catalog">Torna a Gestione Ordini</a>
+                                    <a href="${pageContext.request.contextPath}/AdminOrdiniServlet" class="btn btn-md btn-primary">Torna a Gestione Ordini</a>
                                 </c:when>
                                 <c:otherwise>
-                                    <a href="${pageContext.request.contextPath}/ProfiloServlet" class="btn btn-catalog">Torna al Profilo</a>
+                                    <a href="${pageContext.request.contextPath}/ProfiloServlet" class="btn btn-md btn-primary">Torna al Profilo</a>
                                 </c:otherwise>
                             </c:choose>
                         </div>

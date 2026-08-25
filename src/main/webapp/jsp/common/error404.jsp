@@ -1,11 +1,13 @@
 <%-- Pagina di errore HTTP 404 (Pagina Non Trovata): mostrata quando l'URL richiesto non esiste o la risorsa è stata rimossa --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%-- Inclusione della libreria di tag JSTL Core --%>
+<%-- Importazione della libreria JSTL Core per il controllo di flusso, cicli e condizioni --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%-- Inclusione dei frammenti statici per l'intestazione (header) e il menu di navigazione --%>
+<%-- Inclusione del frammento statico per l'intestazione HTML e le risorse della pagina (head, CSS, JS) --%>
 <%@ include file="/jsp/common/header.jspf" %>
+
+<%-- Inclusione del frammento statico per la barra di navigazione principale (menu / navbar) --%>
 <%@ include file="/jsp/common/menu.jspf" %>
 
 <%-- Contenitore principale della scheda d'errore 404 --%>

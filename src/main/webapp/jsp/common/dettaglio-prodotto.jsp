@@ -5,13 +5,19 @@
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%-- Direttive Tag Library JSTL (Core, Formattazione e Funzioni per stringhe) --%>
+<%-- Importazione della libreria JSTL Core per il controllo di flusso, cicli e condizioni --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<%-- Importazione della libreria JSTL Formatting per la formattazione di date, numeri e valute --%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<%-- Importazione della libreria JSTL Functions per la manipolazione di stringhe e collezioni --%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<%-- Inclusione dei frammenti di layout condivisi: Header e Menu di Navigazione --%>
+<%-- Inclusione del frammento statico per l'intestazione HTML e le risorse della pagina (head, CSS, JS) --%>
 <%@ include file="/jsp/common/header.jspf" %>
+
+<%-- Inclusione del frammento statico per la barra di navigazione principale (menu / navbar) --%>
 <%@ include file="/jsp/common/menu.jspf" %>
 
 <main class="container product-details-container">
@@ -91,7 +97,7 @@
                             <%-- CASO 1.2: Il prodotto è in stock e acquistabile --%>
                             <c:when test="${prodotto.quantita > 0}">
                                 <%-- Parametri inviati direttamente nell'URL della form (senza hidden) --%>
-                                <form method="post" action="${pageContext.request.contextPath}/CarrelloServlet?action=add&idProdotto=${prodotto.idProdotto}" id="add-to-cart-form" class="add-to-cart-form">
+                                <form method="post" action="${pageContext.request.contextPath}/CarrelloServlet?action=add&idProdotto=${prodotto.idProdotto}" id="add-to-cart-form" class="form-unstyled">
                                     
                                     <%-- Menu a tendina per la selezione della taglia (se il prodotto le supporta) --%>
                                     <c:if test="${not empty prodotto.taglie}">
@@ -112,7 +118,7 @@
                                     <div class="qty-submit-wrapper">
                                         <label for="quantita">Quantità:</label>
                                         <input type="number" id="quantita" name="quantita" value="1" min="1" max="${prodotto.quantita}" class="input-qty">
-                                        <button type="submit" class="btn">Aggiungi al carrello</button>
+                                        <button type="submit" class="btn btn-md btn-primary btn-full">Aggiungi al carrello</button>
                                     </div>
                                 </form>
 
@@ -122,7 +128,7 @@
 
                             <%-- CASO 1.3: Prodotto Esaurito a magazzino --%>
                             <c:otherwise>
-                                <button class="btn btn-secondary" disabled>Esaurito</button>
+                                <button class="btn btn-md btn-secondary" disabled>Esaurito</button>
                             </c:otherwise>
                         </c:choose>
                     </div>
@@ -200,8 +206,8 @@
 
                                         <%-- Pulsante di eliminazione (mostrato solo se Admin o se l'utente è l'autore della recensione) --%>
                                         <c:if test="${isAdmin || (not empty sessionScope.utente && sessionScope.utente.idUtente == rec.idUtente)}">
-                                            <form action="${pageContext.request.contextPath}/EliminaRecensioneServlet?idRecensione=${rec.idRecensione}&idProdotto=${prodotto.idProdotto}" method="post" class="delete-review-form" onsubmit="return confirm('Sei sicuro di voler eliminare questa recensione?');">
-                                                <button type="submit" class="btn-delete-review">🗑️ Elimina</button>
+                                            <form action="${pageContext.request.contextPath}/EliminaRecensioneServlet?idRecensione=${rec.idRecensione}&idProdotto=${prodotto.idProdotto}" method="post" class="form-unstyled" onsubmit="return confirm('Sei sicuro di voler eliminare questa recensione?');">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">🗑️ Elimina</button>
                                             </form>
                                         </c:if>
                                     </div>

@@ -172,16 +172,40 @@
 
 /* --------------------------------------------------------------------------
    6.6 MESSAGGIO RISULTATI VUOTI (EMPTY STATE)
-   Visualizzato quando non sono presenti recensioni od ordini per i criteri scelti.
+   Visualizzato quando non sono presenti prodotti, recensioni od ordini.
    -------------------------------------------------------------------------- */
-.no-reviews-msg {
-    margin-top: 10px;                          /* Distanza dal blocco superiore */
+.no-reviews-msg,
+.empty-state {
+    margin-top: 20px;                          /* Distanza dal blocco superiore */
     padding: 40px 20px;                        /* Spaziatura interna generosa per dare respiro */
     border: 1px dashed var(--border-color);    /* Bordo tratteggiato discreto per evidenziare lo stato vuoto */
     border-radius: 8px;                        /* Angoli arrotondati */
     background-color: var(--bg-card);          /* Sfondo coordinato con le schede */
     color: var(--text-gray);                   /* Colore del testo neutro */
-    font-style: italic;                        /* Stile corsivo */
     text-align: center;                        /* Messaggio centrato */
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);/* Leggera ombreggiatura */
+}
+
+/* Formattazione specifica per i paragrafi all'interno dello stato vuoto */
+.empty-state p {
+    font-size: 15px;                           /* Dimensione testo descrittivo */
+    margin-bottom: 20px;                       /* Distacco dal pulsante d'azione sottostante */
+    font-style: italic;                        /* Stile corsivo */
+}
+
+/* --------------------------------------------------------------------------
+   6.7 MESSAGGI DI AVVISO E NOTIFICHE ADMIN (ALERT STOCK)
+   Box di avviso per la gestione delle giacenze di magazzino in esaurimento/terminate.
+   -------------------------------------------------------------------------- */
+.alert-box-out-of-stock {
+    margin-bottom: 20px;                       /* Distacco dai blocchi/tabelle sottostanti */
+    padding: 14px 18px;                        /* Spaziatura interna per una lettura agevole */
+    border: 1px solid #ff4d4d;                 /* Bordo rosso avviso per forte visibilità */
+    border-radius: 8px;                        /* Angoli arrotondati coordinati col design system */
+    background-color: rgba(255, 77, 77, 0.15); /* Sfondo rosso semi-trasparente */
+    color: #ff4d4d;                            /* Testo in rosso chiaro per massimo contrasto */
+    font-size: 14px;                           /* Dimensione testo */
+    font-weight: 600;                          /* Peso testo semi-grassetto */
+    text-align: center;                        /* Messaggio centrato */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);/* Ombreggiatura leggera per rilievo visivo */
 }

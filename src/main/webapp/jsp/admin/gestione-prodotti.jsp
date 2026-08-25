@@ -8,13 +8,19 @@
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%-- Inclusione delle Tag Library JSTL per controllo flusso (core), formattazione numeri/valute e funzioni di utilità --%>
+<%-- Importazione della libreria JSTL Core per il controllo di flusso, cicli e condizioni --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<%-- Importazione della libreria JSTL Formatting per la formattazione di date, numeri e valute --%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
+<%-- Importazione della libreria JSTL Functions per la manipolazione di stringhe e collezioni --%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
-<%-- Inclusione dei frammenti statici per l'intestazione HTML e la barra di navigazione --%>
+<%-- Inclusione del frammento statico per l'intestazione HTML e le risorse della pagina (head, CSS, JS) --%>
 <%@ include file="/jsp/common/header.jspf" %>
+
+<%-- Inclusione del frammento statico per la barra di navigazione principale (menu / navbar) --%>
 <%@ include file="/jsp/common/menu.jspf" %>
 
 <main class="container">
@@ -54,13 +60,13 @@
                 <table class="admin-table">
                     <thead>
                         <tr>
-                            <th class="col-id">ID</th>
+                            <th>ID</th>
                             <th>Nome</th>
-                            <th class="text-center">Taglie</th>
+                            <th>Taglie</th>
                             <th>Prezzo</th>
-                            <th class="text-center">Quantità</th>
-                            <th class="text-center">Stato</th>
-                            <th class="text-center col-actions">Azioni</th>
+                            <th>Quantità</th>
+                            <th>Stato</th>
+                            <th>Azioni</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -69,20 +75,20 @@
                                 <tr>
                                     <td><strong>#<c:out value="${prodotto.idProdotto}" /></strong></td>
                                     <td><strong><c:out value="${prodotto.nome}" /></strong></td>
-                                    <td class="text-center">
+                                    <td>
                                         <c:out value="${empty prodotto.taglie ? 'Unica' : prodotto.taglie}" />
                                     </td>
                                     <td>
                                         <fmt:formatNumber value="${prodotto.costo}" type="currency" currencySymbol="€" />
                                     </td>
-                                    <td class="text-center text-danger font-bold">0</td>
-                                    <td class="text-center">
+                                    <td>0</td>
+                                    <td>
                                         <span class="badge-esaurito">Esaurito</span>
                                     </td>
-                                    <td class="text-center">
-                                        <div class="action-cell action-cell-center">
+                                    <td>
+                                        <div class="action-cell">
                                             <%-- Reindirizzamento diretto alla form di modifica per velocizzare il rifornimento --%>
-                                            <a href="${pageContext.request.contextPath}/AdminProdottoServlet?action=edit&id=${prodotto.idProdotto}" class="btn-edit">
+                                            <a href="${pageContext.request.contextPath}/AdminProdottoServlet?action=edit&id=${prodotto.idProdotto}" class="btn btn-sm btn-outline-purple">
                                                 ✏️ Rifornisci / Modifica
                                             </a>
                                         </div>
@@ -101,29 +107,29 @@
         <c:when test="${not empty prodottiAdmin}">
             <%-- Barra degli strumenti con ricerca client-side e pulsante nuovo prodotto --%>
             <div class="admin-toolbar">
-                <h2>Tutti i Prodotti</h2>
+                <h2><strong>Tutti i Prodotti</strong></h2>
                 
                 <div class="admin-toolbar-actions">
                     <input type="text" id="searchProductInput" placeholder="🔍 Cerca per nome, ID..." class="admin-search-input">
-                    <a href="${pageContext.request.contextPath}/AdminProdottoServlet?action=new" class="btn btn-add">
+                    <a href="${pageContext.request.contextPath}/AdminProdottoServlet?action=new" class="btn btn-md btn-primary">
                         + Aggiungi Nuovo Prodotto
                     </a>
                 </div>
             </div>
 
             <div class="admin-table-wrapper">
-                <table class="admin-table" id="mainProductsTable">
+                <table id="mainProductsTable" class="admin-table">
                     <thead>
                         <tr>
-                            <th class="col-id">ID</th>
+                            <th>ID</th>
                             <th>Nome</th>
-                            <th class="col-desc">Descrizione</th>
-                            <th class="text-center">Taglie</th>
+                            <th>Descrizione</th>
+                            <th>Taglie</th>
                             <th>Prezzo</th>
-                            <th class="text-center">Quantità</th>
-                            <th class="text-center">Categorie</th>
-                            <th class="text-center">Stato</th>
-                            <th class="text-center col-actions">Azioni</th>
+                            <th>Quantità</th>
+                            <th>Categorie</th>
+                            <th>Stato</th>
+                            <th>Azioni</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -134,12 +140,12 @@
                                 <td><strong><c:out value="${prodotto.nome}" /></strong></td>
                                 
                                 <%-- Descrizione sintetica del prodotto --%>
-                                <td class="col-desc text-muted">
+                                <td>
                                     <c:out value="${prodotto.descrizione}" />
                                 </td>
                                 
                                 <%-- Gestione visualizzazione taglia singola o taglia unica di default --%>
-                                <td class="text-center">
+                                <td>
                                     <c:out value="${empty prodotto.taglie ? 'Unica' : prodotto.taglie}" />
                                 </td>
                                 
@@ -149,12 +155,12 @@
                                 </td>
                                 
                                 <%-- Quantità attualmente disponibile in magazzino --%>
-                                <td class="text-center">
+                                <td>
                                     <c:out value="${prodotto.quantita}" />
                                 </td>
                                 
                                 <%-- Formattazione elenco delle categorie collegate tramite virgole --%>
-                                <td class="text-center">
+                                <td>
                                     <c:choose>
                                         <c:when test="${not empty prodotto.categorie}">
                                             <c:forEach var="cat" items="${prodotto.categorie}" varStatus="s">
@@ -166,25 +172,24 @@
                                 </td>
                                 
                                 <%-- Badge di stato (Attivo/Inattivo) --%>
-                                <td class="text-center">
+                                <td>
                                     <span class="${prodotto.attivo ? 'status-attivo' : 'badge-esaurito'}">
                                         ${prodotto.attivo ? 'Attivo' : 'Inattivo'}
                                     </span>
                                 </td>
                                 
                                 <%-- Azioni disponibili per la riga --%>
-                                <td class="text-center">
-                                    <div class="action-cell action-cell-center">
-                                        <a href="${pageContext.request.contextPath}/AdminProdottoServlet?action=edit&id=${prodotto.idProdotto}" class="btn-edit">
+                                <td>
+                                    <div class="action-cell">
+                                        <a href="${pageContext.request.contextPath}/AdminProdottoServlet?action=edit&id=${prodotto.idProdotto}" class="btn btn-sm btn-outline-purple">
                                             Modifica
                                         </a>
 
                                         <%-- Form per l'eliminazione con escape dei caratteri speciali nel nome del prodotto prima di darlo in pasto a JS --%>
-                                        <form method="post" action="${pageContext.request.contextPath}/AdminProdottoServlet" 
+                                        <form method="post" action="${pageContext.request.contextPath}/AdminProdottoServlet?action=delete&id=${prodotto.idProdotto}" 
+                                              class="form-unstyled"
                                               onsubmit="return confirm('Sei sicuro di voler eliminare il prodotto \'${fn:escapeXml(prodotto.nome)}\'?');">
-                                            <input type="hidden" name="action" value="delete">
-                                            <input type="hidden" name="id" value="${prodotto.idProdotto}">
-                                            <button type="submit" class="btn-delete">Elimina</button>
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">Elimina</button>
                                         </form>
                                     </div>
                                 </td>
@@ -199,7 +204,7 @@
         <c:otherwise>
             <div class="empty-state">
                 <p>Il catalogo è attualmente vuoto. Inizia ad aggiungere prodotti!</p>
-                <a href="${pageContext.request.contextPath}/AdminProdottoServlet?action=new" class="btn btn-add">
+                <a href="${pageContext.request.contextPath}/AdminProdottoServlet?action=new" class="btn btn-md btn-primary">
                     + Aggiungi il Primo Prodotto
                 </a>
             </div>
@@ -209,17 +214,26 @@
 
 <%-- ── SCRIPT JS PER IL FILTRAGGIO CLIENT-SIDE DELLE RIGHE DELLA TABELLA ───────── --%>
 <script>
+    // Attende il caricamento completo della struttura DOM dell'HTML prima di eseguire lo script
     document.addEventListener('DOMContentLoaded', function() {
+        // Recupera i riferimenti all'input di ricerca e alla tabella principale dei prodotti
         const input = document.getElementById('searchProductInput');
         const table = document.getElementById('mainProductsTable');
+
+        // Controlla la presenza di entrambi gli elementi per evitare errori JavaScript in console
         if (!input || !table) return;
 
-        // Ascolta l'evento di digitazione nell'input di ricerca per nascondere/mostrare le righe corrispondenti
+        // Registra l'ascoltatore per l'evento 'input', che scatta istantaneamente a ogni digitazione
         input.addEventListener('input', function() {
+            // Normalizza la stringa cercata: converte in minuscolo e rimuove gli spazi iniziali/finali
             const filter = this.value.toLowerCase().trim();
+
+            // Seleziona tutte le righe contenute all'interno del corpo della tabella (tbody)
             const rows = table.querySelectorAll('tbody tr');
 
+            // Sccorre ogni riga per valutare la corrispondenza con la chiave di ricerca
             rows.forEach(row => {
+                // Se il testo complessivo della riga include la stringa cercata la rende visibile (''), altrimenti la nasconde ('none')
                 row.style.display = row.textContent.toLowerCase().includes(filter) ? '' : 'none';
             });
         });

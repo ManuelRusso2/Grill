@@ -1,12 +1,16 @@
 <%-- Impostazione del tipo di contenuto della pagina e della codifica dei caratteri (UTF-8) --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%-- Inclusione delle librerie di tag JSTL per la logica di controllo e la formattazione di valute/numeri --%>
+<%-- Importazione della libreria JSTL Core per il controllo di flusso, cicli e condizioni --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<%-- Importazione della libreria JSTL Formatting per la formattazione di date, numeri e valute --%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%-- Inclusione dei frammenti di codice statici per l'intestazione (header) e la barra di navigazione (menu) --%>
+<%-- Inclusione del frammento statico per l'intestazione HTML e le risorse della pagina (head, CSS, JS) --%>
 <%@ include file="/jsp/common/header.jspf" %>
+
+<%-- Inclusione del frammento statico per la barra di navigazione principale (menu / navbar) --%>
 <%@ include file="/jsp/common/menu.jspf" %>
 
 <%-- Contenitore principale della pagina del carrello --%>
@@ -80,7 +84,7 @@
                             <%-- Colonna Modifica Quantità --%>
 							<td>
 							    <%-- Form per l'invio dell'aggiornamento della quantità alla CarrelloServlet --%>
-							    <form method="post" action="${pageContext.request.contextPath}/CarrelloServlet?action=update&idProdotto=${prodotto.idProdotto}&taglia=${prodotto.tagliaSelezionata}" class="cart-update-form">
+							    <form method="post" action="${pageContext.request.contextPath}/CarrelloServlet?action=update&idProdotto=${prodotto.idProdotto}&taglia=${prodotto.tagliaSelezionata}" class="form-unstyled">
 							        <input type="number" name="quantita" value="${quantita}" min="1" max="${prodotto.quantita}" class="input-qty" aria-label="Quantità">
 							        <button type="submit" class="btn-update">Aggiorna</button>
 							    </form>
@@ -93,8 +97,8 @@
 
                             <%-- Colonna Azioni (Rimozione del singolo articolo) --%>
 							<td>
-							    <form method="post" action="${pageContext.request.contextPath}/CarrelloServlet?action=remove&idProdotto=${prodotto.idProdotto}&taglia=${prodotto.tagliaSelezionata}" class="cart-remove-form">
-							        <button type="submit" class="btn-delete" onclick="return confirm('Rimuovere questo prodotto dal carrello?');">
+							    <form method="post" action="${pageContext.request.contextPath}/CarrelloServlet?action=remove&idProdotto=${prodotto.idProdotto}&taglia=${prodotto.tagliaSelezionata}" class="form-unstyled">
+							        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Rimuovere questo prodotto dal carrello?');">
 							            Rimuovi
 							        </button>
 							    </form>
@@ -110,12 +114,12 @@
                 
                 <div class="cart-actions-group">
                     <%-- Pulsante per procedere alla fase di checkout dell'ordine --%>
-                    <a href="${pageContext.request.contextPath}/CheckoutServlet" class="btn btn-checkout">
+                    <a href="${pageContext.request.contextPath}/CheckoutServlet" class="btn btn-md btn-primary">
                         Procedi al Checkout
                     </a>
 
                     <%-- Form per svuotare interamente il carrello con conferma JavaScript --%>
-					<form method="post" action="${pageContext.request.contextPath}/CarrelloServlet?action=empty">
+					<form method="post" action="${pageContext.request.contextPath}/CarrelloServlet?action=empty" class="form-unstyled">
 					    <button type="submit" class="btn-empty-cart" onclick="return confirm('Sei sicuro di voler svuotare completamente il carrello?');">
 					        Svuota Carrello
 					    </button>
@@ -135,7 +139,7 @@
                 </div>
                 <h2>Il tuo carrello è vuoto</h2>
                 <p>Non hai ancora aggiunto nessun articolo. Esplora il nostro catalogo per scoprire tutti i prodotti disponibili!</p>
-                <a href="${pageContext.request.contextPath}/CatalogoServlet" class="btn btn-catalog">
+                <a href="${pageContext.request.contextPath}/CatalogoServlet" class="btn btn-md btn-primary">
                     Torna al Catalogo &rarr;
                 </a>
             </div>

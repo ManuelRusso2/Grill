@@ -6,12 +6,16 @@
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%-- Inclusione delle Tag Library JSTL per la logica di controllo e la formattazione --%>
+<%-- Importazione della libreria JSTL Core per il controllo di flusso, cicli e condizioni --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<%-- Importazione della libreria JSTL Formatting per la formattazione di date, numeri e valute --%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%-- Inclusione dei frammenti statici per l'intestazione HTML e la barra di navigazione --%>
+<%-- Inclusione del frammento statico per l'intestazione HTML e le risorse della pagina (head, CSS, JS) --%>
 <%@ include file="/jsp/common/header.jspf" %>
+
+<%-- Inclusione del frammento statico per la barra di navigazione principale (menu / navbar) --%>
 <%@ include file="/jsp/common/menu.jspf" %>
 
 <main class="container admin-orders-section">
@@ -43,12 +47,12 @@
         <label for="dataA">Data a:</label>
         <input type="date" id="dataA" name="dataA" value="<c:out value='${dataA}'/>">
 
-        <button type="submit" class="btn-filter">Filtra</button>
+        <button type="submit" class="btn btn-md btn-primary">Filtra</button>
     </form>
 
     <%-- ── TABELLA ELENCO ORDINI AMMINISTRAZIONE ───────────────────────────── --%>
     <div class="admin-table-wrapper">
-        <table class="admin-orders-table">
+        <table class="admin-table">
             <thead>
                 <tr>
                     <th class="col-id">ID</th>
@@ -83,7 +87,7 @@
                                 
                                 <%-- Pulsante per accedere alla pagina di dettaglio dell'ordine --%>
                                 <td class="text-right">
-                                    <a href="${pageContext.request.contextPath}/DettaglioOrdineServlet?id=${o.idAcquisto}" class="btn-view">Apri</a>
+                                    <a href="${pageContext.request.contextPath}/DettaglioOrdineServlet?id=${o.idAcquisto}" class="btn btn-sm btn-outline-warning">Apri</a>
                                 </td>
                             </tr>
                         </c:forEach>

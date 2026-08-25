@@ -1,0 +1,171 @@
+/* ==========================================================================
+   TABELLE ADMIN & TOOLBAR
+   ==========================================================================
+   Stili dedicati alla gestione dei dati tabellari del pannello di amministrazione
+   (prodotti, ordini, recensioni) e alla barra degli strumenti con filtri/ricerca.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. CONTENITORE E STRUTTURA GENERALE TABELLE
+   -------------------------------------------------------------------------- */
+/* Contenitore scheda con scroll orizzontale automatico su dispositivi mobili */
+.admin-table-wrapper {
+    margin-bottom: 30px;                       /* Distanza dal blocco successivo */
+    overflow-x: auto;                          /* Abilita lo scroll orizzontale se la tabella straborda */
+    border: 1px solid var(--border-color);     /* Bordo perimetrale basato sul tema */
+    border-radius: 8px;                        /* Angoli arrotondati della scheda */
+    background-color: var(--bg-card);          /* Sfondo scuro del contenitore */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);/* Ombreggiatura profonda per stacco visivo */
+}
+
+/* Struttura base della tabella */
+.admin-table-wrapper table,
+.admin-table {
+    width: 100%;                               /* Occupazione a tutta larghezza */
+    border-collapse: collapse;                 /* Unifica i bordi adiacenti delle celle */
+    text-align: left;                          /* Allineamento del testo a sinistra di default */
+    white-space: nowrap;                       /* Mantiene il contenuto su una riga per evitare rotture */
+    background-color: var(--bg-card);          /* Sfondo scuro coordinato */
+    border-radius: 8px;                        /* Angoli arrotondati */
+    overflow: hidden;                          /* Taglia i bordi eccedenti */
+}
+
+/* Formattazione generica delle celle d'intestazione (TH) e contenuto (TD) */
+.admin-table th,
+.admin-table td {
+    padding: 16px;                             /* Spaziatura interna uniforme per la leggibilità */
+    border-bottom: 1px solid var(--border-color); /* Separatore orizzontale tra le righe */
+    font-size: 13px;                           /* Dimensione del carattere compatta */
+    vertical-align: middle;                    /* Centratura verticale del contenuto delle celle */
+}
+
+/* --------------------------------------------------------------------------
+   2. INTESTAZIONI E FEEDBACK VISIVO RIGHE
+   -------------------------------------------------------------------------- */
+/* Celle d'intestazione (TH) */
+.admin-table th {
+    background-color: rgba(255, 255, 255, 0.03); /* Lieve velatura chiara di stacco */
+    color: var(--text-gray);                   /* Testo grigio secondario */
+    font-size: 11px;                           /* Testo ridotto per l'intestazione */
+    font-weight: 700;                          /* Grassetto marcato */
+    letter-spacing: 0.5px;                     /* Spaziatura tra i caratteri */
+    text-transform: uppercase;                 /* Forzo il testo in maiuscolo */
+}
+
+/* Evidenziazione visiva della riga al passaggio del mouse (hover) */
+.admin-table tr:hover td {
+    background-color: rgba(255, 255, 255, 0.015); /* Sottile cambio di sfondo per feedback visivo */
+}
+
+/* --------------------------------------------------------------------------
+   3. FORMATTAZIONE SPECIFICA DELLE COLONNE
+   -------------------------------------------------------------------------- */
+/* Seconda colonna (Titoli/Nomi): testo in evidenza con andata a capo */
+.admin-table td:nth-child(2) {
+    min-width: 180px;                          /* Larghezza minima garantita */
+    color: var(--text-light);                  /* Testo ad alto contrasto */
+    font-weight: 600;                          /* Semi-grassetto */
+    white-space: normal;                       /* Consente l'andata a capo per nomi lunghi */
+}
+
+/* Terza colonna (Descrizioni/Dettagli): testo secondario limitato in larghezza */
+.admin-table td:nth-child(3) {
+    max-width: 280px;                          /* Limite massimo di larghezza */
+    color: var(--text-gray);                   /* Testo grigio secondario */
+    font-size: 12px;                           /* Dimensione testo ridotta */
+    line-height: 1.4;                          /* Interlinea adeguata per testi multilinea */
+    white-space: normal;                       /* Consente l'andata a capo */
+    word-break: break-word;                    /* Spezza parole troppo lunghe */
+}
+
+/* Quarta e Quinta colonna (Prezzo, Quantità, Date): dati numerici e in evidenza */
+.admin-table td:nth-child(4),
+.admin-table td:nth-child(5) {
+    color: var(--text-light);                  /* Testo chiaro ad alta visibilità */
+    font-weight: 600;                          /* Semi-grassetto */
+}
+
+/* --------------------------------------------------------------------------
+   4. BARRA DEGLI STRUMENTI ADMIN (TOOLBAR)
+   -------------------------------------------------------------------------- */
+/* Insieme della barra superiore (Titolo + Ricerca/Filtri) */
+.admin-toolbar {
+    display: flex;                             /* Disposizione flessibile */
+    flex-wrap: wrap;                           /* Va a capo su schermi ridotti */
+    align-items: center;                       /* Centratura verticale degli elementi */
+    justify-content: space-between;            /* Titolo a sinistra, azioni a destra */
+    gap: 15px;                                 /* Spaziatura tra i blocchi */
+    margin-bottom: 25px;                       /* Distacco dalla tabella sottostante */
+}
+
+/* Titolo della sezione nella toolbar */
+.admin-toolbar h2 {
+    color: var(--text-light);                  /* Titolo chiaro ad alto contrasto */
+    font-size: 22px;                           /* Dimensione in evidenza */
+    font-weight: 700;                          /* Grassetto */
+}
+
+/* Gruppo azioni sul lato destro della toolbar */
+.admin-toolbar-actions {
+    display: flex;                             /* Disposizione flessibile in riga */
+    flex-wrap: wrap;                           /* Va a capo se lo spazio scarseggia */
+    align-items: center;                       /* Centratura verticale */
+    gap: 15px;                                 /* Spaziatura tra gli strumenti */
+}
+
+/* --------------------------------------------------------------------------
+   5. ELEMENTI INTERATTIVI & MEDIA NELLE TABELLE
+   -------------------------------------------------------------------------- */
+/* Campo di input per la ricerca rapida nella tabella */
+.admin-search-input {
+    min-width: 280px;                          /* Larghezza minima garantita */
+    padding: 10px 16px;                        /* Spaziatura interna */
+    border: 1px solid var(--border-color);     /* Bordo basato sulle variabili di tema */
+    border-radius: 6px;                        /* Angoli arrotondati */
+    background-color: var(--bg-input);          /* Sfondo scuro per gli input */
+    color: var(--text-light);                  /* Testo digitato ad alta visibilità */
+    font-size: 13px;                           /* Dimensione carattere compatta */
+    outline: none;                             /* Rimuove l'outline predefinito del browser */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease; /* Transizione al focus */
+}
+
+/* Stato di focus sul campo di ricerca */
+.admin-search-input:focus {
+    border-color: var(--primary-purple);      /* Bordo viola in linea con il design system */
+    box-shadow: 0 0 0 3px rgba(155, 81, 224, 0.2); /* Anello luminoso viola */
+}
+
+/* Miniatura dell'immagine prodotto nella riga della tabella */
+.admin-thumb {
+    width: 44px;                               /* Larghezza fissa */
+    height: 44px;                              /* Altezza fissa */
+    border: 1px solid var(--border-color);     /* Bordo della miniatura */
+    border-radius: 4px;                        /* Angoli leggermente arrotondati */
+    object-fit: cover;                         /* Adatta l'immagine senza distorcerla */
+}
+
+/* Cella contenitore per i pulsanti d'azione (Modifica, Elimina, Dettagli) */
+.action-cell {
+    display: flex;                             /* Dispone i bottoni d'azione in riga */
+    align-items: center;                       /* Centratura verticale */
+    gap: 8px;                                  /* Distanza tra un bottone e l'altro */
+}
+
+/* Menu a tendina per cambio rapido di stato (es. Stato Ordine) */
+.select-status-quick {
+    padding: 6px 10px;                         /* Spaziatura compatta */
+    border: 1px solid var(--border-color);     /* Bordo coordinato */
+    border-radius: 4px;                        /* Angoli arrotondati */
+    background-color: var(--bg-input);          /* Sfondo scuro input */
+    color: var(--text-light);                  /* Testo chiaro */
+    font-size: 13px;                           /* Dimensione del font */
+}
+
+/* --------------------------------------------------------------------------
+   VALUTAZIONE A STELLE
+   -------------------------------------------------------------------------- */
+.stars {
+    color: var(--accent-yellow);               /* Colore giallo fluo/oro d'accento */
+    font-size: 16px;                           /* Ingrandisce la dimensione delle stelle */
+    letter-spacing: 2px;                       /* Distanzia leggermente le stelle tra loro */
+}

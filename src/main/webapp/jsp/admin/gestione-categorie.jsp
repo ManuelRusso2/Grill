@@ -8,6 +8,9 @@
 <%-- Inclusione della Tag Library JSTL Core per le strutture di controllo e output --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<%-- Inclusione della Tag Library JSTL Functions per l'escape sicuro nei confirm JavaScript --%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <%-- Inclusione del frammento di intestazione (Header HTML, meta-tag, stylesheet, JS globali) --%>
 <%@ include file="/jsp/common/header.jspf" %>
 
@@ -22,14 +25,14 @@
     <%-- Banner di successo (mostrato ad esempio dopo la creazione/modifica/eliminazione) --%>
     <c:if test="${not empty successMessage}">
         <div class="alert alert-success">
-            <c:out value="${successMessage}" />
+            ✓ <c:out value="${successMessage}" />
         </div>
     </c:if>
 
     <%-- Banner di errore (mostrato in caso di eccezioni o vincoli di integrità referenziale) --%>
     <c:if test="${not empty errorMessage}">
         <div class="alert alert-danger">
-            <c:out value="${errorMessage}" />
+            ✗ <c:out value="${errorMessage}" />
         </div>
     </c:if>
 
@@ -37,7 +40,7 @@
     <div class="admin-toolbar">
         <h2>Elenco Categorie</h2>
         <%-- Pulsante per il reindirizzamento al form di inserimento di una nuova categoria --%>
-        <a href="${pageContext.request.contextPath}/AdminCategoriaServlet?action=new" class="btn btn-small">➕ Nuova Categoria</a>
+        <a href="${pageContext.request.contextPath}/AdminCategoriaServlet?action=new" class="btn btn-md btn-primary">➕ Nuova Categoria</a>
     </div>
 
     <%-- ── TABELLA ELENCO CATEGORIE ────────────────────────────────────────── --%>
@@ -71,13 +74,11 @@
                                 <td class="text-right">
                                     <div class="action-cell">
                                         <%-- Link per la modifica della categoria mediante la Servlet --%>
-                                        <a href="${pageContext.request.contextPath}/AdminCategoriaServlet?action=edit&id=${cat.idCategoria}" class="btn-edit">Modifica</a>
+                                        <a href="${pageContext.request.contextPath}/AdminCategoriaServlet?action=edit&id=${cat.idCategoria}" class="btn btn-sm btn-outline-purple">Modifica</a>
                                         
-                                        <%-- Form POST per l'eliminazione sicura con conferma tramite popup JavaScript inline --%>
-                                        <form method="post" action="${pageContext.request.contextPath}/AdminCategoriaServlet" class="action-form" onsubmit="return confirm('Sei sicuro di voler eliminare la categoria ${cat.nome}?');">
-                                            <input type="hidden" name="action" value="delete">
-                                            <input type="hidden" name="id" value="${cat.idCategoria}">
-                                            <button type="submit" class="btn-delete">Elimina</button>
+                                        <%-- Form POST per l'eliminazione sicura con conferma tramite popup JavaScript inline e sanificazione apici --%>
+                                        <form method="post" action="${pageContext.request.contextPath}/AdminCategoriaServlet?action=delete&id=${cat.idCategoria}" class="form-unstyled" onsubmit="return confirm('Sei sicuro di voler eliminare la categoria \'${fn:escapeXml(cat.nome)}\'?');">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">Elimina</button>
                                         </form>
                                     </div>
                                 </td>

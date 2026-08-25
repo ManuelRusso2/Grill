@@ -1,0 +1,188 @@
+/* ==========================================================================
+   LAYOUT ADMIN, ANTEPRIMA & CHIPS CATEGORIE
+   ==========================================================================
+   Stili specifici per la griglia di gestione prodotti, schede contenitore,
+   anteprima dinamica sticky e selezione categorie tramite chip.
+   Le regole base dei form (input, label, form-group) sono ereditate da global.css.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. LAYOUT A GRIGLIA E SCHEDE CONTENITORE
+   -------------------------------------------------------------------------- */
+/* Griglia affiancata per modulo di inserimento e scheda di anteprima */
+.admin-edit-grid {
+    display: grid;                             /* Layout a griglia bidimensionale */
+    grid-template-columns: 1.4fr 1fr;          /* Proporzioni: 1.4 parti al form, 1 parte all'anteprima */
+    gap: 30px;                                 /* Spaziatura tra le colonne */
+    align-items: start;                        /* Allinea gli elementi in alto */
+    margin-top: 20px;                          /* Distacco dal blocco superiore */
+}
+
+/* Riquadro contenitore standard per i moduli dell'amministrazione */
+.admin-form-card,
+.admin-form,
+.form-container {
+    max-width: 700px;                          /* Larghezza massima contenitore */
+    margin: 30px auto;                         /* Centratura orizzontale */
+    padding: 30px;                             /* Spaziatura interna */
+    background-color: var(--bg-card);          /* Sfondo scuro della scheda */
+    border: 1px solid var(--border-color);     /* Bordo perimetrale */
+    border-radius: 8px;                        /* Angoli arrotondati */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);/* Ombreggiatura profonda */
+}
+
+/* Titoli interni alle schede form e anteprima */
+.admin-form-card h2,
+.admin-preview-card h2,
+.form-container h2 {
+    margin-bottom: 20px;                       /* Distanza dagli elementi sottostanti */
+    color: var(--text-light);                  /* Testo ad alto contrasto */
+    font-size: 20px;                           /* Dimensione titolo */
+    font-weight: 700;                          /* Grassetto marcato */
+    text-transform: uppercase;                 /* Testo in lettere maiuscole */
+}
+
+/* Layout su 2 colonne per campi affiancati (es. Prezzo e Quantità) */
+.form-row {
+    display: flex;                             /* Layout flessibile in riga */
+    gap: 20px;                                 /* Spazio tra i due campi */
+    width: 100%;                               /* Occupazione a tutta larghezza */
+}
+
+.form-row .form-group {
+    flex: 1;                                   /* Ogni campo occupa il 50% dello spazio */
+    margin-bottom: 0;                          /* Azzera il margine inferiore della riga */
+}
+
+/* --------------------------------------------------------------------------
+   2. CASSELLA DI SPUNTA SPECIALE (PRODOTTO ATTIVO)
+   -------------------------------------------------------------------------- */
+/* Contenitore con sfondo per la checkbox di stato */
+.checkbox-card {
+    display: flex;                             /* Dispone checkbox e label affiancate */
+    align-items: center;                       /* Centratura verticale */
+    gap: 12px;                                 /* Spazio tra casella di spunta e testo */
+    padding: 12px 16px;                        /* Spaziatura interna */
+    background-color: var(--bg-input);          /* Sfondo scuro integrato */
+    border: 1px solid var(--border-color);     /* Bordo coordinato */
+    border-radius: 6px;                        /* Angoli arrotondati */
+}
+
+/* Checkbox ingrandita con accento fluo */
+.checkbox-large {
+    width: 18px !important;                    /* Forza la larghezza azzerando il 100% degli input generici */
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--accent-yellow);        /* Colore di spunta giallo */
+}
+
+/* Etichetta coordinata per la checkbox */
+.checkbox-label {
+    margin-bottom: 0 !important;               /* Azzera il margine per l'allineamento flex */
+    cursor: pointer;
+    font-size: 13px !important;
+    text-transform: none !important;           /* Disabilita il maiuscolo */
+    color: var(--text-light) !important;
+}
+
+/* --------------------------------------------------------------------------
+   3. SCHEDA ANTEPRIMA PRODOTTO (STICKY PREVIEW)
+   -------------------------------------------------------------------------- */
+/* Riquadro fisso visibile durante lo scorrimento della pagina */
+.admin-preview-card {
+    position: sticky;                          /* Mantiene l'anteprima visibile in cima allo scroll */
+    top: 90px;                                 /* Distanza dalla sommità della finestra */
+    padding: 30px;                             /* Spaziatura interna */
+    border: 1px solid var(--border-color);     /* Bordo della scheda */
+    border-radius: 8px;                        /* Angoli arrotondati */
+    background-color: var(--bg-card);          /* Sfondo della scheda */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);/* Ombreggiatura */
+}
+
+/* Cornice di contenimento per l'immagine d'anteprima */
+.preview-image-wrapper {
+    display: flex;                             /* Flexbox per centrare l'immagine */
+    align-items: center;                       /* Centratura verticale */
+    justify-content: center;                   /* Centratura orizzontale */
+    width: 100%;                               /* Occupazione a tutta larghezza */
+    height: 220px;                             /* Altezza fissa della cornice */
+    margin-bottom: 20px;                       /* Distanza dai dettagli sottostanti */
+    overflow: hidden;                          /* Taglia eventuali eccedenze dell'immagine */
+    border: 1px solid var(--border-color);     /* Bordo di cornice */
+    border-radius: 6px;                        /* Angoli arrotondati */
+    background-color: var(--bg-input);          /* Sfondo scuro neutro */
+}
+
+/* Immagine adattiva nell'anteprima */
+.preview-image {
+    width: 100%;                               /* Adatta la larghezza al contenitore */
+    height: 100%;                              /* Adatta l'altezza al contenitore */
+    object-fit: contain;                       /* Ridimensiona mantenendo le proporzioni senza ritagliare */
+}
+
+/* --------------------------------------------------------------------------
+   4. SELEZIONE CATEGORIE AD ETICHETTE (CHIPS)
+   -------------------------------------------------------------------------- */
+/* Contenitore flessibile tra griglia categorie e bottoni accessori */
+.categories-wrapper {
+    display: flex;                             /* Layout affiancato */
+    align-items: flex-start;                   /* Allineamento in alto */
+    gap: 12px;                                 /* Spazio tra blocco categorie e pulsante */
+    width: 100%;
+}
+
+/* Contenitore principale della lista chips */
+.categories-list {
+    flex: 1;                                   /* Occupa tutto lo spazio disponibile a sinistra */
+}
+
+/* Griglia per la disposizione avvolgente delle chips */
+.categories-checkbox-grid {
+    display: flex;                             /* Layout flessibile */
+    flex-wrap: wrap;                           /* Va a capo automaticamente se lo spazio finisce */
+    gap: 10px;                                 /* Spaziatura tra le singole chips */
+    margin: 4px 0 6px 0;                       /* Margini di distacco verticale */
+}
+
+/* Singola etichetta chip */
+.category-chip {
+    display: inline-flex;                      /* Allineamento in linea */
+    align-items: center;                       /* Centratura verticale */
+    cursor: pointer;                           /* Cursore a manina */
+    user-select: none;                         /* Previene la selezione del testo al click */
+}
+
+/* Nasconde l'input checkbox nativo lasciandolo attivo per il form */
+.category-chip input[type="checkbox"] {
+    position: absolute;                        /* Rimuove l'input dal flusso visivo */
+    width: 0;
+    height: 0;
+    opacity: 0;                                /* Completamente invisibile */
+}
+
+/* Pillola visiva della categoria (Stato base) */
+.category-chip span {
+    padding: 8px 16px;                         /* Spaziatura interna della pillola */
+    border: 1px solid var(--border-color);     /* Bordo discreto di base */
+    border-radius: 20px;                       /* Arrotondamento completo a pillola */
+    background-color: var(--bg-input);          /* Sfondo scuro per il chip */
+    color: var(--text-gray);                   /* Testo grigio disattivato */
+    font-size: 13px;                           /* Dimensione carattere */
+    font-weight: 600;                          /* Semi-grassetto */
+    transition: all 0.25s ease;                /* Transizione fluida per cambio stato */
+}
+
+/* Effetto hover sulla pillola */
+.category-chip:hover span {
+    border-color: var(--primary-purple);       /* Il bordo diventa viola */
+    color: var(--text-light);                  /* Testo chiaro */
+}
+
+/* Stato attivo (quando il checkbox nascosto è selezionato) */
+.category-chip input[type="checkbox"]:checked + span {
+    border-color: var(--accent-yellow);        /* Bordo giallo fluo d'accento */
+    background-color: rgba(204, 255, 0, 0.12); /* Velatura di sfondo gialla */
+    color: var(--accent-yellow);               /* Testo giallo fluo */
+    font-weight: 700;                          /* Grassetto per evidenziare */
+    box-shadow: 0 0 10px rgba(204, 255, 0, 0.15); /* Bagliore luminoso dorato */
+}

@@ -4,12 +4,16 @@
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%-- Inclusione delle librerie di tag JSTL per la logica di controllo e la formattazione --%>
+<%-- Importazione della libreria JSTL Core per il controllo di flusso, cicli e condizioni --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<%-- Importazione della libreria JSTL Formatting per la formattazione di date, numeri e valute --%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%-- Inclusione dei frammenti statici per l'intestazione e il menu --%>
+<%-- Inclusione del frammento statico per l'intestazione HTML e le risorse della pagina (head, CSS, JS) --%>
 <%@ include file="/jsp/common/header.jspf" %>
+
+<%-- Inclusione del frammento statico per la barra di navigazione principale (menu / navbar) --%>
 <%@ include file="/jsp/common/menu.jspf" %>
 
 <main class="container">
@@ -65,8 +69,8 @@
 				
 				    <%-- Pulsanti di azione --%>
 				    <div class="form-actions">
-				        <button type="submit" class="btn btn-submit">Salva modifiche</button>
-				        <a href="${pageContext.request.contextPath}/ProfiloServlet" class="btn btn-cancel">Annulla</a>
+				        <button type="submit" class="btn btn-md btn-primary">Salva modifiche</button>
+				        <a href="${pageContext.request.contextPath}/ProfiloServlet" class="btn btn-md btn-secondary">Annulla</a>
 				    </div>
 				</form>
             </div>

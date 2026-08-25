@@ -6,9 +6,14 @@
     - L'anteprima in tempo reale dell'immagine e dello stato di visibilità/stock tramite JS.
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
+<%-- Importazione della libreria JSTL Core per il controllo di flusso, cicli e condizioni --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<%-- Inclusione del frammento statico per l'intestazione HTML e le risorse della pagina (head, CSS, JS) --%>
 <%@ include file="/jsp/common/header.jspf" %>
+
+<%-- Inclusione del frammento statico per la barra di navigazione principale (menu / navbar) --%>
 <%@ include file="/jsp/common/menu.jspf" %>
 
 <main class="container">
@@ -23,27 +28,21 @@
         <div class="admin-form-card">
             <h2>${isEdit ? 'Dettagli Prodotto' : 'Inserisci Dati'}</h2>
 
-            <form method="post" action="${pageContext.request.contextPath}/AdminProdottoServlet" class="form-container">
-                <%-- Switch della logica di salvataggio nel Servlet tramite hidden field --%>
-                <input type="hidden" name="action" value="${isEdit ? 'update' : 'save'}">
+            <form method="post" action="${pageContext.request.contextPath}/AdminProdottoServlet?action=${isEdit ? 'update' : 'save'}${isEdit ? '&id=' : ''}${isEdit ? prodotto.idProdotto : ''}">
                 
-                <c:if test="${isEdit}">
-                    <input type="hidden" name="id" value="${prodotto.idProdotto}">
-                </c:if>
-
                 <div class="form-group">
                     <label for="nome">Nome Prodotto:</label>
                     <input type="text" id="nome" name="nome" 
                            value="<c:out value='${isEdit ? prodotto.nome : ""}'/>" required>
                 </div>
-
+            
                 <div class="form-row">
                     <div class="form-group">
                         <label for="costo">Prezzo (€):</label>
                         <input type="number" id="costo" name="costo" step="0.01" min="0"
                                value="${isEdit ? prodotto.costo : ''}" required>
                     </div>
-
+            
                     <div class="form-group">
                         <label for="quantita">Quantità in Stock:</label>
                         <input type="number" id="quantita" name="quantita" min="0"
@@ -57,7 +56,7 @@
                            value="<c:out value='${isEdit ? prodotto.taglie : ""}'/>" placeholder="Es: S, M, L, XL, 42, 44">
                     <span class="field-hint">Inserisci le taglie separate da una virgola.</span>
                 </div>
-
+            
                 <%-- GRIGLIA CATEGORIE A CHIP: Associazione dinamica --%>
                 <div class="form-group">
                     <label>Categorie associate:</label>
@@ -85,35 +84,35 @@
                             </div>
                             <span class="field-hint">Seleziona una o più categorie cliccando sui badge.</span>
                         </div>
-                        <a href="${pageContext.request.contextPath}/AdminCategoriaServlet?action=new" class="btn btn-secondary btn-small btn-nowrap">
+                        <a href="${pageContext.request.contextPath}/AdminCategoriaServlet?action=new" class="btn btn-sm btn-outline-warning">
                             ➕ Nuova
                         </a>
                     </div>
                 </div>
-
+            
                 <div class="form-group">
                     <label for="descrizione">Descrizione:</label>
                     <textarea id="descrizione" name="descrizione" rows="4" required><c:out value="${isEdit ? prodotto.descrizione : ''}" /></textarea>
                 </div>
-
+            
                 <div class="form-group">
                     <label for="immagine">Percorso Immagine:</label>
                     <input type="text" id="immagine" name="immagine"
                            value="<c:out value='${isEdit ? prodotto.immagine : "images/default.jpg"}'/>">
                     <span class="field-hint">Es: images/prodotto.jpg. L'anteprima si aggiornerà in tempo reale.</span>
                 </div>
-
+            
                 <div class="form-group checkbox-card">
                     <input type="checkbox" id="attivo" name="attivo" class="checkbox-large"
                            ${(!isEdit || prodotto.attivo) ? 'checked' : ''}>
                     <label for="attivo" class="checkbox-label">Prodotto Attivo (Visibile nel catalogo)</label>
                 </div>
-
+            
                 <div class="form-actions">
-                    <button type="submit" class="btn">
+                    <button type="submit" class="btn btn-md btn-primary">
                         ${isEdit ? 'Salva Modifiche' : 'Crea Prodotto'}
                     </button>
-                    <a href="${pageContext.request.contextPath}/AdminProdottoServlet" class="btn btn-secondary">
+                    <a href="${pageContext.request.contextPath}/AdminProdottoServlet" class="btn btn-md btn-secondary">
                         Annulla
                     </a>
                 </div>
@@ -174,7 +173,7 @@
 
             <c:if test="${isEdit}">
                 <div class="preview-actions">
-                    <a href="${pageContext.request.contextPath}/DettaglioProdottoServlet?id=${prodotto.idProdotto}" target="_blank" class="btn btn-view">
+                    <a href="${pageContext.request.contextPath}/DettaglioProdottoServlet?id=${prodotto.idProdotto}" target="_blank" class="btn btn-sm btn-outline-warning">
                         Vedi nel Negozio ↗
                     </a>
                 </div>

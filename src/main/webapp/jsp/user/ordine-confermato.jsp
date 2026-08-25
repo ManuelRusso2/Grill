@@ -1,12 +1,16 @@
 <%-- Impostazione del tipo di contenuto della pagina e della codifica dei caratteri (UTF-8) --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%-- Inclusione delle librerie di tag JSTL per la logica condizionale e la formattazione di numeri e valute --%>
+<%-- Importazione della libreria JSTL Core per il controllo di flusso, cicli e condizioni --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<%-- Importazione della libreria JSTL Formatting per la formattazione di date, numeri e valute --%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%-- Inclusione dei frammenti di codice statici per l'intestazione (header) e la barra di navigazione (menu) --%>
+<%-- Inclusione del frammento statico per l'intestazione HTML e le risorse della pagina (head, CSS, JS) --%>
 <%@ include file="/jsp/common/header.jspf" %>
+
+<%-- Inclusione del frammento statico per la barra di navigazione principale (menu / navbar) --%>
 <%@ include file="/jsp/common/menu.jspf" %>
 
 <%-- Contenitore principale della pagina di conferma o errore dell'ordine --%>
@@ -70,10 +74,10 @@
                     <%-- Pulsanti di azione rapida per il download della fattura in PDF o per proseguire la navigazione --%>
                     <div class="success-actions">
                         <%-- Link che richiama la FatturaServlet passando l'ID dell'ordine per la generazione del PDF --%>
-                        <a href="${pageContext.request.contextPath}/FatturaServlet?id=${ordineId}" target="_blank" class="btn btn-catalog">SCARICA FATTURA PDF</a>
+                        <a href="${pageContext.request.contextPath}/FatturaServlet?id=${ordineId}" target="_blank" class="btn btn-md btn-primary">SCARICA FATTURA PDF</a>
                         
                         <%-- Link di reindirizzamento al catalogo prodotti per continuare lo shopping --%>
-                        <a href="${pageContext.request.contextPath}/CatalogoServlet" class="btn btn-catalog">CONTINUA LO SHOPPING</a>
+                        <a href="${pageContext.request.contextPath}/CatalogoServlet" class="btn btn-md btn-primary">CONTINUA LO SHOPPING</a>
                     </div>
                 </div>
             </c:when>
@@ -89,7 +93,7 @@
                     
                     <%-- Pulsante per ritornare alla pagina principale del catalogo prodotti --%>
                     <div class="error-actions">
-                        <a href="${pageContext.request.contextPath}/CatalogoServlet" class="btn btn-catalog">Torna al Catalogo</a>
+                        <a href="${pageContext.request.contextPath}/CatalogoServlet" class="btn btn-md btn-primary">Torna al Catalogo</a>
                     </div>
                 </div>
             </c:otherwise>

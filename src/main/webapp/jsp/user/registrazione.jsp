@@ -1,11 +1,13 @@
 <%-- Impostazione del tipo di contenuto della pagina e della codifica dei caratteri (UTF-8) --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%-- Inclusione della libreria di tag JSTL Core per la gestione della logica condizionale ed estrazione valori --%>
+<%-- Importazione della libreria JSTL Core per il controllo di flusso, cicli e condizioni --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%-- Inclusione dei frammenti di codice statici per l'intestazione (header) e la barra di navigazione (menu) --%>
+<%-- Inclusione del frammento statico per l'intestazione HTML e le risorse della pagina (head, CSS, JS) --%>
 <%@ include file="/jsp/common/header.jspf" %>
+
+<%-- Inclusione del frammento statico per la barra di navigazione principale (menu / navbar) --%>
 <%@ include file="/jsp/common/menu.jspf" %>
 
 <%-- Contenitore principale della pagina di registrazione utente --%>
@@ -76,7 +78,7 @@
         </div>
 
         <%-- Pulsante di invio del modulo per sottomettere i dati di registrazione --%>
-        <button type="submit" class="btn-submit">Registrati</button>
+        <button type="submit" class="btn btn-md btn-primary btn-full">Registrati</button>
     </form>
 
     <%-- Inclusione dello script JavaScript esterno per la validazione client-side dei campi --%>

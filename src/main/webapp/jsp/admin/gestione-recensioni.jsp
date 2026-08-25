@@ -5,12 +5,16 @@
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%-- Inclusione delle Tag Library JSTL per controllo flusso e formattazione date --%>
+<%-- Importazione della libreria JSTL Core per il controllo di flusso, cicli e condizioni --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<%-- Importazione della libreria JSTL Formatting per la formattazione di date, numeri e valute --%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
-<%-- Inclusione dei frammenti statici per l'intestazione HTML e la barra di navigazione --%>
+<%-- Inclusione del frammento statico per l'intestazione HTML e le risorse della pagina (head, CSS, JS) --%>
 <%@ include file="/jsp/common/header.jspf" %>
+
+<%-- Inclusione del frammento statico per la barra di navigazione principale (menu / navbar) --%>
 <%@ include file="/jsp/common/menu.jspf" %>
 
 <main class="container">
@@ -19,11 +23,11 @@
     <%-- ── MESSAGGI DI FEEDBACK ─────────────────────────────────────────────── --%>
     <%-- Banner di successo dopo eliminazione --%>
     <c:if test="${not empty successMessage}">
-        <div class="alert alert-success"><c:out value="${successMessage}" /></div>
+        <div class="alert alert-success">✓ <c:out value="${successMessage}" /></div>
     </c:if>
     <%-- Banner di errore in caso di fallimento operazione --%>
     <c:if test="${not empty errorMessage}">
-        <div class="alert alert-danger"><c:out value="${errorMessage}" /></div>
+        <div class="alert alert-danger">✗ <c:out value="${errorMessage}" /></div>
     </c:if>
 
     <div class="admin-reviews-section">
@@ -43,9 +47,9 @@
                     </c:forEach>
                 </select>
                 
-                <%-- Mostra pulsante reset se un filtro è attualmente attivo --%>
+                <%-- Mostra pulsante reset con stile unificato se un filtro è attualmente attivo --%>
                 <c:if test="${not empty param.idUtente}">
-                    <a href="${pageContext.request.contextPath}/AdminRecensioniServlet" class="btn-reset-filter">Mostra Tutti</a>
+                    <a href="${pageContext.request.contextPath}/AdminRecensioniServlet" class="btn btn-sm btn-secondary">Mostra Tutti</a>
                 </c:if>
             </form>
         </div>
@@ -54,7 +58,7 @@
         <c:choose>
             <c:when test="${not empty tutteRecensioni}">
                 <div class="admin-table-wrapper">
-                    <table class="admin-table admin-reviews-table">
+                    <table class="admin-table">
                         <thead>
                             <tr>
                                 <th class="col-id">ID</th>
@@ -93,13 +97,11 @@
                                     
                                     <%-- Form per eliminazione singola recensione gestito da AdminRecensioniServlet --%>
                                     <td class="text-right">
-                                        <form action="${pageContext.request.contextPath}/AdminRecensioniServlet" method="post" class="action-form" onsubmit="return confirm('Sei sicuro di voler eliminare questa recensione?');">
-                                            <input type="hidden" name="action" value="delete" />
-                                            <input type="hidden" name="idRecensione" value="${rec.idRecensione}" />
-                                            <%-- Mantiene il filtro utente attivo anche dopo l'eliminazione --%>
-                                            <input type="hidden" name="idUtente" value="${param.idUtente}" />
-                                            <button type="submit" class="btn-delete">Elimina</button>
-                                        </form>
+                                        <div class="action-cell">
+                                            <form action="${pageContext.request.contextPath}/AdminRecensioniServlet?action=delete&idRecensione=${rec.idRecensione}&idUtente=${param.idUtente}" method="post" class="form-unstyled" onsubmit="return confirm('Sei sicuro di voler eliminare questa recensione?');">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">Elimina</button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             </c:forEach>

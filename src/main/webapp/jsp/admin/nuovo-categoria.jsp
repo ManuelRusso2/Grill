@@ -6,11 +6,13 @@
 --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%-- Inclusione della Tag Library JSTL Core per la gestione del flusso --%>
+<%-- Importazione della libreria JSTL Core per il controllo di flusso, cicli e condizioni --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%-- Inclusione dei frammenti statici per header e menu --%>
+<%-- Inclusione del frammento statico per l'intestazione HTML e le risorse della pagina (head, CSS, JS) --%>
 <%@ include file="/jsp/common/header.jspf" %>
+
+<%-- Inclusione del frammento statico per la barra di navigazione principale (menu / navbar) --%>
 <%@ include file="/jsp/common/menu.jspf" %>
 
 <main class="container">
@@ -41,8 +43,8 @@
 
         <div class="form-actions">
             <%-- Il bottone di submit cambia etichetta in base all'operazione --%>
-            <button type="submit" class="btn">${isEdit ? 'Salva Modifiche' : 'Crea Categoria'}</button>
-            <a href="${pageContext.request.contextPath}/AdminCategoriaServlet" class="btn btn-secondary">Annulla</a>
+            <button type="submit" class="btn btn-md btn-primary">${isEdit ? 'Salva Modifiche' : 'Crea Categoria'}</button>
+            <a href="${pageContext.request.contextPath}/AdminCategoriaServlet" class="btn btn-md btn-secondary">Annulla</a>
         </div>
     </form>
 </main>

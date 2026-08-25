@@ -1,11 +1,13 @@
 <%-- Pagina di errore HTTP 403 (Accesso Negato): mostrata quando l'utente non possiede i permessi per accedere alla risorsa --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%-- Inclusione della libreria di tag JSTL Core --%>
+<%-- Importazione della libreria JSTL Core per il controllo di flusso, cicli e condizioni --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<%-- Inclusione dei frammenti statici per l'intestazione (header) e il menu di navigazione --%>
+<%-- Inclusione del frammento statico per l'intestazione HTML e le risorse della pagina (head, CSS, JS) --%>
 <%@ include file="/jsp/common/header.jspf" %>
+
+<%-- Inclusione del frammento statico per la barra di navigazione principale (menu / navbar) --%>
 <%@ include file="/jsp/common/menu.jspf" %>
 
 <%-- Contenitore principale della scheda d'errore --%>
@@ -25,7 +27,7 @@
             <a class="btn" href="${pageContext.request.contextPath}/CatalogoServlet">Torna al Catalogo</a>
             
             <%-- Link per disconnettere la sessione attuale --%>
-            <a class="btn btn-secondary" href="${pageContext.request.contextPath}/LogoutServlet">Logout</a>
+            <a class="btn btn-md btn-secondary" href="${pageContext.request.contextPath}/LogoutServlet">Logout</a>
         </div>
     </div>
 </main>

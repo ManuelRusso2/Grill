@@ -1,0 +1,147 @@
+/* ==========================================================================
+   SISTEMA BOTTONI GLOBALI UNIFICATI
+   ==========================================================================
+   Modello a componenti modulari per tutti i pulsanti dell'applicazione.
+   Combina la struttura base (.btn) con una dimensione (.btn-md, .btn-sm) 
+   e una variante di stile (.btn-primary, .btn-secondary, ecc.).
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. STRUTTURA BASE COMUNE
+   -------------------------------------------------------------------------- */
+/* Regole strutturali applicate a qualsiasi tipologia di bottone */
+.btn {
+    display: inline-flex;                      /* Flexbox in linea per l'allineamento perfetto di icone e testo */
+    align-items: center;                       /* Centratura verticale dei contenuti interni */
+    justify-content: center;                   /* Centratura orizzontale */
+    gap: 8px;                                  /* Spaziatura costante tra eventuale icona e testo */
+    border: 1px solid transparent;             /* Bordo base trasparente per evitare riposizionamenti al cambio stato */
+    text-decoration: none;                     /* Rimuove la sottolineatura in caso di elementi <a> */
+    text-transform: uppercase;                 /* Standardizza il testo in lettere maiuscole */
+    cursor: pointer;                           /* Puntatore a manina per indicare l'interattività */
+    transition: all 0.3s ease;                /* Transizione fluida per tutte le modifiche di stato (hover/active) */
+}
+
+/* --------------------------------------------------------------------------
+   2. DIMENSIONI (SIZING)
+   -------------------------------------------------------------------------- */
+/* Dimensione standard (usata per call-to-action principali, form e modali) */
+.btn-md {
+    padding: 14px 28px;                        /* Spaziatura interna confortevole per la cliccabilità */
+    border-radius: 6px;                        /* Angoli leggermente arrotondati */
+    font-size: 14px;                           /* Dimensione testo di lettura standard */
+}
+
+/* Dimensione compatta (usata per azioni nelle tabelle admin e griglie) */
+.btn-sm {
+    padding: 6px 12px;                         /* Spaziatura interna ridotta al minimo */
+    border-radius: 4px;                        /* Arrotondamento angoli compatto */
+    font-size: 12px;                           /* Dimensione testo ridotta */
+    font-weight: 700;                          /* Grassetto marcato */
+    line-height: 1;                            /* Azzera l'interlinea per centrare il testo */
+}
+
+/* --------------------------------------------------------------------------
+   3. VARIANTI DI STILE (COLORI E TEMA)
+   -------------------------------------------------------------------------- */
+/* Primario Fluo (Sostituisce btn-catalog, btn-checkout, btn-submit) */
+.btn-primary {
+    background-color: var(--accent-yellow);    /* Sfondo giallo fluo d'accento */
+    color: #000000;                            /* Testo nero ad alto contrasto */
+    font-family: var(--font-headings);         /* Font dedicato per le azioni principali */
+    font-weight: 800;                          /* Grassetto molto marcato (Extra Bold) */
+    box-shadow: 0 4px 15px rgba(204, 255, 0, 0.2); /* Ombreggiatura dorata luminosa */
+}
+
+.btn-primary:hover {
+    background-color: #e0ff4d;                 /* Giallo fluo leggermente più luminoso */
+    box-shadow: 0 8px 22px rgba(204, 255, 0, 0.35); /* Bagliore amplificato */
+    transform: translateY(-2px);               /* Micro-elevazione verso l'alto */
+}
+
+/* Secondario Trasparente (Usato per "Annulla", "Torna indietro", ecc.) */
+.btn-secondary {
+    background-color: transparent;             /* Sfondo trasparente di default */
+    color: var(--text-light);                  /* Testo chiaro di base */
+    font-family: var(--font-body);             /* Font standard di lettura */
+    font-weight: 600;                          /* Peso semi-grassetto */
+}
+
+.btn-secondary:hover {
+    border-color: var(--border-color);         /* Rivela un bordo discreto basato sul tema */
+    background-color: rgba(255, 255, 255, 0.08); /* Sottile velatura bianca trasparente */
+    color: #ffffff;                            /* Testo bianco brillante */
+    transform: translateY(-2px);               /* Micro-elevazione verso l'alto */
+}
+
+/* Outline Viola (Sostituisce il vecchio btn-edit per l'Admin) */
+.btn-outline-purple {
+    background-color: rgba(155, 81, 224, 0.15); /* Sfondo viola semitrasparente */
+    border-color: var(--primary-purple);       /* Bordo viola principale */
+    color: var(--primary-purple);              /* Testo viola */
+}
+
+.btn-outline-purple:hover {
+    background-color: var(--primary-purple);   /* Sfondo pieno viola al passaggio del mouse */
+    color: #ffffff;                            /* Testo bianco contrastato */
+}
+
+/* Outline Rosso (Sostituisce il vecchio btn-delete per l'Admin) */
+.btn-outline-danger {
+    background-color: rgba(255, 74, 74, 0.15);  /* Sfondo rosso semitrasparente */
+    border-color: #ff4a4a;                     /* Bordo rosso allarme */
+    color: #ff4a4a;                            /* Testo rosso */
+}
+
+.btn-outline-danger:hover {
+    background-color: #ff4a4a;                 /* Sfondo pieno rosso al passaggio del mouse */
+    color: #ffffff;                            /* Testo bianco contrastato */
+}
+
+/* Outline Giallo (Sostituisce il vecchio btn-view per l'Admin) */
+.btn-outline-warning {
+    background-color: rgba(204, 255, 0, 0.1);  /* Sfondo giallo/verde semitrasparente */
+    border-color: var(--accent-yellow);        /* Bordo giallo d'accento */
+    color: var(--accent-yellow);               /* Testo giallo d'accento */
+}
+
+.btn-outline-warning:hover {
+    background-color: var(--accent-yellow);    /* Sfondo pieno giallo al passaggio del mouse */
+    color: #000000;                            /* Testo nero leggibile */
+}
+
+/* --------------------------------------------------------------------------
+   4. UTILITY & AVVISI SPECIALI
+   -------------------------------------------------------------------------- */
+/* Bottone ad estensione completa (per form di Login, Registrazione e Checkout) */
+.btn-full {
+    width: 100%;                               /* Occupa il 100% della larghezza del contenitore madre */
+}
+
+/* Box per messaggi di avviso o avvertenze amministrative */
+.admin-notice {
+    padding: 15px;                             /* Spaziatura interna */
+    border: 1px solid #ff4a4a;                 /* Bordo rosso allarme */
+    border-radius: 6px;                        /* Angoli arrotondati */
+    background-color: rgba(255, 74, 74, 0.12); /* Sfondo rosso trasparente */
+    color: #ff4a4a;                            /* Testo rosso */
+    font-size: 14px;                           /* Dimensione carattere */
+    font-weight: 600;                          /* Semi-grassetto */
+    text-align: center;                        /* Testo centrato */
+}
+
+/* --------------------------------------------------------------------------
+   5. STATO DISABILITATO GLOBALE
+   -------------------------------------------------------------------------- */
+/* Comportamento per pulsanti non interattivi (es. "Esaurito" o submit in caricamento) */
+.btn:disabled,
+.btn.disabled {
+    background-color: rgba(255, 255, 255, 0.05); /* Sfondo scuro semitrasparente */
+    border: 1px solid var(--border-color);     /* Bordo grigio discreto */
+    color: var(--text-light);                  /* Testo chiaro leggibile */
+    opacity: 0.5;                              /* Riduzione opacità per effetto visivo disabilitato */
+    cursor: not-allowed;                       /* Cursore di blocco interazione */
+    pointer-events: none;                      /* Disabilita i click e gli effetti hover */
+    box-shadow: none;                          /* Rimuove ombre ed effetti di luce */
+    transform: none;                           /* Annulla qualsiasi spostamento o elevazione */
+}

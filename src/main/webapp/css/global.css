@@ -331,32 +331,39 @@ img {
 }
 
 /* ==========================================================================
-   5. COMPONENTI GENERICI & UTILITY (Pulsanti, Form Base, Alert, Toast)
+   5. RESET FORM INLINE (Mini-form invisibili e trasparenti)
    ==========================================================================
-   Componenti di interfaccia riutilizzabili nell'applicazione come pulsanti
-   secondari, controlli dei moduli, messaggi di avviso e notifiche popup.
+   Annulla lo stile predefinito dei form inseriti in contesti specifici o legati 
+   ad azioni rapide (carrello, recensioni, tabelle admin), trasformandoli in 
+   semplici contenitori trasparenti privi di margini, sfondi o ombre.
    ========================================================================== */
 
-/* Pulsante secondario/compatto */
-.btn-small {
-    background-color: var(--accent-yellow);    /* Colore di sfondo giallo d'accento */
-    color: #000000 !important;                 /* Forza il testo nero per leggibilità */
-    padding: 8px 16px;                         /* Dimensionamento compatto */
-    border-radius: 6px;                        /* Angoli leggermente arrotondati */
-    font-weight: bold;                         /* Testo in grassetto */
-    font-size: 13px;                           /* Dimensione del font */
-    display: inline-block;                     /* Comportamento in linea con supporto a dimensioni */
-    transition: transform 0.2s ease, background-color 0.2s ease; /* Transizioni smooth */
-}
-
-/* Hover per il pulsante compatto */
-.btn-small:hover {
-    background-color: #e0ff4d;                 /* Schiarisce il giallo al passaggio del mouse */
-    transform: translateY(-2px);               /* Micro-elevazione verso l'alto */
+.form-unstyled,
+.add-to-cart-form, 
+.review-form-card form, 
+.checkout-form-card form,
+.cart-actions-group form, 
+.cart-update-form, 
+.cart-remove-form,
+.delete-review-form, 
+.user-review .review-actions form,
+.admin-table form, 
+.cart-table form, 
+.action-form, 
+.inline-form, 
+td form {
+    display: inline-block;                     /* Dispone il form in linea rispettando il layout circostante */
+    width: 100%;                               /* Utilizza tutto lo spazio fornito dal contenitore padre */
+    max-width: none;                           /* Rimuove eventuali vincoli di larghezza massima */
+    margin: 0;                                 /* Azzera i margini esterni */
+    padding: 0;                                /* Azzera la spaziatura interna */
+    background: transparent;                   /* Sfondo trasparente per ereditare il colore di sfondo padre */
+    border-radius: 0;                          /* Rimuove l'arrotondamento dei bordi predefinito */
+    box-shadow: none;                          /* Rimuove ombreggiature applicate ai form tradizionali */
 }
 
 /* --------------------------------------------------------------------------
-   STILI DI BASE PER I MODULI (FORMS)
+   6. STILI DI BASE PER I MODULI (FORMS)
    -------------------------------------------------------------------------- */
 /* Gruppo contenitore per campo e relativa etichetta */
 .form-group {
@@ -428,7 +435,38 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   MESSAGGI DI NOTIFICA (ALERTS)
+   STILI DI BASE PER I CAMPI DEI MODULI (INPUT, TEXTAREA, SELECT)
+   --------------------------------------------------------------------------
+   Normalizzazione stilistica universale per tutti gli elementi di inserimento
+   dati (campi di testo, aree multilinea e menu a tendina) all'interno dei form.
+   -------------------------------------------------------------------------- */
+
+/* Campi di testo, textarea e select standard */
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;                               /* Occupazione completa della larghezza del contenitore */
+    padding: 11px 14px;                        /* Spaziatura interna confortevole per la digitazione e lettura */
+    border: 1px solid var(--border-color);     /* Bordo discreto basato sulle variabili Custom Properties */
+    border-radius: 8px;                        /* Angoli leggermente arrotondati in linea con la UI */
+    background: var(--bg-input);               /* Sfondo scuro dedicato per garantire stacco visivo */
+    color: var(--text-light);                  /* Colore principale del testo digitato ad alta visibilità */
+    font-family: var(--font-body);             /* Famiglia di font standard per la lettura */
+    font-size: 14px;                           /* Dimensione uniforme del carattere */
+    outline: none;                             /* Rimuove l'outline di focus predefinito del browser */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease; /* Transizione fluida per lo stato di focus */
+}
+
+/* Stato di focus unificato durante l'interazione dell'utente */
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: var(--primary-purple);      /* Il bordo assume il colore viola primario */
+    box-shadow: 0 0 0 3px rgba(155, 81, 224, 0.2); /* Anello luminoso esterno di evidenziazione */
+}
+
+/* --------------------------------------------------------------------------
+   7. MESSAGGI DI NOTIFICA (ALERTS)
    -------------------------------------------------------------------------- */
 /* Stile base per la scatola dei messaggi di avviso */
 .alert {
@@ -453,7 +491,7 @@ img {
 }
 
 /* --------------------------------------------------------------------------
-   NOTIFICHE FLOATING (TOASTS)
+   8. NOTIFICHE FLOATING (TOASTS)
    -------------------------------------------------------------------------- */
 /* Contenitore base del popup Toast visibile in basso a destra */
 .toast {
@@ -495,7 +533,7 @@ img {
 }
 
 /* ==========================================================================
-   6. LAYOUT: FOOTER GLOBALE
+   9. LAYOUT: FOOTER GLOBALE
    ==========================================================================
    Piè di pagina dell'applicazione contenente crediti, copyright e link utente.
    ========================================================================== */

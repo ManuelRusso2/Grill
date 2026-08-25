@@ -1,8 +1,10 @@
 <%-- Direttive di pagina: definizione del tipo di contenuto e della codifica dei caratteri --%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
-<%-- Inclusione delle librerie di tag JSTL Core (gestione flusso) e Functions (manipolazione stringhe) --%>
+<%-- Importazione della libreria JSTL Core per il controllo di flusso, cicli e condizioni --%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<%-- Importazione della libreria JSTL Functions per la manipolazione di stringhe e collezioni --%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <%-- Estrazione dell'URI corrente della richiesta per determinare la pagina attiva --%>
