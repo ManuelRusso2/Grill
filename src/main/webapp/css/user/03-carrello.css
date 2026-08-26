@@ -8,15 +8,20 @@
 /* --------------------------------------------------------------------------
    5.1 TABELLA CARRELLO & PRODOTTI
    -------------------------------------------------------------------------- */
+/* Wrapper responsive per contenere la tabella carrello */
+.cart-table-wrapper {
+    width: 100%;
+    margin-bottom: 30px;
+    overflow-x: auto;
+    border-radius: 8px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
 /* Tabella principale contenente i prodotti inseriti nel carrello */
 .cart-table {
     width: 100%;                               /* Occupazione completa della larghezza disponibile */
-    margin-bottom: 30px;                       /* Distacco dal blocco riepilogo sottostante */
-    overflow: hidden;                          /* Previene la fuoriuscita di contenuti e mantiene il border-radius */
     border-collapse: collapse;                 /* Unifica i bordi delle celle della tabella */
-    border-radius: 8px;                        /* Angoli arrotondati della struttura tabella */
     background-color: var(--bg-card);          /* Sfondo scuro della scheda cart */
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);/* Ombreggiatura profonda per stacco visivo */
 }
 
 /* Stili comuni per intestazioni e celle della tabella */
@@ -25,11 +30,12 @@
     padding: 16px 20px;                        /* Spaziatura interna per un'ottima leggibilità */
     border-bottom: 1px solid var(--border-color); /* Separatore orizzontale tra le righe */
     text-align: left;                          /* Allineamento a sinistra del testo di default */
+    vertical-align: middle;                    /* Centratura verticale dei contenuti */
 }
 
 /* Intestazione della tabella carrello */
 .cart-table th {
-    background-color: rgba(0, 0, 0, 0.2);      /* Sfondo leggermente inscurito per la barra di intestazione */
+    background-color: rgba(0, 0, 0, 0.25);     /* Sfondo inscurito per la barra di intestazione */
     color: var(--text-gray);                   /* Colore del testo secondario */
     font-size: 13px;                           /* Dimensione carattere contenuta */
     letter-spacing: 0.5px;                     /* Spaziatura caratteri per leggibilità */
@@ -45,6 +51,8 @@
 .cart-product-title {
     color: var(--text-light);                  /* Testo ad alto contrasto */
     font-weight: 600;                          /* Testo semi-grassetto */
+    text-decoration: none;
+    transition: color 0.2s ease;
 }
 
 /* Hover sul titolo prodotto (se formattato come link) */
@@ -59,141 +67,101 @@
     font-size: 12px;                           /* Dimensione contenuta */
     font-weight: 600;                          /* Semi-grassetto per chiarezza */
     margin-top: 4px;                           /* Distacco verticale dal titolo */
+    text-transform: uppercase;
 }
 
 /* --------------------------------------------------------------------------
    5.2 AGGIORNAMENTO QUANTITÀ CARRELLO
    -------------------------------------------------------------------------- */
-/* Form per la modifica rapida delle quantità nel carrello */
-.cart-update-form {
+/* Form inline per la modifica e l'aggiornamento rapido delle quantità */
+.cart-table td form {
     display: inline-flex;                      /* Flexbox in linea per affiancare input e bottone */
     align-items: center;                       /* Centratura verticale */
     gap: 8px;                                  /* Spazio tra il campo numerico e il bottone aggiorna */
 }
 
-/* Campo input numerico quantità */
+/* Campo input numerico quantità perfettamente integrato nel tema scuro */
+.cart-table .input-qty,
 .cart-update-form .input-qty {
-    width: 60px;                               /* Larghezza compatta adatta a poche cifre */
-    padding: 6px 8px;                          /* Spaziatura interna ridotta */
-    border: 1px solid var(--border-color);     /* Bordo neutro di default */
-    border-radius: 4px;                        /* Angoli arrotondati */
-    background-color: var(--bg-input);          /* Sfondo scuro per il campo di digitazione */
-    color: var(--text-light);                  /* Testo numerico chiaro */
+    width: 65px;                               /* Larghezza compatta per numeri */
+    padding: 8px 10px;                         /* Spaziatura interna */
+    border: 1px solid var(--border-color);     /* Bordo neutro del tema */
+    border-radius: 6px;                        /* Angoli arrotondati */
+    background-color: var(--bg-input);         /* Sfondo scuro del campo input */
+    color: var(--text-light);                  /* Testo chiaro */
+    font-family: var(--font-body);
     font-size: 14px;                           /* Dimensione del testo */
-    text-align: center;                        /* Numero centrato nel campo */
-    outline: none;                             /* Rimuove l'outline predefinito */
-    transition: border-color 0.2s ease;        /* Transizione fluida sullo stato di focus */
+    text-align: center;                        /* Numero centrato */
+    outline: none;                             /* Rimuove l'outline nativo del browser */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 /* Evidenziazione al focus del campo quantità */
+.cart-table .input-qty:focus,
 .cart-update-form .input-qty:focus {
     border-color: var(--primary-purple);       /* Il bordo passa al viola principale di tema */
-}
-
-/* Pulsante Aggiorna Quantità */
-main .cart-update-form button,
-main .cart-update-form .btn-update,
-main .cart-table .cart-update-form button {
-    display: inline-flex;                      /* Layout flex in linea */
-    align-items: center;                       /* Centratura verticale dell'icona/testo */
-    justify-content: center;                   /* Centratura orizzontale */
-    padding: 6px 12px;                         /* Spaziatura interna compatta */
-    border: 1px solid var(--primary-purple);   /* Bordo viola ben definito */
-    border-radius: 4px;                        /* Angoli arrotondati */
-    background-color: rgba(138, 43, 226, 0.2); /* Sfondo viola traslucido */
-    color: #ffffff;                            /* Garantisce il testo bianco senza forzature */
-    font-family: var(--font-headings);         /* Font dei titoli/pulsanti */
-    font-size: 12px;                           /* Dimensione testo contenuta */
-    font-weight: 700;                          /* Grassetto marcato */
-    line-height: 1;                            /* Line-height unitario per un'altezza precisa */
-    text-transform: uppercase;                 /* Maiuscolo */
-    letter-spacing: 0.5px;                     /* Spaziatura dei caratteri */
-    cursor: pointer;                           /* Puntatore a manina */
-    white-space: nowrap;                       /* Impedisce il riavvolgimento del testo del pulsante */
-    transition: all 0.2s ease;                /* Transizione fluida degli stati */
-}
-
-/* Feedback al passaggio del mouse sul pulsante aggiorna */
-main .cart-update-form button:hover,
-main .cart-update-form .btn-update:hover,
-main .cart-table .cart-update-form button:hover {
-    background-color: var(--primary-purple);  /* Sfondo passa al viola pieno */
-    color: #ffffff;                            /* Mantiene il testo bianco ad alto contrasto */
-    box-shadow: 0 0 10px rgba(138, 43, 226, 0.5); /* Bagliore violaceo attorno al pulsante */
-    transform: translateY(-1px);               /* Effetto di leggero sollevamento */
+    box-shadow: 0 0 0 3px rgba(155, 81, 224, 0.2); /* Anello di focus violaceo */
 }
 
 /* --------------------------------------------------------------------------
-   5.3 RIEPILOGO CARRELLO & AZIONI GLOBALI
+   5.3 RIEPILOGO CARRELLO & AZIONI GLOBALI (ALLINEAMENTO A DESTRA)
    -------------------------------------------------------------------------- */
-/* Contenitore della scheda riepilogo carrello e totale */
+/* Contenitore principale del riquadro riepilogo totale e pulsanti d'azione */
 .cart-summary {
-    display: flex;                             /* Disposizione flessibile */
-    flex-direction: column;                    /* Incolonna i contenuti in verticale */
-    align-items: flex-end;                     /* Allinea tutto il contenuto sul margine destro */
-    gap: 20px;                                 /* Spaziatura costante tra titolo, totale e bottoni */
-    max-width: 100%;                           /* Adattamento responsive alla larghezza totale */
-    margin-top: 30px;                          /* Distacco dalla tabella dei prodotti */
-    padding: 30px;                             /* Spaziatura interna della scheda */
-    border: 1px solid var(--border-color);     /* Bordo perimetrale basato sul tema */
-    border-radius: 8px;                        /* Angoli arrotondati */
-    background-color: var(--bg-card);          /* Sfondo della scheda riepilogo */
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);/* Ombreggiatura profonda */
+    display: flex;                             /* Attiva il layout flessibile */
+    flex-direction: column;                    /* Dispone verticalmente il totale e la barra dei pulsanti */
+    align-items: flex-end;                     /* Allinea tutti i contenuti rigorosamente sul margine destro */
+    gap: 20px;                                 /* Spaziatura verticale costante tra blocco totale e pulsanti */
+    width: 100%;                               /* Occupazione completa della larghezza disponibile */
+    margin-top: 30px;                          /* Distacco verticale dalla tabella prodotti soprastante */
+    padding: 30px;                             /* Spaziatura interna per dare respiro alla scheda */
+    border: 1px solid var(--border-color);     /* Bordo sottile di delimitazione basato sul tema dark */
+    border-radius: 8px;                        /* Arrotondamento degli angoli del contenitore */
+    background-color: var(--bg-card);          /* Sfondo scuro coordinato con le schede del sito */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);/* Ombreggiatura profonda per stacco visivo */
 }
 
-/* Titolo ed etichetta del totale */
+/* Etichetta di testo dell'importo totale ("Totale Ordine:") */
 .cart-summary h2 {
-    margin: 0;                                 /* Azzera i margini predefiniti */
-    color: var(--text-light);                  /* Testo ad alta visibilità */
-    font-size: 24px;                           /* Dimensione estesa */
-    font-style: normal;                        /* Testo non inclinato */
-    font-weight: 800;                          /* Extra bold */
-    text-align: right;                         /* Allineamento a destra */
-    text-transform: none;                      /* Mantiene il casing originale del testo */
+    margin: 0;                                 /* Elimina i margini verticali predefiniti del tag H2 */
+    color: var(--text-light);                  /* Testo chiaro ad alto contrasto */
+    font-size: 24px;                           /* Dimensione estesa per evidenziare il valore */
+    font-weight: 800;                          /* Carattere extra-bold per massima leggibilità */
+    text-align: right;                         /* Forza l'allineamento a destra del testo */
 }
 
-/* Importo effettivo in evidenza all'interno del titolo */
+/* Valore numerico effettivo della somma in Euro */
 .cart-summary h2 span {
-    margin-left: 10px;                         /* Spazio dalla label al prezzo */
-    color: var(--primary-purple);              /* Importo evidenziato con il viola di brand */
-    font-size: 30px;                           /* Dimensione notevolmente aumentata per grande impatto */
+    margin-left: 10px;                         /* Spazio orizzontale tra l'etichetta e la cifra numerica */
+    color: var(--primary-purple);              /* Evidenzia il prezzo finale con il colore viola di brand */
+    font-size: 30px;                           /* Dimensione maggiorata per forte impatto visivo */
 }
 
-/* Gruppo contenitore delle azioni globali sul carrello (Svuota / Procedi) */
+/* Contenitore orizzontale delle azioni d'acquisto (Svuota / Checkout) affiancate sulla destra */
 .cart-actions-group {
-    display: flex;                             /* Layout in linea flessibile */
-    flex-wrap: wrap;                           /* Consente l'incolonnamento su dispositivi stretti */
-    align-items: center;                       /* Centratura verticale degli elementi */
-    justify-content: flex-end;                 /* Allineamento sulla destra */
-    gap: 15px;                                 /* Spaziatura tra i pulsanti di azione */
-    width: 100%;                               /* Occupazione piena della larghezza */
+    display: flex !important;                  /* Forza la disposizione flessibile in riga */
+    flex-direction: row !important;            /* Dispone i pulsanti uno accanto all'altro in orizzontale */
+    justify-content: flex-end !important;      /* Allinea e spinge tutti i pulsanti sul lato destro */
+    align-items: center !important;            /* Centratura verticale tra pulsanti di altezze diverse */
+    gap: 15px !important;                      /* Spaziatura orizzontale costante tra i due pulsanti */
+    width: 100% !important;                    /* Occupazione piena della larghezza del contenitore */
+    padding-top: 20px;                         /* Spaziatura interna superiore rispetto al totale */
+    border-top: 1px solid var(--border-color); /* Linea divisoria orizzontale di separazione */
 }
 
-/* Pulsante Svuota Carrello */
-.cart-summary .btn-empty-cart {
-    display: inline-flex;                      /* Flexbox in linea */
-    align-items: center;                       /* Centratura verticale */
-    justify-content: center;                   /* Centratura orizzontale */
-    width: auto;                               /* Adatta la larghezza al testo interno */
-    padding: 14px 20px;                        /* Spaziatura interna */
-    border: 1px solid #ff4a4a;                 /* Bordo rosso avviso */
-    border-radius: 4px;                        /* Angoli arrotondati */
-    background-color: rgba(255, 74, 74, 0.15); /* Sfondo rosso trasparente */
-    color: #ff4a4a;                            /* Testo rosso */
-    font-family: var(--font-headings);         /* Font dei titoli */
-    font-size: 13px;                           /* Dimensione del font */
-    font-weight: 800;                          /* Extra bold */
-    line-height: 1;                            /* Line-height unitario */
-    text-transform: uppercase;                 /* Maiuscolo */
-    cursor: pointer;                           /* Puntatore a manina */
-    transition: all 0.2s ease;                /* Transizione fluida */
+/* Annulla i comportamenti a blocco dei form per mantenere il pulsante in linea */
+.cart-actions-group form {
+    display: inline-flex !important;           /* Impedisce al form di andare a capo e lo mantiene in linea */
+    margin: 0 !important;                      /* Azzera i margini esterni del modulo form */
+    width: auto !important;                    /* Impedisce al form di espandersi al 100% della larghezza */
 }
 
-/* Hover sul pulsante svuota carrello */
-.cart-summary .btn-empty-cart:hover {
-    background-color: #ff4a4a;                 /* Sfondo passa al rosso pieno */
-    color: #ffffff;                            /* Testo diventa bianco */
-    transform: translateY(-2px);               /* Effetto di elevazione */
+/* Mantiene le dimensioni naturali e il testo su singola riga per tutti i bottoni del gruppo */
+.cart-actions-group a,
+.cart-actions-group button {
+    width: auto !important;                    /* Il pulsante si adatta rigorosamente al proprio testo */
+    margin: 0 !important;                      /* Elimina i margini esterni concorrenti */
+    white-space: nowrap !important;            /* Previene l'andata a capo del testo all'interno del bottone */
 }
 
 /* --------------------------------------------------------------------------
@@ -202,9 +170,16 @@ main .cart-table .cart-update-form button:hover {
 /* Griglia principale a due colonne per la pagina checkout */
 .checkout-grid {
     display: grid;                             /* Layout a griglia */
-    grid-template-columns: 1fr 1.2fr;          /* Colonna riepilogo e colonna form con proporzioni 1 a 1.2 */
+    grid-template-columns: 1fr 1.2fr;          /* Colonna riepilogo e colonna form */
     gap: 30px;                                 /* Spaziatura tra le due sezioni */
-    align-items: start;                        /* Allinea i contenitori alla parte superiore della griglia */
+    align-items: start;                        /* Allinea i contenitori alla parte superiore */
+}
+
+/* Responsiveness griglia checkout su schermi medio-piccoli */
+@media (max-width: 900px) {
+    .checkout-grid {
+        grid-template-columns: 1fr;            /* Incolonna riepilogo e form su tablet/mobile */
+    }
 }
 
 /* Schede riepilogo e form nel checkout */
@@ -252,19 +227,6 @@ main .cart-table .cart-update-form button:hover {
     font-weight: 800;                          /* Extra bold */
 }
 
-/* Menu a tendina per select generici nel checkout */
-.checkout-form-card select {
-    width: 100%;                               /* Larghezza piena al 100% */
-    padding: 12px;                             /* Spaziatura interna */
-    border: 1px solid var(--border-color);     /* Bordo neutro */
-    border-radius: 4px;                        /* Angoli arrotondati */
-    background-color: var(--bg-input);          /* Sfondo scuro dei campi */
-    color: var(--text-light);                  /* Testo chiaro */
-    font-family: inherit;                      /* Eredita il font della pagina */
-    font-size: 14px;                           /* Dimensione carattere */
-    transition: border-color 0.3s;            /* Transizione del bordo */
-}
-
 /* --------------------------------------------------------------------------
    5.5 METODI DI PAGAMENTO & SELEZIONE
    -------------------------------------------------------------------------- */
@@ -293,18 +255,18 @@ main .cart-table .cart-update-form button:hover {
     padding: 20px;                             /* Spaziatura interna */
     border: 2px solid var(--border-color);     /* Bordo marcato di default */
     border-radius: 8px;                        /* Angoli arrotondati */
-    background: var(--bg-input);              /* Sfondo della scheda opzione */
+    background: var(--bg-input);               /* Sfondo della scheda opzione */
     color: var(--text-gray);                   /* Testo secondario in stato inattivo */
     font-weight: 700;                          /* Grassetto */
     text-align: center;                        /* Testo centrato */
     cursor: pointer;                           /* Interattività a manina */
-    transition: all 0.3s ease;                /* Transizione fluida di tutti gli stati visivi */
+    transition: all 0.3s ease;                 /* Transizione fluida di tutti gli stati visivi */
     user-select: none;                         /* Disabilita la selezione del testo al click */
 }
 
 /* Icona grafica rappresentativa del metodo di pagamento */
 .payment-option .icon {
-    font-size: 24px;                           /* Dimensione dell'icona/emoji o carattere speciale */
+    font-size: 24px;                           /* Dimensione dell'icona/emoji */
 }
 
 /* Feedback al sorvolo della scheda pagamento */
@@ -315,7 +277,7 @@ main .cart-table .cart-update-form button:hover {
 /* Stato dell'opzione di pagamento SELEZIONATA / ATTIVA */
 .payment-option.active {
     border-color: var(--primary-purple);       /* Bordo passa al colore viola principale */
-    background: rgba(155, 81, 224, 0.1);      /* Sfondo con velatura viola traslucida */
+    background: rgba(155, 81, 224, 0.1);       /* Sfondo con velatura viola traslucida */
     color: var(--text-light);                  /* Testo evidenziato in chiaro */
     box-shadow: 0 0 15px rgba(155, 81, 224, 0.2); /* Bagliore violaceo attorno alla scheda selezionata */
 }
@@ -338,23 +300,6 @@ main .cart-table .cart-update-form button:hover {
     color: var(--accent-yellow);               /* Titolo in giallo d'accento */
     font-size: 16px;                           /* Dimensione del titolo */
     text-transform: uppercase;                 /* Maiuscolo */
-}
-
-/* Riga multi-campo per form (es. Scadenza e CVV) */
-.form-row {
-    display: flex;                             /* Disposizione affiancata dei campi */
-    gap: 15px;                                 /* Spaziatura tra i campi nella riga */
-}
-
-/* Espansione equa per ciascun gruppo all'interno della riga */
-.form-row .form-group {
-    flex: 1;                                   /* Ogni campo occupa una porzione uguale di spazio */
-}
-
-/* Pulsante finale per confermare l'ordine nel checkout */
-.btn-checkout-submit {
-    width: 100%;                               /* Occupazione a tutta larghezza per massima evidenza */
-    margin-top: 25px;                          /* Spazio superiore dai form di carta/dati */
 }
 
 /* Messaggio di errore dinamico generato via JS (Checkout/Auth) */
@@ -408,7 +353,7 @@ main .cart-table .cart-update-form button:hover {
     margin-bottom: 20px;                       /* Distanza dal titolo di conferma */
     border: 1px solid rgba(39, 174, 96, 0.4);  /* Bordo verde trasparente */
     border-radius: 50%;                        /* Forma perfettamente circolare */
-    background: rgba(39, 174, 96, 0.15);        /* Sfondo con velatura verde di successo */
+    background: rgba(39, 174, 96, 0.15);       /* Sfondo con velatura verde di successo */
 }
 
 /* Simbolo di spunta (Checkmark) verde */

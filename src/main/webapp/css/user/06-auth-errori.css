@@ -34,7 +34,7 @@
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);/* Ombreggiatura profonda d'impatto */
 }
 
-/* Codice di errore numerico principale (es. 404, 500) */
+/* Codice di errore numerico principale (es. 404, 500) o icona di alert */
 .error-card .error-code {
     margin-bottom: 20px;                       /* Distanza dal titolo dell'errore */
     color: var(--accent-yellow);               /* Colore giallo fluo d'accento per massimo risalto */
@@ -48,6 +48,7 @@
     margin-bottom: 20px;                       /* Spazio inferiore dal paragrafo descrittivo */
     color: var(--text-light);                  /* Testo chiaro ad alto contrasto */
     font-size: 24px;                           /* Dimensione del titolo */
+    font-weight: 800;                          /* Grassetto marcato */
 }
 
 /* Descrizione dettagliata dell'errore per l'utente */
@@ -70,10 +71,8 @@
 
 /* Stile specifico per i pulsanti contenuti nella scheda d'errore */
 .error-actions .btn {
-    display: inline-block;                     /* Blocco in linea */
-    width: auto;                               /* Larghezza adattata al contenuto */
-    min-width: 180px;                          /* Larghezza minima garantita per uniformità dei pulsanti */
-    margin-top: 0;                             /* Azzera eventuali margini superiori erediti */
+    min-width: 180px;                          /* Larghezza minima garantita per uniformità visiva */
+    margin-top: 0;                             /* Azzera eventuali margini superiori ereditati */
     text-align: center;                        /* Centratura del testo all'interno del pulsante */
 }
 
@@ -87,9 +86,14 @@
 /* Formattazione del codice o testo formattato dei log di errore */
 .error-details pre {
     margin-top: 10px;                          /* Distanza dal titolo del dettaglio */
+    padding: 15px;                             /* Spaziatura interna */
     border: 1px solid var(--border-color);     /* Bordo perimetrale */
+    border-radius: 6px;                        /* Angoli arrotondati */
     background-color: var(--bg-input);          /* Sfondo scuro identico agli input di testo */
     color: #ff4a4a;                            /* Testo rosso avviso per evidenziare l'errore tecnico */
+    font-family: monospace;                    /* Font a spaziatura fissa */
+    font-size: 13px;                           /* Dimensione ridotta */
+    white-space: pre-wrap;                     /* Permette l'andata a capo automatica delle righe lunghe */
 }
 
 /* --------------------------------------------------------------------------
@@ -174,6 +178,7 @@
     border-bottom: 1px solid var(--border-color); /* Linea divisoria orizzontale */
     color: var(--accent-yellow);               /* Titolo in evidenza con il giallo d'accento */
     font-size: 16px;                           /* Dimensione titolo sezione */
+    font-weight: 700;                          /* Grassetto */
     text-transform: uppercase;                 /* Maiuscolo */
 }
 
@@ -216,7 +221,7 @@
     display: flex;                             /* Layout flessibile */
     flex-wrap: wrap;                           /* Consente incolonnamento su schermi ridotti */
     align-items: center;                       /* Centratura verticale */
-    justify-content: flex-end;                 /* Allinea i pulsanti sul margine destro */
+    justify-content: center;                   /* Centra i pulsanti d'azione */
     gap: 15px;                                 /* Spaziatura tra i pulsanti d'azione */
     width: 100%;                               /* Occupazione piena della larghezza */
 }
@@ -236,8 +241,11 @@
 .auth-title {
     margin-top: 40px;                          /* Distacco superiore dall'header */
     margin-bottom: 24px;                       /* Spazio inferiore dalla scheda di auth */
+    color: var(--text-light);                  /* Testo chiaro */
     font-size: 28px;                           /* Dimensione marcata */
+    font-weight: 800;                          /* Extra bold */
     text-align: center;                        /* Centratura del titolo nella pagina */
+    text-transform: uppercase;                 /* Maiuscolo */
 }
 
 /* Scheda contenitore del form di autenticazione */
@@ -258,8 +266,20 @@
     margin: 0 auto 20px auto;                  /* Centratura orizzontale e spaziatura inferiore dal form */
 }
 
-/* Pulsante principale di invio del modulo di autenticazione */
-.btn-submit {
-    width: 100%;                               /* Occupazione a tutta larghezza del modulo */
-    margin-top: 10px;                          /* Spazio superiore dai campi di input */
+/* Footer informativo per link di passaggio tra Login e Registrazione */
+.auth-footer-text {
+    margin-top: 20px;                          /* Spazio superiore dal pulsante */
+    color: var(--text-gray);                   /* Testo grigio */
+    font-size: 14px;                           /* Dimensione contenuta */
+    text-align: center;                        /* Centratura del testo */
+}
+
+.auth-footer-text a {
+    color: var(--accent-yellow);               /* Link in giallo d'accento */
+    font-weight: 600;                          /* Semi-grassetto */
+    text-decoration: underline;               /* Sottolineato */
+}
+
+.auth-footer-text a:hover {
+    color: var(--text-light);                  /* Passa al bianco durante l'hover */
 }

@@ -88,7 +88,11 @@
         <%-- Caso 2: Nessun prodotto attivo presente nella categoria o nel catalogo --%>
         <c:otherwise>
             <div class="empty-state">
-                <p>Al momento non ci sono prodotti disponibili nel catalogo.</p>
+                <div class="empty-state-icon">
+                    <img src="${pageContext.request.contextPath}/images/icons/search.svg" alt="Catalogo vuoto" onerror="this.style.display='none';" />
+                </div>
+                <h2>Nessun Prodotto Trovato</h2>
+                <p>Al momento non ci sono prodotti disponibili nel catalogo o nella categoria selezionata.</p>
             </div>
         </c:otherwise>
     </c:choose>

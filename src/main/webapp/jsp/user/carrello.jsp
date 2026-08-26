@@ -22,14 +22,14 @@
     <%-- Messaggio di successo (es. prodotto aggiornato o rimosso correttamente) --%>
     <c:if test="${not empty successMessage}">
         <div class="alert alert-success">
-            <c:out value="${successMessage}" />
+            ✓ <c:out value="${successMessage}" />
         </div>
     </c:if>
 
     <%-- Messaggio di errore (es. quantità richiesta non disponibile a magazzino) --%>
     <c:if test="${not empty errorMessage}">
         <div class="alert alert-danger">
-            <c:out value="${errorMessage}" />
+            ✗ <c:out value="${errorMessage}" />
         </div>
     </c:if>
 
@@ -42,71 +42,73 @@
             <c:set var="totaleCarrello" value="0" scope="page" />
 
             <%-- Tabella riepilogativa degli articoli presenti nel carrello --%>
-            <table class="cart-table">
-                <thead>
-                    <tr>
-                        <th>Prodotto</th>
-                        <th>Prezzo Unitario</th>
-                        <th>Quantità</th>
-                        <th>Subtotale</th>
-                        <th>Azioni</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <%-- Iterazione sulla mappa contenente le coppie <ProdottoBean, Integer (Quantità)> --%>
-                    <c:forEach var="entry" items="${prodottiCarrello}">
-                        <c:set var="prodotto" value="${entry.key}" />
-                        <c:set var="quantita" value="${entry.value}" />
-                        
-                        <%-- Calcolo del subtotale per la singola riga (prezzo unitario * quantità) --%>
-                        <c:set var="subtotale" value="${prodotto.costo * quantita}" />
-                        
-                        <%-- Accumulo progressivo per il calcolo del totale complessivo dell'ordine --%>
-                        <c:set var="totaleCarrello" value="${totaleCarrello + subtotale}" />
-
+            <div class="cart-table-wrapper">
+                <table class="cart-table">
+                    <thead>
                         <tr>
-                            <%-- Colonna Nome Prodotto e Taglia Selezionata --%>
-                            <td>
-                                <a href="${pageContext.request.contextPath}/DettaglioProdottoServlet?id=${prodotto.idProdotto}" class="cart-product-title">
-                                    <c:out value="${prodotto.nome}" />
-                                </a>
-                                <%-- Mostra la taglia scelta sotto il titolo, se presente --%>
-                                <c:if test="${not empty prodotto.tagliaSelezionata}">
-                                    <span class="cart-product-size">Taglia: <c:out value="${prodotto.tagliaSelezionata}" /></span>
-                                </c:if>
-                            </td>
-
-                            <%-- Colonna Prezzo Unitario formattato in Euro (€) --%>
-                            <td>
-                                <fmt:formatNumber value="${prodotto.costo}" type="currency" currencySymbol="€" />
-                            </td>
-
-                            <%-- Colonna Modifica Quantità --%>
-							<td>
-							    <%-- Form per l'invio dell'aggiornamento della quantità alla CarrelloServlet --%>
-							    <form method="post" action="${pageContext.request.contextPath}/CarrelloServlet?action=update&idProdotto=${prodotto.idProdotto}&taglia=${prodotto.tagliaSelezionata}" class="form-unstyled">
-							        <input type="number" name="quantita" value="${quantita}" min="1" max="${prodotto.quantita}" class="input-qty" aria-label="Quantità">
-							        <button type="submit" class="btn-update">Aggiorna</button>
-							    </form>
-							</td>
-
-                            <%-- Colonna Subtotale di riga formattato in Euro (€) --%>
-                            <td>
-                                <fmt:formatNumber value="${subtotale}" type="currency" currencySymbol="€" />
-                            </td>
-
-                            <%-- Colonna Azioni (Rimozione del singolo articolo) --%>
-							<td>
-							    <form method="post" action="${pageContext.request.contextPath}/CarrelloServlet?action=remove&idProdotto=${prodotto.idProdotto}&taglia=${prodotto.tagliaSelezionata}" class="form-unstyled">
-							        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Rimuovere questo prodotto dal carrello?');">
-							            Rimuovi
-							        </button>
-							    </form>
-							</td>
+                            <th>Prodotto</th>
+                            <th>Prezzo Unitario</th>
+                            <th>Quantità</th>
+                            <th>Subtotale</th>
+                            <th>Azioni</th>
                         </tr>
-                    </c:forEach>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        <%-- Iterazione sulla mappa contenente le coppie <ProdottoBean, Integer (Quantità)> --%>
+                        <c:forEach var="entry" items="${prodottiCarrello}">
+                            <c:set var="prodotto" value="${entry.key}" />
+                            <c:set var="quantita" value="${entry.value}" />
+                            
+                            <%-- Calcolo del subtotale per la singola riga (prezzo unitario * quantità) --%>
+                            <c:set var="subtotale" value="${prodotto.costo * quantita}" />
+                            
+                            <%-- Accumulo progressivo per il calcolo del totale complessivo dell'ordine --%>
+                            <c:set var="totaleCarrello" value="${totaleCarrello + subtotale}" />
+
+                            <tr>
+                                <%-- Colonna Nome Prodotto e Taglia Selezionata --%>
+                                <td>
+                                    <a href="${pageContext.request.contextPath}/DettaglioProdottoServlet?id=${prodotto.idProdotto}" class="cart-product-title">
+                                        <c:out value="${prodotto.nome}" />
+                                    </a>
+                                    <%-- Mostra la taglia scelta sotto il titolo, se presente --%>
+                                    <c:if test="${not empty prodotto.tagliaSelezionata}">
+                                        <span class="cart-product-size">Taglia: <c:out value="${prodotto.tagliaSelezionata}" /></span>
+                                    </c:if>
+                                </td>
+
+                                <%-- Colonna Prezzo Unitario formattato in Euro (€) --%>
+                                <td>
+                                    <fmt:formatNumber value="${prodotto.costo}" type="currency" currencySymbol="€" />
+                                </td>
+
+                                <%-- Colonna Modifica Quantità --%>
+                                <td>
+                                    <%-- Form per l'invio dell'aggiornamento della quantità alla CarrelloServlet --%>
+                                    <form method="post" action="${pageContext.request.contextPath}/CarrelloServlet?action=update&idProdotto=${prodotto.idProdotto}&taglia=${prodotto.tagliaSelezionata}" class="form-unstyled">
+                                        <input type="number" name="quantita" value="${quantita}" min="1" max="${prodotto.quantita}" class="input-qty" aria-label="Quantità">
+                                        <button type="submit" class="btn btn-sm btn-outline-purple">Aggiorna</button>
+                                    </form>
+                                </td>
+
+                                <%-- Colonna Subtotale di riga formattato in Euro (€) --%>
+                                <td>
+                                    <fmt:formatNumber value="${subtotale}" type="currency" currencySymbol="€" />
+                                </td>
+
+                                <%-- Colonna Azioni (Rimozione del singolo articolo) --%>
+                                <td>
+                                    <form method="post" action="${pageContext.request.contextPath}/CarrelloServlet?action=remove&idProdotto=${prodotto.idProdotto}&taglia=${prodotto.tagliaSelezionata}" class="form-unstyled">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Rimuovere questo prodotto dal carrello?');">
+                                            Rimuovi
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+            </div>
 
             <%-- Riquadro di riepilogo del totale e azioni globali sul carrello --%>
             <div class="cart-summary">
@@ -119,11 +121,11 @@
                     </a>
 
                     <%-- Form per svuotare interamente il carrello con conferma JavaScript --%>
-					<form method="post" action="${pageContext.request.contextPath}/CarrelloServlet?action=empty" class="form-unstyled">
-					    <button type="submit" class="btn-empty-cart" onclick="return confirm('Sei sicuro di voler svuotare completamente il carrello?');">
-					        Svuota Carrello
-					    </button>
-					</form>
+                    <form method="post" action="${pageContext.request.contextPath}/CarrelloServlet?action=empty" class="form-unstyled">
+                        <button type="submit" class="btn btn-md btn-outline-danger" onclick="return confirm('Sei sicuro di voler svuotare completamente il carrello?');">
+                            Svuota Carrello
+                        </button>
+                    </form>
                 </div>
             </div>
         </c:when>

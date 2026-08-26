@@ -310,7 +310,7 @@ public class FatturaServlet extends HttpServlet {
         // G. PIÈ DI PAGINA (FOOTER)
         // -------------------------------------------------------------------------
         document.add(new Paragraph("Grazie per il vostro acquisto!").setTextAlignment(TextAlignment.CENTER));
-        document.add(new Paragraph("Grill - Progetto Java EE")
+        document.add(new Paragraph("2026 Grill. Tutti i diritti riservati.")
                 .setFontSize(9)
                 .setTextAlignment(TextAlignment.CENTER));
     }

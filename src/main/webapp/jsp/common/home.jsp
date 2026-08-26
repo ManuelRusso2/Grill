@@ -1,4 +1,8 @@
-<%-- Impostazione del tipo di contenuto della pagina e della codifica dei caratteri (UTF-8) --%>
+<%-- 
+    Home Page dell'e-commerce Grill.
+    Presenta la sezione Carousel Hero per la navigazione interattiva tra le Collezioni
+    e lo slider orizzontale dei prodotti in evidenza alimentato via AJAX/Fetch API.
+--%>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%-- Importazione della libreria JSTL Core per il controllo di flusso, cicli e condizioni --%>
@@ -13,34 +17,34 @@
 <%-- Inclusione del frammento statico per la barra di navigazione principale (menu / navbar) --%>
 <%@ include file="/jsp/common/menu.jspf" %>
 
-<%-- Contenitore principale della pagina Home --%>
+<%-- Contenitore principale di layout della pagina Home --%>
 <main class="container">
 
-    <%-- ── SEZIONE 1: CAROUSEL DI COLLEZIONI ────────────────────────────────── --%>
+    <%-- ── SEZIONE 1: CAROUSEL HERO COLLEZIONI ────────────────────────────────── --%>
     <section class="carousel-section">
         <h2>LE NOSTRE COLLEZIONI</h2>
         
-        <%-- Struttura del carosello immagini --%>
+        <%-- Struttura contenitore del carosello immagini --%>
         <div class="carousel-container">
-            <%-- Pulsante di scorrimento verso sinistra --%>
+            <%-- Pulsante di scorrimento verso la diapositiva precedente --%>
             <button class="carousel-btn carousel-btn-prev" id="prevBtn" aria-label="Collezione precedente">&#10094;</button>
             
-            <%-- Wrapper e traccia dinamica in cui verranno inserite le immagini via JS --%>
+            <%-- Maschera di ritaglio e traccia dinamica in cui le slide vengono caricate via JS --%>
             <div class="carousel-wrapper">
                 <div class="carousel-track" id="carouselTrack">
-                    <%-- Elementi caricati dinamicamente da JavaScript --%>
+                    <%-- Slide generate dinamicamente dallo script JavaScript --%>
                 </div>
             </div>
             
-            <%-- Pulsante di scorrimento verso destra --%>
+            <%-- Pulsante di scorrimento verso la diapositiva successiva --%>
             <button class="carousel-btn carousel-btn-next" id="nextBtn" aria-label="Collezione successiva">&#10095;</button>
         </div>
 
-        <%-- Indicatori a pallino per identificare la slide corrente --%>
+        <%-- Contenitore per le barre/pallini indicatori di paginazione della slide attiva --%>
         <div class="carousel-indicators" id="carouselIndicators"></div>
     </section>
 
-    <%-- ── SEZIONE 2: PRODOTTI CASUALI SCORREVOLI ──────────────────────────── --%>
+    <%-- ── SEZIONE 2: PRODOTTI IN EVIDENZA SCORREVOLI ──────────────────────────── --%>
     <section class="products-scroll-section">
         <h2>Prodotti in Evidenza</h2>
         
@@ -49,10 +53,10 @@
             <%-- Pulsante per scorrere i prodotti a sinistra --%>
             <button class="scroll-btn scroll-btn-prev" id="scrollPrevBtn" aria-label="Prodotti precedenti">&#10094;</button>
             
-            <%-- Traccia dinamica popolata via AJAX con i prodotti in evidenza --%>
+            <%-- Traccia dinamica popolata via AJAX con le schede dei prodotti in evidenza --%>
             <div class="products-scroll-wrapper">
                 <div class="products-scroll-track" id="productsTrack">
-                    <%-- Card prodotti generate via Fetch API da JavaScript --%>
+                    <%-- Schede prodotto (Product Cards) generate via Fetch API --%>
                 </div>
             </div>
             
@@ -63,10 +67,10 @@
 
 </main>
 
-<%-- ── SCRIPT JS PER LOGICA CAROUSEL E CARICAMENTO PRODOTTI AJAX ────────────── --%>
+<%-- ── SCRIPT JS: LOGICA CAROUSEL E CARICAMENTO PRODOTTI AJAX ────────────── --%>
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-    // Recupero dinamico del percorso di contesto dell'applicazione Web (Context Path)
+    // Recupero del percorso di contesto dell'applicazione (Context Path)
     const contextPath = '${pageContext.request.contextPath}';
 
     <%-- ── FUNZIONI DI UTILITÀ PER SICUREZZA E FORMATTAZIONE ────────────────── --%>
@@ -105,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     <%-- ── LOGICA CAROUSEL COLLEZIONI ────────────────────────────────────────── --%>
     
-    // Lista di oggetti contenenti i nomi delle immagini e gli ID collezione associati
+    // Lista di oggetti contenenti le immagini e gli ID collezione associati
     const collections = [
         { img: 'Bloom.png', id: 8 },
         { img: 'Built Different.png', id: 7 },
@@ -124,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { img: 'Speed.png', id: 6 }
     ];
 
-    let currentSlide = 0; // Indice della slide attualmente attiva
+    let currentSlide = 0; // Indice della slide attiva
 
     /**
      * Inizializza la struttura del carosello inserendo le immagini e gli indicatori nel DOM.
@@ -137,7 +141,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (!track || !indicators) return;
 
-        // Generazione dinamica delle slide e dei pallini indicatori
+        // Generazione dinamica delle slide e degli indicatori
         collections.forEach((item, index) => {
             const slide = document.createElement('div');
             slide.className = 'carousel-slide';
@@ -158,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
             indicators.appendChild(indicator);
         });
 
-        // Event listener per la navigazione manuale tramite pulsanti
+        // Event listener per la navigazione manuale
         if (prevBtn) prevBtn.addEventListener('click', prevSlide);
         if (nextBtn) nextBtn.addEventListener('click', nextSlide);
 
@@ -177,7 +181,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const offset = -currentSlide * 100;
         track.style.transform = 'translateX(' + offset + '%)';
         
-        // Aggiorna la classe CSS attiva sui pallini indicatori
+        // Aggiorna lo stato visivo degli indicatori
         document.querySelectorAll('.indicator').forEach((indicator, index) => {
             indicator.classList.toggle('active', index === currentSlide);
         });
@@ -195,19 +199,19 @@ document.addEventListener('DOMContentLoaded', () => {
         updateCarousel();
     }
 
-    /** Naviga direttamente a uno specifico indice di slide */
+    /** Naviga direttamente a un indice specifico */
     function goToSlide(index) {
         currentSlide = index;
         updateCarousel();
     }
 
-    <%-- ── LOGICA SCROLL PRODOTTI IN EVIDENZA (AJAX) ────────────────────────── --%>
+    <%-- ── LOGICA SCROLL PRODOTTI IN EVIDENZA (AJAX FETCH) ─────────────────── --%>
     
     let currentProductScroll = 0;
     const CARD_WIDTH = 25;       // Larghezza percentuale della singola card
     const GAP = 1.6;             // Spaziatura percentuale tra le card
     const CARD_WITH_GAP = CARD_WIDTH + GAP;
-    let totalProducts = 0;       // Conteggio totale dei prodotti caricati
+    let totalProducts = 0;       // Conteggio totale prodotti
 
     /**
      * Richiede i prodotti in evidenza tramite chiamata REST API / Fetch asincrona.
@@ -219,15 +223,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 const productsTrack = document.getElementById('productsTrack');
                 if (!productsTrack) return;
 
-                // Gestione caso in cui non ci siano prodotti restituiti dall'API
+                // Gestione caso in cui non vi siano prodotti restituiti
                 if (!prodotti || prodotti.length === 0) {
-                    productsTrack.innerHTML = '<p class="no-featured-msg">Nessun prodotto in evidenza al momento.</p>';
+                    productsTrack.innerHTML = '<div class="empty-state"><p class="empty-table-msg">Nessun prodotto in evidenza al momento.</p></div>';
                     return;
                 }
 
                 totalProducts = prodotti.length;
                 
-                // Generazione del markup HTML per ogni card prodotto recuperata
+                // Generazione del markup HTML per ciascun prodotto
                 productsTrack.innerHTML = prodotti.map(p => {
                     const detailUrl = contextPath + '/DettaglioProdottoServlet?id=' + p.idProdotto;
                     const imgSrc = getImgSrc(p.immagine);
@@ -249,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     '</div>';
                 }).join('');
 
-                // Inizializza i controlli di scorrimento dopo aver popolato il DOM
+                // Inizializza i controlli di scorrimento dopo l'inserimento nel DOM
                 initProductScrollControls();
             })
             .catch(err => {

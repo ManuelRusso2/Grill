@@ -76,41 +76,9 @@
 }
 
 /* --------------------------------------------------------------------------
-   4.3 CAMPI DI INPUT (SELECT, TEXTAREA, INPUTS)
+   4.3 CAMPI DI INPUT (TEXTAREA E CONTROLLI SPECIFICI)
    -------------------------------------------------------------------------- */
-/* Formattazione uniforme dei controlli nei form recensione */
-.review-form-card select,
-.review-form-card textarea,
-.review-form-card .form-control,
-.review-edit-card select,
-.review-edit-card textarea,
-.form-edit-review select,
-.form-edit-review textarea {
-    width: 100%;                               /* Larghezza piena al 100% rispetto al contenitore */
-    padding: 12px;                             /* Spaziatura interna confortevole per la digitazione */
-    border: 1px solid var(--border-color);     /* Bordo neutro di default */
-    border-radius: 4px;                        /* Angoli arrotondati */
-    background-color: var(--bg-input);          /* Sfondo scuro per i campi di input */
-    color: var(--text-light);                  /* Testo digitato chiaro */
-    font-family: inherit;                      /* Eredita la tipografia della pagina */
-    font-size: 14px;                           /* Dimensione del testo */
-    transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Transizione fluida sullo stato di focus */
-}
-
-/* Evidenziazione visiva al focus sui campi form */
-.review-form-card select:focus,
-.review-form-card textarea:focus,
-.review-form-card .form-control:focus,
-.review-edit-card select:focus,
-.review-edit-card textarea:focus,
-.form-edit-review select:focus,
-.form-edit-review textarea:focus {
-    border-color: var(--primary-purple);       /* Bordo passa al colore viola primario */
-    box-shadow: 0 0 8px rgba(138, 43, 226, 0.3);/* Bagliore violaceo attorno al campo attivo */
-    outline: none;                             /* Rimuove l'outline predefinito del browser */
-}
-
-/* Area testo multilinea per il commento */
+/* Area testo multilinea per il commento (estende .form-control di global.css) */
 .review-form-card textarea,
 .review-edit-card textarea,
 .form-edit-review textarea {
@@ -142,68 +110,6 @@
     justify-content: flex-start;               /* Allineamento a sinistra */
     gap: 15px;                                 /* Distanza orizzontale tra invia e annulla */
     margin-top: 25px;                          /* Spazio superiore dai campi del form */
-}
-
-/* Pulsanti principali (Invia / Salva Recensione) */
-.btn-submit-review,
-.btn-submit-edit,
-.form-edit-review .btn-submit,
-.form-edit-review button[type="submit"] {
-    display: inline-flex;                      /* Flexbox in linea */
-    align-items: center;                       /* Centratura verticale */
-    justify-content: center;                   /* Centratura orizzontale */
-    width: auto;                               /* Larghezza adattata al contenuto */
-    padding: 12px 24px;                        /* Spaziatura interna */
-    border: 1px solid var(--primary-purple);   /* Bordo viola */
-    border-radius: 4px;                        /* Angoli arrotondati */
-    background-color: var(--primary-purple);  /* Sfondo viola principale */
-    color: #ffffff;                            /* Testo bianco ad alto contrasto */
-    font-family: var(--font-headings);         /* Font dei titoli */
-    font-size: 13px;                           /* Dimensione carattere */
-    font-weight: 700;                          /* Grassetto */
-    text-transform: uppercase;                 /* Maiuscolo */
-    letter-spacing: 0.5px;                     /* Spaziatura tra i caratteri */
-    cursor: pointer;                           /* Puntatore a manina */
-    transition: all 0.2s ease;                /* Transizione per stato hover */
-}
-
-/* Hover del pulsante primario */
-.btn-submit-review:hover,
-.btn-submit-edit:hover,
-.form-edit-review .btn-submit:hover,
-.form-edit-review button[type="submit"]:hover {
-    background-color: rgba(138, 43, 226, 0.85); /* Lieve schiarimento del viola */
-    box-shadow: 0 0 12px rgba(138, 43, 226, 0.5);/* Bagliore violaceo attorno al pulsante */
-    transform: translateY(-1px);               /* Effetto di sollevamento leggero */
-}
-
-/* Pulsanti secondari (Annulla Modifica) */
-.btn-cancel-edit,
-.form-edit-review .btn-cancel,
-.form-edit-review a.btn-cancel {
-    display: inline-flex;                      /* Flexbox in linea */
-    align-items: center;                       /* Centratura verticale */
-    justify-content: center;                   /* Centratura orizzontale */
-    padding: 12px 24px;                        /* Spaziatura interna */
-    border: 1px solid var(--border-color);     /* Bordo neutro */
-    border-radius: 4px;                        /* Angoli arrotondati */
-    background-color: transparent;             /* Sfondo trasparente */
-    color: var(--text-gray);                   /* Testo grigio */
-    font-family: var(--font-headings);         /* Font dei titoli */
-    font-size: 13px;                           /* Dimensione carattere */
-    font-weight: 700;                          /* Grassetto */
-    text-decoration: none;                     /* Rimuove la sottolineatura dal link */
-    text-transform: uppercase;                 /* Maiuscolo */
-    transition: all 0.2s ease;                /* Transizione fluida */
-}
-
-/* Hover del pulsante di annullamento */
-.btn-cancel-edit:hover,
-.form-edit-review .btn-cancel:hover,
-.form-edit-review a.btn-cancel:hover {
-    border-color: var(--text-light);          /* Il bordo diventa chiaro */
-    color: var(--text-light);                  /* Il testo passa al chiaro */
-    transform: translateY(-1px);               /* Effetto di sollevamento */
 }
 
 /* --------------------------------------------------------------------------
@@ -264,7 +170,7 @@
 
 /* Data di pubblicazione */
 .review-date {
-    margin-left: auto;                         /* Spinge la data sull'estrema destra */
+    margin-left: auto;                         /* Spigne la data sull'estrema destra */
     color: var(--text-gray);                   /* Testo grigio di supporto */
     font-size: 12px;                           /* Dimensione ridotta */
 }
@@ -290,33 +196,6 @@
     margin-top: 15px;                          /* Spazio dal testo della recensione */
     padding-top: 10px;                         /* Spaziatura interna superiore */
     border-top: 1px solid rgba(255, 255, 255, 0.05); /* Separatore sottile dal testo */
-}
-
-/* Pulsante Elimina Recensione (Stile Distruttivo/Rosso) */
-.btn-delete-review {
-    display: inline-flex;                      /* Flexbox in linea */
-    align-items: center;                       /* Centratura verticale */
-    justify-content: center;                   /* Centratura orizzontale */
-    width: auto;                               /* Larghezza automatica */
-    padding: 6px 12px;                         /* Spaziatura interna compatta */
-    border: 1px solid #ff4a4a;                 /* Bordo rosso d'allarme */
-    border-radius: 4px;                        /* Angoli arrotondati */
-    background-color: rgba(255, 74, 74, 0.15); /* Sfondo rosso trasparente */
-    color: #ff4a4a;                            /* Testo rosso */
-    font-family: var(--font-headings);         /* Font dei titoli */
-    font-size: 12px;                           /* Dimensione compatta */
-    font-weight: 700;                          /* Grassetto */
-    text-transform: uppercase;                 /* Maiuscolo */
-    cursor: pointer;                           /* Puntatore a manina */
-    transition: all 0.2s ease;                /* Transizione fluida */
-}
-
-/* Hover del pulsante elimina */
-.btn-delete-review:hover {
-    background-color: #ff4a4a;                 /* Sfondo rosso pieno */
-    color: #ffffff;                            /* Testo bianco */
-    box-shadow: 0 0 10px rgba(255, 74, 74, 0.4);/* Bagliore rosso attorno al pulsante */
-    transform: translateY(-1px);               /* Effetto di sollevamento */
 }
 
 /* Messaggi di stato o inviti all'azione (es. Login per recensire) */

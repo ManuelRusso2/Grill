@@ -28,7 +28,7 @@
     font-weight: 700;                          /* Grassetto marcato */
 }
 
-/* Contenitore verticale per le righe informativo del profilo */
+/* Contenitore verticale per le righe informative del profilo */
 .profile-details {
     display: flex;                             /* Disposizione flessibile */
     flex-direction: column;                    /* Incolonna le varie righe di dettaglio */
@@ -111,7 +111,7 @@
     letter-spacing: 2px;                       /* Spaziatura tra i simboli stella */
 }
 
-/* Barra delle azioni sulla recensione dell'utente (Modifica/Elimina) */
+/* Barra delle azioni sulla recensione dell'utente */
 .user-review .review-actions {
     display: flex;                             /* Disposizione flessibile affiancata */
     align-items: center;                       /* Centratura verticale */
@@ -119,42 +119,6 @@
     margin-top: 8px;                           /* Distacco dal testo della recensione */
     padding-top: 12px;                         /* Spaziatura interna superiore */
     border-top: 1px solid var(--border-color); /* Linea divisoria orizzontale */
-}
-
-/* Pulsante d'azione generico per la recensione dell'utente (es. Modifica) */
-.user-review .btn-action {
-    display: inline-block;                     /* Blocco in linea */
-    width: auto;                               /* Larghezza adattata al contenuto */
-    padding: 8px 16px;                         /* Spaziatura interna */
-    border: none;                              /* Rimuove i bordi predefiniti */
-    border-radius: 4px;                        /* Angoli leggermente arrotondati */
-    background-color: var(--accent-yellow);    /* Sfondo giallo d'accento primario */
-    color: #000000;                            /* Testo nero per massimo contrasto sul giallo */
-    font-family: var(--font-headings);         /* Font dei titoli/pulsanti */
-    font-size: 12px;                           /* Dimensione del testo */
-    font-weight: 800;                          /* Extra bold */
-    text-transform: uppercase;                 /* Maiuscolo */
-    cursor: pointer;                           /* Puntatore a manina */
-    transition: all 0.2s ease;                /* Transizione fluida */
-}
-
-/* Hover sul pulsante d'azione generico */
-.user-review .btn-action:hover {
-    background-color: #e0ff4d;                 /* Schiarimento del giallo fluo */
-    transform: translateY(-2px);               /* Effetto di elevazione verso l'alto */
-}
-
-/* Variante per il pulsante Elimina Recensione (Stile d'allarme) */
-.user-review .btn-action.btn-delete {
-    border: 1px solid #ff4a4a;                 /* Bordo rosso avviso */
-    background-color: rgba(255, 74, 74, 0.15); /* Sfondo rosso traslucido */
-    color: #ff4a4a;                            /* Testo rosso */
-}
-
-/* Hover sul pulsante elimina recensione */
-.user-review .btn-action.btn-delete:hover {
-    background-color: #ff4a4a;                 /* Sfondo passa al rosso pieno */
-    color: #ffffff;                            /* Testo passa al bianco ad alto contrasto */
 }
 
 /* --------------------------------------------------------------------------
@@ -313,7 +277,7 @@
     text-transform: uppercase;                 /* Maiuscolo */
 }
 
-/* Piè di pagina con le azioni disponibili sull'ordine (es. Torna agli ordini / Scarica PDF) */
+/* Piè di pagina con le azioni disponibili sull'ordine */
 .order-actions-footer {
     display: flex;                             /* Layout in linea flessibile */
     flex-wrap: wrap;                           /* Consente il riavvolgimento su schermi piccoli */
@@ -331,18 +295,4 @@
     flex-wrap: wrap;                           /* Consente l'incolonnamento responsive */
     align-items: center;                       /* Centratura verticale */
     gap: 15px;                                 /* Spaziatura tra i pulsanti del gruppo */
-}
-
-/* Link di download della fattura / ricevuta in formato PDF */
-.pdf-download-link {
-    color: var(--text-light);                  /* Testo chiaro ad alto contrasto */
-    font-size: 14px;                           /* Dimensione del testo */
-    font-weight: 600;                          /* Testo semi-grassetto */
-    text-decoration: underline;               /* Sottolineato per evidenziare la funzione di link */
-    transition: color 0.2s ease;               /* Transizione del colore all'hover */
-}
-
-/* Hover sul link di download PDF */
-.pdf-download-link:hover {
-    color: var(--accent-yellow);               /* Evidenziazione in giallo d'accento al sorvolo */
 }

@@ -76,66 +76,67 @@
 /* --------------------------------------------------------------------------
    7.2 PULSANTI DI NAVIGAZIONE & INDICATORI (PAGINAZIONE)
    -------------------------------------------------------------------------- */
-/* Pulsanti circolari di scorrimento (utilizzati sia nel carosello che nello scroll prodotti) */
+/* Pulsanti circolari di scorrimento (Giallo Fluo con freccia nera) */
 .carousel-btn,
 .scroll-btn {
-    display: flex;                             /* Layout flessibile */
+    display: flex;                             /* Disposizione flessibile */
     flex-shrink: 0;                            /* Impedisce la riduzione del pulsante nel flexbox */
     align-items: center;                       /* Centratura verticale dell'icona/freccia */
     justify-content: center;                   /* Centratura orizzontale dell'icona/freccia */
-    width: 45px;                               /* Dimensione fissa in larghezza */
-    height: 45px;                              /* Dimensione fissa in altezza per forma circolare */
+    width: 44px;                               /* Dimensione fissa in larghezza */
+    height: 44px;                              /* Dimensione fissa in altezza per forma circolare */
     border: none;                              /* Azzera il bordo predefinito */
     border-radius: 50%;                        /* Forma perfettamente circolare */
     background-color: var(--accent-yellow);    /* Sfondo giallo fluo d'accento */
     color: #000000;                            /* Simbolo/Freccia in nero per alto contrasto */
-    font-size: 24px;                           /* Dimensione del simbolo della freccia */
-    font-weight: bold;                         /* Simbolo in grassetto marcato */
+    font-size: 20px;                           /* Dimensione del simbolo della freccia */
+    font-weight: 900;                          /* Simbolo in grassetto marcato */
     cursor: pointer;                           /* Puntatore a manina */
-    transition: all 0.3s ease;                /* Transizione fluida delle proprietà al passaggio mouse */
+    transition: transform 0.2s ease, background-color 0.2s ease; /* Transizione fluida */
 }
 
 /* Feedback al sorvolo dei pulsanti di scorrimento */
 .carousel-btn:hover,
 .scroll-btn:hover {
-    background-color: #e0ff4d;                 /* Schiarimento del giallo fluo */
-    transform: scale(1.1);                     /* Ingrandimento del pulsante per effetto d'azione */
+    background-color: #d8ff00;                 /* Schiarimento del giallo fluo */
+    transform: scale(1.1);                     /* Ingrandimento del pulsante */
 }
 
-/* Stato disabilitato dei pulsanti di scorrimento (es. ad inizio o fine tracciato) */
+/* Stato disabilitato dei pulsanti di scorrimento */
 .carousel-btn:disabled,
 .scroll-btn:disabled {
     background-color: var(--text-gray);        /* Colore di sfondo grigio opaco */
-    opacity: 0.5;                              /* Trasparenza per indicare inattività */
-    cursor: not-allowed;                       /* Puntatore di divieto/non consentito */
+    opacity: 0.4;                              /* Trasparenza per indicare inattività */
+    cursor: not-allowed;                       /* Puntatore di divieto */
     transform: none;                           /* Rimuove trasformazioni di scala */
 }
 
-/* Contenitore degli indicatori di paginazione (pallini del carosello) */
+/* Contenitore degli indicatori di paginazione sotto al carosello */
 .carousel-indicators {
-    display: flex;                             /* Disposizione in linea flessibile */
+    display: flex;                             /* Disposizione orizzontale in riga */
+    flex-wrap: wrap;                           /* Permette l'andata a capo se necessario */
     align-items: center;                       /* Centratura verticale */
-    justify-content: center;                   /* Centratura orizzontale nella sezione */
-    gap: 8px;                                  /* Distanza tra i singoli pallini */
+    justify-content: center;                   /* Centratura orizzontale sotto l'immagine */
+    gap: 8px;                                  /* Spaziatura costante tra i pill */
     width: 100%;                               /* Occupazione a tutta larghezza */
-    margin-top: 20px;                          /* Spazio superiore dal carosello */
+    margin-top: 25px;                          /* Spazio superiore dall'immagine */
 }
 
-/* Singolo indicatore di paginazione (pallino disattivo) */
+/* Singolo indicatore a pillola/capsula (stato INATTIVO) */
 .indicator {
-    width: 10px;                               /* Larghezza del pallino */
-    height: 10px;                              /* Altezza del pallino per forma circolare */
-    border: 2px solid var(--accent-yellow);     /* Bordo giallo d'accento */
-    border-radius: 50%;                        /* Forma circolare */
-    background: transparent;                   /* Sfondo trasparente per lo stato inattivo */
+    width: 22px;                               /* Larghezza contenuta a capsula */
+    height: 10px;                              /* Altezza contenuta */
+    padding: 0;                                /* Azzera i padding */
+    border: 2px solid var(--accent-yellow);    /* Bordo giallo fluo d'accento */
+    border-radius: 10px;                       /* Forma a pillola/capsula completamente arrotondata */
+    background: transparent;                   /* Sfondo vuoto per lo stato inattivo */
     cursor: pointer;                           /* Puntatore a manina */
-    transition: all 0.3s ease;                /* Transizione fluida degli stati */
+    transition: all 0.2s ease;                /* Transizione fluida sullo stato attivo */
 }
 
 /* Indicatore della diapositiva CORRENTE / ATTIVA */
 .indicator.active {
-    background: var(--accent-yellow);          /* Riempimento in giallo d'accento pieno */
-    transform: scale(1.2);                     /* Leggero ingrandimento per evidenziarlo */
+    background-color: var(--accent-yellow);    /* Riempimento in giallo fluo pieno */
 }
 
 /* --------------------------------------------------------------------------
@@ -255,7 +256,7 @@
 .product-info-scroll .price {
     margin-bottom: 15px;                       /* Distanza dal pulsante d'azione */
     color: var(--accent-yellow);               /* Prezzo in evidenza con il giallo d'accento */
-    font-size: 20px;                           /* Dimensionemaggiorata del prezzo */
+    font-size: 20px;                           /* Dimensione maggiorata del prezzo */
     font-weight: 800;                          /* Extra bold */
 }
 

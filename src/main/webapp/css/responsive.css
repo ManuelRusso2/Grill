@@ -1,226 +1,157 @@
 /* ==========================================================================
-   RESPONSIVE MEDIA QUERIES
+   RESPONSIVE MEDIA QUERIES & MEDIA PRINT (FATTURA)
    ==========================================================================
-   Gestione dell'adattabilità dell'interfaccia (Responsive Web Design) tramite
-   media queries breakpoint-based per Tablet e Dispositivi Mobili.
+   Gestione dell'adattabilità dell'interfaccia (Responsive Web Design) e
+   formattazione per la stampa della Fattura in A4
    ========================================================================== */
 
 /* ==========================================================================
    1. TABLET & LAYOUT A COLONNA SINGOLA (max-width: 900px)
    ==========================================================================
-   Breakpoint intermedio per schermi di dimensioni medie/tablet in posizione
-   verticale dove le griglie a più colonne risultano troppo compresse.
+   Breakpoint intermedio per schermi di dimensioni medie/tablet.
    ========================================================================== */
 @media (max-width: 900px) {
     /* Passaggio a layout a colonna singola per le griglie di amministrazione e checkout */
     .admin-edit-grid,
     .admin-grid-2col,
     .checkout-grid {
-        grid-template-columns: 1fr;             /* Imposta una sola colonna a tutta larghezza disponibile */
+        grid-template-columns: 1fr;             /* Una sola colonna a tutta larghezza */
     }
 
     /* Adattamento dell'anteprima prodotto sticky nel pannello Admin */
     .admin-preview-card {
-        position: static;                      /* Rimuove il posizionamento fisso/sticky per fluire nel documento */
-        margin-top: 20px;                      /* Crea distacco verticale dal modulo precedente */
+        position: static;                      /* Rimuove il posizionamento fisso per fluire normalmente */
+        margin-top: 20px;                      /* Distacco dal modulo precedente */
     }
 }
 
 /* ==========================================================================
    2. TABLET PICCOLI E MOBILE (max-width: 768px)
    ==========================================================================
-   Breakpoint per smartphone in orizzontale e tablet compatti. Riorganizza
-   l'header, i caroselli, i banner principali e i filtri di ricerca.
+   Breakpoint per smartphone in orizzontale e tablet compatti.
    ========================================================================== */
 @media (max-width: 768px) {
     /* --- Header & Navbar --- */
-    /* Riorganizzazione della barra di navigazione */
     .navbar {
-        flex-wrap: wrap;                       /* Permette l'incolonnamento su più righe dei componenti */
+        flex-wrap: wrap;                       /* Permette l'incolonnamento su più righe */
         justify-content: center;               /* Centra orizzontalmente gli elementi */
-        gap: 15px;                             /* Riduce la spaziatura tra i blocchi interni */
+        gap: 15px;                             /* Riduce la spaziatura */
     }
 
-    /* Riorganizzazione del campo di ricerca per mobile */
+    /* Campo di ricerca adattato per mobile */
     .search-wrapper {
-        order: 3;                              /* Sposta la barra di ricerca sotto il logo e la navigazione */
-        flex: 1 1 100%;                        /* Espande la barra a occupare l'intera riga inferiore */
-        max-width: 100%;                       /* Rimuove la limitazione di larghezza massima */
-        margin: 10px 0 0 0;                    /* Imposta un margine visivo solo verso l'alto */
+        order: 3;                              /* Sposta la barra di ricerca in basso */
+        flex: 1 1 100%;                        /* Espande a tutta larghezza */
+        max-width: 100%;                       /* Rimuove vincoli di larghezza */
+        margin: 10px 0 0 0;
     }
 
-    /* Ottimizzazione dei link di navigazione */
+    /* Link di navigazione compatti */
     .nav-links {
-        gap: 12px;                             /* Riduce lo spazio orizzontale tra i collegamenti */
-        font-size: 12px;                       /* Riduce leggermente la dimensione del testo */
+        gap: 12px;
+        font-size: 12px;
     }
 
     /* --- Home Page: Carousel --- */
-    /* Regolazione dei contenitori e sezioni del carosello */
     .carousel-container {
-        gap: 10px;                             /* Riduce la spaziatura interna tra elementi del carosello */
-        padding: 0 10px;                       /* Margine di sicurezza ai bordi dello schermo */
+        gap: 10px;
+        padding: 0 10px;
     }
 
     .carousel-section {
-        padding: 40px 0;                       /* Riduce l'imbottitura verticale della sezione */
+        padding: 30px 0;
     }
 
-    /* Ridimensionamento pulsanti di scorrimento del carosello */
     .carousel-btn,
     .scroll-btn {
-        width: 35px;                           /* Larghezza ridotta per schermi touch */
-        height: 35px;                          /* Altezza ridotta */
-        font-size: 18px;                       /* Dimensione ridotta dell'icona freccia */
-    }
-
-    /* --- Home Page: Hero Banner --- */
-    /* Adattamento della sezione Hero/Banner promozionale */
-    .hero-cart-section {
-        padding: 40px 20px;                    /* Riduce lo spazio interno del banner */
-        margin: 30px 20px;                     /* Riduce il margine esterno */
-    }
-
-    /* Layout interno del banner Hero */
-    .hero-cart-content {
-        flex-direction: column;                /* Incolonna testo ed elementi grafici verticalmente */
-        text-align: center;                    /* Centra il testo promozionale */
-        gap: 30px;                             /* Spaziatura verticale tra testo e immagini/azioni */
-    }
-
-    /* Titolo principale del banner Hero */
-    .hero-cart-text h2 {
-        font-size: 36px;                       /* Scalatura del titolo per una corretta gerarchia visiva */
+        width: 36px;
+        height: 36px;
+        font-size: 18px;
     }
 
     /* --- Home Page: Prodotti in Evidenza --- */
-    /* Sezione di scorrimento orizzontale dei prodotti */
     .products-scroll-section {
-        padding: 0 20px;                       /* Margine interno di protezione ai lati dello schermo */
+        padding: 0 15px;
     }
 
-    /* Titolo della sezione prodotti in evidenza */
     .products-scroll-section h2 {
-        margin-bottom: 30px;                   /* Riduce il margine inferiore */
-        font-size: 28px;                       /* Riduce la dimensione del titolo */
+        margin-bottom: 25px;
+        font-size: 26px;
     }
 
-    /* Schede prodotto nello scorrimento orizzontale */
+    /* Schede prodotto nello scorrimento orizzontale (2 per riga) */
     .product-card-scroll {
-        min-width: calc(50% - 10px);           /* Mostra 2 schede affiancate contemporaneamente */
+        min-width: calc(50% - 10px);
     }
 
     /* --- Filtri Admin in Mobile --- */
-    /* Incolonnamento dei moduli di filtraggio nella Dashboard Amministratore */
     .filter-form,
     .admin-orders-filter {
-        flex-direction: column;                /* Dispone i campi del form in una singola colonna */
-        align-items: stretch;                  /* Espande tutti i campi a occupare la larghezza completa */
+        flex-direction: column;
+        align-items: stretch;
     }
 }
 
 /* ==========================================================================
    3. MOBILE STRETTO (max-width: 480px)
    ==========================================================================
-   Breakpoint per smartphone in verticale a risoluzione ridotta (es. iPhone SE,
-   vecchi dispositivi Android) per evitare problemi di overflow orizzontale.
+   Breakpoint per smartphone in verticale a risoluzione ridotta.
    ========================================================================== */
 @media (max-width: 480px) {
-    /* --- Componenti Generici & Auth --- */
-    /* Riduzione imbottitura per le schede di autenticazione */
+    /* Scheda di autenticazione compatta */
     .auth-card {
-        padding: 20px 16px;                    /* Massimizza lo spazio per i campi di input nei moduli */
+        padding: 24px 16px;
     }
 
-    /* --- Carousel & Indicatori --- */
-    /* Ulteriore riduzione per la sezione carosello */
+    /* Carousel ultra-compatto */
     .carousel-section {
-        padding: 20px 0;                       /* Spaziatura verticale minimale */
+        padding: 20px 0;
     }
 
     .carousel-container {
-        gap: 5px;                              /* Spaziatura minima tra gli elementi */
-        padding: 0 5px;                        /* Padding ai bordi azzerato per guadagnare spazio */
+        gap: 5px;
+        padding: 0 5px;
     }
 
-    /* Pulsanti di navigazione del carosello compatti */
     .carousel-btn,
     .scroll-btn {
-        width: 30px;                           /* Dimensioni ultra-compatte dei pulsanti */
-        height: 30px;
-        font-size: 16px;                       /* Icona freccia ridotta */
+        width: 32px;
+        height: 32px;
+        font-size: 16px;
     }
 
-    /* Distanziamento degli indicatori a pallino (Dots) */
     .carousel-indicators {
-        gap: 6px;                              /* Spaziatura sottile tra gli indicatori */
+        gap: 6px;
     }
 
-    /* Indicatore carosello standard (Stato inattivo) */
     .indicator {
-        width: 8px;                            /* Diametro ridotto */
-        height: 8px;                           /* Diametro ridotto */
+        width: 16px;
+        height: 8px;
     }
 
-    /* Indicatore carosello attivo */
-    .indicator.active {
-        width: 12px;                           /* Dimensione leggermente maggiorata per lo stato attivo */
-        height: 12px;                          /* Dimensione leggermente maggiorata per lo stato attivo */
-    }
-
-    /* --- Hero Banner & Prodotti --- */
-    /* Riduzione massima dei margini del banner promozionale */
-    .hero-cart-section {
-        padding: 30px 15px;                    /* Imbottitura ridotta */
-        margin: 20px 15px;                     /* Margine esterno ridotto */
-    }
-
-    /* Titolo del banner Hero */
-    .hero-cart-text h2 {
-        font-size: 28px;                       /* Riduzione del font per evitare a capo impropri */
-    }
-
-    /* Descrizione del banner Hero */
-    .hero-cart-text p {
-        font-size: 16px;                       /* Dimensione di lettura adeguata al mobile */
-    }
-
-    /* Sezione a scorrimento dei prodotti */
+    /* Sezione prodotti a scorrimento (1 per riga) */
     .products-scroll-section {
-        margin: 40px auto;                     /* Riduzione del margine verticale */
-        padding: 0 15px;                       /* Imbottitura laterale di protezione */
+        margin: 30px auto;
+        padding: 0 10px;
     }
 
-    /* Scheda prodotto a colonna singola */
     .product-card-scroll {
-        min-width: 100%;                       /* Mostra 1 sola scheda prodotto a schermo intero */
+        min-width: 100%;                       /* 1 sola scheda prodotto a schermo intero */
     }
 }
 
 /* ==========================================================================
-   GESTIONE VISIBILITÀ FATTURA (SCHERMO VS STAMPA)
+   4. STAMPA FATTURA - MEDIA PRINT (REQUISITO OBBLIGATORIO CHECKLIST)
    ==========================================================================
-   Regole per la gestione dei blocchi visibili esclusivamente a schermo
-   oppure destinati solo alla resa cartacea/PDF.
+   Stili applicati durante la stampa o il salvataggio in PDF dell'ordine.
    ========================================================================== */
-
-/* Nasconde gli elementi dedicati alla stampa durante la visualizzazione standard a schermo */
+/* Nasconde gli elementi della fattura durante la normale navigazione web */
 html body .print-only {
-    display: none;                             /* Rimuove l'elemento dal flusso della pagina a schermo */
+    display: none;
 }
 
-/* ==========================================================================
-   4. STAMPA FATTURA (MEDIA PRINT)
-   ==========================================================================
-   Stili applicati esclusivamente in fase di stampa (o esportazione PDF).
-   Ottimizzano il layout per il formato A4, riducono il consumo di inchiostro
-   e nascondono l'interfaccia utente web non necessaria.
-   ========================================================================== */
 @media print {
-    /* ----------------------------------------------------------------------
-       1. RIMOZIONE ELEMENTI INTERFACCIA WEB (ALTA SPECIFICITÀ)
-       ---------------------------------------------------------------------- */
-    /* Nasconde header, footer, navigazione, ricerca e pulsanti d'azione */
+    /* 1. RIMOZIONE ELEMENTI DI INTERFACCIA WEB */
     html body header.site-header, 
     html body footer, 
     html body nav.nav-links, 
@@ -230,132 +161,102 @@ html body .print-only {
     html body button.btn,
     html body a.btn,
     html body .web-only {
-        display: none;                         /* Esclude tutti i componenti di navigazione e azionamento dalla stampa */
+        display: none !important;              /* Nasconde completamente header, footer e bottoni */
     }
 
-    /* ----------------------------------------------------------------------
-       2. MOSTRA STRUTTURA DEDICATA ALLA FATTURA
-       ---------------------------------------------------------------------- */
-    /* Attiva la visualizzazione degli elementi riservati al documento cartaceo */
+    /* 2. MOSTRA STRUTTURA DEDICATA ALLA FATTURA */
     html body .print-only {
-        display: block;                        /* Rende visibile il blocco stampabile */
+        display: block !important;
     }
 
-    /* ----------------------------------------------------------------------
-       3. FORZATURA SFONDO BIANCO E TESTO NERO (OTTIMIZZAZIONE A4)
-       ---------------------------------------------------------------------- */
-    /* Reset dello stile dei contenitori principali per il formato foglio */
+    /* 3. FORMATTAZIONE FOGLIO A4 BIANCO / TESTO NERO */
     html body, 
     html body main.container, 
     html body div.order-detail-container, 
     html body div.order-detail-card {
-        background: #ffffff;                    /* Sfondo bianco puro per risparmio inchiostro */
-        color: #000000;                        /* Testo nero nitido ad alto contrasto per la stampa */
-        box-shadow: none;                      /* Rimuove qualsiasi ombreggiatura */
-        border: none;                          /* Rimuove i bordi dei contenitori schede */
-        padding: 0;                            /* Azzera gli spazi interni per sfruttare i margini del foglio */
-        margin: 0;                             /* Azzera i margini esterni */
-        width: 100%;                           /* Occupazione a tutta larghezza del foglio */
-        max-width: 100%;                       /* Annulla i vincoli di larghezza massima definiti a schermo */
+        background: #ffffff !important;        /* Sfondo bianco puro */
+        color: #000000 !important;            /* Testo nero nitido */
+        box-shadow: none !important;          /* Rimuove ombre */
+        border: none !important;              /* Rimuove bordi trasparenti/scuri */
+        padding: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
     }
 
-    /* ----------------------------------------------------------------------
-       4. INTESTAZIONE FATTURA
-       ---------------------------------------------------------------------- */
-    /* Titolo principale della fattura (es. "FATTURA N° 1234") */
+    /* 4. INTESTAZIONE FATTURA PRINT */
     html body h1.invoice-title-print {
-        text-align: center;                    /* Centratura orizzontale del titolo del documento */
-        font-size: 28px;                       /* Dimensione marcata per la titolazione */
-        font-weight: bold;                     /* Grassetto */
-        margin-bottom: 5px;                    /* Distacco minimo dal sottotitolo */
-        color: #000000;                        /* Colore nero nitido */
+        text-align: center;
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #000000 !important;
     }
 
-    /* Sottotitolo informativo della fattura */
     html body p.invoice-sub-print {
-        font-size: 14px;                       /* Dimensione ridotta di supporto */
-        margin-bottom: 20px;                   /* Spaziatura inferiore dal blocco dati */
-        color: #000000;                        /* Colore nero nitido */
+        font-size: 14px;
+        margin-bottom: 20px;
+        color: #000000 !important;
     }
 
-    /* Griglia per i dati intestatario / emittente fattura */
     html body div.invoice-grid-print {
-        display: flex;                         /* Disposizione in riga flessibile */
-        justify-content: space-between;        /* Spinge i blocchi aziendali/cliente agli estremi opposti */
-        margin-bottom: 15px;                   /* Spazio inferiore dalla linea divisoria */
-        font-size: 13px;                       /* Dimensione testo compatto per la griglia */
-        line-height: 1.4;                      /* Interlinea leggibile per indirizzi e dati fiscali */
-        color: #000000;                        /* Colore nero nitido */
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        font-size: 13px;
+        line-height: 1.4;
+        color: #000000 !important;
     }
 
-    /* Linea di separazione orizzontale per stampa */
     html body hr.invoice-hr-print {
-        border: none;                          /* Annulla il bordo predefinito dell'elemento hr */
-        border-top: 1px solid #000000;         /* Crea una linea nera netta di 1px */
-        margin: 15px 0;                        /* Spaziatura verticale uniforme */
+        border: none;
+        border-top: 1px solid #000000;
+        margin: 15px 0;
     }
 
-    /* ----------------------------------------------------------------------
-       5. TABELLA PRODOTTI IN FORMATO STAMPA
-       ---------------------------------------------------------------------- */
-    /* Struttura della tabella prodotti */
+    /* 5. TABELLA PRODOTTI STAMPABILE */
     html body table.cart-table {
-        width: 100%;                           /* Occupazione a tutta larghezza del foglio */
-        border-collapse: collapse;             /* Unifica i bordi di celle adiacenti evitando spazi vuoti */
-        margin: 15px 0;                        /* Spaziatura verticale attorno alla tabella */
+        width: 100% !important;
+        border-collapse: collapse !important;
+        margin: 15px 0 !important;
     }
 
-    /* Intestazioni e celle di tabella */
     html body table.cart-table th, 
     html body table.cart-table td {
-        border: 1px solid #000000;             /* Bordo nero definito attorno a ogni singola cella */
-        padding: 8px;                          /* Spaziatura interna per una chiara griglia dati */
-        color: #000000;                        /* Testo nero per leggibilità */
-        background: transparent;              /* Annulla eventuali sfondi alternati o scuri */
-        text-align: left;                      /* Allineamento del testo a sinistra */
+        border: 1px solid #000000 !important; /* Bordo nero definito attorno a ogni cella */
+        padding: 8px !important;
+        color: #000000 !important;
+        background: transparent !important;
+        text-align: left !important;
     }
 
-    /* ----------------------------------------------------------------------
-       6. TOTALI E PIÈ DI PAGINA FATTURA
-       ---------------------------------------------------------------------- */
-    /* Sezione riepilogo totali in basso a destra */
+    /* 6. TOTALI E FOOTER FATTURA */
     html body div.invoice-footer-print {
-        margin-top: 25px;                      /* Distacco dalla tabella prodotti */
-        text-align: right;                     /* Allinea importi e totale sul margine destro */
-        color: #000000;                        /* Testo nero nitido */
+        margin-top: 25px;
+        text-align: right;
+        color: #000000 !important;
     }
 
-    /* Riga evidenziata del totale complessivo */
     html body p.invoice-total-line {
-        font-size: 16px;                       /* Dimensione leggermente maggiorata per evidenziare il totale */
-        font-weight: bold;                     /* Grassetto per risalto visivo */
-        margin-bottom: 15px;                   /* Spaziatura inferiore dai ringraziamenti */
+        font-size: 16px;
+        font-weight: bold;
+        margin-bottom: 15px;
     }
 
-    /* Messaggio finale di ringraziamento o note legali in calce */
     html body p.invoice-thanks-print {
-        text-align: center;                    /* Centratura orizzontale del testo di cortesia */
-        margin-top: 40px;                      /* Distacco importante dal blocco totale */
-        font-size: 13px;                       /* Dimensione testo discreta */
-    }
-    
-    /* ----------------------------------------------------------------------
-       7. PULIZIA TESTO, LINK E OMBRE NELLA TABELLA
-       ---------------------------------------------------------------------- */
-    /* Rimuove lo stile dei link nella tabella prodotti per l'output cartaceo */
-    html body table.cart-table a,
-    html body table.cart-table .cart-product-title {
-        color: #000000;                        /* Trasforma i collegamenti blu/viola in testo nero */
-        text-decoration: none;                 /* Rimuove la sottolineatura tipica dei link */
+        text-align: center;
+        margin-top: 40px;
+        font-size: 13px;
     }
 
-    /* Azzera stili complessi, sfondi, ombreggiature e badge colorati */
-    html body table.cart-table,
-    html body table.cart-table tr,
-    html body table.cart-table td,
+    /* 7. RESET LINK E BADGE PER LA STAMPA */
+    html body table.cart-table a,
+    html body table.cart-table .cart-product-title,
     html body .order-size-badge {
-        box-shadow: none;                      /* Elimina le ombreggiature CSS */
-        background: transparent;              /* Trasparenza totale per evitare macchie d'inchiostro */
-        color: #000000;                        /* Forza il colore nero del testo */
+        color: #000000 !important;
+        text-decoration: none !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        border: none !important;
     }
 }

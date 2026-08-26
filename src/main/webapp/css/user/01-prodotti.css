@@ -30,8 +30,8 @@
 
 /* Feedback visivo al passaggio del mouse sulla scheda prodotto */
 .card:hover {
-    box-shadow: 0 15px 30px rgba(155, 81, 224, 0.15); /* Ombreggiatura accentuata con altoparlante cromatico viola */
-    transform: translateY(-8px);               /* Effetto di elevazione verso l'alto di 8px */
+    box-shadow: 0 15px 30px rgba(155, 81, 224, 0.15); /* Ombreggiatura accentuata in viola */
+    transform: translateY(-8px);               /* Effetto di elevazione verso l'alto */
 }
 
 /* Titolo del prodotto nella scheda */
@@ -68,7 +68,7 @@
     height: 250px;                             /* Altezza fissa per uniformare le schede */
     margin-bottom: 15px;                       /* Distanza dal titolo sottostante */
     border-radius: 6px;                        /* Angoli arrotondati dell'immagine */
-    object-fit: cover;                         /* Scala l'immagine per riempire il riquadro mantenendo le proporzioni */
+    object-fit: cover;                         /* Scala l'immagine mantenendo le proporzioni */
 }
 
 /* Campo quantità rapido all'interno delle card */
@@ -80,7 +80,6 @@
 /* --------------------------------------------------------------------------
    STILI DEI BADGE DI DISPONIBILITÀ (OVERRIDE DEDICATO ALLA CARD)
    -------------------------------------------------------------------------- */
-/* Reset della forma circolare del carrello definita in global.css */
 .card .badge {
     display: inline-block;                     /* Disposizione in linea */
     min-width: unset;                          /* Reset larghezza minima da global.css */
@@ -152,7 +151,7 @@
 .empty-state-icon img {
     width: 44px;                               /* Dimensione dell'icona */
     height: 44px;                              /* Dimensione dell'icona */
-    filter: brightness(0) invert(1) opacity(0.8); /* Inverte l'icona in bianco con opacità al 80% */
+    filter: brightness(0) invert(1) opacity(0.8); /* Inverte l'icona in bianco con opacità all'80% */
     object-fit: contain;                       /* Mantiene le proporzioni dell'icona */
 }
 
@@ -188,7 +187,7 @@
     padding: 40px 0;                           /* Spaziatura verticale principale */
 }
 
-/* Scheda pricipale a due colonne (Immagine e Info) */
+/* Scheda principale a due colonne (Immagine e Info) */
 .product-details-card {
     display: grid;                             /* Disposizione a griglia */
     grid-template-columns: 1fr 1fr;            /* Divisione equa a due colonne di pari larghezza */
@@ -198,7 +197,7 @@
     border: 1px solid var(--border-color);     /* Bordo perimetrale basato sul tema */
     border-radius: 14px;                       /* Angoli arrotondati marcati */
     background: var(--bg-card);                /* Sfondo scheda */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);/* Ombreggiatura accentuata per la scheda principale */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);/* Ombreggiatura accentuata */
 }
 
 /* Contenitore della galleria/immagine principale */
@@ -208,7 +207,7 @@
     overflow: hidden;                          /* Previene fuoriuscite dell'immagine */
     border: 1px solid var(--border-color);     /* Bordo di cornice */
     border-radius: 10px;                       /* Angoli arrotondati della cornice */
-    background: var(--bg-input);              /* Sfondo scuro neutro per far risaltare l'immagine */
+    background: var(--bg-input);               /* Sfondo scuro neutro */
     text-align: center;                        /* Centratura dell'immagine */
 }
 
@@ -217,7 +216,7 @@
     display: inline-block;                     /* Allineamento in linea */
     width: 100%;                               /* Adattamento responsive alla larghezza del contenitore */
     max-width: 450px;                          /* Dimensione massima consentita */
-    height: auto;                              /* Mantentimento automatica delle proporzioni */
+    height: auto;                              /* Mantenimento automatico delle proporzioni */
     border-radius: 6px;                        /* Angoli arrotondati dell'immagine */
     object-fit: contain;                       /* L'immagine viene contenuta integralmente senza ritagli */
 }
@@ -244,7 +243,7 @@
     margin-bottom: 20px;                       /* Distanza dal blocco prezzo */
     color: var(--text-light);                  /* Testo chiaro */
     font-size: 15px;                           /* Dimensione del font */
-    line-height: 1.6;                          /* Interlinea per migliorare la leggibilità di testi lunghi */
+    line-height: 1.6;                          /* Interlinea per migliorare la leggibilità */
 }
 
 /* Blocco di visualizzazione del prezzo */
@@ -261,7 +260,7 @@
 /* Importo effettivo del prezzo */
 .product-price span {
     color: var(--primary-purple);              /* Prezzo evidenziato in viola */
-    font-size: 28px;                           /* Dimensione aumentata per grande impatto visivo */
+    font-size: 28px;                           /* Dimensione aumentata per impatto visivo */
     font-weight: 800;                          /* Extra bold */
 }
 
@@ -307,28 +306,28 @@
     padding: 8px 18px;                         /* Spaziatura interna */
     border: 1px solid var(--border-color);     /* Bordo neutro di default */
     border-radius: 8px;                        /* Angoli arrotondati */
-    background: var(--bg-input);              /* Sfondo del campo */
+    background: var(--bg-input);               /* Sfondo del campo */
     color: var(--text-light);                  /* Testo chiaro */
     font-size: 14px;                           /* Dimensione carattere */
     font-weight: 600;                          /* Testo semi-grassetto */
-    text-decoration: none;                     /* Rimuove la sottolineatura in caso di link */
+    text-decoration: none;                     /* Rimuove la sottolineatura */
     cursor: pointer;                           /* Puntatore a manina */
-    user-select: none;                         /* Disabilita la selezione del testo al click */
-    transition: all 0.2s ease;                /* Transizione fluida degli stati */
+    user-select: none;                         /* Disabilita la selezione del testo */
+    transition: all 0.2s ease;                 /* Transizione fluida degli stati */
 }
 
 /* Feedback al passaggio del mouse sul bottone variante */
 .variante-btn:hover {
     border-color: var(--primary-purple);       /* Bordo evidenziato in viola */
     color: var(--accent-yellow);               /* Testo in tonalità giallo fluo */
-    box-shadow: 0 4px 12px rgba(155, 81, 224, 0.2); /* Ombreggiatura con altoparlante viola */
+    box-shadow: 0 4px 12px rgba(155, 81, 224, 0.2); /* Ombreggiatura violacea */
     transform: translateY(-2px);               /* Effetto di elevazione */
 }
 
 /* Stato del bottone variante ATTIVO / SELEZIONATO */
 .variante-btn.active {
     border-color: var(--primary-purple);       /* Bordo evidenziato in viola */
-    background: rgba(155, 81, 224, 0.2);      /* Sfondo viola trasparente */
+    background: rgba(155, 81, 224, 0.2);       /* Sfondo viola trasparente */
     color: var(--accent-yellow);               /* Testo giallo d'accento */
     font-weight: 700;                          /* Grassetto marcato per la selezione */
     box-shadow: 0 0 12px rgba(155, 81, 224, 0.4); /* Bagliore violaceo attorno al pulsante attivo */
@@ -336,52 +335,71 @@
 
 /* Stato della variante ESAURITA / NON DISPONIBILE */
 .variante-btn.esaurito {
-    border-color: rgba(255, 255, 255, 0.05);  /* Bordo quasi invisibile */
-    opacity: 0.35;                             /* Trasparenza accentuata per indicare l'inagibilità */
+    border-color: rgba(255, 255, 255, 0.05);   /* Bordo quasi invisibile */
+    opacity: 0.35;                             /* Trasparenza accentuata */
     text-decoration: line-through;             /* Testo barrato */
-    cursor: not-allowed;                       /* Icona di divieto al passaggio del mouse */
+    cursor: not-allowed;                       /* Icona di divieto */
     pointer-events: none;                      /* Disabilita qualsiasi interazione o click */
 }
 
 /* --------------------------------------------------------------------------
    3.3 AZIONI E QUANTITÀ PRODOTTO
    -------------------------------------------------------------------------- */
-/* Wrapper per il form di aggiunta al carrello */
+/* Contenitore del modulo d'acquisto */
 .product-actions-wrapper {
-    max-width: 100%;                           /* Larghezza piena */
-    margin-top: 25px;                          /* Distacco dagli elementi superiori */
+    width: 100%;                               /* Occupazione a tutta larghezza del contenitore padre */
+    margin-top: 25px;                          /* Distacco dagli elementi superiori (descrizione/varianti) */
 }
 
-/* Layout del form con campo quantità e bottone d'acquisto */
+/* Layout verticale del form: selettore taglia in alto, quantità e pulsante in basso */
 .product-actions-wrapper form {
-    display: flex;                             /* Disposizione flessibile affiancata */
-    align-items: center;                       /* Centratura verticale degli elementi */
-    gap: 15px;                                 /* Distanza tra campo quantità e pulsante d'acquisto */
+    display: flex;                             /* Disposizione flessibile del contenuto */
+    flex-direction: column;                    /* Incolonna i blocchi (Taglia sopra, Quantità/Bottone sotto) */
+    gap: 20px;                                 /* Spaziatura verticale uniforme tra selettore e pulsante */
+    width: 100%;                               /* Occupazione a tutta larghezza */
 }
 
-/* Campo di input per la quantità */
-.product-actions-wrapper input[type="number"] {
-    width: 70px;                               /* Larghezza fissa compatta */
-    padding: 12px;                             /* Spaziatura interna */
-    border: 1px solid var(--border-color);     /* Bordo neutro */
-    border-radius: 8px;                        /* Angoli arrotondati */
-    background: var(--bg-input);              /* Sfondo del campo input */
-    color: var(--text-light);                  /* Testo ad alto contrasto */
-    font-size: 16px;                           /* Dimensione testo ben leggibile */
-    font-weight: 700;                          /* Grassetto */
-    text-align: center;                        /* Numero centrato */
-    outline: none;                             /* Rimuove l'outline predefinito */
-    transition: border-color 0.2s ease;        /* Transizione per lo stato di focus */
+/* Riga orizzontale per affiancare il campo quantità al pulsante d'acquisto */
+.qty-submit-wrapper {
+    display: flex;                             /* Disposizione flessibile in riga */
+    align-items: center;                       /* Centratura verticale di etichetta, input e bottone */
+    gap: 15px;                                 /* Spaziatura orizzontale tra quantità e pulsante */
+    width: 100%;                               /* Occupazione a tutta larghezza */
 }
 
-/* Stato di focus sul campo quantità */
-.product-actions-wrapper input[type="number"]:focus {
-    border-color: var(--primary-purple);       /* Bordo passa al viola principale */
+/* Etichetta di testo affiancata al campo quantità */
+.qty-submit-wrapper label {
+    color: var(--text-gray);                   /* Colore del testo secondario/grigio */
+    font-size: 14px;                           /* Dimensione del carattere */
+    font-weight: 700;                          /* Grassetto per massima visibilità */
+    white-space: nowrap;                       /* Previene l'andata a capo automatica del testo */
 }
 
-/* Espansione del pulsante d'azione nel form */
-.product-actions-wrapper button,
-.product-actions-wrapper input[type="submit"] {
+/* Campo di input per la quantità con stili coordinati al design system */
+.product-actions-wrapper input[type="number"],
+.qty-submit-wrapper .input-qty {
+    width: 70px;                               /* Larghezza fissa compatta per contenere i valori numerici */
+    padding: 11px 10px;                        /* Spaziatura interna confortevole per la digitazione */
+    border: 1px solid var(--border-color);     /* Bordo perimetrale coordinato con il tema */
+    border-radius: 8px;                        /* Angoli arrotondati in linea con gli altri form */
+    background: var(--bg-input);               /* Sfondo scuro dedicato ai campi di inserimento */
+    color: var(--text-light);                  /* Testo ad alto contrasto per la digitazione */
+    font-family: var(--font-body);             /* Famiglia di font standard del progetto */
+    font-size: 14px;                           /* Dimensione del carattere */
+    text-align: center;                        /* Centratura del testo numerico */
+    outline: none;                             /* Rimuove l'outline di focus di default del browser */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease; /* Transizione fluida per lo stato di focus */
+}
+
+/* Stato di focus del campo quantità durante l'interazione */
+.product-actions-wrapper input[type="number"]:focus,
+.qty-submit-wrapper .input-qty:focus {
+    border-color: var(--primary-purple);       /* Il bordo assume la tonalità viola primario */
+    box-shadow: 0 0 0 3px rgba(155, 81, 224, 0.2); /* Anello di evidenziazione luminoso violaceo */
+}
+
+/* Espansione del pulsante d'acquisto sulla riga */
+.qty-submit-wrapper button {
     flex: 1;                                   /* Il bottone acquista occupa tutto lo spazio rimanente */
 }
 
@@ -392,54 +410,53 @@
 .size-selector-wrapper {
     display: flex;                             /* Disposizione flessibile */
     flex-direction: column;                    /* Incolonna label e select */
-    gap: 8px;                                  /* Distanza tra label e dropdown */
-    margin-bottom: 20px;                       /* Distanza dal blocco successivo */
+    gap: 8px;                                  /* Distanza tra l'etichetta e il menu a tendina */
+    width: 100%;                               /* Occupazione a tutta larghezza */
 }
 
 /* Etichetta del selettore taglie */
 .size-selector-wrapper label {
-    color: var(--text-gray);                   /* Testo grigio secondario */
-    font-size: 14px;                           /* Dimensione */
+    color: var(--text-gray);                   /* Colore del testo secondario */
+    font-size: 14px;                           /* Dimensione del carattere */
     font-weight: 700;                          /* Grassetto */
-    letter-spacing: 0.5px;                     /* Spaziatura caratteri */
-    text-transform: uppercase;                 /* Maiuscolo */
+    letter-spacing: 0.5px;                     /* Spaziatura tra i caratteri */
+    text-transform: uppercase;                 /* Testo forzato in maiuscolo */
 }
 
 /* Menu a tendina personalizzato per la selezione delle taglie */
 select.size-dropdown {
-    width: 100%;                               /* Occupazione completa del contenitore */
-    max-width: 250px;                          /* Larghezza massima delimitata */
-    padding: 12px 15px;                        /* Spaziatura interna */
-    border: 1px solid var(--border-color);     /* Bordo di base */
+    width: 100%;                               /* Occupazione a tutta larghezza del blocco */
+    max-width: 280px;                          /* Larghezza massima delimitata per non allargare eccessivamente */
+    padding: 11px 14px;                        /* Spaziatura interna verticale ed orizzontale */
+    padding-right: 40px;                       /* Spazio a destra riservato per non sovrapporre il testo alla freccia */
+    border: 1px solid var(--border-color);     /* Bordo coerente con il tema */
     border-radius: 8px;                        /* Angoli arrotondati */
-    background-color: var(--bg-input);          /* Sfondo scuro per il controllo */
-    /* Icona freccia custom in formato SVG integrato in data-URI */
+    background-color: var(--bg-input);          /* Sfondo scuro per i campi di selezione */
+    color: var(--text-light);                  /* Testo chiaro leggibile */
+    font-family: var(--font-body);             /* Eredita il font principale della pagina */
+    font-size: 14px;                           /* Dimensione del carattere */
+    /* Icona freccia custom SVG in formato Data URI per sostituire quella di default del browser */
     background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-    background-repeat: no-repeat;              /* Impedisce la ripetizione dell'icona freccia */
-    background-position: right 15px center;    /* Posiziona la freccia a destra e centrata verticalmente */
-    background-size: 16px;                     /* Dimensione della freccia SVG */
-    color: var(--text-light);                  /* Testo chiaro per le opzioni */
-    font-family: inherit;                      /* Eredita il font principale della pagina */
-    font-size: 15px;                           /* Dimensione carattere */
-    font-weight: 600;                          /* Testo semi-grassetto */
-    cursor: pointer;                           /* Puntatore a manina */
-    appearance: none;                          /* Rimuove l'aspetto e la freccia standard forniti dal browser */
-    transition: all 0.3s ease;                /* Transizione fluida per l'interazione */
+    background-repeat: no-repeat;              /* Impedisce la ripetizione dell'icona della freccia */
+    background-position: right 15px center;    /* Posiziona l'icona a destra centrata verticalmente */
+    background-size: 16px;                     /* Dimensione fissa per la freccia */
+    appearance: none;                          /* Rimuove l'aspetto standard fornito dal sistema operativo */
+    cursor: pointer;                           /* Puntatore a manina al passaggio del mouse */
+    outline: none;                             /* Rimuove l'outline predefinito del browser */
+    transition: border-color 0.2s ease, box-shadow 0.2s ease; /* Transizione fluida per l'interazione */
 }
 
-/* Evidenziazione al focus e all'hover del menu a tendina */
-select.size-dropdown:focus,
-select.size-dropdown:hover {
-    border-color: var(--primary-purple);       /* Bordo passa al viola principale */
-    box-shadow: 0 0 0 3px rgba(155, 81, 224, 0.15); /* Anello di focus violaceo traslucido */
-    outline: none;                             /* Rimuove l'outline predefinito del browser */
+/* Stato di focus del menu a tendina taglie */
+select.size-dropdown:focus {
+    border-color: var(--primary-purple);       /* Il bordo assume il colore viola primario */
+    box-shadow: 0 0 0 3px rgba(155, 81, 224, 0.2); /* Anello luminoso viola */
 }
 
 /* Opzioni interne al menu a tendina delle taglie */
 select.size-dropdown option {
     padding: 10px;                             /* Spaziatura interna delle voci */
-    background-color: var(--bg-card);          /* Sfondo scuro coordinato con le card per le opzioni estese */
-    color: var(--text-light);                  /* Testo chiaro */
+    background-color: var(--bg-card);          /* Sfondo scuro delle opzioni nel menu a comparsa */
+    color: var(--text-light);                  /* Testo chiaro per le singole opzioni */
 }
 
 /* Indicatore della taglia selezionata nel carrello */
@@ -450,7 +467,7 @@ select.size-dropdown option {
     font-size: 13px;                           /* Dimensione ridotta */
     font-weight: 700;                          /* Grassetto */
     letter-spacing: 0.5px;                     /* Spaziatura lettere */
-    text-transform: uppercase;                 /* Maiuscolo */
+    text-transform: uppercase;                 /* Testo in maiuscolo */
 }
 
 /* Badge decorativo per la visualizzazione della taglia nei riepiloghi ordine */
@@ -463,5 +480,5 @@ select.size-dropdown option {
     color: var(--primary-purple);              /* Testo viola */
     font-size: 13px;                           /* Dimensione compatta */
     font-weight: 800;                          /* Extra bold per massima evidenza */
-    text-transform: uppercase;                 /* Maiuscolo */
+    text-transform: uppercase;                 /* Testo in maiuscolo */
 }

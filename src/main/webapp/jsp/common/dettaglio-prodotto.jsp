@@ -103,7 +103,7 @@
                                     <c:if test="${not empty prodotto.taglie}">
                                         <div class="size-selector-wrapper">
                                             <label for="taglia">Seleziona Taglia:</label>
-                                            <select name="taglia" id="taglia" required class="size-dropdown">
+                                            <select name="taglia" id="taglia" required class="size-dropdown form-control">
                                                 <option value="">-- Scegli --</option>
                                                 <%-- Suddivisione della stringa taglie (es. "S,M,L") in un array interabile --%>
                                                 <c:forEach var="t" items="${fn:split(prodotto.taglie, ',')}">
@@ -168,7 +168,7 @@
                                     <textarea name="descrizione" id="descrizione" class="form-control" rows="4" required placeholder="Scrivi una recensione..."></textarea>
                                 </div>
 
-                                <button type="submit" class="btn-submit-review">Invia Recensione</button>
+                                <button type="submit" class="btn btn-md btn-primary">Invia Recensione</button>
                             </form>
                         </div>
                     </c:when>
@@ -195,7 +195,7 @@
                                         </span>
 
                                         <%-- Render stelle numeriche in simboli grafici --%>
-                                        <span class="review-stars">
+                                        <span class="review-stars stars">
                                             <c:forEach begin="1" end="${rec.valutazione}">★</c:forEach>
                                         </span>
 
@@ -232,7 +232,11 @@
         <%-- ========================================================================= --%>
         <c:otherwise>
             <div class="empty-state">
-                <p>Prodotto non trovato.</p>
+                <div class="empty-state-icon">
+                    <img src="${pageContext.request.contextPath}/images/icons/search.svg" alt="Prodotto non trovato" onerror="this.style.display='none';" />
+                </div>
+                <h2>Prodotto non trovato</h2>
+                <p>Il prodotto richiesto non è disponibile o è stato rimosso.</p>
             </div>
         </c:otherwise>
     </c:choose>
