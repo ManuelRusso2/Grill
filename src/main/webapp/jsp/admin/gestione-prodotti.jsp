@@ -1,8 +1,8 @@
 <%-- 
-    Pagina di gestione/amministrazione dei prodotti del catalogo.
+    Pagina di gestione/amministrazione dei prodotti del catalogo (Area Amministrativa).
     Consente agli utenti autorizzati (Admin) di:
     - Rilevare subito una sezione di avviso per i prodotti esauriti (quantità <= 0).
-    - Consultare la lista completa dei prodotti con categorie, prezzi e stato (attivo/inattivo).
+    - Consultare la lista completa dei prodotti con categorie, prezzi, aliquota IVA (%) e stato (attivo/inattivo).
     - Cercare e filtrare i prodotti in tempo reale tramite uno script JavaScript integrato.
     - Creare, modificare, rifornire ed eliminare articoli.
 --%>
@@ -64,6 +64,7 @@
                             <th>Nome</th>
                             <th>Taglie</th>
                             <th>Prezzo</th>
+                            <th>IVA</th>
                             <th>Quantità</th>
                             <th>Stato</th>
                             <th>Azioni</th>
@@ -81,13 +82,17 @@
                                     <td>
                                         <fmt:formatNumber value="${prodotto.costo}" type="currency" currencySymbol="€" />
                                     </td>
+                                    <%-- Aliquota IVA percentuale del prodotto --%>
+                                    <td>
+                                        <c:out value="${prodotto.iva}" />%
+                                    </td>
                                     <td>0</td>
                                     <td>
                                         <span class="badge-esaurito">Esaurito</span>
                                     </td>
                                     <td>
                                         <div class="action-cell">
-                                            <%-- Reindirizzamento diretto alla form di modifica per velocizzare il rifornimento --%>
+                                            <%-- Reindirizzamento diretto al form di modifica per velocizzare il rifornimento --%>
                                             <a href="${pageContext.request.contextPath}/AdminProdottoServlet?action=edit&id=${prodotto.idProdotto}" class="btn btn-sm btn-outline-purple">
                                                 ✏️ Rifornisci / Modifica
                                             </a>
@@ -126,6 +131,7 @@
                             <th>Descrizione</th>
                             <th>Taglie</th>
                             <th>Prezzo</th>
+                            <th>IVA</th>
                             <th>Quantità</th>
                             <th>Categorie</th>
                             <th>Stato</th>
@@ -152,6 +158,11 @@
                                 <%-- Prezzo di vendita formattato come valuta --%>
                                 <td>
                                     <fmt:formatNumber value="${prodotto.costo}" type="currency" currencySymbol="€" />
+                                </td>
+
+                                <%-- Aliquota IVA percentuale del prodotto --%>
+                                <td>
+                                    <c:out value="${prodotto.iva}" />%
                                 </td>
                                 
                                 <%-- Quantità attualmente disponibile in magazzino --%>
@@ -185,7 +196,7 @@
                                             Modifica
                                         </a>
 
-                                        <%-- Form per l'eliminazione con escape dei caratteri speciali nel nome del prodotto prima di darlo in pasto a JS --%>
+                                        <%-- Form per l'eliminazione con escape dei caratteri speciali nel nome prima di passarli a JS --%>
                                         <form method="post" action="${pageContext.request.contextPath}/AdminProdottoServlet?action=delete&id=${prodotto.idProdotto}" 
                                               class="form-unstyled"
                                               onsubmit="return confirm('Sei sicuro di voler eliminare il prodotto \'${fn:escapeXml(prodotto.nome)}\'?');">
@@ -231,11 +242,18 @@
             // Seleziona tutte le righe contenute all'interno del corpo della tabella (tbody)
             const rows = table.querySelectorAll('tbody tr');
 
-            // Sccorre ogni riga per valutare la corrispondenza con la chiave di ricerca
-            rows.forEach(row => {
-                // Se il testo complessivo della riga include la stringa cercata la rende visibile (''), altrimenti la nasconde ('none')
-                row.style.display = row.textContent.toLowerCase().includes(filter) ? '' : 'none';
-            });
+            // Scorre tutte le righe della tabella una alla volta
+            for (let i = 0; i < rows.length; i++) {
+                let row = rows[i];
+                let testoRiga = row.textContent.toLowerCase();
+
+                // Se il testo della riga contiene la parola cercata
+                if (testoRiga.includes(filter)) {
+                    row.style.display = '';      // Mostra la riga
+                } else {
+                    row.style.display = 'none';  // Nascondi la riga
+                }
+            }
         });
     });
 </script>

@@ -168,14 +168,6 @@
     text-decoration: underline;               /* Aggiunge la sottolineatura */
 }
 
-/* Messaggio mostrato quando lo storico ordini è vuoto */
-.empty-table-msg {
-    padding: 30px 20px;                        /* Spaziatura interna generosa */
-    color: var(--text-gray);                   /* Colore del testo secondario */
-    font-style: italic;                        /* Corsivo */
-    text-align: center;                        /* Testo centrato nella tabella/scheda */
-}
-
 /* --------------------------------------------------------------------------
    6.4 PAGINA DETTAGLIO ORDINE UTENTE
    -------------------------------------------------------------------------- */

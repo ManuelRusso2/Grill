@@ -11,6 +11,7 @@ public class ProdottoBean implements Serializable {
     private String nome;
     private String descrizione;
     private double costo;
+    private double iva = 22.0;
     private int quantita;
     private boolean attivo;
     private Integer idCollezione;
@@ -32,6 +33,9 @@ public class ProdottoBean implements Serializable {
 
     public double getCosto() { return costo; }
     public void setCosto(double costo) { this.costo = costo; }
+
+    public double getIva() { return iva; }
+    public void setIva(double iva) { this.iva = iva; }
 
     public int getQuantita() { return quantita; }
     public void setQuantita(int quantita) { this.quantita = quantita; }

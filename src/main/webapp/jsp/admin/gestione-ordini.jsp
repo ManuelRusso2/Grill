@@ -32,9 +32,9 @@
             <c:if test="${not empty clienti}">
                 <c:forEach var="c" items="${clienti}">
                     <%-- Mantiene la selezione attiva in base al parametro inviato precedentemente --%>
-                    <option value="${c.idUtente}" ${clienteSelezionato == c.idUtente ? 'selected' : ''}>
-                        <c:out value="${c.nome} ${c.cognome}" />
-                    </option>
+					<option value="${c.idUtente}" <c:if test="${clienteSelezionato == c.idUtente}">selected</c:if>>
+					    <c:out value="${c.nome} ${c.cognome}" />
+					</option>
                 </c:forEach>
             </c:if>
         </select>
@@ -55,11 +55,11 @@
         <table class="admin-table">
             <thead>
                 <tr>
-                    <th class="col-id">ID</th>
+                    <th>ID</th>
                     <th>Data</th>
                     <th>Totale</th>
                     <th>ID Cliente</th>
-                    <th class="text-right col-actions">Dettaglio</th>
+                    <th>Dettaglio</th>
                 </tr>
             </thead>
             <tbody>
@@ -86,7 +86,7 @@
                                 <td><c:out value="${o.idUtente}" /></td>
                                 
                                 <%-- Pulsante per accedere alla pagina di dettaglio dell'ordine --%>
-                                <td class="text-right">
+                                <td>
                                     <a href="${pageContext.request.contextPath}/DettaglioOrdineServlet?id=${o.idAcquisto}" class="btn btn-sm btn-outline-warning">Apri</a>
                                 </td>
                             </tr>

@@ -532,6 +532,22 @@ td form {
     color: #ff4d4d;                            /* Testo in rosso leggibile */
 }
 
+/* --------------------------------------------------------------------------
+   8.1 TABELLE E STATI VUOTI (EMPTY STATES)
+   -------------------------------------------------------------------------- */
+/* Messaggio generico per tabelle vuote o privi di risultati di ricerca */
+.empty-table-msg {
+    padding: 30px 15px;                        /* Spaziatura interna verticale ed orizzontale */
+    color: var(--text-gray);                   /* Testo grigio secondario di supporto */
+    font-size: 15px;                           /* Dimensione del testo di lettura standard */
+    font-style: italic;                        /* Corsivo per evidenziare lo stato di assenza dati */
+    text-align: center;                        /* Centratura del testo nella cella/contenitore */
+}
+
+/* ==========================================================================
+   9. LAYOUT: FOOTER GLOBALE
+   ========================================================================== */
+
 /* ==========================================================================
    9. LAYOUT: FOOTER GLOBALE
    ==========================================================================

@@ -15,7 +15,7 @@ public class ConnessioneDB {
         try {
             // Inizializza il contesto per cercare le risorse gestite da Tomcat (JNDI)
             Context initContext = new InitialContext();
-            Context envContext = (Context) initContext.lookup("java:/comp/env");
+            Context envContext = (Context) initContext.lookup("java:comp/env");
             
             // Cerca il DataSource usando lo stesso nome impostato nel context.xml
             ds = (DataSource) envContext.lookup("jdbc/grillDB");

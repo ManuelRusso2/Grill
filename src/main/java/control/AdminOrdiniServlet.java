@@ -3,7 +3,9 @@ package control;
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -103,66 +105,77 @@ public class AdminOrdiniServlet extends HttpServlet {
     }
 
     /**
-     * Applica la logica condizionale di filtraggio (per Cliente, per Intervallo di Date, o Entrambi)
-     * e imposta gli attributi nella Request per mantenere lo stato dei filtri nella vista JSP.
+     * Applica la logica condizionale di filtraggio flessibile sugli ordini.
+     * Consente di filtrare per singolo cliente, per intervallo di date (anche parziale, 
+     * compilando solo "Data Da" o solo "Data A"), o per entrambi i criteri contemporaneamente.
      * 
-     * @param request      la richiesta HTTP attiva
-     * @param clienteParam l'ID del cliente sotto forma di stringa (opzionale)
-     * @param dataDaParam  la data di inizio ricerca AAAA-MM-GG (opzionale)
-     * @param dataAParam   la data di fine ricerca AAAA-MM-GG (opzionale)
-     * @return la lista di ordini filtrati
-     * @throws SQLException in caso di errore nell'esecuzione delle query DAO
-     * @throws IllegalArgumentException in caso di parsing errato di ID o Date
+     * @param request      la richiesta HTTP da cui recuperare e su cui impostare gli attributi per la JSP
+     * @param clienteParam l'ID del cliente da filtrare (opzionale, formato stringa)
+     * @param dataDaParam  la data di inizio ricerca nel formato AAAA-MM-GG (opzionale)
+     * @param dataAParam   la data di fine ricerca nel formato AAAA-MM-GG (opzionale)
+     * @return la lista di ordini (AcquistoBean) opportunamente filtrata
+     * @throws SQLException             in caso di errore nelle query verso il database
+     * @throws IllegalArgumentException in caso di formato errato dell'ID o delle date
      */
     private List<AcquistoBean> fetchFilteredOrdini(HttpServletRequest request, String clienteParam, String dataDaParam, String dataAParam) 
             throws SQLException {
         
         List<AcquistoBean> ordini;
-        // Verifica se è stato specificato un intervallo completo di date (entrambi i parametri presenti)
-        boolean hasDateRange = (dataDaParam != null && dataAParam != null);
 
+        // -------------------------------------------------------------------------
+        // 1. RECUPERO INIZIALE DAL DATABASE
+        // -------------------------------------------------------------------------
+        // Se è stato selezionato un cliente specifico, recupera solo i suoi ordini;
+        // altrimenti carica l'elenco completo di tutti gli ordini registrati a sistema.
         if (clienteParam != null) {
-            // CASO A: È presente il filtro per Cliente
             int clienteId = Integer.parseInt(clienteParam);
-            
-            // Recupera dal DAO tutti gli ordini effettuati da quel cliente specifico
             ordini = new ArrayList<>(acquistoDAO.doRetrieveByUtente(clienteId));
             
-            // Mantiene selezionato l'ID cliente nel form di filtraggio della JSP
+            // Mantiene selezionato l'ID del cliente nel menu a tendina della vista JSP
             request.setAttribute("clienteSelezionato", clienteId);
-
-            // Applica un ulteriore filtro in memoria per l'intervallo di date se presente
-            if (hasDateRange) {
-                Date dataDa = Date.valueOf(dataDaParam);
-                Date dataA = Date.valueOf(dataAParam);
-
-                // Rimuove dalla lista gli ordini con data precedente a "dataDa" o successiva a "dataA"
-                ordini.removeIf(acquisto -> {
-                    Date dataAcquisto = new Date(acquisto.getDataAcquisto().getTime());
-                    return dataAcquisto.before(dataDa) || dataAcquisto.after(dataA);
-                });
-
-                // Mantiene le date inserite nel form della JSP
-                request.setAttribute("dataDa", dataDaParam);
-                request.setAttribute("dataA", dataAParam);
-            }
-
-        } else if (hasDateRange) {
-            // CASO B: Nessun cliente specificato, ma è impostato un intervallo di date globale
-            Date dataDa = Date.valueOf(dataDaParam);
-            Date dataA = Date.valueOf(dataAParam);
-
-            // Recupera direttamente dal DB gli ordini compresi nell'intervallo tramite query DAO
-            ordini = new ArrayList<>(acquistoDAO.doRetrieveByDateInterval(dataDa, dataA));
-            
-            // Mantiene le date inserite nel form della JSP
-            request.setAttribute("dataDa", dataDaParam);
-            request.setAttribute("dataA", dataAParam);
-
         } else {
-            // CASO C: Nessun filtro applicato -> recupera la totalità degli ordini presenti nel sistema
             ordini = new ArrayList<>(acquistoDAO.doRetrieveAll());
         }
+
+        // -------------------------------------------------------------------------
+        // 2. PARSING E CONVERSIONE DELLE DATE
+        // -------------------------------------------------------------------------
+        // Conversioni da String a java.sql.Date con ripopolamento dei campi form
+        Date dataDa = null;
+        if (dataDaParam != null) {
+            dataDa = Date.valueOf(dataDaParam);
+            request.setAttribute("dataDa", dataDaParam);
+        }
+
+        Date dataA = null;
+        if (dataAParam != null) {
+            // Aggiunge 1 giorno a dataA per includere gli ordini effettuati fino alle 23:59:59 della giornata selezionata
+            dataA = Date.valueOf(java.time.LocalDate.parse(dataAParam).plusDays(1).toString());
+            request.setAttribute("dataA", dataAParam);
+        }
+
+     // -------------------------------------------------------------------------
+     // 3. FILTRAGGIO IN MEMORIA PER DATE (CON CICLO CLASSICO SENZA LAMBDA)
+     // -------------------------------------------------------------------------
+     if (dataDa != null || dataA != null) {
+         Iterator<AcquistoBean> iterator = ordini.iterator();
+         
+         while (iterator.hasNext()) {
+             AcquistoBean acquisto = iterator.next();
+             Timestamp d = acquisto.getDataAcquisto();
+
+             // Se l'ordine è stato fatto PRIMA della "Data Da", lo rimuove
+             if (dataDa != null && d.before(dataDa)) {
+                 iterator.remove();
+                 continue;
+             }
+
+             // Se l'ordine è stato fatto DOPO la "Data A", lo rimuove
+             if (dataA != null && !d.before(dataA)) {
+                 iterator.remove();
+             }
+         }
+     }
 
         return ordini;
     }

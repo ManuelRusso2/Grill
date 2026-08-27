@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS prodotto(
     immagine VARCHAR(255) NOT NULL,
     id_collezione INTEGER,
     taglie VARCHAR(255),
+    iva DECIMAL(4,2) NOT NULL DEFAULT 22.00 CHECK (iva >= 0),
     
     FOREIGN KEY(id_collezione) REFERENCES collezione(id_collezione)
         ON UPDATE CASCADE

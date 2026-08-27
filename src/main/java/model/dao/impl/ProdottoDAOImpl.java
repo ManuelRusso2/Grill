@@ -15,169 +15,175 @@ import model.dao.ProdottoDAO;
 import utility.ConnessioneDB;
 
 /**
- * Implementazione dell'interfaccia ProdottoDAO per la gestione della persistenza dei prodotti nel DB.
- * Gestisce la logica CRUD dei prodotti, le varianti di prodotto, il raggruppamento dinamico, 
- * le associazioni con le categorie e la cancellazione logica (soft delete).
+ * Implementazione DAO per la gestione della persistenza dei prodotti nel Database.
+ * Gestisce le operazioni CRUD, il raggruppamento 
+ * delle varianti di prodotto per il catalogo, l'associazione M:N con le categorie 
+ * e la cancellazione logica (soft delete).
  */
 public class ProdottoDAOImpl implements ProdottoDAO {
 
-    // DAO per gestire le relazioni con la tabella delle Categorie
+    // DAO ausiliario per recuperare le categorie collegate a ciascun prodotto
     private final CategoriaDAO categoriaDAO = new CategoriaDAOImpl();
 
-    // --- QUERY SQL PREPARATE ---
+    // =========================================================================
+    // QUERY SQL PREPARATE
+    // =========================================================================
 
-    // Inserimento di un nuovo prodotto
+    // Inserisce un nuovo prodotto nel DB
     private static final String INSERT_PRODOTTO =
-        "INSERT INTO prodotto (nome, descrizione, costo, quantita, attivo, id_collezione, immagine, taglie) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        "INSERT INTO prodotto (nome, descrizione, costo, iva, quantita, attivo, id_collezione, immagine, taglie) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    // Aggiornamento dati di un prodotto
+    // Aggiorna tutti i campi di un prodotto esistente tramite il suo ID
     private static final String UPDATE_PRODOTTO =
-        "UPDATE prodotto SET nome = ?, descrizione = ?, costo = ?, quantita = ?, attivo = ?, id_collezione = ?, immagine = ?, taglie = ? WHERE id_prodotto = ?";
+        "UPDATE prodotto SET nome = ?, descrizione = ?, costo = ?, iva = ?, quantita = ?, attivo = ?, id_collezione = ?, immagine = ?, taglie = ? WHERE id_prodotto = ?";
 
-    // Soft delete: disattiva il prodotto invece di eliminare la riga (per preservare lo storico ordini)
+    // Soft delete: disattiva il prodotto (attivo = false) per preservare lo storico degli ordini passati
     private static final String DELETE_LOGIC_PRODOTTO =
         "UPDATE prodotto SET attivo = false WHERE id_prodotto = ?";
 
-    // Selezione per ID univoco
+    // Selezione di un singolo prodotto tramite la sua chiave primaria (ID)
     private static final String SELECT_BY_KEY =
-        "SELECT id_prodotto, nome, descrizione, costo, quantita, attivo, immagine, id_collezione, taglie FROM prodotto WHERE id_prodotto = ?";
+        "SELECT id_prodotto, nome, descrizione, costo, iva, quantita, attivo, immagine, id_collezione, taglie FROM prodotto WHERE id_prodotto = ?";
 
-    // Selezione di tutti i prodotti visibili ai clienti (attivo = true)
+    // Selezione di tutti i prodotti attivi destinati alla consultazione cliente
     private static final String SELECT_ALL_PRODOTTI =
-        "SELECT id_prodotto, nome, descrizione, costo, quantita, attivo, immagine, id_collezione, taglie FROM prodotto WHERE attivo = true";
+        "SELECT id_prodotto, nome, descrizione, costo, iva, quantita, attivo, immagine, id_collezione, taglie FROM prodotto WHERE attivo = true";
 
-    // Query per la vetrina: raggruppa le varianti dello stesso prodotto in un unico elemento dimostrativo
+    // Query vetrina: raggruppa le varianti (es. colore/taglia) sotto un unico nome base e calcola la quantita totale
     private static final String SELECT_ALL_PRODOTTI_RAGGRUPPATI =
         "SELECT MIN(id_prodotto) as id_prodotto, " +
         "SUBSTRING_INDEX(nome, ' - ', 1) as nome, " +
-        "MIN(descrizione) as descrizione, MIN(costo) as costo, " +
+        "MIN(descrizione) as descrizione, MIN(costo) as costo, MIN(iva) as iva, " +
         "SUM(quantita) as quantita, true as attivo, MIN(immagine) as immagine, MIN(id_collezione) as id_collezione, MIN(taglie) as taglie " +
         "FROM prodotto WHERE attivo = true " +
         "GROUP BY SUBSTRING_INDEX(nome, ' - ', 1) " +
         "ORDER BY MIN(id_prodotto)";
 
-    // Selezione delle specifiche varianti associate a un prodotto base (es. taglie/colori)
+    // Selezione di tutte le varianti specifiche legate a un prodotto base
     private static final String SELECT_VARIANTI =
-        "SELECT id_prodotto, nome, descrizione, costo, quantita, attivo, immagine, id_collezione, taglie " +
+        "SELECT id_prodotto, nome, descrizione, costo, iva, quantita, attivo, immagine, id_collezione, taglie " +
         "FROM prodotto WHERE attivo = true AND SUBSTRING_INDEX(nome, ' - ', 1) = ? " +
         "ORDER BY id_prodotto";
 
-    // Selezione di tutti i prodotti (inclusi quelli disattivati) per il pannello di amministrazione
+    // Selezione globale di tutti i prodotti (attivi e disattivati) per il pannello di amministrazione
     private static final String SELECT_ALL_ADMIN =
-        "SELECT id_prodotto, nome, descrizione, costo, quantita, attivo, immagine, id_collezione, taglie FROM prodotto";
+        "SELECT id_prodotto, nome, descrizione, costo, iva, quantita, attivo, immagine, id_collezione, taglie FROM prodotto";
 
-    // Ricerca live/autocompletamento per nome, descrizione o categoria (limitato a 8 risultati per efficienza)
+    // Ricerca live per autocompletamento (filtra per nome, descrizione o nome categoria)
     private static final String SELECT_BY_SEARCH =
         "SELECT DISTINCT p.id_prodotto, p.nome, p.costo " +
         "FROM prodotto p LEFT JOIN prodotto_categoria t ON p.id_prodotto = t.id_prodotto " +
         "LEFT JOIN categoria c ON t.id_categoria = c.id_categoria " +
         "WHERE p.attivo = true AND (p.nome LIKE ? OR p.descrizione LIKE ? OR c.nome LIKE ?) LIMIT 8";
 
-    // Selezione prodotti filtrati per id_categoria
+    // Selezione dei prodotti appartenenti a una specifica categoria
     private static final String SELECT_BY_CATEGORIA =
-        "SELECT p.id_prodotto, p.nome, p.descrizione, p.costo, p.quantita, p.attivo, p.immagine, p.id_collezione, p.taglie " +
+        "SELECT p.id_prodotto, p.nome, p.descrizione, p.costo, p.iva, p.quantita, p.attivo, p.immagine, p.id_collezione, p.taglie " +
         "FROM prodotto p JOIN prodotto_categoria t ON p.id_prodotto = t.id_prodotto " +
         "WHERE p.attivo = true AND t.id_categoria = ?";
 
-    // Rimozione delle relazioni con le categorie (tabella ponte M:N)
+    // Rimuove tutte le associazioni del prodotto dalla tabella ponte 'prodotto_categoria'
     private static final String DELETE_TIPOLOGIA =
         "DELETE FROM prodotto_categoria WHERE id_prodotto = ?";
 
-    // Inserimento relazione con le categorie (tabella ponte M:N)
+    // Inserisce una nuova associazione nella tabella ponte 'prodotto_categoria'
     private static final String INSERT_TIPOLOGIA =
         "INSERT INTO prodotto_categoria (id_prodotto, id_categoria) VALUES (?, ?)";
 
+    // =========================================================================
+    // METODI CRUD PRINCIPALI
+    // =========================================================================
+
     /**
-     * Inserisce un nuovo prodotto nel DB e ne salva le categorie collegate in una transazione atomica.
-     * 
-     * @param prodotto L'oggetto ProdottoBean da persistere
-     * @throws SQLException Se si verifica un errore durante le operazioni di inserimento
+     * Salva un nuovo prodotto nel Database e ne associa le categorie all'interno di una transazione.
      */
     @Override
     public void doSave(ProdottoBean prodotto) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection()) {
-            con.setAutoCommit(false); // Avvio transazione
+            con.setAutoCommit(false); // Inizio della transazione SQL
+            
             try {
                 int idProdotto;
+                
+                // Preparazione dell'inserimento con recupero della chiave generata (AUTO_INCREMENT)
                 try (PreparedStatement ps = con.prepareStatement(INSERT_PRODOTTO, Statement.RETURN_GENERATED_KEYS)) {
                     ps.setString(1, prodotto.getNome());
                     ps.setString(2, prodotto.getDescrizione());
                     ps.setDouble(3, prodotto.getCosto());
-                    ps.setInt(4, prodotto.getQuantita());
-                    ps.setBoolean(5, prodotto.isAttivo());
-                    setNullableInt(ps, 6, prodotto.getIdCollezione());
-                    ps.setString(7, getImmagineOrDefault(prodotto.getImmagine()));
-                    ps.setString(8, prodotto.getTaglie());
+                    ps.setDouble(4, prodotto.getIva());
+                    ps.setInt(5, prodotto.getQuantita());
+                    ps.setBoolean(6, prodotto.isAttivo());
+                    setNullableInt(ps, 7, prodotto.getIdCollezione());
+                    ps.setString(8, getImmagineOrDefault(prodotto.getImmagine()));
+                    ps.setString(9, prodotto.getTaglie());
 
                     ps.executeUpdate();
                     
-                    // Recupero della chiave primaria autogenerata
+                    // Recupera l'ID univoco assegnato al nuovo prodotto
                     try (ResultSet keys = ps.getGeneratedKeys()) {
                         if (!keys.next()) {
-                            throw new SQLException("Errore: Impossibile recuperare l'ID prodotto generato.");
+                            throw new SQLException("Impossibile recuperare l'ID autogenerato del nuovo prodotto.");
                         }
                         idProdotto = keys.getInt(1);
                         prodotto.setIdProdotto(idProdotto);
                     }
                 }
                 
-                // Salvataggio delle associazioni con le categorie (M:N)
+                // Salva le relazioni con le categorie nella tabella ponte
                 salvaTipologie(con, idProdotto, prodotto.getCategorie());
-                con.commit(); // Conferma transazione
+                
+                con.commit(); // Conferma definitiva della transazione
             } catch (SQLException e) {
-                con.rollback(); // Annulla transazione in caso di fallimento
+                con.rollback(); // Annulla la transazione in caso di errore
                 throw e;
             }
         }
     }
 
     /**
-     * Aggiorna un prodotto esistente e ne ri-sincronizza la lista delle categorie collegate.
-     * 
-     * @param prodotto L'oggetto ProdottoBean aggiornato
-     * @throws SQLException Se si verifica un errore durante l'aggiornamento
+     * Aggiorna i dati di un prodotto esistente nel DB (compresa l'IVA) e sincronizza le sue categorie.
      */
     @Override
     public void doUpdate(ProdottoBean prodotto) throws SQLException {
         try (Connection con = ConnessioneDB.getConnection()) {
-            con.setAutoCommit(false); // Avvio transazione
+            con.setAutoCommit(false); // Inizio della transazione SQL
+            
             try {
+                // Aggiorna le informazioni principali nella tabella 'prodotto'
                 try (PreparedStatement ps = con.prepareStatement(UPDATE_PRODOTTO)) {
                     ps.setString(1, prodotto.getNome());
                     ps.setString(2, prodotto.getDescrizione());
                     ps.setDouble(3, prodotto.getCosto());
-                    ps.setInt(4, prodotto.getQuantita());
-                    ps.setBoolean(5, prodotto.isAttivo());
-                    setNullableInt(ps, 6, prodotto.getIdCollezione());
-                    ps.setString(7, getImmagineOrDefault(prodotto.getImmagine()));
-                    ps.setString(8, prodotto.getTaglie());
-                    ps.setInt(9, prodotto.getIdProdotto());
+                    ps.setDouble(4, prodotto.getIva());
+                    ps.setInt(5, prodotto.getQuantita());
+                    ps.setBoolean(6, prodotto.isAttivo());
+                    setNullableInt(ps, 7, prodotto.getIdCollezione());
+                    ps.setString(8, getImmagineOrDefault(prodotto.getImmagine()));
+                    ps.setString(9, prodotto.getTaglie());
+                    ps.setInt(10, prodotto.getIdProdotto());
 
                     ps.executeUpdate();
                 }
 
-                // Sincronizzazione categorie: cancella le vecchie e inserisce le nuove
+                // Sincronizzazione categorie: cancella le vecchie associazioni dalla tabella ponte
                 try (PreparedStatement ps = con.prepareStatement(DELETE_TIPOLOGIA)) {
                     ps.setInt(1, prodotto.getIdProdotto());
                     ps.executeUpdate();
                 }
                 
+                // Inserisce le nuove associazioni aggiornate
                 salvaTipologie(con, prodotto.getIdProdotto(), prodotto.getCategorie());
-                con.commit(); // Conferma transazione
+                
+                con.commit(); // Conferma definitiva della transazione
             } catch (SQLException e) {
-                con.rollback(); // Annulla transazione
+                con.rollback(); // Annulla la transazione in caso di errore
                 throw e;
             }
         }
     }
 
     /**
-     * Esegue una cancellazione LOGICA (soft delete) impostando 'attivo = false'.
-     * Mantiene l'integrità dei dati referenziati dagli ordini passati.
-     * 
-     * @param idProdotto L'ID del prodotto da disattivare
-     * @return true se l'operazione ha avuto successo
-     * @throws SQLException In caso di errore SQL
+     * Disattiva logicamente un prodotto imponendo attivo = false (Soft Delete).
      */
     @Override
     public boolean doDelete(int idProdotto) throws SQLException {
@@ -188,11 +194,12 @@ public class ProdottoDAOImpl implements ProdottoDAO {
         }
     }
 
+    // =========================================================================
+    // METODI DI LETTURA E QUERY CATALOGO
+    // =========================================================================
+
     /**
-     * Recupera un singolo prodotto dal database tramite il suo ID.
-     * 
-     * @param idProdotto L'ID del prodotto
-     * @return L'oggetto ProdottoBean associato o null se non trovato
+     * Cerca un prodotto nel DB tramite la sua chiave primaria (ID).
      */
     @Override
     public ProdottoBean doRetrieveByKey(int idProdotto) throws SQLException {
@@ -200,14 +207,16 @@ public class ProdottoDAOImpl implements ProdottoDAO {
              PreparedStatement ps = con.prepareStatement(SELECT_BY_KEY)) {
             ps.setInt(1, idProdotto);
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return mapRow(rs);
+                if (rs.next()) {
+                    return mapRow(rs);
+                }
             }
         }
         return null;
     }
 
     /**
-     * Recupera l'elenco di tutti i prodotti attivi
+     * Recupera tutti i prodotti attualmente attivi sul sito.
      */
     @Override
     public List<ProdottoBean> doRetrieveAllProdotti() throws SQLException {
@@ -215,14 +224,15 @@ public class ProdottoDAOImpl implements ProdottoDAO {
         try (Connection con = ConnessioneDB.getConnection();
              PreparedStatement ps = con.prepareStatement(SELECT_ALL_PRODOTTI);
              ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) prodotti.add(mapRow(rs));
+            while (rs.next()) {
+                prodotti.add(mapRow(rs));
+            }
         }
         return prodotti;
     }
 
     /**
-     * Recupera tutti i prodotti presenti nel sistema (inclusi quelli disattivati).
-     * Riservato all'utilizzo del pannello Admin.
+     * Recupera l'elenco completo dei prodotti (inclusi quelli disattivati) per l'Admin.
      */
     @Override
     public List<ProdottoBean> doRetrieveAllAdmin() throws SQLException {
@@ -230,15 +240,15 @@ public class ProdottoDAOImpl implements ProdottoDAO {
         try (Connection con = ConnessioneDB.getConnection();
              PreparedStatement ps = con.prepareStatement(SELECT_ALL_ADMIN);
              ResultSet rs = ps.executeQuery()) {
-            while (rs.next()) prodotti.add(mapRow(rs));
+            while (rs.next()) {
+                prodotti.add(mapRow(rs));
+            }
         }
         return prodotti;
     }
 
     /**
-     * Recupera la lista di prodotti appartenenti a una specifica categoria.
-     * 
-     * @param idCategoria L'ID della categoria da filtrare
+     * Recupera tutti i prodotti associati a una specifica categoria.
      */
     @Override
     public List<ProdottoBean> doRetrieveByCategoria(int idCategoria) throws SQLException {
@@ -247,15 +257,16 @@ public class ProdottoDAOImpl implements ProdottoDAO {
              PreparedStatement ps = con.prepareStatement(SELECT_BY_CATEGORIA)) {
             ps.setInt(1, idCategoria);
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) prodotti.add(mapRow(rs));
+                while (rs.next()) {
+                    prodotti.add(mapRow(rs));
+                }
             }
         }
         return prodotti;
     }
 
     /**
-     * Recupera i prodotti attivi raggruppati per nome base
-     * Somma la quantità totale disponibile per tutte le varianti correlate.
+     * Recupera la lista dei prodotti raggruppati per nome base da mostrare nel catalogo.
      */
     @Override
     public List<ProdottoBean> doRetrieveAllProdottiRaggruppati() throws SQLException {
@@ -269,6 +280,7 @@ public class ProdottoDAOImpl implements ProdottoDAO {
                 p.setNome(rs.getString("nome"));
                 p.setDescrizione(rs.getString("descrizione"));
                 p.setCosto(rs.getDouble("costo"));
+                p.setIva(rs.getDouble("iva")); // Mappa l'IVA
                 p.setQuantita(rs.getInt("quantita"));
                 p.setAttivo(true);
                 p.setImmagine(rs.getString("immagine"));
@@ -281,9 +293,7 @@ public class ProdottoDAOImpl implements ProdottoDAO {
     }
 
     /**
-     * Recupera tutte le varianti specifiche per un dato nome prodotto base.
-     * 
-     * @param nomeBase Il nome identificativo condiviso tra le varianti
+     * Recupera le varianti collegate a un nome prodotto base.
      */
     @Override
     public List<ProdottoBean> doRetrieveVarianti(String nomeBase) throws SQLException {
@@ -292,18 +302,16 @@ public class ProdottoDAOImpl implements ProdottoDAO {
              PreparedStatement ps = con.prepareStatement(SELECT_VARIANTI)) {
             ps.setString(1, nomeBase);
             try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) prodotti.add(mapRow(rs));
+                while (rs.next()) {
+                    prodotti.add(mapRow(rs));
+                }
             }
         }
         return prodotti;
     }
 
     /**
-     * Ricerca avanzata/suggerimenti live per il modulo di ricerca del sito.
-     * Cerca all'interno di: nome prodotto, descrizione e nome della categoria.
-     * 
-     * @param query Testo digitato dall'utente
-     * @return Una lista ridotta di oggetti ProdottoBean popolati solo con i campi essenziali
+     * Esegue la ricerca rapida per la barra di autocompletamento live.
      */
     @Override
     public List<ProdottoBean> doRetrieveBySearch(String query) throws SQLException {        
@@ -327,24 +335,29 @@ public class ProdottoDAOImpl implements ProdottoDAO {
         return prodotti;
     }
 
+    // =========================================================================
+    // METODI AUXILIARI PRIVATI
+    // =========================================================================
+
     /**
-     * Metodo privato per l'inserimento delle categorie collegate al prodotto 
+     * Salva le relazioni tra il prodotto e le sue categorie tramite query batch.
      */
     private void salvaTipologie(Connection con, int idProdotto, List<CategoriaBean> categorie) throws SQLException {
         if (categorie == null || categorie.isEmpty()) return;
+        
         try (PreparedStatement ps = con.prepareStatement(INSERT_TIPOLOGIA)) {
-            for (CategoriaBean cat : categorie) {
+            for (int i = 0; i < categorie.size(); i++) {
+                CategoriaBean cat = categorie.get(i);
                 ps.setInt(1, idProdotto);
                 ps.setInt(2, cat.getIdCategoria());
-                ps.addBatch(); // Accoda la query nel batch
+                ps.addBatch(); // Accoda l'operazione nel batch
             }
-            ps.executeBatch(); // Esegue le query accodate in un'unica chiamata DB
+            ps.executeBatch(); // Esegue tutti gli inserimenti in una sola chiamata DB
         }
     }
 
     /**
-     * Mappa una riga di ResultSet in un oggetto ProdottoBean, inclusa l'estrazione
-     * differita/annidata delle categorie associate tramite `categoriaDAO`.
+     * Mappa una riga di ResultSet in un oggetto ProdottoBean.
      */
     private ProdottoBean mapRow(ResultSet rs) throws SQLException {
         ProdottoBean prodotto = new ProdottoBean();
@@ -352,31 +365,35 @@ public class ProdottoDAOImpl implements ProdottoDAO {
         prodotto.setNome(rs.getString("nome"));
         prodotto.setDescrizione(rs.getString("descrizione"));
         prodotto.setCosto(rs.getDouble("costo"));
+        prodotto.setIva(rs.getDouble("iva")); // Legge l'aliquota IVA dal Resultset
         prodotto.setQuantita(rs.getInt("quantita"));
         prodotto.setAttivo(rs.getBoolean("attivo"));
         prodotto.setImmagine(rs.getString("immagine"));
         prodotto.setTaglie(rs.getString("taglie"));
         prodotto.setIdCollezione(rs.getInt("id_collezione"));
 
-        // Caricamento delle categorie collegate tramite il relativo DAO
+        // Recupera ed imposta le categorie associate al prodotto tramite CategoriaDAO
         try {
             prodotto.setCategorie(categoriaDAO.doRetrieveByProdotto(prodotto.getIdProdotto()));
         } catch (SQLException e) {
             prodotto.setCategorie(new ArrayList<>());
         }
+        
         return prodotto;
     }
 
     /**
-     * Utility method: Ritorna il percorso dell'immagine fornito o un'immagine di fallback di default.
+     * Ritorna l'immagine specificata oppure l'immagine di default se il parametro è vuoto.
      */
     private String getImmagineOrDefault(String immagine) {
-        return (immagine != null && !immagine.trim().isEmpty()) ? immagine : "images/default.jpg";
+        if (immagine != null && !immagine.trim().isEmpty()) {
+            return immagine;
+        }
+        return "images/default.jpg";
     }
 
     /**
-     * Utility method: Gestisce i valori interi opzionali (Foreign Keys nullable) 
-     * impostando NULL su PreparedStatement se il valore è null/0.
+     * Gestisce i campi numerici opzionali (Foreign Keys nullable) inserendo NULL in caso di valore 0 o assente.
      */
     private void setNullableInt(PreparedStatement ps, int paramIndex, Integer value) throws SQLException {
         if (value != null && value > 0) {
