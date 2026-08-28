@@ -16,7 +16,7 @@ import model.dao.impl.UtenteDAOImpl;
 /**
  *LoginServlet
  * Servlet controller responsabile della gestione dell'autenticazione degli utenti (processo di Login).
- * Implementa l'architettura <b>MVC (Model-View-Controller):
+ * Implementa l'architettura MVC (Model-View-Controller):
  *   GET: Verifica l'eventuale sessione già attiva e smista l'utente verso la vista di Login o la Home.
  *   POST: Riceve le credenziali dal form, le valida, le verifica sul database tramite DAO e gestisce la sessione in sicurezza.
  */
@@ -131,7 +131,7 @@ public class LoginServlet extends HttpServlet {
                 // Salvataggio del JavaBean dell'utente all'interno della sessione
                 session.setAttribute("utente", utente);
 
-                // Pattern PRG (Post-Redirect-Get): Reindirizzamento alla Home per evitare 
+                // Reindirizzamento alla Home per evitare 
                 // l'invio duplicato dei dati del form in caso di refresh della pagina
                 response.sendRedirect(request.getContextPath() + "/jsp/common/home.jsp");
                 

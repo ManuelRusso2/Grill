@@ -78,7 +78,7 @@ public class CategorieFilter implements Filter {
         }
 
         // =========================================================================
-        // 2. VERIFICA E CARICAMENTO LAZY DELLE CATEGORIE
+        // 2. VERIFICA E CARICAMENTO DELLE CATEGORIE
         // Esegue la query su DB soltanto se l'attributo "categorie" non è ancora presente
         // nella Request (es. evita re-query in caso di inoltri con Forward).
         // =========================================================================

@@ -101,8 +101,28 @@ public class RegistrationServlet extends HttpServlet {
         // =========================================================================
         // 2. DEFINIZIONE DELLE REGOLE DI VALIDAZIONE (REGEX)
         // =========================================================================
-        String emailRegex    = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[a-zA-Z]{2,}$";
-        String telefonoRegex = "^[0-9+\\s\\-]{7,20}$";
+        
+     // =========================================================================
+     // REGEX VALIDAZIONE EMAIL
+     // =========================================================================
+     // ^                  : Inizio della stringa
+     // [A-Za-z0-9+_.-]+   : Nome utente (lettere, numeri e caratteri +, _, ., -)
+     // @                  : Simbolo chiocciola obbligatorio
+     // [A-Za-z0-9.-]+     : Nome del dominio (lettere, numeri, punti e trattini)
+     // \\.                : Punto letterale che separa dominio ed estensione (serve \\ per l'escape)
+     // [a-zA-Z]{2,}       : Estensione del dominio (es. .it, .com) con almeno 2 lettere
+     // $                  : Fine della stringa
+     String emailRegex = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[a-zA-Z]{2,}$";
+
+
+     // =========================================================================
+     // REGEX VALIDAZIONE NUMERO DI TELEFONO
+     // =========================================================================
+     // ^                  : Inizio della stringa
+     // [0-9+\\s\\-]       : Caratteri consentiti: cifre (0-9), prefisso (+), spazi (\\s) o trattini (\\-)
+     // {7,20}             : Il numero totale di caratteri deve essere compreso tra 7 e 20
+     // $                  : Fine della stringa
+     String telefonoRegex = "^[0-9+\\s\\-]{7,20}$";
         boolean hasErrors = false;
 
         // =========================================================================
@@ -201,7 +221,7 @@ public class RegistrationServlet extends HttpServlet {
             HttpSession session = request.getSession(true);
             session.setAttribute("utente", nuovoUtente);
 
-            // Reindirizzamento alla Home Page mediante il pattern PRG (Post-Redirect-Get)
+            // Reindirizzamento alla Home Page
             response.sendRedirect(request.getContextPath() + "/jsp/common/home.jsp");
 
         } catch (SQLException e) {

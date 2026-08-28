@@ -45,7 +45,7 @@
         <div class="form-group">
             <label for="email">Indirizzo Email</label>
             <%-- Mantiene precompilata l'email inserita in precedenza in caso di errore di autenticazione --%>
-            <input id="email" type="email" name="email" class="form-control"
+            <input id="email" type="email" name="email"
                    value="<c:out value='${param.email}' />" 
                    required placeholder="nome@esempio.it" autocomplete="email">
         </div>
@@ -53,7 +53,7 @@
         <%-- Campo di inserimento Password dell'utente --%>
         <div class="form-group">
             <label for="password">Password</label>
-            <input id="password" type="password" name="password" class="form-control"
+            <input id="password" type="password" name="password"
                    required placeholder="Inserisci la password" autocomplete="current-password">
         </div>
 

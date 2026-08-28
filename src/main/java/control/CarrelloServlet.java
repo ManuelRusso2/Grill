@@ -217,7 +217,6 @@ public class CarrelloServlet extends HttpServlet {
                 return;
             }
 
-            // Pattern Post-Redirect-Get (PRG) per sottomissioni standard per evitare re-invii del form
             response.sendRedirect(request.getContextPath() + "/CarrelloServlet");
 
         } catch (SQLException e) {
@@ -233,34 +232,53 @@ public class CarrelloServlet extends HttpServlet {
         }
     }
 
-    // =========================================================================
-    // METODI PRIVATI PER LA LOGICA DI DOMINIO
+ // =========================================================================
+    // METODI PRIVATI PER LA LOGICA DI DOMINIO (CARRELLO)
     // =========================================================================
 
     /**
-     * Recupera il carrello associato all'utente o ne crea uno nuovo a DB se assente.
+     * Recupera il carrello associato all'utente o ne crea uno nuovo a DB se non ancora presente.
+     * 
+     * @param idUtente L'ID dell'utente autenticato
+     * @return CarrelloBean Il carrello valido (esistente o appena creato)
+     * @throws SQLException In caso di errore durante l'accesso al database
      */
     private CarrelloBean ottieniOCreaCarrello(int idUtente) throws SQLException {
+        // 1. Cerca il carrello esistente associato all'ID utente
         CarrelloBean carrello = carrelloDAO.doRetrieveByUtente(idUtente);
+        
+        // 2. Se l'utente non possiede ancora un carrello, ne crea uno nuovo
         if (carrello == null) {
             carrello = new CarrelloBean();
             carrello.setIdUtente(idUtente);
-            carrelloDAO.doSave(carrello); // Salva il nuovo carrello
-            carrello = carrelloDAO.doRetrieveByUtente(idUtente); // Recupera il carrello appena generato con l'ID
+            
+            // Persiste il nuovo carrello nel DB
+            carrelloDAO.doSave(carrello); 
+            
+            // Rilegge il carrello dal DB per ottenere l'ID autogenerato dalla chiave primaria
+            carrello = carrelloDAO.doRetrieveByUtente(idUtente); 
         }
         return carrello;
     }
 
     /**
-     * Gestisce l'aggiunta di un prodotto e della relativa quantità/taglia al carrello.
-     * Utilizza il calcolo totale via DB per considerare tutte le taglie ed evitare il superamento dello stock.
+     * Gestisce l'inserimento di un prodotto nel carrello dell'utente.
+     * Effettua i controlli di validità dell'input, presenza del prodotto a DB e 
+     * verifica che la quantità totale richiesta non superi lo stock di magazzino.
+     * 
+     * @param request  La richiesta HTTP contenente i parametri dell'articolo
+     * @param session  La sessione utente per la gestione dei messaggi di esito (Flash Messages)
+     * @param carrello Il carrello dell'utente a cui aggiungere il prodotto
+     * @throws SQLException In caso di errore durante le query al database
      */
     private void aggiungiProdotto(HttpServletRequest request, HttpSession session, CarrelloBean carrello) throws SQLException {
+        // 1. Estrazione e sanitizzazione dei parametri dalla richiesta
         int idProdotto = estraiIdProdotto(request);
         String taglia = getTrimmedParam(request, "taglia");
         if (taglia == null) taglia = "";
 
-        int quantitaDaAggiungere = 1; // Quantità di default
+        // Imposta la quantità di default ad 1 se non espressamente specificata
+        int quantitaDaAggiungere = 1; 
         String qtyParam = getTrimmedParam(request, "quantita");
         if (qtyParam != null) {
             try {
@@ -271,22 +289,22 @@ public class CarrelloServlet extends HttpServlet {
             }
         }
 
-        // Validazione dei valori di input
+        // 2. Validazione di base dei parametri di input
         if (idProdotto <= 0 || quantitaDaAggiungere <= 0) {
             session.setAttribute("errorMessage", "Dati prodotto o quantità non validi.");
             return;
         }
 
-        // Verifica l'effettiva esistenza del prodotto a DB
+        // 3. Recupero delle informazioni aggiornate del prodotto dal database
         ProdottoBean prodotto = prodottoDAO.doRetrieveByKey(idProdotto);
 
-        // Controlla che il prodotto esista, sia attivo e disponibile in magazzino
+        // 4. Verifica di disponibilità: il prodotto deve esistere, essere attivo e avere giacenza > 0
         if (prodotto != null && prodotto.isAttivo() && prodotto.getQuantita() > 0) {
             
-            // Calcola il totale complessivo dei pezzi di questo idProdotto già a carrello (somma di TUTTE le taglie)
+            // Calcola la somma di tutti i pezzi di questo articolo già presente nel carrello (tutte le taglie)
             int quantitaGiaInCarrello = contenutoDAO.getQuantitaTotaleProdottoInCarrello(carrello.getIdCarrello(), idProdotto);
 
-            // Verifica che la somma (totale presente + nuova quantità) non superi lo stock disponibile a magazzino
+            // Controlla che (pezzi già in carrello + nuovi pezzi) non superi lo stock fisico in magazzino
             if (quantitaGiaInCarrello + quantitaDaAggiungere <= prodotto.getQuantita()) {
                 contenutoDAO.doAddProduct(carrello.getIdCarrello(), prodotto.getIdProdotto(), quantitaDaAggiungere, taglia);
                 session.setAttribute("successMessage", "Prodotto aggiunto al carrello!");
@@ -299,7 +317,12 @@ public class CarrelloServlet extends HttpServlet {
     }
 
     /**
-     * Rimuove uno specifico prodotto/taglia dal carrello.
+     * Rimuove un articolo specificato (per ID e taglia) dal carrello.
+     * 
+     * @param request  La richiesta HTTP contenente l'ID del prodotto e la taglia
+     * @param session  La sessione per impostare il messaggio di conferma
+     * @param carrello Il carrello dell'utente
+     * @throws SQLException In caso di errore durante la cancellazione da DB
      */
     private void rimuoviProdotto(HttpServletRequest request, HttpSession session, CarrelloBean carrello) throws SQLException {
         int idProdotto = estraiIdProdotto(request);
@@ -313,7 +336,13 @@ public class CarrelloServlet extends HttpServlet {
     }
 
     /**
-     * Aggiorna la quantità di un prodotto già presente nel carrello.
+     * Aggiorna la quantità di un elemento già presente nel carrello.
+     * Se la nuova quantità impostata è minore o uguale a zero, l'articolo viene rimosso dal carrello.
+     * 
+     * @param request  La richiesta HTTP contenente la nuova quantità
+     * @param session  La sessione per notificare eventuali errori o conferme
+     * @param carrello Il carrello su cui operare
+     * @throws SQLException In caso di errore di aggiornamento a DB
      */
     private void aggiornaQuantita(HttpServletRequest request, HttpSession session, CarrelloBean carrello) throws SQLException {
         int idProdotto = estraiIdProdotto(request);
@@ -335,35 +364,48 @@ public class CarrelloServlet extends HttpServlet {
 
         ProdottoBean prodotto = prodottoDAO.doRetrieveByKey(idProdotto);
 
-        // Se la quantità è positiva ed entro i limiti del magazzino, aggiorna
+        // Caso 1: Nuova quantità positiva ed entro i limiti del magazzino -> Aggiorna la riga
         if (prodotto != null && nuovaQuantita > 0 && nuovaQuantita <= prodotto.getQuantita()) {
             contenutoDAO.doUpdateQuantity(carrello.getIdCarrello(), idProdotto, nuovaQuantita, taglia);
             session.setAttribute("successMessage", "Quantità aggiornata con successo.");
-        } else if (nuovaQuantita <= 0) {
-            // Se l'utente imposta quantità <= 0, rimuove l'articolo
+        } 
+        // Caso 2: Quantità imposta <= 0 -> Rimuove direttamente il prodotto dal carrello
+        else if (nuovaQuantita <= 0) {
             contenutoDAO.doRemoveProduct(carrello.getIdCarrello(), idProdotto, taglia);
             session.setAttribute("successMessage", "Prodotto rimosso dal carrello.");
-        } else {
+        } 
+        // Caso 3: Quantità richiesta superiore alla giacenza a magazzino -> Notifica l'errore
+        else {
             session.setAttribute("errorMessage", "Quantità non disponibile a magazzino.");
         }
     }
 
     // =========================================================================
-    // METODI HELPER
+    // METODI DI UTILITÀ E SUPPORTO (HELPER METHODS)
     // =========================================================================
 
     /**
-     * Sposta un attributo temporaneo dalla sessione alla request per essere consumato dalla JSP.
+     * Trasferisce un attributo di notifica dalla Sessione alla Request (Pattern Flash Attribute).
+     * Garantisce che i messaggi sopravvivano al reindirizzamento (PRG) e vengano subito rimossi 
+     * dalla sessione per evitare che compaiano nuovamente nelle pagine successive.
+     * 
+     * @param session       La sessione HTTP da cui prelevare l'attributo
+     * @param request       La richiesta HTTP in cui iniettare l'attributo per la JSP
+     * @param attributeName Il nome dell'attributo (es. "successMessage", "errorMessage")
      */
     private void moveSessionAttributeToRequest(HttpSession session, HttpServletRequest request, String attributeName) {
         if (session != null && session.getAttribute(attributeName) != null) {
             request.setAttribute(attributeName, session.getAttribute(attributeName));
-            session.removeAttribute(attributeName); // Rimuove l'attributo per non lasciarlo persistente
+            session.removeAttribute(attributeName); // Rimuove il messaggio per consumarlo una sola volta
         }
     }
 
     /**
-     * Estrae un parametro dalla richiesta applicando il trim ed eliminando gli spazi bianchi.
+     * Estrae un parametro dalla richiesta HTTP rimuovendo spazi bianchi iniziali e finali.
+     * 
+     * @param request La richiesta HTTP
+     * @param name    Il nome del parametro da recuperare
+     * @return String La stringa ripulita, oppure {@code null} se il parametro è assente o vuoto
      */
     private String getTrimmedParam(HttpServletRequest request, String name) {
         String value = request.getParameter(name);
@@ -371,7 +413,11 @@ public class CarrelloServlet extends HttpServlet {
     }
 
     /**
-     * Cerca di estrarre l'ID del prodotto provando sia la chiave "id" che "idProdotto".
+     * Tenta l'estrazione dell'ID prodotto supportando sia il parametro "id" che "idProdotto".
+     * Garantisce la compatibilità con chiamate arrivate da form o script JS differenti.
+     * 
+     * @param request La richiesta HTTP
+     * @return int L'ID del prodotto convertito, oppure -1 in caso di errore/assenza
      */
     private int estraiIdProdotto(HttpServletRequest request) {
         String idStr = getTrimmedParam(request, "id");
@@ -389,17 +435,27 @@ public class CarrelloServlet extends HttpServlet {
     }
 
     /**
-     * Invia una risposta formattata in JSON con opportuno status code ed encoding UTF-8.
+     * Scrive direttamente nello stream di risposta un payload in formato JSON.
+     * Configura lo status code HTTP, il MIME type "application/json" e la codifica UTF-8.
+     * 
+     * @param response    La risposta HTTP
+     * @param status      Lo stato HTTP da impostare (es. 200 OK, 400 Bad Request, 401 Unauthorized)
+     * @param jsonContent La stringa JSON da inviare al client
+     * @throws IOException In caso di errore durante la scrittura sullo stream di output
      */
     private void sendJsonResponse(HttpServletResponse response, int status, String jsonContent) throws IOException {
-        response.setStatus(status); // Imposta lo stato HTTP (200, 400, 401, 403, 500)
-        response.setContentType("application/json"); // Notifica al client che la risposta è un JSON
+        response.setStatus(status);
+        response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(jsonContent); // Scrive il corpo JSON
+        response.getWriter().write(jsonContent);
     }
 
     /**
-     * Effettua l'escape dei caratteri speciali per evitare errori di sintassi nella creazione di stringhe JSON manuali.
+     * Effettua l'escape dei caratteri speciali nei testi per evitare la rottura 
+     * della sintassi nelle risposte JSON composte manualmente.
+     * 
+     * @param input La stringa di testo da ripulire
+     * @return String La stringa formattata con l'escape per JSON
      */
     private String escapeJson(String input) {
         if (input == null) return "";
