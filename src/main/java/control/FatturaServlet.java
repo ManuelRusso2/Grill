@@ -214,7 +214,7 @@ public class FatturaServlet extends HttpServlet {
         document.add(new Paragraph("Data: " + dataFormattata));
         
         // -------------------------------------------------------------------------
-        // B. DATI MITTENTE (ESERCIZIO/AZIENDA)
+        // B. DATI MITTENTE (AZIENDA)
         // -------------------------------------------------------------------------
         document.add(new Paragraph("\nVenditore:").setBold());
         document.add(new Paragraph("Grill Store\nVia Roma 10, Salerno\nP.IVA: 01234567890"));

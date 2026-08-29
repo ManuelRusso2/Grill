@@ -143,11 +143,19 @@
    4. LAYOUT DI STAMPA FATTURA (@media print)
    ==========================================================================
    Stili dedicati alla generazione del documento di fattura (A4 / PDF).
+   Rimuove l'interfaccia web e riorganizza la pagina per una resa grafica
+   pulita ed elegante in bianco e nero, priva di intestazioni automatiche del browser.
    ========================================================================== */
 
 /* Nasconde gli elementi ad esclusivo uso di stampa durante la normale navigazione web */
 .print-only {
-    display: none;                             /* Nasconde l'elemento durante la normale navigazione */
+    display: none;                             /* Nasconde i blocchi riservati alla fattura a schermo */
+}
+
+/* Configurazione fondamentale della pagina per eliminare le intestazioni native del browser */
+@page {
+    size: auto;                                /* Mantiene la dimensione predefinita del foglio (A4) */
+    margin: 0mm;                               /* MARGINE ZERO: elimina URL, data e titolo inseriti dal browser */
 }
 
 @media print {
@@ -162,102 +170,110 @@
     body a.btn,
     body .btn,
     body .web-only {
-        display: none;                         /* Nasconde tutti gli elementi di navigazione web */
+        display: none;                         /* Nasconde la navbar, il footer, i filtri ed i pulsanti d'azione */
     }
 
     /* 2. Attivazione della struttura dedicata al layout di fattura */
     body .print-only {
-        display: block;                        /* Mostra gli elementi riservati alla stampa */
+        display: block;                        /* Rende visibili solo sul foglio stampato i blocchi fattura */
     }
 
-    /* 3. Reset dei contenitori di pagina per sfondo bianco e testo nero nitido */
-    body, 
+    /* 3. Reset del body con padding interno per distanziare i contenuti dai bordi del foglio A4 */
+    body {
+        background: #ffffff;                   /* Forza lo sfondo bianco puro per risparmiare inchiostro */
+        color: #000000;                        /* Imposta il testo in nero nitido ad alto contrasto */
+        padding: 15mm 20mm;                    /* Crea il margine visivo sul foglio (1.5cm alto/basso, 2cm lati) */
+        margin: 0;                             /* Azzera i margini esterni del body */
+        width: 100%;                           /* Espande il corpo pagina all'intera larghezza del foglio */
+    }
+
+    /* 4. Reset dei contenitori principali per rimuovere stili web (ombre, sfondi scuri, bordi) */
     body main.container, 
     body .order-detail-container, 
     body .order-detail-card {
-        background: #ffffff;                   /* Sfondo bianco puro per il risparmio di inchiostro */
-        color: #000000;                        /* Testo nero ad alto contrasto per la stampa */
-        box-shadow: none;                      /* Rimuove ombreggiatura dalle schede */
-        border: none;                          /* Elimina bordi decorativi del tema */
-        padding: 0;                            /* Azzera le spaziatura interne */
-        margin: 0;                             /* Azzera i margini esterni per stare nel foglio A4 */
+        background: transparent;               /* Sfondo trasparente per ereditare il bianco del body */
+        color: #000000;                        /* Colore del testo nero puro */
+        box-shadow: none;                      /* Rimuove le ombreggiature esterne delle schede web */
+        border: none;                          /* Elimina i bordi decorativi del tema scuro */
+        padding: 0;                            /* Azzera i padding interni dei contenitori web */
+        margin: 0;                             /* Azzera i margini esterni dei contenitori web */
         width: 100%;                           /* Occupazione a tutta larghezza del foglio */
-        max-width: 100%;                       /* Disabilita i limiti di larghezza massima */
+        max-width: 100%;                       /* Rimuove i limiti di larghezza massima (es. 1100px) */
     }
 
-    /* 4. Formattazione dell'intestazione del documento stampabile */
+    /* 5. Formattazione dell'intestazione del documento stampabile */
     body h1.invoice-title-print {
-        text-align: center;                    /* Titolo della fattura centrato in alto */
-        font-size: 28px;                       /* Dimensione marcata per l'intestazione */
-        font-weight: bold;                     /* Testo in grassetto */
-        margin-bottom: 5px;                    /* Distacco dal sottotitolo */
-        color: #000000;                        /* Colore nero puro */
+        text-align: center;                    /* Centra il titolo "FATTURA" in cima alla pagina */
+        font-size: 28px;                       /* Dimensione marcata ed in evidenza */
+        font-weight: bold;                     /* Grassetto per massima leggibilità */
+        margin-bottom: 5px;                    /* Spaziatura ridotta verso il sottotitolo */
+        color: #000000;                        /* Testo nero puro */
     }
 
     body p.invoice-sub-print {
-        font-size: 14px;                       /* Dimensione del sottotitolo fattura */
-        margin-bottom: 20px;                   /* Distanza dalla griglia dei dati */
-        color: #000000;                        /* Colore testo nero */
+        font-size: 14px;                       /* Dimensione del testo per il sottotitolo con numero e data */
+        margin-bottom: 20px;                   /* Spazio inferiore di distacco dalla griglia dati */
+        color: #000000;                        /* Testo nero puro */
     }
 
     body div.invoice-grid-print {
-        display: flex;                         /* Disposizione flessibile dei dati acquirente/venditore */
-        justify-content: space-between;        /* Spinge le due colonne sui lati opposti */
-        margin-bottom: 15px;                   /* Spazio inferiore dal separatore */
-        font-size: 13px;                       /* Dimensione testo leggibile */
-        line-height: 1.4;                      /* Interlinea adeguata alla lettura */
-        color: #000000;                        /* Testo nero */
+        display: flex;                         /* Disposizione flessibile per affiancare i due blocchi dati */
+        justify-content: space-between;        /* Posiziona i dati del venditore a sinistra ed il cliente a destra */
+        margin-bottom: 15px;                   /* Distanza dalla linea orizzontale divisoria */
+        font-size: 13px;                       /* Dimensione del testo per i dati fiscali */
+        line-height: 1.4;                      /* Interlinea bilanciata per i blocchi di testo multilinea */
+        color: #000000;                        /* Testo nero puro */
     }
 
     body hr.invoice-hr-print {
-        border: none;                          /* Rimuove il bordo predefinito */
-        border-top: 1px solid #000000;         /* Linea divisoria nera sottile */
-        margin: 15px 0;                        /* Spaziatura verticale della linea */
+        border: none;                          /* Rimuove lo stile predefinito della linea orizzontale */
+        border-top: 1px solid #000000;         /* Sostituisce con una linea nera sottile e netta */
+        margin: 15px 0;                        /* Spaziatura verticale attorno alla linea divisoria */
     }
 
-    /* 5. Tabella prodotti in bianco e nero con bordi definiti */
+    /* 6. Tabella prodotti in bianco e nero con bordi definiti per la stampa */
     body table.cart-table {
-        width: 100%;                           /* Tabella prodotti a tutta larghezza */
-        border-collapse: collapse;             /* Unifica i bordi delle celle */
-        margin: 15px 0;                        /* Spaziatura verticale della tabella */
+        width: 100%;                           /* Estende la tabella dei prodotti a tutta larghezza */
+        border-collapse: collapse;             /* Unifica i bordi delle celle adiacenti in un'unica linea */
+        margin: 15px 0;                        /* Spaziatura verticale sopra e sotto la tabella */
     }
 
     body table.cart-table th, 
     body table.cart-table td {
-        border: 1px solid #000000;             /* Bordo nero definito attorno alle celle */
-        padding: 8px;                          /* Spaziatura interna delle celle */
-        color: #000000;                        /* Testo nero per tutte le righe */
-        background: transparent;               /* Sfondo trasparente senza colorazioni */
-        text-align: left;                      /* Allineamento del testo a sinistra */
+        border: 1px solid #000000;             /* Bordo nero definito perimetrale su ciascuna cella */
+        padding: 8px;                          /* Spaziatura interna confortevole per la lettura dei dati */
+        color: #000000;                        /* Forza il testo delle celle in nero */
+        background: transparent;               /* Annulla eventuali sfondi scuri o righe alternate */
+        text-align: left;                      /* Allineamento a sinistra per i titoli delle colonne ed i valori */
     }
 
-    /* 6. Sezione riepilogo importi e note di ringraziamento */
+    /* 7. Sezione riepilogo importi e note di ringraziamento in calce */
     body div.invoice-footer-print {
-        margin-top: 25px;                      /* Distacco superiore dal corpo della tabella */
-        text-align: right;                     /* Allinea i totali sul margine destro */
+        margin-top: 25px;                      /* Distacco superiore dal corpo della tabella articoli */
+        text-align: right;                     /* Allinea il blocco del totale sul margine destro */
         color: #000000;                        /* Testo nero */
     }
 
     body p.invoice-total-line {
-        font-size: 16px;                       /* Dimensione evidenziata per il totale */
+        font-size: 16px;                       /* Dimensione maggiorata per evidenziare il totale complessivo */
         font-weight: bold;                     /* Testo in grassetto */
-        margin-bottom: 15px;                   /* Spazio inferiore dal ringraziamento */
+        margin-bottom: 15px;                   /* Spazio inferiore dal messaggio di ringraziamento */
     }
 
     body p.invoice-thanks-print {
-        text-align: center;                    /* Messaggio finale centrato in calce */
-        margin-top: 40px;                      /* Distanza marcata dai totali */
-        font-size: 13px;                       /* Dimensione del testo in calce */
+        text-align: center;                    /* Messaggio di cortesia e copyright centrato in fondo al foglio */
+        margin-top: 40px;                      /* Distanza marcata dalla sezione dei totali */
+        font-size: 13px;                       /* Dimensione ridotta per il testo di chiusura */
     }
 
-    /* 7. Reset degli stili per collegamenti e badge all'interno della tabella */
+    /* 8. Reset degli stili per collegamenti e badge all'interno della tabella prodotti */
     body table.cart-table a,
     body table.cart-table .cart-product-title,
     body .order-size-badge {
-        color: #000000;                        /* Colore nero per i link e i titoli in tabella */
-        text-decoration: none;                 /* Rimuove sottolineature dai link */
-        background: transparent;               /* Rimuove lo sfondo dei badge */
-        box-shadow: none;                      /* Rimuove ombreggiatura */
-        border: none;                          /* Rimuove bordi decorativi dai badge */
+        color: #000000;                        /* Converte i link ed i titoli blu/viola in colore nero */
+        text-decoration: none;                 /* Rimuove la sottolineatura dai collegamenti ipertestuali */
+        background: transparent;               /* Annulla gli sfondi colorati dei badge della taglia */
+        box-shadow: none;                      /* Elimina l'ombreggiatura visiva dai badge */
+        border: none;                          /* Rimuove bordi decorativi non necessari su carta */
     }
 }
