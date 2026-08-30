@@ -92,11 +92,35 @@ public class RegistrationServlet extends HttpServlet {
         String password = request.getParameter("password");
         String telefono = request.getParameter("telefono");
 
-        nome     = nome     != null ? nome.trim()     : "";
-        cognome  = cognome  != null ? cognome.trim()  : "";
-        email    = email    != null ? email.trim()    : "";
-        password = password != null ? password.trim() : "";
-        telefono = telefono != null ? telefono.trim() : "";
+        if (nome != null) {
+            nome = nome.trim();
+        } else {
+            nome = "";
+        }
+
+        if (cognome != null) {
+            cognome = cognome.trim();
+        } else {
+            cognome = "";
+        }
+
+        if (email != null) {
+            email = email.trim();
+        } else {
+            email = "";
+        }
+
+        if (password != null) {
+            password = password.trim();
+        } else {
+            password = "";
+        }
+
+        if (telefono != null) {
+            telefono = telefono.trim();
+        } else {
+            telefono = "";
+        }
 
         // =========================================================================
         // 2. DEFINIZIONE DELLE REGOLE DI VALIDAZIONE (REGEX)

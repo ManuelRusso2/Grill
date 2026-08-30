@@ -16,7 +16,6 @@ import model.dao.impl.RecensioneDAOImpl;
 
 /**
  * Servlet per la gestione della creazione e pubblicazione delle recensioni sui prodotti.
- * Mappata sull'URL '/AggiungiRecensioneServlet'.
  */
 @WebServlet("/AggiungiRecensioneServlet")
 public class AggiungiRecensioneServlet extends HttpServlet {
@@ -150,7 +149,11 @@ public class AggiungiRecensioneServlet extends HttpServlet {
     private String getTrimmedParam(HttpServletRequest request, String name) {
         String value = request.getParameter(name);
         // Se il parametro esiste e non è composto solo da spazi bianchi restituisce la stringa con trim(), altrimenti null
-        return (value != null && !value.trim().isEmpty()) ? value.trim() : null;
+        if (value != null && !value.trim().isEmpty()) {
+            return value.trim();
+        }
+
+        return null;
     }
 
     /**

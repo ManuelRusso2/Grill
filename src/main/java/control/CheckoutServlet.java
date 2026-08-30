@@ -2,8 +2,6 @@ package control;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -123,7 +121,7 @@ public class CheckoutServlet extends HttpServlet {
             errorMessage = "Metodo di pagamento non valido.";
         }
 
-        // Se la validazione fallisce, ricarica la pagina mostrato l'errore
+        // Se la validazione fallisce, ricarica la pagina mostrando l'errore
         if (errorMessage != null) {
             request.setAttribute("errorMessage", errorMessage);
             doGet(request, response);
@@ -144,7 +142,6 @@ public class CheckoutServlet extends HttpServlet {
             double totale = calcolaTotale(prodottiInCarrello);
 
             // 6. Esecuzione della transazione di acquisto atomica a livello di DAO
-            List<String> newAlerts = new ArrayList<>();
             int idAcquisto = acquistoDAO.completaAcquisto(
                 carrello.getIdCarrello(),
                 utente.getIdUtente(),
@@ -152,15 +149,10 @@ public class CheckoutServlet extends HttpServlet {
                 indirizzoConsegna,
                 prodottiInCarrello,
                 totale,
-                newAlerts
+                null
             );
 
-            // 7. Registrazione nel contesto applicativo di eventuali alert sul magazzino (es. scorte esaurite)
-            for (String alert : newAlerts) {
-                addAdminAlert(alert);
-            }
-
-            // 8. Impostazione dei dati di riepilogo per la schermata di conferma
+            // 7. Impostazione dei dati di riepilogo per la schermata di conferma
             request.setAttribute("ordineId", idAcquisto);
             request.setAttribute("totaleOrdine", totale);
             request.setAttribute("metodoPagamento", metodoPagamento);
@@ -233,21 +225,46 @@ public class CheckoutServlet extends HttpServlet {
 
         // Rimuovo spazi dal numero carta
         String numOnly = cartaNumero.replaceAll("\\s+", "");
-        
-        // Controllo lunghezza, cifre e algoritmo di Luhn
+
+        // =========================================================================
+        // REGEX VALIDAZIONE NUMERO CARTA
+        // =========================================================================
+        // \\d                : Cifra numerica da 0 a 9 (serve \\ per l'escape Java di \d)
+        // {13,19}            : Quantificatore: da un minimo di 13 a un massimo di 19 cifre
         if (!numOnly.matches("\\d{13,19}") || !luhnCheck(numOnly)) {
             return "Numero carta non valido.";
         }
-        // Controllo formato scadenza MM/AA
+
+        // =========================================================================
+        // REGEX VALIDAZIONE SCADENZA CARTA (MM/AA)
+        // =========================================================================
+        // ^                  : Inizio della stringa
+        // (                  : Inizio del gruppo per la selezione del Mese (MM)
+        //   0[1-9]           : Cifra '0' seguita da un numero da 1 a 9 (mesi 01-09)
+        //   |                : Operatore logico OR (oppure)
+        //   1[0-2]           : Cifra '1' seguita da un numero da 0 a 2 (mesi 10-12)
+        // )                  : Fine del gruppo Mese
+        // /                  : Carattere slash letterale di separazione
+        // (                  : Inizio del gruppo per l'Anno (AA)
+        //   \\d{2}           : Esattamente 2 cifre numeriche per l'anno (es. 26 per 2026)
+        // )                  : Fine del gruppo Anno
+        // $                  : Fine della stringa
         if (!cartaScadenza.matches("^(0[1-9]|1[0-2])/(\\d{2})$")) {
             return "Formato data scadenza non valido (MM/AA).";
         }
-        // Controllo formato CVV (3 o 4 cifre)
+
+        // =========================================================================
+        // REGEX VALIDAZIONE CVV / CVC
+        // =========================================================================
+        // ^                  : Inizio della stringa
+        // \\d                : Cifra numerica da 0 a 9
+        // {3,4}              : Quantificatore: esattamente 3 cifre (Visa/Mastercard) o 4 (Amex)
+        // $                  : Fine della stringa
         if (!cartaCVV.matches("^\\d{3,4}$")) {
             return "CVV non valido.";
         }
-
-        return null; // Nessun errore
+        
+        return null;
     }
 
     /**
@@ -305,27 +322,15 @@ public class CheckoutServlet extends HttpServlet {
     private boolean validateIBAN(String iban) {
         if (iban == null) return false;
         String value = iban.replaceAll("\\s+", "").toUpperCase();
-        // Regex per IBAN generico (2 lettere nazione + 2 cifre controllo + fino a 30 caratteri alfanumerici)
+
+        // =========================================================================
+        // REGEX VALIDAZIONE IBAN GENERICO
+        // =========================================================================
+        // ^                  : Inizio della stringa
+        // [A-Z]{2}           : Codice nazione ISO (esattamente 2 lettere maiuscole, es. IT, DE, FR)
+        // [0-9A-Z]{13,32}    : Cifre di controllo + BBAN (da 13 a 32 caratteri alfanumerici: numeri 0-9 e lettere maiuscole)
+        // $                  : Fine della stringa
         return value.matches("^[A-Z]{2}[0-9A-Z]{13,32}$");
-    }
-
-    /**
-     * Aggiunge in modo thread-safe un messaggio d'avviso per l'amministratore
-     * all'interno del ServletContext (es. esaurimento scorte).
-     * 
-     * @param alertMessage Il messaggio da notificare all'admin
-     */
-    private void addAdminAlert(String alertMessage) {
-        synchronized (getServletContext()) {
-            @SuppressWarnings("unchecked")
-            List<String> alerts = (List<String>) getServletContext().getAttribute("adminAlerts");
-
-            if (alerts == null) {
-                alerts = new ArrayList<>();
-                getServletContext().setAttribute("adminAlerts", alerts);
-            }
-            alerts.add(alertMessage);
-        }
     }
 
     /**
@@ -336,7 +341,11 @@ public class CheckoutServlet extends HttpServlet {
      */
     private UtenteBean getLoggedUser(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        return (session != null) ? (UtenteBean) session.getAttribute("utente") : null;
+        if (session != null) {
+            return (UtenteBean) session.getAttribute("utente");
+        }
+
+        return null;
     }
 
     /**
@@ -349,6 +358,10 @@ public class CheckoutServlet extends HttpServlet {
      */
     private String getTrimmedParam(HttpServletRequest request, String name) {
         String value = request.getParameter(name);
-        return (value != null && !value.trim().isEmpty()) ? value.trim() : null;
+        if (value != null && !value.trim().isEmpty()) {
+            return value.trim();
+        }
+
+        return null;
     }
 }

@@ -409,7 +409,11 @@ public class CarrelloServlet extends HttpServlet {
      */
     private String getTrimmedParam(HttpServletRequest request, String name) {
         String value = request.getParameter(name);
-        return (value != null && !value.trim().isEmpty()) ? value.trim() : null;
+        if (value != null && !value.trim().isEmpty()) {
+            return value.trim();
+        }
+
+        return null;
     }
 
     /**

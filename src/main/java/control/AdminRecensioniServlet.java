@@ -135,7 +135,7 @@ public class AdminRecensioniServlet extends HttpServlet {
             request.getSession(true).setAttribute("errorMessage", "Errore durante l'eliminazione della recensione.");
         }
 
-        // Applica il pattern Post/Redirect/Get reindirizzando alla vista aggiornata delle recensioni
+        // Reindirizza alla vista aggiornata delle recensioni
         response.sendRedirect(redirectUrl);
     }
 
@@ -151,7 +151,11 @@ public class AdminRecensioniServlet extends HttpServlet {
      */
     private boolean isNotAdmin(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        UtenteBean utente = (session != null) ? (UtenteBean) session.getAttribute("utente") : null;
+        UtenteBean utente = null;
+
+        if (session != null) {
+            utente = (UtenteBean) session.getAttribute("utente");
+        }
         return utente == null || !utente.isAdmin();
     }
 
@@ -164,6 +168,10 @@ public class AdminRecensioniServlet extends HttpServlet {
      */
     private String getTrimmedParam(HttpServletRequest request, String name) {
         String value = request.getParameter(name);
-        return (value != null && !value.trim().isEmpty()) ? value.trim() : null;
+        if (value != null && !value.trim().isEmpty()) {
+            return value.trim();
+        }
+
+        return null;
     }
 }

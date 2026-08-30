@@ -73,7 +73,6 @@ public class CollezioniServlet extends HttpServlet {
 
             // 2. Associa le collezioni ai propri prodotti mantenendo l'ordine di inserimento/recupero.
             //    Si usa una LinkedHashMap per preservare l'ordine originale delle collezioni.
-            //    Complessità: O(N) [N = num collezioni].
             Map<CollezioneBean, List<ProdottoBean>> collezioniMap = new LinkedHashMap<>();
 
             if (collezioni != null) {

@@ -26,7 +26,6 @@ import model.dao.impl.ProdottoDAOImpl;
 
 /**
  * Servlet per la gestione e visualizzazione del catalogo prodotti.
- * Mappa la richiesta alla rotta '/CatalogoServlet'.
  */
 @WebServlet("/CatalogoServlet")
 public class CatalogoServlet extends HttpServlet {
@@ -174,6 +173,10 @@ public class CatalogoServlet extends HttpServlet {
      */
     private String getTrimmedParam(HttpServletRequest request, String name) {
         String value = request.getParameter(name);
-        return (value != null && !value.trim().isEmpty()) ? value.trim() : null;
+        if (value != null && !value.trim().isEmpty()) {
+            return value.trim();
+        }
+
+        return null;
     }
 }
