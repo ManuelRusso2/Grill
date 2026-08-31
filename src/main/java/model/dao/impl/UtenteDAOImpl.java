@@ -21,15 +21,25 @@ import utility.ConnessioneDB;
  */
 public class UtenteDAOImpl implements UtenteDAO {
 
-    // --- QUERY SQL PREPARATE ---
+    // =========================================================================
+    // QUERY SQL PREPARATE
+    // =========================================================================
+
     private static final String INSERT_UTENTE =
         "INSERT INTO utente (nome, cognome, email, password, telefono, isAdmin) VALUES (?, ?, ?, ?, ?, ?)";
+    
+    private static final String INSERT_CARRELLO = 
+        "INSERT INTO carrello (id_utente) VALUES (?)";
+
     private static final String SELECT_BY_EMAIL =
         "SELECT id_utente, nome, cognome, email, password, telefono, isAdmin FROM utente WHERE email = ?";
+
     private static final String SELECT_BY_ID =
         "SELECT id_utente, nome, cognome, email, password, telefono, isAdmin FROM utente WHERE id_utente = ?";
+
     private static final String SELECT_BY_LOGIN =
         "SELECT id_utente, nome, cognome, email, password, telefono, isAdmin FROM utente WHERE email = ? AND password = ?";
+
     private static final String SELECT_ALL_CLIENTI =
         "SELECT id_utente, nome, cognome, email, password, telefono, isAdmin FROM utente WHERE isAdmin = false";
 
@@ -42,8 +52,6 @@ public class UtenteDAOImpl implements UtenteDAO {
      */
     @Override
     public void doSave(UtenteBean utente) throws SQLException {
-        String insertCarrello = "INSERT INTO carrello (id_utente) VALUES (?)";
-
         try (Connection con = ConnessioneDB.getConnection()) {
             // Disabilita l'auto-commit per iniziare una transazione manuale
             con.setAutoCommit(false);
@@ -53,7 +61,7 @@ public class UtenteDAOImpl implements UtenteDAO {
                 psUtente.setString(1, utente.getNome());
                 psUtente.setString(2, utente.getCognome());
                 psUtente.setString(3, utente.getEmail());
-                psUtente.setString(4, hashPassword(utente.getPassword())); // La password viene salvata formattata in Hash SHA-256
+                psUtente.setString(4, hashPassword(utente.getPassword())); // La password viene salvata in Hash SHA-256
                 psUtente.setString(5, utente.getTelefono());
                 psUtente.setBoolean(6, utente.isAdmin());
                 psUtente.executeUpdate();
@@ -67,19 +75,23 @@ public class UtenteDAOImpl implements UtenteDAO {
                     utente.setIdUtente(idUtenteGenerato); // Aggiorna il bean con l'ID assegnato dal DB
 
                     // Inserimento automatico del carrello associato al nuovo utente
-                    try (PreparedStatement psCarrello = con.prepareStatement(insertCarrello)) {
+                    try (PreparedStatement psCarrello = con.prepareStatement(INSERT_CARRELLO)) {
                         psCarrello.setInt(1, idUtenteGenerato);
                         psCarrello.executeUpdate();
                     }
                 }
+
+                // Se tutto è andato a buon fine, conferma la transazione
+                con.commit();
+
             } catch (SQLException e) {
                 // Se una qualsiasi operazione fallisce, esegue il rollback per annullare le modifiche
                 con.rollback();
                 throw e; // Rilancia l'eccezione verso il livello superiore
+            } finally {
+                // Ripristina l'autocommit di default per la connessione
+                con.setAutoCommit(true);
             }
-
-            // Se tutto è andato a buon fine, conferma la transazione
-            con.commit();
         }
     }
 
@@ -98,7 +110,9 @@ public class UtenteDAOImpl implements UtenteDAO {
             ps.setString(2, hashPassword(password)); // Confronta l'hash della password fornita con quello sul DB
 
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return mapRow(rs);
+                if (rs.next()) {
+                    return mapRow(rs);
+                }
             }
         }
         return null;
@@ -117,7 +131,9 @@ public class UtenteDAOImpl implements UtenteDAO {
             ps.setString(1, email);
 
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return mapRow(rs);
+                if (rs.next()) {
+                    return mapRow(rs);
+                }
             }
         }
         return null;
@@ -136,7 +152,9 @@ public class UtenteDAOImpl implements UtenteDAO {
             ps.setInt(1, id);
 
             try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) return mapRow(rs);
+                if (rs.next()) {
+                    return mapRow(rs);
+                }
             }
         }
         return null;
@@ -161,6 +179,10 @@ public class UtenteDAOImpl implements UtenteDAO {
         }
         return clienti;
     }
+
+    // =========================================================================
+    // METODI HELPER PRIVATI
+    // =========================================================================
 
     /**
      * Metodo helper di supporto per mappare la riga corrente di un ResultSet
@@ -189,7 +211,9 @@ public class UtenteDAOImpl implements UtenteDAO {
      * @return La stringa contenente l'hash SHA-256 in formato esadecimale
      */
     private String hashPassword(String password) {
-        if (password == null) return null;
+        if (password == null) {
+            return null;
+        }
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
@@ -197,7 +221,9 @@ public class UtenteDAOImpl implements UtenteDAO {
 
             for (byte b : hash) {
                 String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) hexString.append('0'); // Aggiunge lo zero iniziale per byte a cifra singola
+                if (hex.length() == 1) {
+                    hexString.append('0'); // Aggiunge lo zero iniziale per byte a cifra singola
+                }
                 hexString.append(hex);
             }
             return hexString.toString();

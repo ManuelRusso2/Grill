@@ -34,8 +34,15 @@
                 
                 <!-- COLONNA SINISTRA: Gestione dell'immagine del prodotto -->
                 <div class="product-image-wrapper">
-                    <%-- Imposta l'immagine del prodotto o il fallback se vuota --%>
-                    <c:set var="imgSrc" value="${not empty prodotto.immagine ? prodotto.immagine : 'images/default.jpg'}" />
+                    <%-- Imposta l'immagine del prodotto o il fallback senza operatore ternario --%>
+                    <c:choose>
+                        <c:when test="${not empty prodotto.immagine}">
+                            <c:set var="imgSrc" value="${prodotto.immagine}" />
+                        </c:when>
+                        <c:otherwise>
+                            <c:set var="imgSrc" value="images/default.jpg" />
+                        </c:otherwise>
+                    </c:choose>
 
                     <%-- Tag Immagine con gestore d'errore Client (onerror) per evitare broken images --%>
                     <img class="product-image" 
@@ -48,7 +55,14 @@
                 <div class="product-details-info">
                     <%-- Titolo: Mostra il nome radice/base se è una variante, altrimenti il nome completo --%>
                     <h1>
-                        <c:out value="${not empty nomeBase ? nomeBase : prodotto.nome}" />
+                        <c:choose>
+                            <c:when test="${not empty nomeBase}">
+                                <c:out value="${nomeBase}" />
+                            </c:when>
+                            <c:otherwise>
+                                <c:out value="${prodotto.nome}" />
+                            </c:otherwise>
+                        </c:choose>
                     </h1>
 
                     <%-- Descrizione estesa del prodotto --%>
@@ -65,9 +79,9 @@
                             <p class="varianti-label">Colore:</p>
                             <div class="varianti-list">
                                 <c:forEach var="v" items="${varianti}">
-                                    <%-- Bottone selettore variante con colore estratto direttamente --%>
+                                    <%-- Bottone selettore variante senza ternario nelle classi --%>
                                     <a href="${pageContext.request.contextPath}/DettaglioProdottoServlet?id=${v.idProdotto}"
-                                       class="variante-btn ${v.idProdotto == prodotto.idProdotto ? 'active' : ''} ${v.quantita <= 0 ? 'esaurito' : ''}">
+                                       class="variante-btn <c:if test='${v.idProdotto == prodotto.idProdotto}'>active</c:if> <c:if test='${v.quantita <= 0}'>esaurito</c:if>">
                                         <c:out value="${fn:substringAfter(v.nome, ' - ')}" />
                                     </a>
                                 </c:forEach>
@@ -264,8 +278,12 @@ document.addEventListener("DOMContentLoaded", function () {
         // Inserisce il testo del messaggio nel contenitore
         toast.textContent = message;
 
-        // Imposta le classi CSS per lo stile dinamico (successo o errore)
-        toast.className = "toast " + (isSuccess ? "toast-success" : "toast-error");
+        // Imposta le classi CSS per lo stile dinamico senza operatore ternario
+        if (isSuccess) {
+            toast.className = "toast toast-success";
+        } else {
+            toast.className = "toast toast-error";
+        }
 
         // Rende visibile il toast aggiungendo la classe .show (avvia animazione CSS)
         toast.classList.add("show");
@@ -318,25 +336,41 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // GESTIONE UTENTE NON LOGGATO (Codice HTTP 401 Unauthorized)
                 if (response.status === 401) { 
-                    // Reindirizza l'utente alla pagina di login
-                    window.location.href = data.redirect || "${pageContext.request.contextPath}/jsp/common/login.jsp"; 
+                    // Reindirizza l'utente alla pagina di login senza ternario
+                    let redirectUrl = "${pageContext.request.contextPath}/jsp/common/login.jsp";
+                    if (data && data.redirect) {
+                        redirectUrl = data.redirect;
+                    }
+                    window.location.href = redirectUrl; 
                     return; 
                 }
 
                 // GESTIONE ESITO POSITIVO (Codice HTTP 200 OK e success = true)
                 if (response.ok && data.success) {
                     // Mostra notifica di successo
-                    showToast(data.message || "Prodotto aggiunto al carrello!", true);
+                    let msg = "Prodotto aggiunto al carrello!";
+                    if (data.message) {
+                        msg = data.message;
+                    }
+                    showToast(msg, true);
 
                     // Aggiorna l'elemento badge del carrello presente nell'header
                     const badge = document.getElementById("cart-count");
                     if (badge) {
                         const count = parseInt(data.cartCount, 10) || 0;
-                        badge.textContent = count > 0 ? count : "";
+                        if (count > 0) {
+                            badge.textContent = count;
+                        } else {
+                            badge.textContent = "";
+                        }
                     }
                 } else {
                     // Mostra il messaggio d'errore inviato dalla Servlet (es. quantità esaurita)
-                    showToast(data.message || "Impossibile aggiungere il prodotto.", false);
+                    let errorMsg = "Impossibile aggiungere il prodotto.";
+                    if (data && data.message) {
+                        errorMsg = data.message;
+                    }
+                    showToast(errorMsg, false);
                 }
             })
             .catch(() => {

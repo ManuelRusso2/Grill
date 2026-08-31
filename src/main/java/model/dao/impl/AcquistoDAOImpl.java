@@ -65,10 +65,6 @@ public class AcquistoDAOImpl implements AcquistoDAO {
     private static final String UPDATE_STOCK =
         "UPDATE prodotto SET quantita = quantita - ? WHERE id_prodotto = ?";
 
-    /** Verifica la quantità rimanente in stock e il nome di un determinato prodotto. */
-    private static final String SELECT_STOCK =
-        "SELECT quantita, nome FROM prodotto WHERE id_prodotto = ?";
-
     /** Svuota tutti i prodotti contenuti nel carrello specificato. */
     private static final String EMPTY_CARRELLO =
         "DELETE FROM contenuto WHERE id_carrello = ?";
@@ -248,7 +244,7 @@ public class AcquistoDAOImpl implements AcquistoDAO {
      * <ol>
      *   <li>Creazione del record di testata nella tabella 'acquisto'.</li>
      *   <li>Inserimento dei singoli articoli nell'ordine (tabella 'ordine').</li>
-     *   <li>Aggiornamento delle giacenze in magazzino e controllo degli articoli esauriti.</li>
+     *   <li>Aggiornamento delle giacenze in magazzino dei prodotti acquistati.</li>
      *   <li>Svuotamento dei prodotti dal carrello dell'utente.</li>
      * </ol>
      * 
@@ -256,16 +252,15 @@ public class AcquistoDAOImpl implements AcquistoDAO {
      * @param idUtente L'ID dell'utente che conclude l'ordine
      * @param metodoPagamento Il metodo di pagamento scelto
      * @param indirizzoConsegna L'indirizzo di destinazione per la spedizione
-     * @param prodottiInCarrello Mappa contentente le coppie Prodotto-Quantità ordinate
+     * @param prodottiInCarrello Mappa contenente le coppie Prodotto-Quantità ordinate
      * @param totale Importo complessivo calcolato dell'ordine
-     * @param adminAlerts Lista in cui appendere eventuali messaggi di alert (es. stock esaurito)
      * @return L'ID autogenerato del nuovo acquisto completato
      * @throws SQLException In caso di fallimento di una delle fasi transazionali (triggera il Rollback)
      */
     @Override
     public int completaAcquisto(int idCarrello, int idUtente, String metodoPagamento,
                                 String indirizzoConsegna, Map<ProdottoBean, Integer> prodottiInCarrello,
-                                double totale, List<String> adminAlerts) throws SQLException {
+                                double totale) throws SQLException {
 
         try (Connection con = ConnessioneDB.getConnection()) {
             // Disabilita l'autocommit per avviare una transazione atomica manuale
@@ -302,9 +297,15 @@ public class AcquistoDAOImpl implements AcquistoDAO {
                         ProdottoBean prodotto = entry.getKey();
                         int quantita = entry.getValue();
 
+                        // Gestione taglia senza operatore ternario
+                        String taglia = prodotto.getTagliaSelezionata();
+                        if (taglia == null) {
+                            taglia = "Unica";
+                        }
+
                         psOrdine.setInt(1, idAcquisto);
                         psOrdine.setInt(2, prodotto.getIdProdotto());
-                        psOrdine.setString(3, prodotto.getTagliaSelezionata() != null ? prodotto.getTagliaSelezionata() : "Unica");
+                        psOrdine.setString(3, taglia);
                         psOrdine.setDouble(4, prodotto.getCosto());
                         psOrdine.setDouble(5, IVA_STANDARD);
                         psOrdine.setInt(6, quantita);
@@ -317,11 +318,9 @@ public class AcquistoDAOImpl implements AcquistoDAO {
                 }
 
                 // -----------------------------------------------------------------
-                // 3. Aggiornamento stock magazzino e verifica giacenze residue
+                // 3. Aggiornamento stock magazzino
                 // -----------------------------------------------------------------
-                try (PreparedStatement psUpdateQty = con.prepareStatement(UPDATE_STOCK);
-                     PreparedStatement psSelectQty = con.prepareStatement(SELECT_STOCK)) {
-
+                try (PreparedStatement psUpdateQty = con.prepareStatement(UPDATE_STOCK)) {
                     for (Map.Entry<ProdottoBean, Integer> entry : prodottiInCarrello.entrySet()) {
                         ProdottoBean prodotto = entry.getKey();
                         int quantitaAcquistata = entry.getValue();
@@ -330,20 +329,6 @@ public class AcquistoDAOImpl implements AcquistoDAO {
                         psUpdateQty.setInt(1, quantitaAcquistata);
                         psUpdateQty.setInt(2, prodotto.getIdProdotto());
                         psUpdateQty.executeUpdate();
-
-                        // Controlla lo stato delle rimanenze per generare notifiche
-                        psSelectQty.setInt(1, prodotto.getIdProdotto());
-                        try (ResultSet rsQ = psSelectQty.executeQuery()) {
-                            if (rsQ.next()) {
-                                int nuovaQ = rsQ.getInt("quantita");
-                                String nomeProd = rsQ.getString("nome");
-
-                                // Segnala se lo stock è andato a zero o negativo
-                                if (nuovaQ <= 0 && adminAlerts != null) {
-                                    adminAlerts.add("Prodotto esaurito: " + nomeProd + " (ID: " + prodotto.getIdProdotto() + ")");
-                                }
-                            }
-                        }
                     }
                 }
 

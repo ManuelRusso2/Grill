@@ -16,19 +16,16 @@ public interface AcquistoDAO {
      */
     void doSave(AcquistoBean acquisto) throws SQLException;
 
-    
     /**
      * Modifica i dati di un acquisto esistente
      */
     void doUpdate(AcquistoBean acquisto) throws SQLException;
 
-    
     /**
      * Recupera un singolo acquisto tramite il suo ID
      */
     AcquistoBean doRetrieveById(int idAcquisto) throws SQLException;
 
-    
     /**
      * Recupera lo storico degli acquisti effettuati da un determinato utente.
      * Requisito Area Cliente: Visualizzazione dello storico ordini effettuati.
@@ -37,20 +34,17 @@ public interface AcquistoDAO {
      */
     List<AcquistoBean> doRetrieveByUtente(int idUtente) throws SQLException;
 
-    
     /**
      * Restituisce l'elenco complessivo di tutti gli acquisti effettuati sul sito.
      * Requisito Area Amministratore: Visualizzare gli ordini complessivi.
      */
     List<AcquistoBean> doRetrieveAll() throws SQLException;
 
-    
     /**
      * Elimina un acquisto dal database (o lo imposta come ANNULLATO).
      */
     boolean doDelete(int idAcquisto) throws SQLException;
 
-    
     /**
      * Filtra gli acquisti in un intervallo temporale.
      * Requisito Area Amministratore: Filtrare gli ordini per intervallo di date (dalla data – alla data).
@@ -63,7 +57,7 @@ public interface AcquistoDAO {
      * Esegue la transazione atomica completa di checkout:
      * 1. Inserisce la testata dell'acquisto
      * 2. Inserisce le righe dell'ordine (dettaglio prodotti)
-     * 3. Decrementa lo stock nei prodotti e rileva i prodotti esauriti
+     * 3. Decrementa lo stock nei prodotti
      * 4. Svuota il carrello dell'utente
      *
      * @param idCarrello ID del carrello da svuotare
@@ -72,11 +66,10 @@ public interface AcquistoDAO {
      * @param indirizzoConsegna Indirizzo di spedizione
      * @param prodottiInCarrello Mappa contenente i prodotti e le rispettive quantità
      * @param totale Importo totale dell'acquisto
-     * @param adminAlerts Lista in cui verranno aggiunti eventuali messaggi per stock esaurito
      * @return ID dell'acquisto appena creato
      * @throws SQLException In caso di errore durante la transazione SQL (rollback automatico)
      */
     int completaAcquisto(int idCarrello, int idUtente, String metodoPagamento,
                          String indirizzoConsegna, Map<ProdottoBean, Integer> prodottiInCarrello,
-                         double totale, List<String> adminAlerts) throws SQLException;
+                         double totale) throws SQLException;
 }

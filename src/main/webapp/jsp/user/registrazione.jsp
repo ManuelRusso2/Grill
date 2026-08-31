@@ -21,7 +21,9 @@
     <h1 class="auth-title">Crea un nuovo Account</h1>
 
     <%-- Form per l'invio dei dati di registrazione via POST alla Servlet 'RegistrationServlet' --%>
-    <form id="registerForm" class="auth-card" method="post" action="${pageContext.request.contextPath}/RegistrationServlet">
+    <form id="registerForm" class="auth-card" method="post" 
+          action="${pageContext.request.contextPath}/RegistrationServlet"
+          data-contextpath="${pageContext.request.contextPath}">
 
         <%-- ── CAMPO: NOME ────────────────────────────────────────────────── --%>
         <div class="form-group">
@@ -53,9 +55,7 @@
             <%-- Input email con autocompletamento e gestione visiva degli errori server-side/client-side --%>
             <input id="email" type="email" name="email" value="<c:out value='${formEmail}'/>" 
                    class="${not empty errEmail ? 'input-error' : ''}" placeholder="nome@esempio.it" autocomplete="email" required>
-            <%-- Elemento span per la visualizzazione dinamica degli errori via JavaScript client-side --%>
-            <span id="emailError" class="field-error-span" style="display:none;"></span>
-            <%-- Visualizzazione dell'errore di validazione lato server (es. email già registrata) --%>
+            <%-- Visualizzazione dell'errore lato server o dinamico via JS --%>
             <c:if test="${not empty errEmail}">
                 <span class="field-error-span"><c:out value="${errEmail}"/></span>
             </c:if>

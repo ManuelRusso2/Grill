@@ -123,10 +123,17 @@
                                                     </a>
                                                 </td>
                                                 
-                                                <%-- Badge visivo per la taglia selezionata --%>
+                                                <%-- Badge visivo per la taglia selezionata senza operatore ternario --%>
                                                 <td>
                                                     <span class="order-size-badge">
-                                                        <c:out value="${empty item.taglia ? 'Unica' : item.taglia}"/>
+                                                        <c:choose>
+                                                            <c:when test="${not empty item.taglia}">
+                                                                <c:out value="${item.taglia}"/>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                Unica
+                                                            </c:otherwise>
+                                                        </c:choose>
                                                     </span>
                                                 </td>
 

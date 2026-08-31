@@ -77,10 +77,4 @@ public class AcquistoBean implements Serializable {
     public void setProdottiAcquistati(List<OrdineBean> prodottiAcquistati) { 
     	this.prodottiAcquistati = prodottiAcquistati; 
     }
-    
-    
-    // Metodo di utilità per aggiungere un prodotto alla volta
-    public void addProdottoAcquistato(OrdineBean item) { 
-    	this.prodottiAcquistati.add(item); 
-    }
 }

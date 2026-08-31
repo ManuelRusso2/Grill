@@ -50,7 +50,7 @@
                     <option value="">-- Tutti gli utenti --</option>
                     <%-- Iterazione sulla lista globale degli utenti per popolare le opzioni del filtro --%>
                     <c:forEach var="u" items="${tuttiUtenti}">
-                        <option value="${u.idUtente}" ${param.idUtente == u.idUtente ? 'selected' : ''}>
+                        <option value="${u.idUtente}" <c:if test="${param.idUtente == u.idUtente}">selected</c:if>>
                             <c:out value="${u.nome} ${u.cognome} (${u.email})" />
                         </option>
                     </c:forEach>
@@ -128,7 +128,7 @@
                 </div>
             </c:when>
             
-            <%-- CASO 2: La lista recensioni è vuota (perchè non ce ne sono o a causa dei filtri stringenti) --%>
+            <%-- CASO 2: La lista recensioni è vuota (perché non ce ne sono o a causa dei filtri stringenti) --%>
             <c:otherwise>
                 <div class="empty-state">
                     <p class="empty-table-msg">Nessuna recensione trovata per il criterio selezionato.</p>

@@ -18,55 +18,77 @@
 <%@ include file="/jsp/common/menu.jspf" %>
 
 <main class="container">
-    <%-- Flag booleano: 'true' se si sta modificando un prodotto esistente (oggetto 'prodotto' presente nella Request), 'false' per nuovo inserimento --%>
+    <%-- Flag booleano: 'true' se si sta modificando un prodotto esistente, 'false' per nuovo inserimento --%>
     <c:set var="isEdit" value="${not empty prodotto}" />
     
-    <%-- Titolo dinamico della pagina in base alla modalità corrente --%>
-    <h1>${isEdit ? 'Modifica Prodotto' : 'Nuovo Prodotto'}</h1>
+    <%-- Titolo dinamico della pagina --%>
+    <c:choose>
+        <c:when test="${isEdit}">
+            <h1>Modifica Prodotto</h1>
+        </c:when>
+        <c:otherwise>
+            <h1>Nuovo Prodotto</h1>
+        </c:otherwise>
+    </c:choose>
+
+    <%-- ── MESSAGGI DI ERRORE LATO SERVER ───────────────────────────────── --%>
+    <c:if test="${not empty errorMessage}">
+        <div class="alert alert-danger">
+            ✗ <c:out value="${errorMessage}" />
+        </div>
+    </c:if>
 
     <div class="admin-edit-grid">
         
         <%-- ── COLONNA SINISTRA: Form di configurazione e dati prodotto ────────────────────────── --%>
         <div class="admin-form-card">
-            <h2>${isEdit ? 'Dettagli Prodotto' : 'Inserisci Dati'}</h2>
+            <c:choose>
+                <c:when test="${isEdit}">
+                    <h2>Dettagli Prodotto</h2>
+                </c:when>
+                <c:otherwise>
+                    <h2>Inserisci Dati</h2>
+                </c:otherwise>
+            </c:choose>
 
-            <%-- Form dinamico: reindirizza alla servlet passando action=update (con ID) o action=save --%>
-            <form method="post" action="${pageContext.request.contextPath}/AdminProdottoServlet?action=${isEdit ? 'update' : 'save'}${isEdit ? '&id=' : ''}${isEdit ? prodotto.idProdotto : ''}">
+            <%-- Form dinamico con parametri nell'URL per evitare input hidden --%>
+            <form method="post" 
+                  action="${pageContext.request.contextPath}/AdminProdottoServlet?<c:choose><c:when test="${isEdit}">action=update&id=${prodotto.idProdotto}</c:when><c:otherwise>action=save</c:otherwise></c:choose>">
                 
                 <%-- Campo: Nome Prodotto --%>
                 <div class="form-group">
-                    <label for="nome">Nome Prodotto:</label>
+                    <label for="nome">Nome Prodotto *</label>
                     <input type="text" id="nome" name="nome" class="form-control"
-                           value="<c:out value='${isEdit ? prodotto.nome : ""}'/>" required>
+                           value="<c:out value='${isEdit ? prodotto.nome : ""}'/>" required placeholder="Inserisci il nome">
                 </div>
             
                 <%-- Riga a tre colonne: Prezzo, Aliquota IVA e Quantità in Stock --%>
                 <div class="form-row">
                     <%-- Prezzo base unitario --%>
                     <div class="form-group">
-                        <label for="costo">Prezzo (€):</label>
+                        <label for="costo">Prezzo (€) *</label>
                         <input type="number" id="costo" name="costo" class="form-control" step="0.01" min="0"
-                               value="${isEdit ? prodotto.costo : ''}" required>
+                               value="${isEdit ? prodotto.costo : ''}" required placeholder="0.00">
                     </div>
 
                     <%-- Aliquota IVA percentuale (Default: 22%) --%>
                     <div class="form-group">
-                        <label for="iva">IVA (%):</label>
+                        <label for="iva">IVA (%) *</label>
                         <input type="number" id="iva" name="iva" class="form-control" step="0.1" min="0" max="100"
                                value="${isEdit ? prodotto.iva : '22.0'}" required>
                     </div>
             
                     <%-- Giacenza in magazzino --%>
                     <div class="form-group">
-                        <label for="quantita">Quantità in Stock:</label>
+                        <label for="quantita">Quantità in Stock *</label>
                         <input type="number" id="quantita" name="quantita" class="form-control" min="0"
-                               value="${isEdit ? prodotto.quantita : ''}" required>
+                               value="${isEdit ? prodotto.quantita : ''}" required placeholder="0">
                     </div>
                 </div>
                 
                 <%-- Campo opzionale: Taglie abbigliamento/calzature --%>
                 <div class="form-group form-group-spaced">
-                    <label for="taglie">Taglie disponibili (opzionale):</label>
+                    <label for="taglie">Taglie disponibili <span class="optional">(opzionale)</span></label>
                     <input type="text" id="taglie" name="taglie" class="form-control"
                            value="<c:out value='${isEdit ? prodotto.taglie : ""}'/>" placeholder="Es: S, M, L, XL, 42, 44">
                     <span class="field-hint">Inserisci le taglie separate da una virgola.</span>
@@ -92,7 +114,7 @@
                                         
                                         <%-- Badge selezionabile per ogni categoria --%>
                                         <label class="category-chip">
-                                            <input type="checkbox" name="idCategoria" value="${cat.idCategoria}" ${selezionata ? 'checked' : ''}>
+                                            <input type="checkbox" name="idCategoria" value="${cat.idCategoria}" <c:if test="${selezionata}">checked</c:if>>
                                             <span><c:out value="${cat.nome}" /></span>
                                         </label>
                                     </c:forEach>
@@ -109,8 +131,8 @@
             
                 <%-- Campo: Descrizione estesa del prodotto --%>
                 <div class="form-group">
-                    <label for="descrizione">Descrizione:</label>
-                    <textarea id="descrizione" name="descrizione" class="form-control" rows="4" required><c:out value="${isEdit ? prodotto.descrizione : ''}" /></textarea>
+                    <label for="descrizione">Descrizione *</label>
+                    <textarea id="descrizione" name="descrizione" class="form-control" rows="4" required placeholder="Inserisci una descrizione dettagliata"><c:out value="${isEdit ? prodotto.descrizione : ''}" /></textarea>
                 </div>
             
                 <%-- Campo: Percorso file immagine --%>
@@ -124,15 +146,20 @@
                 <%-- Checkbox: Stato di visibilità/attivazione nel catalogo pubblico --%>
                 <div class="form-group checkbox-card">
                     <input type="checkbox" id="attivo" name="attivo" class="checkbox-large"
-                           ${(!isEdit || prodotto.attivo) ? 'checked' : ''}>
+                           <c:if test="${!isEdit || prodotto.attivo}">checked</c:if>>
                     <label for="attivo" class="checkbox-label">Prodotto Attivo (Visibile nel catalogo)</label>
                 </div>
             
                 <%-- Pulsanti d'azione (Conferma o Annullamento) --%>
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-md btn-primary">
-                        ${isEdit ? 'Salva Modifiche' : 'Crea Prodotto'}
-                    </button>
+                    <c:choose>
+                        <c:when test="${isEdit}">
+                            <button type="submit" class="btn btn-md btn-primary">Salva Modifiche</button>
+                        </c:when>
+                        <c:otherwise>
+                            <button type="submit" class="btn btn-md btn-primary">Crea Prodotto</button>
+                        </c:otherwise>
+                    </c:choose>
                     <a href="${pageContext.request.contextPath}/AdminProdottoServlet" class="btn btn-md btn-secondary">
                         Annulla
                     </a>
@@ -210,106 +237,107 @@
 
 <%-- ── SCRIPT JS PER INTERAZIONE DINAMICA E ANTEPRIME LIVE ──────────────────────────────── --%>
 <script>
-// Registra un ascoltatore sull'evento 'DOMContentLoaded': assicura che il codice JS venga eseguito
-// solo dopo che l'intera struttura dell'albero HTML della pagina è stata caricata completamente in memoria.
+/**
+ * Script per la gestione reattiva lato client dell'interfaccia utente (UI).
+ * Permette l'aggiornamento in tempo reale dei badge di stato e dell'anteprima dell'immagine
+ * durante la digitazione e l'interazione con i campi del modulo.
+ */
 document.addEventListener('DOMContentLoaded', function() {
 
     // =========================================================================
-    // 1. GESTIONE DELL'ANTEPRIMA IMMAGINE LIVE
+    // 1. GESTIONE REATTIVA DELL'ANTEPRIMA IMMAGINE LIVE
     // =========================================================================
     
-    // Recupera dall'HTML i riferimenti al campo di testo del percorso e all'elemento tag <img> di anteprima
+    // Recupero dei riferimenti agli elementi del DOM necessari per l'anteprima dell'immagine
     const inputImmagine = document.getElementById('immagine');
     const previewImg = document.getElementById('live-preview-img');
     
-    // Recupera il percorso base del progetto (Context Path) tramite Expression Language di JSP (EL)
+    // Generazione del percorso radice dell'applicazione web tramite la tag EL di JSP
     const basePath = '${pageContext.request.contextPath}/';
     
-    // Esegue il blocco solo se entrambi gli elementi esistono nell'interfaccia HTML
+    // Verifica la presenza di entrambi gli elementi nel DOM prima di configurare i listener
     if (inputImmagine && previewImg) {
-
+        
         /**
-         * Funzione che calcola il percorso corretto dell'immagine e ne aggiorna la sorgente (src)
+         * Calcola e aggiorna la sorgente (src) dell'elemento <img> dell'anteprima
+         * analizzando il formato dell'input inserito dall'utente.
          */
         function updatePreview() {
-            // Elimina gli spazi bianchi e rimuove eventuali caratteri '/' inseriti all'inizio dall'utente
+            // Rimuove gli spazi vuoti agli estremi e pulisce eventuali slash iniziali superflui
             let path = inputImmagine.value.trim().replace(/^\/+/, '');
             
-            // CASO A: Il campo di testo è completamente vuoto
+            // CASO A: Campo di testo vuoto -> Imposta l'immagine predefinita di fallback
             if (!path) {
-                // Imposta l'immagine predefinita di fallback del sito
                 previewImg.src = basePath + 'images/default.jpg';
             } 
-            // CASO B: L'utente ha inserito un URL completo da un sito esterno (http:// o https://)
+            // CASO B: URL assoluto esterno (es. http:// o https://) -> Usa l'indirizzo originale
             else if (path.startsWith('http://') || path.startsWith('https://')) {
-                // Assegna direttamente l'URL esterno all'attributo 'src' dell'immagine
                 previewImg.src = path;
             } 
-            // CASO C: L'utente ha inserito un percorso relativo locale (es: "images/prodotti/foto.jpg")
+            // CASO C: Percorso relativo locale -> Concatena la radice dell'applicazione (contextPath)
             else {
-                // Concatena il Context Path del progetto per costruire il percorso assoluto valido sul server
                 previewImg.src = basePath + path;
             }
         }
         
-        // Collega la funzione all'evento 'input': scatta istantaneamente a ogni singola lettera digitata o incollata
+        // Listener per l'aggiornamento istantaneo a ogni lettera digitata, incollata o modificata
         inputImmagine.addEventListener('input', updatePreview);
         
-        // Invoca la funzione al caricamento iniziale della pagina (fondamentale in modalità "Modifica" per mostrare la foto esistente)
+        // Esecuzione immediata al caricamento iniziale della pagina per mostrare l'immagine esistente
         updatePreview();
     }
 
     // =========================================================================
-    // 2. GESTIONE CAMBIO STATO VISIBILITÀ (PRODOTTO ATTIVO / NASCOSTO)
+    // 2. GESTIONE DEL BADGE DI STATO VISIBILITÀ (PRODOTTO ATTIVO / NASCOSTO)
     // =========================================================================
     
-    // Recupera la checkbox dello stato 'attivo' e lo span in cui stampare il badge di visibilità
+    // Recupero del campo di spunta "attivo" e del relativo contenitore del badge visivo
     const inputAttivo = document.getElementById('attivo');
     const badgeStatus = document.getElementById('live-status-badge');
     
+    // Procede solo se gli elementi di controllo della visibilità sono presenti nella pagina
     if (inputAttivo && badgeStatus) {
         
-        // Ascolta l'evento 'change' che scatta quando la checkbox viene spuntata o deselezionata dall'utente
+        // Listener per l'evento 'change', scatenato all'attivazione/disattivazione della checkbox
         inputAttivo.addEventListener('change', function(e) {
             
-            // Verifica lo stato del campo spuntato
+            // Se la spunta è attiva, applica la classe e il testo per il prodotto pubblicato
             if (e.target.checked) {
-                // Se la spunta è presente, mostra il badge verde "Pubblicato"
                 badgeStatus.innerHTML = '<span class="badge-disponibile">Pubblicato</span>';
-            } else {
-                // Se la spunta è assente, mostra il badge rosso "Nascosto"
+            } 
+            // Se la spunta è assente, applica lo stato visivo per il prodotto nascosto
+            else {
                 badgeStatus.innerHTML = '<span class="badge-esaurito">Nascosto</span>';
             }
         });
     }
 
     // =========================================================================
-    // 3. GESTIONE DINAMICA DEL BADGE STOCK (CALCOLO SOGLIE GIACENZA)
+    // 3. GESTIONE DINAMICA DEL BADGE STOCK (GIACENZA DI MAGAZZINO)
     // =========================================================================
     
-    // Recupera l'input numerico della quantità e lo span per il badge di giacenza
+    // Recupero dell'input numerico della quantità e dello span destinato al badge dello stock
     const inputQuantita = document.getElementById('quantita');
     const badgeStock = document.getElementById('live-stock-badge');
     
+    // Configura i controlli di giacenza solo se entrambi gli elementi esistono nel DOM
     if (inputQuantita && badgeStock) {
         
-        // Ascolta la digitazione nel campo numerico delle quantità in magazzino
+        // Listener che monitora le variazioni numeriche nel campo quantità in tempo reale
         inputQuantita.addEventListener('input', function(e) {
             
-            // Converte il valore letto dall'input di testo in un numero intero (in base 10)
+            // Converte il testo dell'input in un numero intero base 10
             const qty = parseInt(e.target.value, 10);
             
-            // VALUTAZIONE DELLE SOGLIE LOGICHE DI STOCK:
-            
-            // 1. Se il valore non è un numero valido oppure è minore o uguale a zero
+            // SOGLIA 1: Quantità non valida, vuota o minore/uguale a zero -> Prodotto Esaurito
             if (isNaN(qty) || qty <= 0) {
                 badgeStock.innerHTML = '<span class="badge-esaurito">Esaurito</span>';
             } 
-            // 2. Se la quantità è compresa tra 1 e 5 pezzi (Soglia di avviso scorte basse)
+            // SOGLIA 2: Giacenza limitata compresa tra 1 e 5 pezzi -> Avviso Scorta in Esaurimento
             else if (qty > 0 && qty <= 5) {
                 badgeStock.innerHTML = '<span class="badge-scarso">In Esaurimento</span>';
             } 
-            // 3. Se la quantità è superiore a 5 pezzi (Disponibilità piena)
+            // SOGLIA 3: Giacenza superiore a 5 pezzi -> Prodotto Disponibile
             else {
                 badgeStock.innerHTML = '<span class="badge-disponibile">Disponibile</span>';
             }
@@ -317,5 +345,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+
+<%@ include file="/jsp/common/footer.jspf" %>
 
 <%@ include file="/jsp/common/footer.jspf" %>

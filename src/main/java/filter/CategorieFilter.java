@@ -28,8 +28,8 @@ import model.dao.impl.CategoriaDAOImpl;
  * la logica di recupero all'interno di ogni singola Servlet controller.
  * 
  * Per ottimizzare le prestazioni:
- *   Esclude le richieste dirette ad asset statici (CSS, JS, immagini, font).
- *   Evita letture ridondanti dal DB se l'attributo è già stato valorizzato nella richiesta corrente.
+ *   - Esclude le richieste dirette ad asset statici (CSS, JS, immagini).
+ *   - Evita letture ridondanti dal DB se l'attributo è già stato valorizzato nella richiesta corrente.
  */
 @WebFilter("/*")
 public class CategorieFilter implements Filter {
@@ -69,7 +69,7 @@ public class CategorieFilter implements Filter {
 
         // =========================================================================
         // 1. FILTRAGGIO DELLE RISORSE STATICHE
-        // Se la richiesta è diretta ad un file statico (CSS, JS, immagini, font),
+        // Se la richiesta è diretta ad un file statico (CSS, JS, immagini),
         // ignora la logica di recupero categorie per evitare query SQL non necessarie.
         // =========================================================================
         if (isStaticResource(path)) {
@@ -87,8 +87,13 @@ public class CategorieFilter implements Filter {
                 // Interroga il DAO per recuperare tutte le categorie memorizzate
                 List<CategoriaBean> categorie = categoriaDAO.doRetrieveAll();
                 
-                // Imposta la lista trovata oppure un ripiego (fallback) lista vuota se null
-                request.setAttribute("categorie", (categorie != null) ? categorie : new ArrayList<>());
+                // Imposta la lista trovata oppure un ripiego (fallback) con lista vuota se null
+                if (categorie != null) {
+                    request.setAttribute("categorie", categorie);
+                } else {
+                    request.setAttribute("categorie", new ArrayList<CategoriaBean>());
+                }
+
             } catch (SQLException e) {
                 // =========================================================================
                 // 3. GESTIONE DELL'ECCEZIONE SQL
@@ -125,7 +130,6 @@ public class CategorieFilter implements Filter {
     private boolean isStaticResource(String path) {
         return path.startsWith("/css/") 
             || path.startsWith("/js/") 
-            || path.startsWith("/images/")
-            || path.endsWith(".ico"); // Per il favicon nella root
+            || path.startsWith("/images/");
     }
 }

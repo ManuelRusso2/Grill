@@ -27,7 +27,7 @@ import model.dao.impl.ContenutoDAOImpl;
  * Filtro globale applicato a tutte le rotte per il calcolo in tempo reale del conteggio degli elementi nel carrello.
  * 
  * Il filtro si occupa di:
- *   - Escludere le chiamate a risorse statiche (CSS, JS, immagini, favicon) per ottimizzare le prestazioni.
+ *   - Escludere le chiamate a risorse statiche (CSS, JS, immagini) per ottimizzare le prestazioni.
  *   - Calcolare il carrello da Database esclusivamente per gli utenti autenticati che non sono amministratori.
  *   - Sommare la quantità totale di tutti i prodotti presenti a carrello.
  *   - Impostare l'attributo di richiesta {@code cartCount} per consentire all'interfaccia utente (es. Navbar/Badge) di mostrare il contatore aggiornato.
@@ -40,7 +40,7 @@ public class CartFilter implements Filter {
     private ContenutoDAO contenutoDAO;
 
     /**
-     * Inizializza il filtro instanziando le implementazioni concrete dei DAO per l'accesso ai dati.
+     * Inizializza il filtro istanziando le implementazioni concrete dei DAO per l'accesso ai dati.
      * Invocato dal Servlet Container durante la fase di avvio del filtro.
      * 
      * @param filterConfig La configurazione del filtro fornita dal Servlet Container
@@ -70,7 +70,7 @@ public class CartFilter implements Filter {
 
         // =========================================================================
         // 1. ESCLUSIONE DELLE RISORSE STATICHE
-        // Se la richiesta riguarda asset statici (CSS, JS, immagini, favicon), 
+        // Se la richiesta riguarda asset statici (CSS, JS, immagini), 
         // bypassa il calcolo del carrello per evitare query SQL non necessarie.
         // =========================================================================
         if (isStaticResource(requestURI)) {
@@ -130,7 +130,7 @@ public class CartFilter implements Filter {
 
     /**
      * Metodo ausiliario di controllo per verificare se il percorso richiesto appartiene
-     * ad una risorsa statica o ad una cartella di asset pubblici.
+     * ad una cartella di risorse statiche pubbliche (CSS, JavaScript, Immagini).
      * 
      * @param path Il percorso relativo della richiesta HTTP in minuscolo
      * @return {@code true} se il percorso identifica un file statico, {@code false} altrimenti
@@ -138,7 +138,6 @@ public class CartFilter implements Filter {
     private boolean isStaticResource(String path) {
         return path.startsWith("/css/") 
             || path.startsWith("/js/") 
-            || path.startsWith("/images/")
-            || path.endsWith(".ico");
+            || path.startsWith("/images/");
     }
 }

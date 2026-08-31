@@ -148,8 +148,7 @@ public class CheckoutServlet extends HttpServlet {
                 metodoPagamento,
                 indirizzoConsegna,
                 prodottiInCarrello,
-                totale,
-                null
+                totale
             );
 
             // 7. Impostazione dei dati di riepilogo per la schermata di conferma

@@ -22,14 +22,14 @@ public class OrdineDAOImpl implements OrdineDAO {
 
     // --- QUERY SQL PREPARATE ---
 
-    // Inserimento di un singolo articolo/riga all'interno di un acquisto
+    // Inserimento di un singolo articolo/riga all'interno di un acquisto (inclusa la taglia)
     private static final String INSERT_ORDINE =
-        "INSERT INTO ordine (id_acquisto, id_prodotto, prezzo_unitario, iva, quantita_acquistata, stato_spedizione) VALUES (?, ?, ?, ?, ?, ?)";
+        "INSERT INTO ordine (id_acquisto, id_prodotto, taglia, prezzo_unitario, iva, quantita_acquistata, stato_spedizione) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
     // Selezione di tutte le righe d'ordine associate ad uno specifico acquisto
     private static final String SELECT_BY_ACQUISTO =
-            "SELECT o.id_acquisto, o.id_prodotto, o.prezzo_unitario, o.iva, o.quantita_acquistata, o.stato_spedizione, o.taglia, p.nome AS nome_prodotto " +
-            "FROM ordine o JOIN prodotto p ON o.id_prodotto = p.id_prodotto WHERE o.id_acquisto = ?";
+        "SELECT o.id_acquisto, o.id_prodotto, o.prezzo_unitario, o.iva, o.quantita_acquistata, o.stato_spedizione, o.taglia, p.nome AS nome_prodotto " +
+        "FROM ordine o JOIN prodotto p ON o.id_prodotto = p.id_prodotto WHERE o.id_acquisto = ?";
 
     // Aggiornamento dello stato di spedizione per uno specifico prodotto all'interno di un acquisto (chiave composta)
     private static final String UPDATE_STATO_SPEDIZIONE =
@@ -47,15 +47,25 @@ public class OrdineDAOImpl implements OrdineDAO {
         try (Connection con = ConnessioneDB.getConnection();
              PreparedStatement ps = con.prepareStatement(INSERT_ORDINE)) {
 
+            // Gestione della taglia senza ternario
+            String taglia = ordine.getTaglia();
+            if (taglia == null || taglia.trim().isEmpty()) {
+                taglia = "Unica";
+            }
+
+            // Gestione del valore di fallback per lo stato della spedizione senza ternario
+            String stato = ordine.getStatoSpedizione();
+            if (stato == null || stato.trim().isEmpty()) {
+                stato = DEFAULT_STATO_SPEDIZIONE;
+            }
+
             ps.setInt(1, ordine.getIdAcquisto());
             ps.setInt(2, ordine.getIdProdotto());
-            ps.setDouble(3, ordine.getPrezzoUnitario());
-            ps.setDouble(4, ordine.getIva());
-            ps.setInt(5, ordine.getQuantitaAcquistata());
-            
-            // Gestione del valore di fallback per lo stato della spedizione
-            String stato = ordine.getStatoSpedizione();
-            ps.setString(6, (stato != null && !stato.trim().isEmpty()) ? stato : DEFAULT_STATO_SPEDIZIONE);
+            ps.setString(3, taglia);
+            ps.setDouble(4, ordine.getPrezzoUnitario());
+            ps.setDouble(5, ordine.getIva());
+            ps.setInt(6, ordine.getQuantitaAcquistata());
+            ps.setString(7, stato);
 
             ps.executeUpdate();
         }
@@ -104,7 +114,7 @@ public class OrdineDAOImpl implements OrdineDAO {
             ps.setInt(2, idAcquisto);
             ps.setInt(3, idProdotto);
 
-            return ps.executeUpdate() > 0; // Restituisce true se almeno una riga è stata modificata
+            return ps.executeUpdate() > 0;
         }
     }
 
@@ -124,15 +134,7 @@ public class OrdineDAOImpl implements OrdineDAO {
         ordine.setIva(rs.getDouble("iva"));
         ordine.setQuantitaAcquistata(rs.getInt("quantita_acquistata"));
         ordine.setStatoSpedizione(rs.getString("stato_spedizione"));
-        
-        // Gestione sicura della taglia (se presente nella tabella)
-        try {
-            ordine.setTaglia(rs.getString("taglia"));
-        } catch (SQLException e) {
-            // Ignora se la colonna non è presente
-        }
-        
-        // Mappatura del nome prodotto recuperato dalla JOIN
+        ordine.setTaglia(rs.getString("taglia"));
         ordine.setNomeProdotto(rs.getString("nome_prodotto"));
         
         return ordine;

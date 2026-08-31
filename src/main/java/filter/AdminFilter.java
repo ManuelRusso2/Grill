@@ -19,12 +19,20 @@ import model.bean.UtenteBean;
  * Filtro di sicurezza e controllo accessi dedicato all'Area Amministrativa dell'applicazione.
  * Intercetta tutte le richieste dirette ai percorsi protetti e alle Servlet riservate agli amministratori:
  *   {@code /admin/*} e {@code /jsp/admin/*} (pagine e viste admin)
- *  {@code /AdminProdottoServlet} e {@code /AdminOrdiniServlet} (controller amministrativi)
+ *   {@code /AdminProdottoServlet}, {@code /AdminOrdiniServlet}, 
+ *   {@code /AdminCategoriaServlet} e {@code /AdminRecensioniServlet} (controller amministrativi)
  * 
  * Garantisce che soltanto gli utenti autenticati con ruolo/flag {@code isAdmin == true} possano proseguire la navigazione,
  * bloccando gli accessi non autorizzati e prevenendo il caching dei dati sensibili nel browser.
  */
-@WebFilter(urlPatterns = {"/admin/*", "/jsp/admin/*", "/AdminProdottoServlet", "/AdminOrdiniServlet"})
+@WebFilter(urlPatterns = {
+    "/admin/*", 
+    "/jsp/admin/*", 
+    "/AdminProdottoServlet", 
+    "/AdminOrdiniServlet",
+    "/AdminCategoriaServlet",
+    "/AdminRecensioniServlet"
+})
 public class AdminFilter implements Filter {
 
     /**
@@ -68,7 +76,11 @@ public class AdminFilter implements Filter {
         // getSession(false) evita la creazione involontaria di una nuova sessione se non esiste
         // =========================================================================
         HttpSession session = httpRequest.getSession(false);
-        UtenteBean utente = (session != null) ? (UtenteBean) session.getAttribute("utente") : null;
+        UtenteBean utente = null;
+        
+        if (session != null) {
+            utente = (UtenteBean) session.getAttribute("utente");
+        }
         
         // =========================================================================
         // 3. CONTROLLO 1: UTENTE NON AUTENTICATO (GUEST)

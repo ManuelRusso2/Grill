@@ -19,8 +19,12 @@ import model.bean.UtenteBean;
  * Filtro di sicurezza preposto alla protezione dell'area riservata agli utenti autenticati.
  * 
  * Intercetta le richieste dirette alle risorse sensibili dell'applicazione:
- *   Servlet utente: {@code /CarrelloServlet}, {@code /CheckoutServlet}, {@code /ProfiloServlet}, {@code /DettaglioOrdineServlet}, {@code /FatturaServlet}
- *   Viste riservate JSP: {@code /jsp/user/carrello.jsp}, {@code /jsp/user/checkout.jsp}, {@code /jsp/user/profilo.jsp}, {@code /jsp/user/ordine-confermato.jsp}
+ *   Servlet utente: {@code /CarrelloServlet}, {@code /CheckoutServlet}, {@code /ProfiloServlet}, 
+ *                   {@code /DettaglioOrdineServlet}, {@code /FatturaServlet},
+ *                   {@code /AggiungiRecensioneServlet}, {@code /ModificaRecensioneServlet}, {@code /EliminaRecensioneServlet}
+ *   Viste riservate JSP: {@code /jsp/user/carrello.jsp}, {@code /jsp/user/checkout.jsp}, 
+ *                       {@code /jsp/user/edit-recensione.jsp}, {@code /jsp/user/ordine-confermato.jsp},
+ *                       {@code /jsp/common/profilo.jsp}
  * 
  * Se un utente non autenticato tenta di accedere a una di queste risorse:
  *   Chiamate standard (HTML/Browser): viene eseguito un reindirizzamento HTTP 302 alla pagina di login.
@@ -29,18 +33,22 @@ import model.bean.UtenteBean;
  * Inoltre, per tutti gli utenti autenticati, imposta gli opportuni header HTTP per prevenire il caching dei dati personali nel browser.
  */
 @WebFilter(urlPatterns = {
-    // Servlet che richiedono obbligatoriamente il login
+    // Servlet riservate agli utenti loggati
     "/CarrelloServlet",
     "/CheckoutServlet", 
     "/ProfiloServlet", 
     "/DettaglioOrdineServlet",
     "/FatturaServlet",
+    "/AggiungiRecensioneServlet",
+    "/ModificaRecensioneServlet",
+    "/EliminaRecensioneServlet",
     
     // Pagine JSP sensibili (registrazione.jsp rimane ad accesso libero)
     "/jsp/user/carrello.jsp",
     "/jsp/user/checkout.jsp",
-    "/jsp/user/profilo.jsp",
-    "/jsp/user/ordine-confermato.jsp"
+    "/jsp/user/edit-recensione.jsp",
+    "/jsp/user/ordine-confermato.jsp",
+    "/jsp/common/profilo.jsp"
 })
 public class UserFilter implements Filter {
 

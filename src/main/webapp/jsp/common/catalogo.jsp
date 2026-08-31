@@ -19,9 +19,14 @@
 
 <main class="container">
     <%-- Titolo dinamico: mostra il nome della categoria selezionata oppure 'Catalogo Prodotti' --%>
-    <h1>
-        <c:out value="${not empty categoriaAttiva ? categoriaAttiva.nome : 'Catalogo Prodotti'}" />
-    </h1>
+    <c:choose>
+        <c:when test="${not empty categoriaAttiva}">
+            <h1><c:out value="${categoriaAttiva.nome}" /></h1>
+        </c:when>
+        <c:otherwise>
+            <h1>Catalogo Prodotti</h1>
+        </c:otherwise>
+    </c:choose>
 
     <%-- ── PRE-CHECK DISPONIBILITÀ PRODOTTI ────────────────────────────────── --%>
     <%-- Scansione preliminare per verificare se esiste almeno un prodotto attivo/visibile --%>

@@ -52,8 +52,15 @@
                                 <%-- Generazione dell'URL dinamico per la Servlet di Dettaglio Prodotto --%>
                                 <c:set var="detailUrl" value="${pageContext.request.contextPath}/DettaglioProdottoServlet?id=${p.idProdotto}" />
                                 
-                                <%-- Normalizzazione del path dell'immagine (Supporta URL esterni http/https e path relativi locali) --%>
-                                <c:set var="imgSrc" value="${p.immagine.startsWith('http') ? p.immagine : pageContext.request.contextPath.concat('/').concat(p.immagine.startsWith('/') ? p.immagine.substring(1) : p.immagine)}" />
+                                <%-- Normalizzazione del path dell'immagine senza operatore ternario --%>
+                                <c:choose>
+                                    <c:when test="${p.immagine.startsWith('http://') || p.immagine.startsWith('https://')}">
+                                        <c:set var="imgSrc" value="${p.immagine}" />
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:set var="imgSrc" value="${pageContext.request.contextPath}/${p.immagine}" />
+                                    </c:otherwise>
+                                </c:choose>
 
                                 <div class="card product-card">
                                     <%-- Anteprima Immagine del prodotto con fallback automatico su errore di caricamento --%>
