@@ -61,10 +61,17 @@
                                     </a>
                                 </td>
                                 
-                                <%-- Badge stilizzato per la visualizzazione della taglia selezionata --%>
+                                <%-- Badge stilizzato per la visualizzazione della taglia selezionata senza ternario --%>
                                 <td>
                                     <span class="order-size-badge">
-                                        <c:out value="${empty prodotto.tagliaSelezionata ? 'Unica' : prodotto.tagliaSelezionata}"/>
+                                        <c:choose>
+                                            <c:when test="${not empty prodotto.tagliaSelezionata}">
+                                                <c:out value="${prodotto.tagliaSelezionata}"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                Unica
+                                            </c:otherwise>
+                                        </c:choose>
                                     </span>
                                 </td>
 
@@ -83,7 +90,16 @@
 
             <%-- Riquadro di evidenziazione dell'importo totale complessivo dell'ordine --%>
             <div class="checkout-total">
-                <p>Totale Ordine: <span><fmt:formatNumber value="${not empty totaleCarrello ? totaleCarrello : 0.0}" type="currency" currencySymbol="€"/></span></p>
+                <p>Totale Ordine: <span>
+                    <c:choose>
+                        <c:when test="${not empty totaleCarrello}">
+                            <fmt:formatNumber value="${totaleCarrello}" type="currency" currencySymbol="€"/>
+                        </c:when>
+                        <c:otherwise>
+                            <fmt:formatNumber value="0.0" type="currency" currencySymbol="€"/>
+                        </c:otherwise>
+                    </c:choose>
+                </span></p>
             </div>
         </div>
 
@@ -244,7 +260,10 @@
                 if (!option) return;
             
                 // Rimuove lo stato attivo dalla precedente opzione e lo assegna a quella cliccata
-                document.querySelector('.payment-option.active')?.classList.remove('active');
+                const activeOpt = document.querySelector('.payment-option.active');
+                if (activeOpt) {
+                    activeOpt.classList.remove('active');
+                }
                 option.classList.add('active');
                 togglePaymentMethod(option.dataset.method);
             });
@@ -296,7 +315,7 @@
 
             // Validazione client-side dei campi prima dell'invio del modulo
             form.addEventListener('submit', function(e) {
-                // Azzera tutti i messaggi d'errore visibili precedenza
+                // Azzera tutti i messaggi d'errore visibili in precedenza
                 form.querySelectorAll('.field-error-span').forEach(s => { s.textContent = ''; });
 
                 let ok = true;

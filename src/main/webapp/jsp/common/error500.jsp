@@ -20,12 +20,12 @@
         <%-- Messaggio di cortesia per l'utente finale --%>
         <p>Si &egrave; verificato un errore inaspettato. Stiamo gi&agrave; lavorando per risolverlo.</p>
 
-        <%-- Mostra la traccia dell'eccezione solo se presente (resa disponibile dall'attributo isErrorPage="true") --%>
+        <%-- Mostra la traccia dell'eccezione sanitizzata tramite c:out per prevenire XSS --%>
         <c:if test="${not empty exception}">
             <div class="error-details">
                 <strong>Dettagli tecnici (solo a scopo diagnostico):</strong>
-                <%-- Blocco formattato per la visualizzazione leggibile del tracciato dello stack (stacktrace) --%>
-                <pre style="white-space:pre-wrap; background:var(--bg-input); padding:15px; border-radius:6px; margin-top:10px; overflow:auto;">${exception}</pre>
+                <%-- Blocco formattato e protetto con c:out per la visualizzazione sicura dell'eccezione --%>
+                <pre style="white-space:pre-wrap; background:var(--bg-input); padding:15px; border-radius:6px; margin-top:10px; overflow:auto;"><c:out value="${exception}" /></pre>
             </div>
         </c:if>
 

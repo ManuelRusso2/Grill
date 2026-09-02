@@ -20,17 +20,18 @@
         <welcome-file>index.jsp</welcome-file>
     </welcome-file-list>
     
-    <!-- =================================================================== -->
+<!-- =================================================================== -->
     <!-- CONFIGURAZIONE GESTIONE SESSIONI E SICUREZZA COOKIE                 -->
     <!-- - session-timeout: Inattività massima espressa in minuti (30 min)  -->
-    <!-- - http-only: Previene l'accesso ai cookie di sessione (JSESSIONID) -->
-    <!--   tramite script client-side (es. JavaScript / attacchi XSS)       -->
+    <!-- - http-only: Previene l'accesso ai cookie di sessione tramite JS    -->
+    <!-- - tracking-mode: Disabilita il tracciamento tramite URL (jsessionid)-->
     <!-- =================================================================== -->
     <session-config>
         <session-timeout>30</session-timeout>
         <cookie-config>
             <http-only>true</http-only>
         </cookie-config>
+        <tracking-mode>COOKIE</tracking-mode>
     </session-config>
     
     <!-- =================================================================== -->

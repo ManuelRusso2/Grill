@@ -42,7 +42,7 @@
                     </p>
                 </c:if>
 
-                <%-- Form inviato via POST alla ModificaRecensioneServlet passandole l'ID recensione --%>
+                <%-- Form inviato via POST alla ModificaRecensioneServlet passandole l'ID recensione nell'URL --%>
                 <form action="${pageContext.request.contextPath}/ModificaRecensioneServlet?idRecensione=${recensione.idRecensione}" method="post" class="form-edit-review">
                 
                     <%-- Campo per la selezione della nuova valutazione a stelle --%>
@@ -50,7 +50,7 @@
                         <label for="valutazione">Valutazione:</label>
                         <select name="valutazione" id="valutazione" required class="form-control">
                             <c:forEach begin="1" end="5" var="i">
-                                <option value="${i}" ${i == recensione.valutazione ? 'selected' : ''}>
+                                <option value="${i}" <c:if test="${i == recensione.valutazione}">selected</c:if>>
                                     ${i} ★ 
                                     <c:choose>
                                         <c:when test="${i == 1}">(Pessimo)</c:when>

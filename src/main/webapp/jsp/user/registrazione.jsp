@@ -30,7 +30,7 @@
             <label for="nome">Nome *</label>
             <%-- Input testo con persistenza del valore e gestione dell'evidenziazione in caso di errore --%>
             <input id="nome" type="text" name="nome" value="<c:out value='${formNome}'/>" 
-                   class="${not empty errNome ? 'input-error' : ''}" placeholder="Mario" required>
+                   class="<c:if test='${not empty errNome}'>input-error</c:if>" placeholder="Mario" required>
             <%-- Visualizzazione del messaggio di errore specifico restituito dalla Servlet --%>
             <c:if test="${not empty errNome}">
                 <span class="field-error-span"><c:out value="${errNome}"/></span>
@@ -42,7 +42,7 @@
             <label for="cognome">Cognome *</label>
             <%-- Input testo per il cognome con gestione dell'evidenziazione in caso di errore --%>
             <input id="cognome" type="text" name="cognome" value="<c:out value='${formCognome}'/>" 
-                   class="${not empty errCognome ? 'input-error' : ''}" placeholder="Rossi" required>
+                   class="<c:if test='${not empty errCognome}'>input-error</c:if>" placeholder="Rossi" required>
             <%-- Visualizzazione dinamica dell'errore relativo al cognome --%>
             <c:if test="${not empty errCognome}">
                 <span class="field-error-span"><c:out value="${errCognome}"/></span>
@@ -54,7 +54,7 @@
             <label for="email">Indirizzo Email *</label>
             <%-- Input email con autocompletamento e gestione visiva degli errori server-side/client-side --%>
             <input id="email" type="email" name="email" value="<c:out value='${formEmail}'/>" 
-                   class="${not empty errEmail ? 'input-error' : ''}" placeholder="nome@esempio.it" autocomplete="email" required>
+                   class="<c:if test='${not empty errEmail}'>input-error</c:if>" placeholder="nome@esempio.it" autocomplete="email" required>
             <%-- Visualizzazione dell'errore lato server o dinamico via JS --%>
             <c:if test="${not empty errEmail}">
                 <span class="field-error-span"><c:out value="${errEmail}"/></span>
@@ -66,7 +66,7 @@
             <label for="password">Password *</label>
             <%-- Input masked per la password con classe di errore condizionale --%>
             <input id="password" type="password" name="password" 
-                   class="${not empty errPassword ? 'input-error' : ''}" placeholder="Crea una password" required>
+                   class="<c:if test='${not empty errPassword}'>input-error</c:if>" placeholder="Crea una password" required>
             <%-- Testo guida informativo con i requisiti minimi di sicurezza --%>
             <span id="passwordHint" class="field-hint">Minimo 6 caratteri, almeno una maiuscola e un numero.</span>
             <%-- Messaggio di errore restituito dalla Servlet in caso di password non conforme --%>
@@ -80,7 +80,7 @@
             <label for="telefono">Telefono <span class="optional">(opzionale)</span></label>
             <%-- Input opzionale per il numero telefonico con evidenziazione in caso di errore --%>
             <input id="telefono" type="tel" name="telefono" value="<c:out value='${formTelefono}'/>" 
-                   class="${not empty errTelefono ? 'input-error' : ''}" placeholder="+39 333 1234567">
+                   class="<c:if test='${not empty errTelefono}'>input-error</c:if>" placeholder="+39 333 1234567">
             <%-- Messaggio di errore lato server se il formato del telefono non è valido --%>
             <c:if test="${not empty errTelefono}">
                 <span class="field-error-span"><c:out value="${errTelefono}"/></span>

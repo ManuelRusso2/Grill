@@ -53,7 +53,14 @@
                         <div class="order-detail-row">
                             <span class="order-label">Totale</span>
                             <span class="order-value order-price">
-                                <fmt:formatNumber value="${totaleOrdine}" type="currency" currencySymbol="€" />
+                                <c:choose>
+                                    <c:when test="${not empty totaleOrdine}">
+                                        <fmt:formatNumber value="${totaleOrdine}" type="currency" currencySymbol="€" />
+                                    </c:when>
+                                    <c:otherwise>
+                                        <fmt:formatNumber value="0.0" type="currency" currencySymbol="€" />
+                                    </c:otherwise>
+                                </c:choose>
                             </span>
                         </div>
                         

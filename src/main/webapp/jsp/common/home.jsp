@@ -76,7 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <%-- ── FUNZIONI DI UTILITÀ PER SICUREZZA E FORMATTAZIONE ────────────────── --%>
     
     /**
-     * Esegue il sanificamento delle stringhe per prevenire attacchi Cross-Site Scripting (XSS).
+     * Esegue la sanificazione delle stringhe per prevenire attacchi Cross-Site Scripting (XSS).
      * @param {string} str - La stringa da convertire in entità HTML sicure.
      */
     const escapeHtml = (str) => {
@@ -104,7 +104,11 @@ document.addEventListener('DOMContentLoaded', () => {
      * @param {number} val - Importo numerico da formattare.
      */
     const formatCurrency = (val) => {
-        return new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(val || 0);
+        let amount = 0;
+        if (val) {
+            amount = val;
+        }
+        return new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR' }).format(amount);
     };
 
     <%-- ── LOGICA CAROUSEL COLLEZIONI ────────────────────────────────────────── --%>
@@ -156,7 +160,10 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Creazione del singolo indicatore di stato
             const indicator = document.createElement('button');
-            indicator.className = 'indicator ' + (index === 0 ? 'active' : '');
+            indicator.className = 'indicator';
+            if (index === 0) {
+                indicator.classList.add('active');
+            }
             indicator.dataset.index = index;
             indicator.addEventListener('click', () => goToSlide(index));
             indicators.appendChild(indicator);
@@ -313,11 +320,6 @@ document.addEventListener('DOMContentLoaded', () => {
     loadFeaturedProducts();
 });
 </script>
-
-<%-- Inclusione dello script per l'aggiornamento del badge carrello se l'utente è autenticato in sessione --%>
-<c:if test="${not empty sessionScope.utente}">
-    <script src="${pageContext.request.contextPath}/js/cart-badge.js"></script>
-</c:if>
 
 <%-- Inclusione del piè di pagina (footer) statico --%>
 <%@ include file="/jsp/common/footer.jspf" %>
