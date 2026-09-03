@@ -22,14 +22,11 @@ import utility.ConnessioneDB;
  */
 public class AcquistoDAOImpl implements AcquistoDAO {
 
-    /** Aliquota IVA predefinita applicata ai singoli elementi dell'ordine. */
-    private static final double IVA_STANDARD = 22.0;
-
     // =========================================================================
     // QUERY SQL PREPARATE
     // =========================================================================
 
-    /** Inserisce una nuova testata d'acquisto. */
+    /** Inserisce una nuova testata d'acquisto nella tabella 'acquisto'. */
     private static final String INSERT_ACQUISTO =
         "INSERT INTO acquisto (prezzo_totale, data_acquisto, metodo_pagamento, indirizzo_consegna, id_utente) VALUES (?, ?, ?, ?, ?)";
 
@@ -37,7 +34,7 @@ public class AcquistoDAOImpl implements AcquistoDAO {
     private static final String UPDATE_ACQUISTO =
         "UPDATE acquisto SET prezzo_totale = ?, data_acquisto = ?, metodo_pagamento = ?, indirizzo_consegna = ? WHERE id_acquisto = ?";
 
-    /** Recupera un acquisto specifico tramite il suo identificativo primario. */
+    /** Recupera un acquisto specifico tramite il suo identificativo primario (ID). */
     private static final String SELECT_BY_ID =
         "SELECT id_acquisto, prezzo_totale, data_acquisto, metodo_pagamento, indirizzo_consegna, id_utente FROM acquisto WHERE id_acquisto = ?";
 
@@ -241,12 +238,10 @@ public class AcquistoDAOImpl implements AcquistoDAO {
      * Esegue l'intera procedura transazionale per il completamento di un acquisto (Checkout).
      * <p>
      * Le operazioni eseguite atomicamente includono:
-     * <ol>
-     *   <li>Creazione del record di testata nella tabella 'acquisto'.</li>
-     *   <li>Inserimento dei singoli articoli nell'ordine (tabella 'ordine').</li>
-     *   <li>Aggiornamento delle giacenze in magazzino dei prodotti acquistati.</li>
-     *   <li>Svuotamento dei prodotti dal carrello dell'utente.</li>
-     * </ol>
+     *    Creazione del record di testata nella tabella 'acquisto'.
+     *    Inserimento dei singoli articoli nell'ordine (tabella 'ordine') salvando prezzo e IVA storici.
+     *    Aggiornamento delle giacenze in magazzino dei prodotti acquistati.
+     *    Svuotamento dei prodotti dal carrello dell'utente.
      * 
      * @param idCarrello L'ID del carrello da svuotare
      * @param idUtente L'ID dell'utente che conclude l'ordine
@@ -290,7 +285,7 @@ public class AcquistoDAOImpl implements AcquistoDAO {
                 }
 
                 // -----------------------------------------------------------------
-                // 2. Inserimento dei dettagli ordine (Batch Execution)
+                // 2. Inserimento dei dettagli ordine (Batch Execution con IVA e Prezzo Dinamici)
                 // -----------------------------------------------------------------
                 try (PreparedStatement psOrdine = con.prepareStatement(INSERT_ORDINE)) {
                     for (Map.Entry<ProdottoBean, Integer> entry : prodottiInCarrello.entrySet()) {
@@ -307,7 +302,10 @@ public class AcquistoDAOImpl implements AcquistoDAO {
                         psOrdine.setInt(2, prodotto.getIdProdotto());
                         psOrdine.setString(3, taglia);
                         psOrdine.setDouble(4, prodotto.getCosto());
-                        psOrdine.setDouble(5, IVA_STANDARD);
+                        
+                        // Salvataggio dell'aliquota IVA specifica recuperata dal ProdottoBean (integrità storica)
+                        psOrdine.setDouble(5, prodotto.getIva()); 
+                        
                         psOrdine.setInt(6, quantita);
                         psOrdine.setString(7, "In elaborazione");
 
