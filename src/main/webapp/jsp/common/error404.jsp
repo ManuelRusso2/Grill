@@ -24,7 +24,7 @@
         <%-- Azione di ripristino navigazione --%>
         <div class="error-actions">
             <%-- Link per tornare alla pagina principale del catalogo prodotti --%>
-            <a class="btn" href="${pageContext.request.contextPath}/CatalogoServlet">Torna al Catalogo</a>
+            <a class="btn btn-primary btn-md" href="${pageContext.request.contextPath}/CatalogoServlet">Torna al Catalogo</a>
         </div>
     </div>
 </main>

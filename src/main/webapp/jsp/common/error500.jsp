@@ -23,16 +23,15 @@
         <%-- Mostra la traccia dell'eccezione sanitizzata tramite c:out per prevenire XSS --%>
         <c:if test="${not empty exception}">
             <div class="error-details">
-                <strong>Dettagli tecnici (solo a scopo diagnostico):</strong>
-                <%-- Blocco formattato e protetto con c:out per la visualizzazione sicura dell'eccezione --%>
-                <pre style="white-space:pre-wrap; background:var(--bg-input); padding:15px; border-radius:6px; margin-top:10px; overflow:auto;"><c:out value="${exception}" /></pre>
+                <p><strong>Dettagli tecnici (solo a scopo diagnostico):</strong></p>
+                <pre><c:out value="${exception.message}" default="Nessun dettaglio aggiuntivo disponibile." /></pre>
             </div>
         </c:if>
 
-        <%-- Azione di ripristino navigazione --%>
+        <%-- Azioni di ripristino navigazione --%>
         <div class="error-actions">
-            <%-- Link per ritornare in sicurezza al catalogo prodotti --%>
-            <a class="btn" href="${pageContext.request.contextPath}/CatalogoServlet">Torna al Catalogo</a>
+            <%-- Link per ritornare in sicurezza al catalogo prodotti con varianti di stile del pulsante --%>
+            <a class="btn btn-primary btn-md" href="${pageContext.request.contextPath}/CatalogoServlet">Torna al Catalogo</a>
         </div>
     </div>
 </main>

@@ -24,10 +24,10 @@
         <%-- Pulsanti di reindirizzamento e ripristino della navigazione --%>
         <div class="error-actions">
             <%-- Link per tornare alla visualizzazione del catalogo prodotti --%>
-            <a class="btn" href="${pageContext.request.contextPath}/CatalogoServlet">Torna al Catalogo</a>
+            <a class="btn btn-primary btn-md" href="${pageContext.request.contextPath}/CatalogoServlet">Torna al Catalogo</a>
             
             <%-- Link per disconnettere la sessione attuale --%>
-            <a class="btn btn-md btn-secondary" href="${pageContext.request.contextPath}/LogoutServlet">Logout</a>
+            <a class="btn btn-primary btn-md" href="${pageContext.request.contextPath}/LogoutServlet">Logout</a>
         </div>
     </div>
 </main>
