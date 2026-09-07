@@ -139,29 +139,29 @@
 
 /* Contenitore orizzontale delle azioni d'acquisto (Svuota / Checkout) affiancate sulla destra */
 .cart-actions-group {
-    display: flex !important;                  /* Forza la disposizione flessibile in riga */
-    flex-direction: row !important;            /* Dispone i pulsanti uno accanto all'altro in orizzontale */
-    justify-content: flex-end !important;      /* Allinea e spinge tutti i pulsanti sul lato destro */
-    align-items: center !important;            /* Centratura verticale tra pulsanti di altezze diverse */
-    gap: 15px !important;                      /* Spaziatura orizzontale costante tra i due pulsanti */
-    width: 100% !important;                    /* Occupazione piena della larghezza del contenitore */
+    display: flex;                  /* Forza la disposizione flessibile in riga */
+    flex-direction: row;            /* Dispone i pulsanti uno accanto all'altro in orizzontale */
+    justify-content: flex-end;      /* Allinea e spinge tutti i pulsanti sul lato destro */
+    align-items: center;            /* Centratura verticale tra pulsanti di altezze diverse */
+    gap: 15px;                      /* Spaziatura orizzontale costante tra i due pulsanti */
+    width: 100%;                    /* Occupazione piena della larghezza del contenitore */
     padding-top: 20px;                         /* Spaziatura interna superiore rispetto al totale */
     border-top: 1px solid var(--border-color); /* Linea divisoria orizzontale di separazione */
 }
 
 /* Annulla i comportamenti a blocco dei form per mantenere il pulsante in linea */
 .cart-actions-group form {
-    display: inline-flex !important;           /* Impedisce al form di andare a capo e lo mantiene in linea */
-    margin: 0 !important;                      /* Azzera i margini esterni del modulo form */
-    width: auto !important;                    /* Impedisce al form di espandersi al 100% della larghezza */
+    display: inline-flex;           /* Impedisce al form di andare a capo e lo mantiene in linea */
+    margin: 0;                      /* Azzera i margini esterni del modulo form */
+    width: auto;                    /* Impedisce al form di espandersi al 100% della larghezza */
 }
 
 /* Mantiene le dimensioni naturali e il testo su singola riga per tutti i bottoni del gruppo */
 .cart-actions-group a,
 .cart-actions-group button {
-    width: auto !important;                    /* Il pulsante si adatta rigorosamente al proprio testo */
-    margin: 0 !important;                      /* Elimina i margini esterni concorrenti */
-    white-space: nowrap !important;            /* Previene l'andata a capo del testo all'interno del bottone */
+    width: auto;                    /* Il pulsante si adatta rigorosamente al proprio testo */
+    margin: 0;                      /* Elimina i margini esterni concorrenti */
+    white-space: nowrap;            /* Previene l'andata a capo del testo all'interno del bottone */
 }
 
 /* --------------------------------------------------------------------------

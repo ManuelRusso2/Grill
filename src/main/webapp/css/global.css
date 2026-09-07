@@ -269,7 +269,7 @@ img {
 /* Link in evidenza "Tutte le Collezioni" */
 .nav-dropdown-featured {
     font-weight: 700;                          /* Grassetto marcato */
-    color: var(--accent-yellow) !important;    /* Colore giallo d'accento */
+    color: var(--accent-yellow);    /* Colore giallo d'accento */
     border-bottom: 1px solid var(--border-color); /* Bordo divisorio inferiore */
     margin-bottom: 6px;                        /* Spaziatura inferiore */
     padding-bottom: 8px;                       /* Distacco interno */
@@ -401,7 +401,7 @@ td form {
 
 /* Stato d'errore applicato all'input */
 .input-error {
-    border-color: #ff4d4d !important;          /* Forza il bordo in rosso avviso */
+    border-color: #ff4d4d;          /* Forza il bordo in rosso avviso */
 }
 
 /* Messaggio di errore sottostante ai campi */
