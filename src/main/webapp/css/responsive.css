@@ -28,7 +28,7 @@
 /* ==========================================================================
    2. TABLET PICCOLI E SMARTPHONE ORIZZONTALI (max-width: 768px)
    ==========================================================================
-   Ottimizzazione della barra di navigazione, carosello ed elementi di lista.
+   Ottimizzazione della barra di navigazione, carosello, elementi di lista e checkout.
    ========================================================================== */
 @media (max-width: 768px) {
     /* Incolonnamento flessibile per la barra di navigazione principale */
@@ -88,6 +88,11 @@
     .admin-orders-filter {
         flex-direction: column;                /* Dispone i filtri verticalmente su mobile */
         align-items: stretch;                  /* Estende i campi per occupare tutta la larghezza */
+    }
+
+    /* Incolonnamento verticale dei pulsanti per la selezione del metodo di pagamento */
+    .payment-method-selector {
+        flex-direction: column;                /* Dispone le opzioni di pagamento l'una sotto l'altra su mobile */
     }
 }
 

@@ -8,13 +8,13 @@
 /* --------------------------------------------------------------------------
    5.1 TABELLA CARRELLO & PRODOTTI
    -------------------------------------------------------------------------- */
-/* Wrapper responsive per contenere la tabella carrello */
+/* Contenitore responsive che permette lo scorrimento orizzontale della tabella carrello */
 .cart-table-wrapper {
-    width: 100%;
-    margin-bottom: 30px;
-    overflow-x: auto;
-    border-radius: 8px;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    width: 100%;                               /* Occupazione completa della larghezza disponibile */
+    margin-bottom: 30px;                       /* Distacco verticale dal blocco sottostante */
+    overflow-x: auto;                          /* Attiva lo scroll orizzontale su schermi piccoli */
+    border-radius: 8px;                        /* Arrotondamento degli angoli del wrapper */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);/* Ombreggiatura profonda per stacco visivo dal fondo */
 }
 
 /* Tabella principale contenente i prodotti inseriti nel carrello */
@@ -175,13 +175,6 @@
     align-items: start;                        /* Allinea i contenitori alla parte superiore */
 }
 
-/* Responsiveness griglia checkout su schermi medio-piccoli */
-@media (max-width: 900px) {
-    .checkout-grid {
-        grid-template-columns: 1fr;            /* Incolonna riepilogo e form su tablet/mobile */
-    }
-}
-
 /* Schede riepilogo e form nel checkout */
 .checkout-summary-card,
 .checkout-form-card {
@@ -236,13 +229,6 @@
     gap: 15px;                                 /* Distanza tra le opzioni di pagamento */
     margin-top: 10px;                          /* Distanza dall'elemento superiore */
     margin-bottom: 25px;                       /* Distanza dalla sezione dati successiva */
-}
-
-/* Responsiveness per schermi piccoli (mobile) */
-@media (max-width: 600px) {
-    .payment-method-selector {
-        flex-direction: column;                /* Incolonna i pulsanti di pagamento su mobile */
-    }
 }
 
 /* Singola opzione/scheda di pagamento */
