@@ -51,12 +51,6 @@ public class AdminRecensioniServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // Controllo di Sicurezza: verifica che la richiesta provenga da un utente con ruolo Amministratore
-        if (isNotAdmin(request)) {
-            response.sendError(HttpServletResponse.SC_FORBIDDEN); // Risponde con 403 Forbidden se non autorizzato
-            return;
-        }
-
         try {
             // 1. Carica i dati di supporto necessari per i menu di navigazione e i filtri di selezione (Categorie e Utenti)
             List<CategoriaBean> allCategorie = categoriaDAO.doRetrieveAll();

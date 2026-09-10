@@ -56,8 +56,6 @@ public class CollezioniServlet extends HttpServlet {
             List<ProdottoBean> prodotti = prodottoDAO.doRetrieveAllProdottiRaggruppati();
 
             // 1. Raggruppa preventivamente i prodotti attivi per ID Collezione.
-            //    Utilizza una HashMap per ridurre la complessità computazionale a O(M) [M = num prodotti],
-            //    evitando query ripetute sul DB o cicli annidati non efficienti.
             Map<Integer, List<ProdottoBean>> prodottiPerCollezioneId = new HashMap<>();
             
             if (prodotti != null) {
