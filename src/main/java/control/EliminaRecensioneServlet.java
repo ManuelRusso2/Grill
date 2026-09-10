@@ -86,7 +86,13 @@ public class EliminaRecensioneServlet extends HttpServlet {
             }
 
             // 5. Cancellazione effettiva della recensione dal database
-            recensioneDAO.doDelete(idRecensione);
+            boolean cancellato = recensioneDAO.doDelete(idRecensione);
+
+            if (cancellato) {
+                request.getSession(true).setAttribute("successMessage", "Recensione eliminata con successo!");
+            } else {
+                request.getSession(true).setAttribute("errorMessage", "Impossibile eliminare la recensione.");
+            }
 
             // 6. Reindirizzamento dinamico:
             // Se la cancellazione è stata inviata dalla scheda prodotto (idProdotto presente), torna lì;

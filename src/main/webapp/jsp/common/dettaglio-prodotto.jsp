@@ -22,6 +22,22 @@
 
 <main class="container product-details-container">
 
+	<%-- ── MESSAGGI DI FEEDBACK (FLASH ATTRIBUTES IN SESSIONE) ──────────────── --%>
+    <c:if test="${not empty sessionScope.successMessage}">
+        <div class="alert alert-success">
+            <c:out value="${sessionScope.successMessage}" />
+        </div>
+        <%-- Rimuove il messaggio dalla sessione dopo la visualizzazione per evitare che persista al refresh --%>
+        <c:remove var="successMessage" scope="session" />
+    </c:if>
+
+    <c:if test="${not empty sessionScope.errorMessage}">
+        <div class="alert alert-danger">
+            <c:out value="${sessionScope.errorMessage}" />
+        </div>
+        <c:remove var="errorMessage" scope="session" />
+    </c:if>
+    
     <%-- Controllo sull'esistenza e validità del bean prodotto passato dalla Servlet --%>
     <c:choose>
         <%-- ========================================================================= --%>
@@ -379,6 +395,27 @@ document.addEventListener("DOMContentLoaded", function () {
             });
         });
     }
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    // Seleziona tutti gli alert di successo o errore nella pagina
+    const alerts = document.querySelectorAll(".alert-success, .alert-danger");
+    
+    alerts.forEach(function (alert) {
+        // Attende 3 secondi, poi applica una transizione di sfumatura
+        setTimeout(function () {
+            alert.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+            alert.style.opacity = "0";
+            alert.style.transform = "translateY(-10px)";
+            
+            // Rimuove completamente l'elemento dal DOM dopo la sfumatura
+            setTimeout(function () {
+                alert.remove();
+            }, 500);
+        }, 3000);
+    });
 });
 </script>
 
