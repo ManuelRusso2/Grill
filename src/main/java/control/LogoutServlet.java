@@ -46,13 +46,8 @@ public class LogoutServlet extends HttpServlet {
 
         // =========================================================================
         // 2. SICUREZZA: DISABILITAZIONE CACHE DEL BROWSER
-        // Configura gli header HTTP di risposta per impedire il salvataggio in cache.
-        // Evita che un utente disconnesso possa visualizzare pagine protette premendo
-        // il pulsante "Indietro" della cronologia del browser.
+        // Le intestazioni anti-caching HTTP sono già applicate a monte da UserFilter.
         // =========================================================================
-        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // Standard HTTP 1.1
-        response.setHeader("Pragma", "no-cache");                                   // Retrocompatibilità HTTP 1.0
-        response.setDateHeader("Expires", 0);                                       // Scadenza immediata per server Proxy
 
         // =========================================================================
         // 3. REINDIRIZZAMENTO

@@ -54,19 +54,10 @@ public class ModificaRecensioneServlet extends HttpServlet {
 
         // ---------------------------------------------------------------------
         // 1. Controllo Autenticazione Utente
+        // Autenticazione già garantita a monte da UserFilter.
         // ---------------------------------------------------------------------
-        // Recupera la sessione corrente senza crearne una nuova se non esiste
         HttpSession session = request.getSession(false);
-        UtenteBean utente = null;
-        if (session != null) {
-            utente = (UtenteBean) session.getAttribute("utente");
-        }
-
-        // Se l'utente non è autenticato, reindirizza alla pagina di login
-        if (utente == null) {
-            response.sendRedirect(request.getContextPath() + "/jsp/common/login.jsp");
-            return;
-        }
+        UtenteBean utente = (UtenteBean) session.getAttribute("utente");
 
         // ---------------------------------------------------------------------
         // 2. Recupero e Validazione del Parametro "idRecensione"
@@ -135,15 +126,10 @@ public class ModificaRecensioneServlet extends HttpServlet {
 
         // ---------------------------------------------------------------------
         // 1. Controllo Autenticazione Utente
+        // Autenticazione già garantita a monte da UserFilter.
         // ---------------------------------------------------------------------
         HttpSession session = request.getSession(false);
-        UtenteBean utente = (session != null) ? (UtenteBean) session.getAttribute("utente") : null;
-
-        // Se la sessione è scaduta o l'utente non è loggato, reindirizza al login
-        if (utente == null) {
-            response.sendRedirect(request.getContextPath() + "/jsp/common/login.jsp");
-            return;
-        }
+        UtenteBean utente = (UtenteBean) session.getAttribute("utente");
 
         // ---------------------------------------------------------------------
         // 2. Lettura dei Parametri Inviati dalla Form
@@ -203,6 +189,7 @@ public class ModificaRecensioneServlet extends HttpServlet {
             
             // Esegue l'update sul database
             recensioneDAO.doUpdate(rec);
+            session.setAttribute("successMessage", "Recensione modificata con successo!");
 
             // ---------------------------------------------------------------------
             // 6. Reindirizzamento Contestuale

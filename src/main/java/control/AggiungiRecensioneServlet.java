@@ -46,16 +46,12 @@ public class AggiungiRecensioneServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
 
-        // Recupera la sessione corrente senza crearne una nuova se non esiste (false)
+        // Recupera la sessione e l'utente autenticato (autenticazione già garantita da UserFilter)
         HttpSession session = request.getSession(false);
-        
-        // Estrae l'oggetto utente dalla sessione (se la sessione esiste)
-        UtenteBean utente = (session != null) ? (UtenteBean) session.getAttribute("utente") : null;
+        UtenteBean utente = (UtenteBean) session.getAttribute("utente");
 
-        // Controllo autenticazione e autorizzazione: 
-        // Se l'utente non è loggato o è un amministratore (gli admin non votano i prodotti)
-        if (utente == null || utente.isAdmin()) {
-            // Reindirizza l'utente alla pagina di Login
+        // Controllo di autorizzazione: gli amministratori non possono inserire recensioni
+        if (utente.isAdmin()) {
             response.sendRedirect(request.getContextPath() + "/jsp/common/login.jsp");
             return; // Interrompe l'esecuzione del metodo
         }

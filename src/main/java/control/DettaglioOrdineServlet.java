@@ -54,13 +54,8 @@ public class DettaglioOrdineServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // 1. Verifica dell'autenticazione: solo gli utenti registrati possono accedere
+        // 1. Recupero dell'utente autenticato (autenticazione già garantita da UserFilter)
         UtenteBean utente = getLoggedUser(request);
-        if (utente == null) {
-            // Se l'utente non è loggato, reindirizza alla pagina di login
-            response.sendRedirect(request.getContextPath() + "/jsp/common/login.jsp");
-            return;
-        }
 
         // 2. Recupero del parametro ID dell'acquisto dall'URL
         String idParam = getTrimmedParam(request, "id");

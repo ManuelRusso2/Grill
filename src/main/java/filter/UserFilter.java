@@ -33,23 +33,26 @@ import model.bean.UtenteBean;
  * Inoltre, per tutti gli utenti autenticati, imposta gli opportuni header HTTP per prevenire il caching dei dati personali nel browser.
  */
 @WebFilter(urlPatterns = {
-    // Servlet riservate agli utenti loggati
-    "/CarrelloServlet",
-    "/CheckoutServlet", 
-    "/ProfiloServlet", 
-    "/DettaglioOrdineServlet",
-    "/FatturaServlet",
-    "/AggiungiRecensioneServlet",
-    "/ModificaRecensioneServlet",
-    "/EliminaRecensioneServlet",
-    
-    // Pagine JSP sensibili (registrazione.jsp rimane ad accesso libero)
-    "/jsp/user/carrello.jsp",
-    "/jsp/user/checkout.jsp",
-    "/jsp/user/edit-recensione.jsp",
-    "/jsp/user/ordine-confermato.jsp",
-    "/jsp/common/profilo.jsp"
-})
+	    // Servlet riservate agli utenti loggati
+	    "/CarrelloServlet",
+	    "/CheckoutServlet", 
+	    "/ProfiloServlet", 
+	    "/DettaglioOrdineServlet",
+	    "/FatturaServlet",
+	    "/AggiungiRecensioneServlet",
+	    "/ModificaRecensioneServlet",
+	    "/EliminaRecensioneServlet",
+	    "/LogoutServlet",
+	    
+	    // Pagine JSP sensibili (registrazione.jsp in /jsp/user/ rimane esclusa)
+	    "/jsp/user/carrello.jsp",
+	    "/jsp/user/checkout.jsp",
+	    "/jsp/user/edit-recensione.jsp",
+	    "/jsp/user/ordine-confermato.jsp",
+	    "/jsp/common/profilo.jsp",
+	    "/jsp/common/dettaglio-ordine.jsp"
+	})
+
 public class UserFilter implements Filter {
 
     /**

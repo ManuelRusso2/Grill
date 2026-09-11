@@ -47,13 +47,8 @@ public class EliminaRecensioneServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // 1. Controllo Autenticazione: verifica se l'utente è attualmente loggato in sessione
+        // 1. Controllo Autenticazione: autenticazione già garantita a monte da UserFilter
         UtenteBean utente = getLoggedUser(request);
-        if (utente == null) {
-            // Se l'utente non è loggato, reindirizza alla pagina di login
-            response.sendRedirect(request.getContextPath() + "/jsp/common/login.jsp");
-            return;
-        }
 
         // 2. Recupero e pulizia dei parametri inviati dalla richiesta
         String idRecensioneParam = getTrimmedParam(request, "idRecensione");

@@ -68,29 +68,11 @@ public class ProfiloServlet extends HttpServlet {
             throws ServletException, IOException {
 
         // =========================================================================
-        // 1. CONTROLLO DI AUTENTICAZIONE UTENTE
-        // Recupera la sessione corrente senza instanziarne una nuova (false).
-        // Se l'utente non è autenticato, viene reindirizzato alla pagina di login.
+        // 1. RECUPERO UTENTE AUTENTICATO
+        // Autenticazione ed intestazioni anti-caching sono garantite a monte da UserFilter.
         // =========================================================================
         HttpSession session = request.getSession(false);
-        UtenteBean utente = null;
-        if (session != null) {
-            utente = (UtenteBean) session.getAttribute("utente");
-        }
-        
-        if (utente == null) {
-            response.sendRedirect(request.getContextPath() + "/jsp/common/login.jsp");
-            return; // Interrompe l'esecuzione del metodo
-        }
-
-        // =========================================================================
-        // 2. SICUREZZA E PRIVACY: PREVENZIONE CACHING
-        // Configura gli header della risposta HTTP per impedire al browser o ai proxy
-        // di salvare in cache le pagine contenenti dati personali dell'utente.
-        // =========================================================================
-        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // Standard HTTP 1.1
-        response.setHeader("Pragma", "no-cache");                                   // Standard HTTP 1.0
-        response.setDateHeader("Expires", 0);                                       // Scadenza immediata per i Proxy
+        UtenteBean utente = (UtenteBean) session.getAttribute("utente");
 
         try {
             // =========================================================================

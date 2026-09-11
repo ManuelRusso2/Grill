@@ -52,13 +52,9 @@ public class CheckoutServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // 1. Verifica se l'utente è autenticato
-        UtenteBean utente = getLoggedUser(request);
-        if (utente == null) {
-            // Reindirizza al login se la sessione non è valida o non contiene l'utente
-            response.sendRedirect(request.getContextPath() + "/jsp/common/login.jsp");
-            return;
-        }
+        // 1. Recupero dell'utente autenticato (autenticazione già garantita da UserFilter)
+        HttpSession session = request.getSession(false);
+        UtenteBean utente = (UtenteBean) session.getAttribute("utente");
 
         try {
             // 2. Recupera (o crea) il carrello attivo dell'utente
@@ -93,12 +89,9 @@ public class CheckoutServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        // 1. Verifica l'autenticazione dell'utente
-        UtenteBean utente = getLoggedUser(request);
-        if (utente == null) {
-            response.sendRedirect(request.getContextPath() + "/jsp/common/login.jsp");
-            return;
-        }
+        // 1. Recupero dell'utente autenticato (autenticazione già garantita da UserFilter)
+        HttpSession session = request.getSession(false);
+        UtenteBean utente = (UtenteBean) session.getAttribute("utente");
 
         // 2. Estrazione e pulizia dei parametri base
         String metodoPagamento = getTrimmedParam(request, "metodoPagamento");
@@ -228,8 +221,8 @@ public class CheckoutServlet extends HttpServlet {
         // =========================================================================
         // REGEX VALIDAZIONE NUMERO CARTA
         // =========================================================================
-        // \\d                : Cifra numerica da 0 a 9 (serve \\ per l'escape Java di \d)
-        // {13,19}            : Quantificatore: da un minimo di 13 a un massimo di 19 cifre
+        // \\d                 : Cifra numerica da 0 a 9 (serve \\ per l'escape Java di \d)
+        // {13,19}             : Quantificatore: da un minimo di 13 a un massimo di 19 cifre
         if (!numOnly.matches("\\d{13,19}") || !luhnCheck(numOnly)) {
             return "Numero carta non valido.";
         }
@@ -237,17 +230,17 @@ public class CheckoutServlet extends HttpServlet {
         // =========================================================================
         // REGEX VALIDAZIONE SCADENZA CARTA (MM/AA)
         // =========================================================================
-        // ^                  : Inizio della stringa
-        // (                  : Inizio del gruppo per la selezione del Mese (MM)
-        //   0[1-9]           : Cifra '0' seguita da un numero da 1 a 9 (mesi 01-09)
-        //   |                : Operatore logico OR (oppure)
-        //   1[0-2]           : Cifra '1' seguita da un numero da 0 a 2 (mesi 10-12)
-        // )                  : Fine del gruppo Mese
-        // /                  : Carattere slash letterale di separazione
-        // (                  : Inizio del gruppo per l'Anno (AA)
-        //   \\d{2}           : Esattamente 2 cifre numeriche per l'anno (es. 26 per 2026)
-        // )                  : Fine del gruppo Anno
-        // $                  : Fine della stringa
+        // ^                   : Inizio della stringa
+        // (                   : Inizio del gruppo per la selezione del Mese (MM)
+        //   0[1-9]            : Cifra '0' seguita da un numero da 1 a 9 (mesi 01-09)
+        //   |                 : Operatore logico OR (oppure)
+        //   1[0-2]            : Cifra '1' seguita da un numero da 0 a 2 (mesi 10-12)
+        // )                   : Fine del gruppo Mese
+        // /                   : Carattere slash letterale di separazione
+        // (                   : Inizio del gruppo per l'Anno (AA)
+        //   \\d{2}            : Esattamente 2 cifre numeriche per l'anno (es. 26 per 2026)
+        // )                   : Fine del gruppo Anno
+        // $                   : Fine della stringa
         if (!cartaScadenza.matches("^(0[1-9]|1[0-2])/(\\d{2})$")) {
             return "Formato data scadenza non valido (MM/AA).";
         }
@@ -255,10 +248,10 @@ public class CheckoutServlet extends HttpServlet {
         // =========================================================================
         // REGEX VALIDAZIONE CVV / CVC
         // =========================================================================
-        // ^                  : Inizio della stringa
-        // \\d                : Cifra numerica da 0 a 9
-        // {3,4}              : Quantificatore: esattamente 3 cifre (Visa/Mastercard) o 4 (Amex)
-        // $                  : Fine della stringa
+        // ^                   : Inizio della stringa
+        // \\d                 : Cifra numerica da 0 a 9
+        // {3,4}               : Quantificatore: esattamente 3 cifre (Visa/Mastercard) o 4 (Amex)
+        // $                   : Fine della stringa
         if (!cartaCVV.matches("^\\d{3,4}$")) {
             return "CVV non valido.";
         }
@@ -325,26 +318,11 @@ public class CheckoutServlet extends HttpServlet {
         // =========================================================================
         // REGEX VALIDAZIONE IBAN GENERICO
         // =========================================================================
-        // ^                  : Inizio della stringa
-        // [A-Z]{2}           : Codice nazione ISO (esattamente 2 lettere maiuscole, es. IT, DE, FR)
-        // [0-9A-Z]{13,32}    : Cifre di controllo + BBAN (da 13 a 32 caratteri alfanumerici: numeri 0-9 e lettere maiuscole)
-        // $                  : Fine della stringa
+        // ^                   : Inizio della stringa
+        // [A-Z]{2}            : Codice nazione ISO (esattamente 2 lettere maiuscole, es. IT, DE, FR)
+        // [0-9A-Z]{13,32}     : Cifre di controllo + BBAN (da 13 a 32 caratteri alfanumerici: numeri 0-9 e lettere maiuscole)
+        // $                   : Fine della stringa
         return value.matches("^[A-Z]{2}[0-9A-Z]{13,32}$");
-    }
-
-    /**
-     * Recupera l'utente correntemente autenticato dalla sessione HTTP.
-     * 
-     * @param request La richiesta HTTP
-     * @return L'oggetto UtenteBean se presente in sessione, altrimenti null
-     */
-    private UtenteBean getLoggedUser(HttpServletRequest request) {
-        HttpSession session = request.getSession(false);
-        if (session != null) {
-            return (UtenteBean) session.getAttribute("utente");
-        }
-
-        return null;
     }
 
     /**

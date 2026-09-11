@@ -58,20 +58,9 @@ public class CarrelloServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
 
-        // Recupera la sessione corrente senza crearne una nuova se non esiste
+        // Recupera la sessione e l'utente autenticato (autenticazione già garantita da UserFilter)
         HttpSession session = request.getSession(false);
-        // Estrae l'utente autenticato dalla sessione
-        UtenteBean utente = null;
-
-        if (session != null) {
-            utente = (UtenteBean) session.getAttribute("utente");
-        }
-
-        // Controllo autenticazione: se l'utente non è loggato viene reindirizzato al login
-        if (utente == null) {
-            response.sendRedirect(request.getContextPath() + "/jsp/common/login.jsp");
-            return; // Interrompe l'esecuzione
-        }
+        UtenteBean utente = (UtenteBean) session.getAttribute("utente");
 
         // Controllo di sicurezza: impedisce il carrello agli utenti con ruolo Amministratore
         if (utente.isAdmin()) {
@@ -115,30 +104,12 @@ public class CarrelloServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
 
-        // Recupera la sessione senza crearne una nuova se non presente
+        // Recupera la sessione e l'utente autenticato (autenticazione già garantita da UserFilter)
         HttpSession session = request.getSession(false);
-        // Estrae l'utente autenticato
-        UtenteBean utente = null;
-
-        if (session != null) {
-            utente = (UtenteBean) session.getAttribute("utente");
-        }
+        UtenteBean utente = (UtenteBean) session.getAttribute("utente");
         
         // Determina se la richiesta proviene da una chiamata asincrona JavaScript (AJAX)
         boolean isAjax = "XMLHttpRequest".equalsIgnoreCase(request.getHeader("X-Requested-With"));
-
-        // Se l'utente non è autenticato
-        if (utente == null) {
-            if (isAjax) {
-                // Risposta JSON 401 Unauthorized per la gestione via JS client-side
-                String json = "{\"error\": \"login_required\", \"redirect\": \"" + request.getContextPath() + "/jsp/common/login.jsp\"}";
-                sendJsonResponse(response, HttpServletResponse.SC_UNAUTHORIZED, json);
-                return;
-            }
-            // Reindirizzamento standard per richieste sincrone
-            response.sendRedirect(request.getContextPath() + "/jsp/common/login.jsp");
-            return;
-        }
 
         // Se l'utente è un Amministratore
         if (utente.isAdmin()) {
@@ -232,7 +203,7 @@ public class CarrelloServlet extends HttpServlet {
         }
     }
 
- // =========================================================================
+    // =========================================================================
     // METODI PRIVATI PER LA LOGICA DI DOMINIO (CARRELLO)
     // =========================================================================
 

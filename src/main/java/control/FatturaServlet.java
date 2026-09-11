@@ -38,7 +38,7 @@ import model.dao.impl.ProdottoDAOImpl;
 import model.dao.impl.UtenteDAOImpl;
 
 /**
- *FatturaServlet
+ * FatturaServlet
  * Servlet responsabile della generazione dinamica delle fatture in formato PDF.
  *
  * Sfrutta la libreria iText 7 per costruire un documento PDF direttamente in memoria (stream)
@@ -84,16 +84,10 @@ public class FatturaServlet extends HttpServlet {
         
         // =========================================================================
         // 1. AUTENTICAZIONE UTENTE
-        // Verifica se l'utente ha una sessione attiva prima di consentire il download
+        // Autenticazione già garantita a monte da UserFilter. Recupero utente loggato.
         // =========================================================================
         HttpSession session = request.getSession(false);
-        UtenteBean utenteLoggato = session != null ? (UtenteBean) session.getAttribute("utente") : null;
-        
-        if (utenteLoggato == null) {
-            // Risponde con un codice HTTP 401 (Non autorizzato)
-            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Utente non autenticato. Effettuare il login.");
-            return;
-        }
+        UtenteBean utenteLoggato = (UtenteBean) session.getAttribute("utente");
         
         // =========================================================================
         // 2. VALIDAZIONE PARAMETRO DI INPUT
@@ -187,9 +181,9 @@ public class FatturaServlet extends HttpServlet {
      * Popola e assembla graficamente il documento PDF iText con le sezioni della fattura:
      * Intestazione, Dati Azienda/Cliente, Tabella Prodotti, Calcoli Fiscali e Pie' di pagina.
      * 
-     * @param document       Il documento iText a cui aggiungere gli elementi grafici
-     * @param acquisto       Bean contenente le informazioni generali dell'acquisto
-     * @param cliente        Bean contenente i dati dell'utente intestatario della fattura
+     * @param document        Il documento iText a cui aggiungere gli elementi grafici
+     * @param acquisto        Bean contenente le informazioni generali dell'acquisto
+     * @param cliente         Bean contenente i dati dell'utente intestatario della fattura
      * @param dettagliOrdine Lista contenente i singoli articoli acquistati nell'ordine
      * @throws SQLException Se si verifica un errore nel recupero del nome dei prodotti tramite DAO
      */
