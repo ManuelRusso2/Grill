@@ -13,7 +13,6 @@
 @media (max-width: 900px) {
     /* Conversione delle griglie di amministrazione e checkout a colonna singola */
     .admin-edit-grid,
-    .admin-grid-2col,
     .checkout-grid {
         grid-template-columns: 1fr;             /* Imposta una sola colonna a tutta larghezza */
     }
@@ -58,15 +57,17 @@
         padding: 0 10px;                       /* Spazio interno laterale per non toccare i bordi */
     }
 
+    /* Riduzione della spaziatura verticale per la sezione del carosello */
     .carousel-section {
-        padding: 30px 0;                       /* Spaziatura verticale ridotta per la sezione */
+        padding: 30px 0;                       /* Imposta 30px di spaziatura verticale (alto/basso) e 0 ai lati per compattare il blocco */
     }
 
+    /* Ridimensionamento dei pulsanti di scorrimento (frecce del carosello e dello scroll) */
     .carousel-btn,
     .scroll-btn {
-        width: 36px;                           /* Larghezza contenuta per i pulsanti di scorrimento */
-        height: 36px;                          /* Altezza fissa coordinata con la larghezza */
-        font-size: 18px;                       /* Dimensione dell'icona/freccia all'interno */
+        width: 36px;                           /* Larghezza contenuta per i pulsanti di scorrimento su schermi medi */
+        height: 36px;                          /* Altezza fissa coordinata con la larghezza per mantenere la forma circolare */
+        font-size: 18px;                       /* Dimensione dell'icona o freccia contenuta all'interno */
     }
 
     /* Sezione prodotti in evidenza a scorrimento (2 schede affiancate) */
@@ -74,13 +75,15 @@
         padding: 0 15px;                       /* Padding orizzontale di protezione laterale */
     }
 
+    /* Ridimensionamento del titolo di sezione dei prodotti in evidenza */
     .products-scroll-section h2 {
-        margin-bottom: 25px;                   /* Distanza dal titolo al catalogo prodotti */
-        font-size: 26px;                       /* Dimensione ridotta per il titolo di sezione */
+        margin-bottom: 25px;                   /* Distanza inferiore di stacco dal titolo alla lista dei prodotti */
+        font-size: 26px;                       /* Dimensione ridotta del carattere per adattarsi a schermi medi */
     }
 
+    /* Adattamento della larghezza delle schede prodotto nel catalogo scorrevole */
     .product-card-scroll {
-        min-width: calc(50% - 10px);           /* Mantiene 2 schede prodotto visibili per riga */
+        min-width: calc(50% - 10px);           /* Calcola la larghezza minima per mantenere 2 schede visibili per riga */
     }
 
     /* Incolonnamento verticale dei moduli di filtraggio nell'area admin */
@@ -112,25 +115,29 @@
         padding: 20px 0;                       /* Ulteriore riduzione del padding verticale */
     }
 
+    /* Compattazione del contenitore del carosello per schermi ultra-ridotti */
     .carousel-container {
-        gap: 5px;                              /* Spaziatura minima tra gli elementi del carosello */
-        padding: 0 5px;                        /* Padding laterale minimo */
+        gap: 5px;                              /* Spaziatura minima tra le immagini e gli elementi del carosello */
+        padding: 0 5px;                        /* Spazio interno di sicurezza limitato ai soli bordi laterali */
     }
 
+    /* Riduzione ultra-compatta dei pulsanti di scorrimento per smartphone */
     .carousel-btn,
     .scroll-btn {
-        width: 32px;                           /* Pulsanti ultra-compatti per smartphone */
-        height: 32px;                          /* Dimensione ridotta dei pulsanti */
-        font-size: 16px;                       /* Icona freccia più piccola */
+        width: 32px;                           /* Larghezza ultra-compatta per non coprire il contenuto sottostante */
+        height: 32px;                          /* Altezza ridotta coordinata con la larghezza per mantenere la forma circolare */
+        font-size: 16px;                       /* Dimensione dell'icona o freccia ridotta per adattarsi al pulsante */
     }
 
+    /* Spaziatura tra gli indicatori di posizione del carosello */
     .carousel-indicators {
-        gap: 6px;                              /* Distanza tra i pallini indicatori */
+        gap: 6px;                              /* Riduce la distanza orizzontale tra i singoli pallini/indicatori */
     }
 
+    /* Ridimensionamento dei singoli indicatori di scorrimento */
     .indicator {
-        width: 16px;                           /* Larghezza del singolo indicatore */
-        height: 8px;                           /* Altezza dell'indicatore */
+        width: 16px;                           /* Larghezza orizzontale contenuta per il singolo indicatore */
+        height: 8px;                           /* Altezza ridotta per mantenere la forma a pillola */
     }
 
     /* Schede prodotto singole a schermo intero nel catalogo scorrevole */
@@ -139,8 +146,9 @@
         padding: 0 10px;                       /* Spaziatura orizzontale minima */
     }
 
+    /* Ridimensionamento a larghezza intera delle schede prodotto nel carosello scorrevole per smartphone */
     .product-card-scroll {
-        min-width: 100%;                       /* Una sola scheda prodotto a tutto schermo */
+        min-width: 100%;                       /* Forza ogni scheda prodotto ad occupare il 100% della larghezza disponibile (1 sola scheda per riga) */
     }
 }
 
@@ -164,7 +172,7 @@
 }
 
 @media print {
-    /* 1. Rimozione completa degli elementi di navigazione ed interazione web */
+    /* 1. Nascondimento completo dell'interfaccia utente web, navigazione e pulsanti d'azione durante la stampa */
     body header.site-header, 
     body footer, 
     body nav.nav-links, 
@@ -175,7 +183,7 @@
     body a.btn,
     body .btn,
     body .web-only {
-        display: none;                         /* Nasconde la navbar, il footer, i filtri ed i pulsanti d'azione */
+        display: none;                         /* Rimuove completamente dall'uscita su carta header, footer, menu, ricerca e bottoni d'azione */
     }
 
     /* 2. Attivazione della struttura dedicata al layout di fattura */
@@ -215,25 +223,28 @@
         color: #000000;                        /* Testo nero puro */
     }
 
+    /* Formattazione del sottotitolo di stampa contenente il numero e la data della fattura */
     body p.invoice-sub-print {
-        font-size: 14px;                       /* Dimensione del testo per il sottotitolo con numero e data */
-        margin-bottom: 20px;                   /* Spazio inferiore di distacco dalla griglia dati */
-        color: #000000;                        /* Testo nero puro */
+        font-size: 14px;                       /* Dimensione del carattere leggibile per il numero e la data del documento */
+        margin-bottom: 20px;                   /* Spazio inferiore di stacco dai blocchi dei dati fiscali */
+        color: #000000;                        /* Forza il colore del testo del sottotitolo in nero puro */
     }
 
+    /* Layout a griglia flessibile per la sezione dei dati fiscali di mittente e destinatario */
     body div.invoice-grid-print {
-        display: flex;                         /* Disposizione flessibile per affiancare i due blocchi dati */
-        justify-content: space-between;        /* Posiziona i dati del venditore a sinistra ed il cliente a destra */
-        margin-bottom: 15px;                   /* Distanza dalla linea orizzontale divisoria */
-        font-size: 13px;                       /* Dimensione del testo per i dati fiscali */
-        line-height: 1.4;                      /* Interlinea bilanciata per i blocchi di testo multilinea */
-        color: #000000;                        /* Testo nero puro */
+        display: flex;                         /* Attiva il layout flessibile per disporre i blocchi di dati affiancati */
+        justify-content: space-between;        /* Spinge i dati del venditore sul margine sinistro e quelli del cliente a destra */
+        margin-bottom: 15px;                   /* Distanzia il blocco dei dati fiscali dalla linea separatrice sottostante */
+        font-size: 13px;                       /* Imposta una dimensione del testo compatta e leggibile per le informazioni di fatturazione */
+        line-height: 1.4;                      /* Interlinea bilanciata per facilitare la lettura dei blocchi d'indirizzo multilinea */
+        color: #000000;                        /* Forza la stampa di tutte le informazioni fiscali in nero puro */
     }
 
+    /* Formattazione della linea di separazione orizzontale nel documento di stampa */
     body hr.invoice-hr-print {
-        border: none;                          /* Rimuove lo stile predefinito della linea orizzontale */
-        border-top: 1px solid #000000;         /* Sostituisce con una linea nera sottile e netta */
-        margin: 15px 0;                        /* Spaziatura verticale attorno alla linea divisoria */
+        border: none;                          /* Rimuove completamente le ombre e i bordi 3D predefiniti del tag HR */
+        border-top: 1px solid #000000;         /* Crea una linea divisoria superiore nera, sottile e netta per il foglio cartaceo */
+        margin: 15px 0;                        /* Definisce una spaziatura verticale uniforme sopra e sotto la linea di separazione */
     }
 
     /* 6. Tabella prodotti in bianco e nero con bordi definiti per la stampa */
@@ -243,13 +254,14 @@
         margin: 15px 0;                        /* Spaziatura verticale sopra e sotto la tabella */
     }
 
+    /* Formattazione visiva delle celle (intestazioni e dati) della tabella articoli in fattura */
     body table.cart-table th, 
     body table.cart-table td {
-        border: 1px solid #000000;             /* Bordo nero definito perimetrale su ciascuna cella */
-        padding: 8px;                          /* Spaziatura interna confortevole per la lettura dei dati */
-        color: #000000;                        /* Forza il testo delle celle in nero */
-        background: transparent;               /* Annulla eventuali sfondi scuri o righe alternate */
-        text-align: left;                      /* Allineamento a sinistra per i titoli delle colonne ed i valori */
+        border: 1px solid #000000;             /* Traccia un bordo nero sottile e ben definito attorno a ciascuna cella della tabella */
+        padding: 8px;                          /* Spaziatura interna confortevole per evitare che il testo sia a contatto con le linee della griglia */
+        color: #000000;                        /* Forza il testo delle intestazioni e dei contenuti delle celle in nero nitido */
+        background: transparent;               /* Annulla eventuali sfondi colorati, scuri o righe alternate del layout web */
+        text-align: left;                      /* Allinea uniformemente il testo a sinistra in tutte le colonne della tabella */
     }
 
     /* 7. Sezione riepilogo importi e note di ringraziamento in calce */
@@ -259,16 +271,18 @@
         color: #000000;                        /* Testo nero */
     }
 
+    /* Evidenziazione e formattazione della riga del totale complessivo in fattura */
     body p.invoice-total-line {
-        font-size: 16px;                       /* Dimensione maggiorata per evidenziare il totale complessivo */
-        font-weight: bold;                     /* Testo in grassetto */
-        margin-bottom: 15px;                   /* Spazio inferiore dal messaggio di ringraziamento */
+        font-size: 16px;                       /* Dimensione del carattere maggiorata per mettere in risalto l'importo totale */
+        font-weight: bold;                     /* Applica il grassetto per garantire la massima evidenza visiva sul documento */
+        margin-bottom: 15px;                   /* Spazio inferiore di stacco dalla nota di ringraziamento in calce */
     }
 
+    /* Formattazione del messaggio di cortesia e note di chiusura a piè di pagina */
     body p.invoice-thanks-print {
-        text-align: center;                    /* Messaggio di cortesia e copyright centrato in fondo al foglio */
-        margin-top: 40px;                      /* Distanza marcata dalla sezione dei totali */
-        font-size: 13px;                       /* Dimensione ridotta per il testo di chiusura */
+        text-align: center;                    /* Centra orizzontalmente il messaggio di ringraziamento ed i dati di copyright in fondo alla pagina */
+        margin-top: 40px;                      /* Ampia spaziatura superiore per distanziare il piè di pagina dal riepilogo dei totali */
+        font-size: 13px;                       /* Dimensione del carattere contenuta e discreta per il testo di chiusura del documento */
     }
 
     /* 8. Reset degli stili per collegamenti e badge all'interno della tabella prodotti */

@@ -81,8 +81,7 @@
 }
 
 /* Campo input numerico quantità perfettamente integrato nel tema scuro */
-.cart-table .input-qty,
-.cart-update-form .input-qty {
+.cart-table .input-qty{
     width: 65px;                               /* Larghezza compatta per numeri */
     padding: 8px 10px;                         /* Spaziatura interna */
     border: 1px solid var(--border-color);     /* Bordo neutro del tema */
@@ -97,8 +96,7 @@
 }
 
 /* Evidenziazione al focus del campo quantità */
-.cart-table .input-qty:focus,
-.cart-update-form .input-qty:focus {
+.cart-table .input-qty:focus{
     border-color: var(--primary-purple);       /* Il bordo passa al viola principale di tema */
     box-shadow: 0 0 0 3px rgba(155, 81, 224, 0.2); /* Anello di focus violaceo */
 }

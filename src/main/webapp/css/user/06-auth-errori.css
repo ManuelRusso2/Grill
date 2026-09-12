@@ -260,8 +260,7 @@
 }
 
 /* Gestione dei messaggi di alert/notifica all'interno dell'area di autenticazione */
-.auth-card .alert,
-.auth-container .alert {
+.auth-card .alert{
     max-width: 440px;                          /* Allinea la larghezza massima dell'alert a quella della scheda */
     margin: 0 auto 20px auto;                  /* Centratura orizzontale e spaziatura inferiore dal form */
 }

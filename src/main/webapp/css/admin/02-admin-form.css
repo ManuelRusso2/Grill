@@ -20,8 +20,7 @@
 
 /* Riquadro contenitore standard per i moduli dell'amministrazione */
 .admin-form-card,
-.admin-form,
-.form-container {
+.admin-form{
     max-width: 700px;                          /* Larghezza massima contenitore */
     margin: 30px auto;                         /* Centratura orizzontale */
     padding: 30px;                             /* Spaziatura interna */
@@ -33,8 +32,7 @@
 
 /* Titoli interni alle schede form e anteprima */
 .admin-form-card h2,
-.admin-preview-card h2,
-.form-container h2 {
+.admin-preview-card h2{
     margin-bottom: 20px;                       /* Distanza dagli elementi sottostanti */
     color: var(--text-light);                  /* Testo ad alto contrasto */
     font-size: 20px;                           /* Dimensione titolo */

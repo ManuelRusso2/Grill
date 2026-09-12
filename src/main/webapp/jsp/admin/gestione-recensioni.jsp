@@ -58,7 +58,7 @@
                 
                 <%-- Se è attivo un filtro (param.idUtente non vuoto), mostra il pulsante di Reset --%>
                 <c:if test="${not empty param.idUtente}">
-                    <a href="${pageContext.request.contextPath}/AdminRecensioniServlet" class="btn btn-sm btn-secondary">Mostra Tutti</a>
+                    <a href="${pageContext.request.contextPath}/AdminRecensioniServlet" class="btn btn-sm btn-primary">Mostra Tutti</a>
                 </c:if>
             </form>
         </div>

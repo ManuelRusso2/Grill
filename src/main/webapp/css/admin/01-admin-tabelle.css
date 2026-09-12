@@ -135,30 +135,11 @@
     box-shadow: 0 0 0 3px rgba(155, 81, 224, 0.2); /* Anello luminoso viola */
 }
 
-/* Miniatura dell'immagine prodotto nella riga della tabella */
-.admin-thumb {
-    width: 44px;                               /* Larghezza fissa */
-    height: 44px;                              /* Altezza fissa */
-    border: 1px solid var(--border-color);     /* Bordo della miniatura */
-    border-radius: 4px;                        /* Angoli leggermente arrotondati */
-    object-fit: cover;                         /* Adatta l'immagine senza distorcerla */
-}
-
 /* Cella contenitore per i pulsanti d'azione (Modifica, Elimina, Dettagli) */
 .action-cell {
     display: flex;                             /* Dispone i bottoni d'azione in riga */
     align-items: center;                       /* Centratura verticale */
     gap: 8px;                                  /* Distanza tra un bottone e l'altro */
-}
-
-/* Menu a tendina per cambio rapido di stato (es. Stato Ordine) */
-.select-status-quick {
-    padding: 6px 10px;                         /* Spaziatura compatta */
-    border: 1px solid var(--border-color);     /* Bordo coordinato */
-    border-radius: 4px;                        /* Angoli arrotondati */
-    background-color: var(--bg-input);          /* Sfondo scuro input */
-    color: var(--text-light);                  /* Testo chiaro */
-    font-size: 13px;                           /* Dimensione del font */
 }
 
 /* --------------------------------------------------------------------------

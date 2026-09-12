@@ -119,59 +119,8 @@
     opacity: 0.9;                              /* Lieve trasparenza al passaggio del mouse */
 }
 
-/* Link/Pulsante di azzeramento filtri applicati */
-.btn-reset-filter {
-    margin-left: 5px;                          /* Distanza dal pulsante principale */
-    color: var(--accent-yellow);               /* Testo in tinta d'accento */
-    font-size: 12px;                           /* Dimensione ridotta */
-    text-decoration: underline;               /* Sottolineatura stilistica per indicare l'azione reset */
-    transition: opacity 0.2s ease;             /* Transizione per lo stato hover */
-}
-
-.btn-reset-filter:hover {
-    opacity: 0.8;                              /* Riduzione opacità al passaggio del mouse */
-}
-
 /* --------------------------------------------------------------------------
-   6.5 TABELLE SPECIFICHE ED ELEMENTI INTERNI
-   -------------------------------------------------------------------------- */
-/* Tabelle riepilogo recensioni e ordini */
-.admin-reviews-table,
-.admin-orders-table {
-    margin-bottom: 30px;                       /* Distanza dal margine inferiore */
-    overflow: hidden;                          /* Mantiene i bordi arrotondati tagliando il contenuto in eccesso */
-    border: 1px solid var(--border-color);     /* Bordo perimetrale */
-    border-radius: 8px;                        /* Angoli arrotondati della scheda tabella */
-    background-color: var(--bg-card);          /* Sfondo della scheda */
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);/* Ombreggiatura profonda */
-}
-
-/* Valutazione a stelle nelle recensioni */
-.admin-reviews-table .stars {
-    color: var(--accent-yellow);               /* Colore giallo per le stelle attive */
-    font-size: 16px;                           /* Dimensione dell'icona/carattere stella */
-    letter-spacing: 1px;                       /* Spaziatura tra una stella e l'altra */
-}
-
-/* Contenuto del testo della recensione */
-.admin-reviews-table .review-description {
-    max-width: 250px;                          /* Limite di larghezza per evitare celle troppo estese */
-    color: var(--text-light);                  /* Colore del testo chiaro */
-    font-size: 13px;                           /* Dimensione testo */
-    opacity: 0.9;                              /* Lieve trasparenza per un'estetica morbida */
-    white-space: normal;                       /* Consente l'andata a capo del testo lungo */
-    word-break: break-word;                    /* Spezza parole o URL fuori misura per evitare overflow */
-}
-
-/* Testo disattivato/secondario (es. date o utenti anonimi) */
-.admin-reviews-table .text-muted {
-    color: var(--text-gray);                   /* Testo grigio di supporto */
-    font-size: 12px;                           /* Dimensione ridotta */
-    font-style: italic;                        /* Corsivo */
-}
-
-/* --------------------------------------------------------------------------
-   6.6 MESSAGGIO RISULTATI VUOTI (EMPTY STATE)
+   6.5 MESSAGGIO RISULTATI VUOTI (EMPTY STATE)
    Visualizzato quando non sono presenti prodotti, recensioni od ordini.
    -------------------------------------------------------------------------- */
 .no-reviews-msg,
@@ -194,7 +143,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   6.7 MESSAGGI DI AVVISO E NOTIFICHE ADMIN (ALERT STOCK)
+   6.6 MESSAGGI DI AVVISO E NOTIFICHE ADMIN (ALERT STOCK)
    Box di avviso per la gestione delle giacenze di magazzino in esaurimento/terminate.
    -------------------------------------------------------------------------- */
 .alert-box-out-of-stock {
