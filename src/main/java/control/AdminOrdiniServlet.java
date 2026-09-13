@@ -159,7 +159,7 @@ public class AdminOrdiniServlet extends HttpServlet {
         }
 
      // -------------------------------------------------------------------------
-     // 3. FILTRAGGIO IN MEMORIA PER DATE (CON CICLO CLASSICO SENZA LAMBDA)
+     // 3. FILTRAGGIO IN MEMORIA PER DATE
      // -------------------------------------------------------------------------
      if (dataDa != null || dataA != null) {
          Iterator<AcquistoBean> iterator = ordini.iterator();
