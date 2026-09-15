@@ -22,7 +22,7 @@
 
 <main class="container product-details-container">
 
-	<%-- ── MESSAGGI DI FEEDBACK (FLASH ATTRIBUTES IN SESSIONE) ──────────────── --%>
+    <%-- ── MESSAGGI DI FEEDBACK (FLASH ATTRIBUTES IN SESSIONE) ──────────────── --%>
     <c:if test="${not empty sessionScope.successMessage}">
         <div class="alert alert-success">
             <c:out value="${sessionScope.successMessage}" />
@@ -363,22 +363,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 // GESTIONE ESITO POSITIVO (Codice HTTP 200 OK e success = true)
                 if (response.ok && data.success) {
-                    // Mostra notifica di successo
+                    // Mostra notifica toast di successo
                     let msg = "Prodotto aggiunto al carrello!";
                     if (data.message) {
                         msg = data.message;
                     }
                     showToast(msg, true);
 
-                    // Aggiorna l'elemento badge del carrello presente nell'header
-                    const badge = document.getElementById("cart-count");
-                    if (badge) {
-                        const count = parseInt(data.cartCount, 10) || 0;
-                        if (count > 0) {
-                            badge.textContent = count;
-                        } else {
-                            badge.textContent = "";
-                        }
+                    // Aggiorna il badge del carrello nella Navbar usando il modulo globale cart-badge.js
+                    if (typeof window.updateCartBadge === "function") {
+                        window.updateCartBadge(data.cartCount);
                     }
                 } else {
                     // Mostra il messaggio d'errore inviato dalla Servlet (es. quantità esaurita)

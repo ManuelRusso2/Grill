@@ -347,5 +347,3 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <%@ include file="/jsp/common/footer.jspf" %>
-
-<%@ include file="/jsp/common/footer.jspf" %>
