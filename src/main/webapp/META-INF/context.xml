@@ -24,7 +24,7 @@
               auth="Container"
               type="javax.sql.DataSource"
               driverClassName="com.mysql.cj.jdbc.Driver"
-              url="jdbc:mysql://localhost:3306/grill?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;serverTimezone=UTC"
+              url="jdbc:mysql://localhost:3306/grill?useSSL=false&amp;allowPublicKeyRetrieval=true&amp;serverTimezone=Europe/Rome"
               username="root" 
               password="root"
               maxTotal="20"
