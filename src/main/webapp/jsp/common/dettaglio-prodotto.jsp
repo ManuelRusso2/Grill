@@ -126,7 +126,7 @@
 
                             <%-- CASO 1.2: Il prodotto è in stock e acquistabile --%>
                             <c:when test="${prodotto.quantita > 0}">
-                                <%-- Parametri inviati direttamente nell'URL della form (senza hidden) --%>
+                                <%-- Parametri inviati direttamente nell'URL della form --%>
                                 <form method="post" action="${pageContext.request.contextPath}/CarrelloServlet?action=add&idProdotto=${prodotto.idProdotto}" id="add-to-cart-form" class="form-unstyled">
                                     
                                     <%-- Menu a tendina per la selezione della taglia (se il prodotto le supporta) --%>

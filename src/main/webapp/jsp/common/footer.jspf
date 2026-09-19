@@ -1,6 +1,9 @@
 <footer class="site-footer">
     <div class="container footer-note">
         &copy; 2026 Grill. Tutti i diritti riservati.
+        <p>I NOSTRI CONTATTI:</p>
+        <p>Email: <a href="mailto:n.russo45@studenti.unisa.it">n.russo45@studenti.unisa.it</a></p>
+        <p>Email: <a href="mailto:a.sicignano49@studenti.unisa.it">a.sicignano49@studenti.unisa.it</a></p>
     </div>
 </footer>
 </body>
